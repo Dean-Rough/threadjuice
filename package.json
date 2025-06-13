@@ -1,25 +1,45 @@
 {
   "name": "threadjuice",
   "version": "1.0.0",
+  "description": "Transform Reddit threads into viral content",
   "main": "index.js",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "db:generate": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > types/supabase.ts",
+    "db:reset": "supabase db reset",
+    "db:seed": "supabase db seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "reddit",
+    "content",
+    "viral",
+    "nextjs",
+    "ai"
+  ],
+  "author": "Dean Newton",
+  "license": "MIT",
   "dependencies": {
     "@clerk/nextjs": "^6.21.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "@tanstack/react-query": "^5.59.0",
     "next": "^15.3.3",
+    "openai": "^4.67.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@jest/types": "^30.0.0",
@@ -30,13 +50,32 @@
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@welldone-software/why-did-you-render": "^10.0.1",
     "autoprefixer": "^10.4.21",
+    "console-log-level": "^1.4.1",
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.3",
+    "husky": "^9.1.7",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
+    "jest-extended": "^6.0.0",
+    "lint-staged": "^15.2.10",
+    "msw": "^2.10.2",
     "postcss": "^8.5.5",
+    "prettier": "^3.4.2",
+    "supabase": "^1.207.7",
     "tailwindcss": "^4.1.10",
-    "typescript": "^5.8.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "whatwg-fetch": "^3.6.20"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   }
 }
