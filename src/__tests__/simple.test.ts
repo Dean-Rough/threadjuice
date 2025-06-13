@@ -34,7 +34,7 @@ describe('Simple Test Suite', () => {
 
   it('should test console logging utility', () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
-    
+
     // Simulate console-log-level usage
     const logger = {
       info: (message: string) => console.log(`INFO: ${message}`),

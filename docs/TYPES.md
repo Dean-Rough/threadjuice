@@ -312,11 +312,13 @@ export const PostSchema = z.object({
   title: z.string().min(1).max(200),
   slug: z.string().min(1).max(100),
   hook: z.string().min(1).max(500),
-  content: z.array(z.object({
-    type: z.enum(['paragraph', 'comment_cluster', 'image', 'quiz']),
-    content: z.string(),
-    metadata: z.record(z.any()).optional(),
-  })),
+  content: z.array(
+    z.object({
+      type: z.enum(['paragraph', 'comment_cluster', 'image', 'quiz']),
+      content: z.string(),
+      metadata: z.record(z.any()).optional(),
+    })
+  ),
   personaId: z.number().int().positive(),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
   eventId: z.string().uuid().optional(),
@@ -340,12 +342,17 @@ export const CommentSchema = z.object({
 export const QuizSchema = z.object({
   postId: z.string().uuid(),
   title: z.string().min(1).max(200),
-  questions: z.array(z.object({
-    question: z.string().min(1),
-    options: z.array(z.string()).min(2).max(6),
-    correct: z.number().int().min(0),
-    explanation: z.string().optional(),
-  })).min(1).max(10),
+  questions: z
+    .array(
+      z.object({
+        question: z.string().min(1),
+        options: z.array(z.string()).min(2).max(6),
+        correct: z.number().int().min(0),
+        explanation: z.string().optional(),
+      })
+    )
+    .min(1)
+    .max(10),
 });
 
 export const RedditIngestionSchema = z.object({
@@ -371,30 +378,30 @@ export const PostsQuerySchema = z.object({
 export interface EnvironmentVariables {
   // Core
   NODE_ENV: 'development' | 'production' | 'test';
-  
+
   // Authentication
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: string;
   CLERK_SECRET_KEY: string;
-  
+
   // Database
   DATABASE_URL: string;
   SUPABASE_URL: string;
   SUPABASE_ANON_KEY: string;
-  
+
   // Reddit API
   REDDIT_CLIENT_ID: string;
   REDDIT_CLIENT_SECRET: string;
   REDDIT_USER_AGENT: string;
-  
+
   // AI Services
   OPENAI_API_KEY: string;
   ELEVENLABS_API_KEY?: string;
-  
+
   // Image Services
   UNSPLASH_ACCESS_KEY?: string;
   FLICKR_API_KEY?: string;
   BANNERBEAR_API_KEY?: string;
-  
+
   // Analytics & Monitoring
   VERCEL_ANALYTICS_ID?: string;
   SENTRY_DSN?: string;
@@ -417,7 +424,7 @@ export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
-export type AsyncReturnType<T extends (...args: any) => Promise<any>> = 
+export type AsyncReturnType<T extends (...args: any) => Promise<any>> =
   T extends (...args: any) => Promise<infer R> ? R : any;
 
 export type NonEmptyArray<T> = [T, ...T[]];
@@ -471,4 +478,4 @@ export class OpenAIError extends Error {
     this.name = 'OpenAIError';
   }
 }
-``` 
+```

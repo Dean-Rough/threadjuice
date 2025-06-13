@@ -35,7 +35,8 @@ export const handlers = [
               content: [
                 {
                   type: 'paragraph',
-                  content: 'Our protagonist thought they had the perfect plan...',
+                  content:
+                    'Our protagonist thought they had the perfect plan...',
                 },
               ],
             }),
@@ -82,7 +83,7 @@ export const handlers = [
 
   http.post('/api/ingest/reddit', async ({ request }) => {
     const body = await request.json();
-    
+
     return HttpResponse.json({
       jobId: 'mock-job-123',
       status: 'queued',

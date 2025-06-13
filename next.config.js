@@ -1,19 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {},
-  webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      const originalEntry = config.entry;
-      config.entry = async () => {
-        const entries = await originalEntry();
-        if (entries['main.js'] && !entries['main.js'].includes('./src/lib/whydidyourender.ts')) {
-          entries['main.js'].unshift('./src/lib/whydidyourender.ts');
-        }
-        return entries;
-      };
-    }
-    return config;
+  // Use Turbopack for faster development builds
+  experimental: {
+    turbo: {
+      rules: {
+        '*.scss': {
+          loaders: ['sass-loader'],
+          as: '*.css',
+        },
+      },
+    },
   },
-}
+  sassOptions: {
+    includePaths: ['./src', './public'],
+    prependData: `@import "public/assets/scss/utils/_index.scss";`,
+  },
+  // Note: whydidyourender disabled for Turbopack compatibility
+  // Can be re-enabled if needed by switching back to Webpack
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

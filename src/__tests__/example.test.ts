@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw';
 // Example service function to test
 function processPostData(data: any) {
   if (!data) return null;
-  
+
   return {
     id: data.id,
     title: data.title?.trim(),
@@ -29,7 +29,13 @@ describe('Example Tests with Jest Extended', () => {
 
       // Using jest-extended matchers
       expect(result).toBeObject();
-      expect(result).toContainAllKeys(['id', 'title', 'isPublished', 'commentCount', 'tags']);
+      expect(result).toContainAllKeys([
+        'id',
+        'title',
+        'isPublished',
+        'commentCount',
+        'tags',
+      ]);
       expect(result.title).toEqualIgnoringWhitespace('Test Post');
       expect(result.isPublished).toBeTrue();
       expect(result.commentCount).toBeNumber();
@@ -40,7 +46,7 @@ describe('Example Tests with Jest Extended', () => {
 
     it('should handle missing data gracefully', () => {
       const result = processPostData(null);
-      
+
       expect(result).toBeNull();
     });
 
@@ -101,7 +107,10 @@ describe('Example Tests with Jest Extended', () => {
       server.use(
         http.get('/api/posts', () => {
           return HttpResponse.json(
-            { error: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' },
+            {
+              error: 'INTERNAL_SERVER_ERROR',
+              message: 'Database connection failed',
+            },
             { status: 500 }
           );
         })
@@ -128,7 +137,7 @@ describe('Example Tests with Jest Extended', () => {
       expect(posts).toSatisfyAll((post: any) => {
         return typeof post.id === 'string' && typeof post.title === 'string';
       });
-      
+
       const titles = posts.map(p => p.title);
       expect(titles).toIncludeAllMembers(['Post 1', 'Post 2', 'Post 3']);
     });

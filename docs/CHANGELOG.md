@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Complete documentation suite for agent-driven development
 - Project requirements document (PRD) analysis
 - System architecture design
@@ -19,18 +20,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Agent-ready build plan with modular tasks
 
 ### Changed
+
 - N/A
 
 ### Deprecated
+
 - N/A
 
 ### Removed
+
 - N/A
 
 ### Fixed
+
 - N/A
 
 ### Security
+
 - N/A
 
 ---
@@ -40,19 +46,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [X.Y.Z] - YYYY-MM-DD
 
 #### Added
+
 - New features
 
 #### Changed
+
 - Changes in existing functionality
 
 #### Deprecated
+
 - Soon-to-be removed features
 
 #### Removed
+
 - Now removed features
 
 #### Fixed
+
 - Bug fixes
 
 #### Security
-- Vulnerability fixes 
+
+- Vulnerability fixes

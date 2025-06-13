@@ -78,6 +78,7 @@ CREATE TABLE quiz_results (
 ```
 
 ## Seed Data
+
 ```sql
 INSERT INTO personas (name, avatar_url, tone) VALUES
 ('The Snarky Sage', '/avatars/snarky-sage.png', 'sarcastic and deadpan'),
@@ -86,9 +87,10 @@ INSERT INTO personas (name, avatar_url, tone) VALUES
 ```
 
 ## Indexes
+
 ```sql
 CREATE INDEX idx_posts_status ON posts(status);
 CREATE INDEX idx_posts_created_at ON posts(created_at DESC);
 CREATE INDEX idx_posts_event_id ON posts(event_id);
 CREATE INDEX idx_comments_post_id ON comments(post_id);
-``` 
+```

@@ -9,6 +9,7 @@ ThreadJuice is a Reddit-to-viral content engine that transforms trending Reddit 
 ## Architecture & Tech Stack
 
 Based on PRD specifications:
+
 - **Frontend**: Next.js + Tailwind CSS
 - **Backend**: Node.js with Reddit API integration + OpenAI GPT
 - **Database**: PostgreSQL (recommended) or MongoDB
@@ -19,6 +20,7 @@ Based on PRD specifications:
 ## Core System Components
 
 ### Content Pipeline
+
 1. **Reddit Scraper** - Ingests trending threads from high-virality subreddits
 2. **GPT Processor** - Transforms raw Reddit content into structured narratives
 3. **Comment Screenshot Renderer** - Converts Reddit comments to styled image cards
@@ -28,8 +30,9 @@ Based on PRD specifications:
 7. **Video Pipeline** - Generates TikTok/Reels format vertical videos with AI voiceover
 
 ### Writer Personas
+
 - **The Snarky Sage** - sarcastic and deadpan tone
-- **The Down-to-Earth Buddy** - chill and friendly voice  
+- **The Down-to-Earth Buddy** - chill and friendly voice
 - **The Dry Cynic** - bitterly hilarious, chaos-loving perspective
 
 Each persona has associated avatar imagery and consistent voice characteristics.
@@ -37,6 +40,7 @@ Each persona has associated avatar imagery and consistent voice characteristics.
 ## Content Structure
 
 All posts follow this format:
+
 - Catchy headline with emoji prefixes
 - Avatar byline (writer persona)
 - Hook intro paragraph
@@ -50,6 +54,7 @@ All posts follow this format:
 ## Legal & Attribution Requirements
 
 **Critical**: All images must use Creative Commons or properly licensed sources:
+
 - Wikimedia Commons via MediaWiki API
 - Flickr API with license filtering
 - Unsplash/Pexels for generic imagery
@@ -63,6 +68,7 @@ All posts follow this format:
 **Phase 3**: Full video pipeline + user onboarding + A/B testing + monetization
 
 ## Key Integration Points
+
 - Reddit API for thread ingestion
 - OpenAI GPT for content transformation and quiz generation
 - Media APIs for legal image sourcing
@@ -70,6 +76,7 @@ All posts follow this format:
 - Social platform APIs for automated sharing
 
 ## SEO Requirements
+
 - Structured JSON-LD schema per post
 - Auto-generated share images with persona + comment snippets
 - Backlinks to original Reddit sources

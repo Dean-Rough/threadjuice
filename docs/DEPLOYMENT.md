@@ -3,95 +3,135 @@
 ## Required Environment Variables
 
 ### Core Application
-| Key                           | Description (scope)                     | Required |
-| ----------------------------- | ---------------------------------------- | -------- |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Frontend Clerk key                   | ✅ |
-| `CLERK_SECRET_KEY`            | Server-side Clerk key                   | ✅ |
-| `DATABASE_URL`                | PostgreSQL connection string            | ✅ |
+
+| Key                                 | Description (scope)          | Required |
+| ----------------------------------- | ---------------------------- | -------- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Frontend Clerk key           | ✅       |
+| `CLERK_SECRET_KEY`                  | Server-side Clerk key        | ✅       |
+| `NEXT_PUBLIC_SUPABASE_URL`          | Supabase project URL         | ✅       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | Supabase anonymous key       | ✅       |
+| `SUPABASE_SERVICE_ROLE_KEY`         | Supabase service role key    | ✅       |
 
 ### Reddit Integration
-| Key                           | Description                             | Required |
-| ----------------------------- | ---------------------------------------- | -------- |
-| `REDDIT_CLIENT_ID`            | Reddit API client ID                    | ✅ |
-| `REDDIT_CLIENT_SECRET`        | Reddit API client secret                | ✅ |
-| `REDDIT_USER_AGENT`           | Reddit API user agent string            | ✅ |
+
+| Key                    | Description                  | Required |
+| ---------------------- | ---------------------------- | -------- |
+| `REDDIT_CLIENT_ID`     | Reddit API client ID         | ✅       |
+| `REDDIT_CLIENT_SECRET` | Reddit API client secret     | ✅       |
+| `REDDIT_USER_AGENT`    | Reddit API user agent string | ✅       |
 
 ### AI Services
-| Key                           | Description                             | Required |
-| ----------------------------- | ---------------------------------------- | -------- |
-| `OPENAI_API_KEY`              | GPT-4 API key                           | ✅ |
-| `ELEVENLABS_API_KEY`          | Voice synthesis (Phase 2)               | ❌ |
 
-### Media & Storage
-| Key                           | Description                             | Required |
-| ----------------------------- | ---------------------------------------- | -------- |
-| `SUPABASE_URL`                | Supabase project URL                    | ✅ |
-| `SUPABASE_ANON_KEY`           | Supabase anonymous key                  | ✅ |
-| `BANNERBEAR_API_KEY`          | Comment screenshots (Phase 2)           | ❌ |
+| Key                  | Description               | Required |
+| -------------------- | ------------------------- | -------- |
+| `OPENAI_API_KEY`     | GPT-4 API key             | ✅       |
 
-### External Image APIs
-| Key                           | Description                             | Required |
-| ----------------------------- | ---------------------------------------- | -------- |
-| `UNSPLASH_ACCESS_KEY`         | Unsplash API key                        | ❌ |
-| `FLICKR_API_KEY`              | Flickr API key                          | ❌ |
+### Optional Services
+
+| Key                           | Description                   | Required |
+| ----------------------------- | ----------------------------- | -------- |
+| `UNSPLASH_ACCESS_KEY`         | Unsplash API key              | ❌       |
+| `WIKIMEDIA_USER_AGENT`        | Wikimedia API user agent     | ❌       |
+| `SENTRY_DSN`                  | Sentry error tracking DSN    | ❌       |
+| `VERCEL_ANALYTICS_ID`         | Vercel analytics ID           | ❌       |
+| `RESEND_API_KEY`              | Resend email service API key | ❌       |
+| `REDIS_URL`                   | Redis connection URL          | ❌       |
+
+### Application Configuration
+
+| Key                           | Description                   | Default     |
+| ----------------------------- | ----------------------------- | ----------- |
+| `NODE_ENV`                    | Application environment       | development |
+| `NEXT_PUBLIC_APP_URL`         | Application base URL          | http://localhost:3000 |
+| `RATE_LIMIT_ENABLED`          | Enable rate limiting          | true        |
+| `CONTENT_MODERATION_ENABLED`  | Enable content moderation     | true        |
+| `PROFANITY_FILTER_LEVEL`      | Profanity filter level        | medium      |
 
 ## Environment Files
 
 ### .env.local (Development)
+
 ```bash
-# Auth
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
+# ThreadJuice Environment Variables
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
+CLERK_SECRET_KEY=sk_test_your_clerk_secret_key_here
 
-# Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/threadjuice
+# Supabase Database
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 
-# Reddit
-REDDIT_CLIENT_ID=your_client_id
-REDDIT_CLIENT_SECRET=your_client_secret
+# Reddit API (Required for content ingestion)
+REDDIT_CLIENT_ID=your_reddit_client_id
+REDDIT_CLIENT_SECRET=your_reddit_client_secret
 REDDIT_USER_AGENT=ThreadJuice/1.0
 
-# AI
-OPENAI_API_KEY=sk-...
+# OpenAI API (Required for content generation)
+OPENAI_API_KEY=sk-your_openai_api_key_here
 
-# Storage
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=eyJ...
+# External Image APIs (Optional)
+UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+WIKIMEDIA_USER_AGENT=ThreadJuice/1.0
+
+# Application Configuration
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Analytics and Monitoring (Optional)
+SENTRY_DSN=your_sentry_dsn_here
+VERCEL_ANALYTICS_ID=your_vercel_analytics_id
+
+# Email Service (Optional)
+RESEND_API_KEY=your_resend_api_key_here
+
+# Rate Limiting (Optional)
+REDIS_URL=redis://localhost:6379
+RATE_LIMIT_ENABLED=true
+
+# Content Moderation (Optional)
+CONTENT_MODERATION_ENABLED=true
+PROFANITY_FILTER_LEVEL=medium
 ```
 
 ### .env.example
+
+The `.env.example` file contains all the above variables with placeholder values. Copy it to `.env.local` and fill in your actual values:
+
 ```bash
-# Copy this to .env.local and fill in your values
-
-# Auth (get from clerk.com)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Database (Supabase or local PostgreSQL)
-DATABASE_URL=
-
-# Reddit API (get from reddit.com/prefs/apps)
-REDDIT_CLIENT_ID=
-REDDIT_CLIENT_SECRET=
-REDDIT_USER_AGENT=ThreadJuice/1.0
-
-# OpenAI
-OPENAI_API_KEY=
-
-# Storage
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
+cp .env.example .env.local
+# Edit .env.local with your actual API keys and configuration
 ```
+
+## Environment Validation
+
+The application uses **Zod** for comprehensive environment variable validation with clear error messages:
+
+- **Type Safety**: All environment variables are properly typed
+- **Runtime Validation**: Variables are validated at startup
+- **Clear Error Messages**: Missing or invalid variables show helpful error messages
+- **Development Helpers**: Environment info logging in development mode
+
+### Validation Features
+
+- URL format validation for Supabase and app URLs
+- API key format validation for OpenAI and Clerk
+- Boolean parsing for feature flags
+- Enum validation for environment and filter levels
+- Optional variable handling with defaults
 
 ## Local Development
 
 ### Prerequisites
+
 - Node.js 18+
-- PostgreSQL (or Supabase account)
+- Supabase account (or local PostgreSQL)
 - Reddit API credentials
 - OpenAI API key
+- Clerk account for authentication
 
 ### Setup
+
 ```bash
 git clone https://github.com/Dean-Rough/threadjuice.git
 cd threadjuice
@@ -102,82 +142,122 @@ npm run dev
 ```
 
 ### Database Setup
+
 ```bash
-# If using local PostgreSQL
+# Using Supabase (Recommended)
+# 1. Create a new Supabase project
+# 2. Run the SQL from database/schema.sql in your Supabase SQL editor
+# 3. Run the SQL from database/seed.sql to populate initial data
+# 4. Copy your Supabase URL and keys to .env.local
+
+# Using local PostgreSQL (Alternative)
 createdb threadjuice
 npm run db:migrate
 npm run db:seed
+```
 
-# If using Supabase
-# Run the SQL from docs/DB_SCHEMA.md in your Supabase SQL editor
+### API Keys Setup
+
+1. **Clerk Authentication**:
+   - Sign up at [clerk.com](https://clerk.com)
+   - Create a new application
+   - Copy the publishable key and secret key
+
+2. **Supabase Database**:
+   - Sign up at [supabase.com](https://supabase.com)
+   - Create a new project
+   - Copy the project URL, anon key, and service role key
+
+3. **Reddit API**:
+   - Go to [reddit.com/prefs/apps](https://reddit.com/prefs/apps)
+   - Create a new "script" application
+   - Copy the client ID and secret
+
+4. **OpenAI API**:
+   - Sign up at [platform.openai.com](https://platform.openai.com)
+   - Create an API key
+   - Copy the API key (starts with `sk-`)
+
+## Testing Environment
+
+The application includes comprehensive environment testing:
+
+- **Unit Tests**: Environment variable validation logic
+- **Integration Tests**: Real environment configuration validation
+- **Type Safety Tests**: TypeScript interface compliance
+- **Error Handling Tests**: Missing variable error messages
+
+Run environment tests:
+
+```bash
+npm test -- --testPathPatterns="env"
 ```
 
 ## Deployment Environments
 
 ### Staging
+
 - **Platform**: Vercel Preview Deployments
 - **Database**: Supabase staging project
 - **Auth**: Clerk development instance
 - **Trigger**: Any PR to main branch
 
 ### Production
+
 - **Platform**: Vercel Production
-- **Database**: Supabase production project  
+- **Database**: Supabase production project
 - **Auth**: Clerk production instance
 - **Trigger**: Push to main branch
 - **Domain**: threadjuice.com (TBD)
 
-## Git Workflow
+### Environment Variables in Vercel
 
-### Branch Strategy
+1. Go to your Vercel project settings
+2. Navigate to "Environment Variables"
+3. Add all required variables from your `.env.local`
+4. Set appropriate values for each environment (development/preview/production)
+
+## Security Best Practices
+
+- **Never commit** `.env.local` or `.env.production` files
+- **Use different API keys** for development, staging, and production
+- **Rotate API keys** regularly
+- **Monitor API usage** to detect unauthorized access
+- **Use Vercel's encrypted environment variables** for production
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Environment validation errors**:
+   - Check that all required variables are set in `.env.local`
+   - Verify API key formats (especially OpenAI and Clerk keys)
+   - Ensure URLs are properly formatted
+
+2. **Database connection issues**:
+   - Verify Supabase URL and keys are correct
+   - Check that your Supabase project is active
+   - Ensure database schema has been applied
+
+3. **Authentication issues**:
+   - Verify Clerk keys match your Clerk application
+   - Check that Clerk webhook URLs are configured correctly
+
+4. **API rate limits**:
+   - Monitor Reddit API usage (60 requests per minute)
+   - Check OpenAI API usage and billing
+   - Consider implementing Redis for rate limiting
+
+### Debug Commands
+
 ```bash
-main                    # Production-ready code
-├── feature/reddit-api  # Feature branches
-├── feature/quiz-system
-└── hotfix/auth-bug     # Critical fixes
+# Check environment validation
+npm run type-check
+
+# Test environment configuration
+npm test -- --testPathPatterns="env"
+
+# View environment info (development only)
+npm run dev
+# Check console for environment configuration log
 ```
-
-### Development Flow
-1. Create feature branch from `main`
-2. Develop and test locally
-3. Create PR to `main`
-4. PR triggers:
-   - ESLint checks
-   - TypeScript compilation
-   - Jest unit tests
-   - Playwright e2e tests
-5. Auto-merge on green (trunk-based)
-6. Deploy to production
-
-### CI/CD Pipeline
-```yaml
-# .github/workflows/ci.yml
-name: CI/CD
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run type-check
-      - run: npm run test
-      - run: npm run build
-```
-
-## Monitoring & Logging
-
-### Production Monitoring
-- **Errors**: Vercel Analytics + Sentry
-- **Performance**: Vercel Speed Insights
-- **Database**: Supabase Dashboard
-- **Auth**: Clerk Dashboard
-
-### Key Metrics
-- Page load times
-- API response times
-- Reddit API rate limits
-- GPT-4 token usage
-- User authentication success rate 
