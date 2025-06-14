@@ -89,26 +89,26 @@ export default function TrendingSlider({ showItem = 4 }: TrendingSiderProps) {
                     {item.title} (Reddit viral thread)
                   </Link>
                 </h4>
-              <ul className='post__activity list-wrap'>
-                <li>
-                  <i className='fal fa-signal' />{' '}
-                  {Math.floor(Math.random() * 10) + 1}.
-                  {Math.floor(Math.random() * 9)}k
-                </li>
-                <li>
-                  <Link href={`/posts/${item.id}`}>
-                    <i className='fal fa-comment-dots' />{' '}
-                    {Math.floor(Math.random() * 500) + 50}
-                  </Link>
-                </li>
-                <li>
-                  <i className='fal fa-share-alt' />{' '}
-                  {Math.floor(Math.random() * 100) + 10}
-                </li>
-              </ul>
+                <ul className='post__activity list-wrap'>
+                  <li>
+                    <i className='fal fa-signal' />{' '}
+                    {Math.floor(Math.random() * 10) + 1}.
+                    {Math.floor(Math.random() * 9)}k
+                  </li>
+                  <li>
+                    <Link href={`/posts/${item.id}`}>
+                      <i className='fal fa-comment-dots' />{' '}
+                      {Math.floor(Math.random() * 500) + 50}
+                    </Link>
+                  </li>
+                  <li>
+                    <i className='fal fa-share-alt' />{' '}
+                    {Math.floor(Math.random() * 100) + 10}
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
         );
       })}
     </Swiper>

@@ -2,13 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getPersonaById, getRandomPersona, WriterPersona } from '@/data/personas';
+import {
+  getPersonaById,
+  getRandomPersona,
+  WriterPersona,
+} from '@/data/personas';
 import data from '@/util/blogData';
-import { 
-  Eye, 
-  MessageCircle, 
-  Share2, 
-  Clock, 
+import {
+  Eye,
+  MessageCircle,
+  Share2,
+  Clock,
   User,
   Heart,
   Bookmark,
@@ -16,7 +20,7 @@ import {
   Tag,
   ExternalLink,
   Calendar,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 
 interface PostDetailProps {
@@ -52,10 +56,10 @@ interface PostData {
   readingTime: number;
 }
 
-export default function PostDetail({ 
-  postId, 
-  showSidebar = true, 
-  showRelated = true 
+export default function PostDetail({
+  postId,
+  showSidebar = true,
+  showRelated = true,
 }: PostDetailProps) {
   const [post, setPost] = useState<PostData | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
@@ -74,21 +78,24 @@ export default function PostDetail({
           views: `${Math.floor(Math.random() * 100) + 10}.${Math.floor(Math.random() * 9)}k`,
           comments: Math.floor(Math.random() * 500) + 100,
           shares: Math.floor(Math.random() * 200) + 50,
-          likes: Math.floor(Math.random() * 1000) + 200
+          likes: Math.floor(Math.random() * 1000) + 200,
         },
         content: generateSampleContent(postData.title),
         excerpt: `${postData.title.slice(0, 120)}...`,
         tags: generateTags(postData.category),
         redditSource: {
           subreddit: getSubredditForCategory(postData.category),
-          originalPost: 'r/' + getSubredditForCategory(postData.category) + '/comments/abc123',
-          threadUrl: `https://reddit.com/r/${getSubredditForCategory(postData.category)}/comments/abc123`
+          originalPost:
+            'r/' +
+            getSubredditForCategory(postData.category) +
+            '/comments/abc123',
+          threadUrl: `https://reddit.com/r/${getSubredditForCategory(postData.category)}/comments/abc123`,
         },
-        readingTime: Math.floor(Math.random() * 8) + 3
+        readingTime: Math.floor(Math.random() * 8) + 3,
       };
-      
+
       setPost(enhancedPost);
-      
+
       // Get related posts
       if (showRelated) {
         const related = data
@@ -101,17 +108,17 @@ export default function PostDetail({
               views: `${Math.floor(Math.random() * 50) + 5}.${Math.floor(Math.random() * 9)}k`,
               comments: Math.floor(Math.random() * 200) + 30,
               shares: Math.floor(Math.random() * 100) + 15,
-              likes: Math.floor(Math.random() * 500) + 50
+              likes: Math.floor(Math.random() * 500) + 50,
             },
             content: '',
             excerpt: `${p.title.slice(0, 100)}...`,
             tags: generateTags(p.category),
-            readingTime: Math.floor(Math.random() * 6) + 2
+            readingTime: Math.floor(Math.random() * 6) + 2,
           }));
         setRelatedPosts(related);
       }
     }
-    
+
     setTimeout(() => setIsLoading(false), 800);
   }, [postId, showRelated]);
 
@@ -120,7 +127,7 @@ export default function PostDetail({
       navigator.share({
         title: post.title,
         text: post.excerpt,
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -130,22 +137,31 @@ export default function PostDetail({
 
   if (isLoading) {
     return (
-      <div className="post-detail-loading py-5">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8">
-              <div className="loading-skeleton">
-                <div className="skeleton-line w-75 mb-3" style={{ height: '2rem' }}></div>
-                <div className="skeleton-line w-50 mb-4" style={{ height: '1rem' }}></div>
-                <div className="skeleton-box mb-4" style={{ height: '300px' }}></div>
-                <div className="skeleton-line w-100 mb-2"></div>
-                <div className="skeleton-line w-100 mb-2"></div>
-                <div className="skeleton-line w-75 mb-2"></div>
+      <div className='post-detail-loading py-5'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-lg-8'>
+              <div className='loading-skeleton'>
+                <div
+                  className='skeleton-line w-75 mb-3'
+                  style={{ height: '2rem' }}
+                ></div>
+                <div
+                  className='skeleton-line w-50 mb-4'
+                  style={{ height: '1rem' }}
+                ></div>
+                <div
+                  className='skeleton-box mb-4'
+                  style={{ height: '300px' }}
+                ></div>
+                <div className='skeleton-line w-100 mb-2'></div>
+                <div className='skeleton-line w-100 mb-2'></div>
+                <div className='skeleton-line w-75 mb-2'></div>
               </div>
             </div>
             {showSidebar && (
-              <div className="col-lg-4">
-                <div className="skeleton-box" style={{ height: '200px' }}></div>
+              <div className='col-lg-4'>
+                <div className='skeleton-box' style={{ height: '200px' }}></div>
               </div>
             )}
           </div>
@@ -156,106 +172,113 @@ export default function PostDetail({
 
   if (!post) {
     return (
-      <div className="post-not-found text-center py-5">
+      <div className='post-not-found py-5 text-center'>
         <h2>Post Not Found</h2>
-        <p className="text-muted">The viral content you're looking for doesn't exist.</p>
-        <Link href="/" className="btn btn-primary">
-          <ArrowLeft size={16} className="me-2" />Back to Feed
+        <p className='text-muted'>
+          The viral content you're looking for doesn't exist.
+        </p>
+        <Link href='/' className='btn btn-primary'>
+          <ArrowLeft size={16} className='me-2' />
+          Back to Feed
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="post-detail">
-      <div className="container">
-        <div className="row">
+    <div className='post-detail'>
+      <div className='container'>
+        <div className='row'>
           {/* Main Content */}
           <div className={showSidebar ? 'col-lg-8' : 'col-12'}>
-            <article className="post-article">
+            <article className='post-article'>
               {/* Breadcrumb */}
-              <nav className="post-breadcrumb mb-4">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
+              <nav className='post-breadcrumb mb-4'>
+                <ol className='breadcrumb'>
+                  <li className='breadcrumb-item'>
+                    <Link href='/'>Home</Link>
                   </li>
-                  <li className="breadcrumb-item">
+                  <li className='breadcrumb-item'>
                     <Link href={`/category/${post.category.toLowerCase()}`}>
                       {post.category}
                     </Link>
                   </li>
-                  <li className="breadcrumb-item active">
+                  <li className='breadcrumb-item active'>
                     {post.title.slice(0, 50)}...
                   </li>
                 </ol>
               </nav>
 
               {/* Post Header */}
-              <header className="post-header mb-4">
-                <div className="post-meta mb-3">
-                  <div className="d-flex align-items-center flex-wrap gap-3">
-                    <span className="category-badge">
-                      <Tag size={14} className="me-1" />
+              <header className='post-header mb-4'>
+                <div className='post-meta mb-3'>
+                  <div className='d-flex align-items-center flex-wrap gap-3'>
+                    <span className='category-badge'>
+                      <Tag size={14} className='me-1' />
                       <Link href={`/category/${post.category.toLowerCase()}`}>
                         {post.category}
                       </Link>
                     </span>
                     {post.trending && (
-                      <span className="trending-badge">
-                        <TrendingUp size={14} className="me-1" />
+                      <span className='trending-badge'>
+                        <TrendingUp size={14} className='me-1' />
                         Trending
                       </span>
                     )}
-                    <span className="reading-time">
-                      <Clock size={14} className="me-1" />
+                    <span className='reading-time'>
+                      <Clock size={14} className='me-1' />
                       {post.readingTime} min read
                     </span>
                   </div>
                 </div>
 
-                <h1 className="post-title">{post.title}</h1>
-                <p className="post-excerpt text-muted">{post.excerpt}</p>
+                <h1 className='post-title'>{post.title}</h1>
+                <p className='post-excerpt text-muted'>{post.excerpt}</p>
 
                 {/* Author Info */}
-                <div className="author-info d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center">
-                    <div className="author-avatar me-3">
-                      <img 
+                <div className='author-info d-flex align-items-center justify-content-between mb-4'>
+                  <div className='d-flex align-items-center'>
+                    <div className='author-avatar me-3'>
+                      <img
                         src={post.persona.avatar}
                         alt={post.persona.name}
-                        className="rounded-circle"
-                        style={{ width: '48px', height: '48px', objectFit: 'cover' }}
-                        onError={(e) => {
+                        className='rounded-circle'
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          objectFit: 'cover',
+                        }}
+                        onError={e => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/assets/img/blog/blog01.jpg';
                         }}
                       />
                     </div>
                     <div>
-                      <h6 className="author-name mb-0">
+                      <h6 className='author-name mb-0'>
                         <Link href={`/personas/${post.persona.id}`}>
                           {post.persona.name}
                         </Link>
                       </h6>
-                      <small className="text-muted">
-                        <Calendar size={12} className="me-1" />
+                      <small className='text-muted'>
+                        <Calendar size={12} className='me-1' />
                         {post.date}
                       </small>
                     </div>
                   </div>
 
                   {/* Engagement Stats */}
-                  <div className="engagement-stats d-flex align-items-center gap-3">
-                    <span className="stat-item">
-                      <Eye size={16} className="me-1" />
+                  <div className='engagement-stats d-flex align-items-center gap-3'>
+                    <span className='stat-item'>
+                      <Eye size={16} className='me-1' />
                       {post.engagement.views}
                     </span>
-                    <span className="stat-item">
-                      <MessageCircle size={16} className="me-1" />
+                    <span className='stat-item'>
+                      <MessageCircle size={16} className='me-1' />
                       {post.engagement.comments}
                     </span>
-                    <span className="stat-item">
-                      <Share2 size={16} className="me-1" />
+                    <span className='stat-item'>
+                      <Share2 size={16} className='me-1' />
                       {post.engagement.shares}
                     </span>
                   </div>
@@ -263,26 +286,26 @@ export default function PostDetail({
               </header>
 
               {/* Featured Image */}
-              <div className="post-featured-image mb-4">
-                <img 
+              <div className='post-featured-image mb-4'>
+                <img
                   src={`/assets/img/${post.group}/${post.img}`}
                   alt={post.title}
-                  className="img-fluid rounded"
+                  className='img-fluid rounded'
                   style={{ width: '100%', height: '400px', objectFit: 'cover' }}
                 />
               </div>
 
               {/* Reddit Source Attribution */}
               {post.redditSource && (
-                <div className="reddit-source alert alert-info mb-4">
-                  <div className="d-flex align-items-center">
-                    <ExternalLink size={16} className="me-2" />
+                <div className='reddit-source alert alert-info mb-4'>
+                  <div className='d-flex align-items-center'>
+                    <ExternalLink size={16} className='me-2' />
                     <div>
                       <strong>Originally from Reddit:</strong>{' '}
-                      <Link 
+                      <Link
                         href={post.redditSource.threadUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                       >
                         {post.redditSource.originalPost}
                       </Link>
@@ -292,19 +315,19 @@ export default function PostDetail({
               )}
 
               {/* Post Content */}
-              <div className="post-content">
+              <div className='post-content'>
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               </div>
 
               {/* Tags */}
-              <div className="post-tags mt-4 mb-4">
+              <div className='post-tags mb-4 mt-4'>
                 <h6>Tags:</h6>
-                <div className="tags-list">
+                <div className='tags-list'>
                   {post.tags.map((tag, index) => (
-                    <Link 
+                    <Link
                       key={index}
                       href={`/tag/${tag.toLowerCase()}`}
-                      className="tag-badge me-2 mb-2"
+                      className='tag-badge mb-2 me-2'
                     >
                       {tag}
                     </Link>
@@ -313,34 +336,42 @@ export default function PostDetail({
               </div>
 
               {/* Action Buttons */}
-              <div className="post-actions d-flex align-items-center justify-content-between border-top pt-4">
-                <div className="action-buttons">
-                  <button 
+              <div className='post-actions d-flex align-items-center justify-content-between border-top pt-4'>
+                <div className='action-buttons'>
+                  <button
                     className={`btn me-2 ${isLiked ? 'btn-danger' : 'btn-outline-danger'}`}
                     onClick={() => setIsLiked(!isLiked)}
                   >
-                    <Heart size={16} className="me-1" fill={isLiked ? 'currentColor' : 'none'} />
+                    <Heart
+                      size={16}
+                      className='me-1'
+                      fill={isLiked ? 'currentColor' : 'none'}
+                    />
                     {post.engagement.likes + (isLiked ? 1 : 0)}
                   </button>
-                  <button 
+                  <button
                     className={`btn me-2 ${isBookmarked ? 'btn-warning' : 'btn-outline-warning'}`}
                     onClick={() => setIsBookmarked(!isBookmarked)}
                   >
-                    <Bookmark size={16} className="me-1" fill={isBookmarked ? 'currentColor' : 'none'} />
+                    <Bookmark
+                      size={16}
+                      className='me-1'
+                      fill={isBookmarked ? 'currentColor' : 'none'}
+                    />
                     Save
                   </button>
-                  <button 
-                    className="btn btn-outline-primary"
+                  <button
+                    className='btn btn-outline-primary'
                     onClick={handleShare}
                   >
-                    <Share2 size={16} className="me-1" />
+                    <Share2 size={16} className='me-1' />
                     Share
                   </button>
                 </div>
 
-                <div className="final-stats text-muted">
+                <div className='final-stats text-muted'>
                   <small>
-                    <Eye size={14} className="me-1" />
+                    <Eye size={14} className='me-1' />
                     {post.engagement.views} views
                   </small>
                 </div>
@@ -350,30 +381,34 @@ export default function PostDetail({
 
           {/* Sidebar */}
           {showSidebar && (
-            <div className="col-lg-4">
-              <aside className="post-sidebar">
+            <div className='col-lg-4'>
+              <aside className='post-sidebar'>
                 {/* Author Bio */}
-                <div className="sidebar-widget author-widget mb-4">
-                  <div className="widget-header d-flex align-items-center mb-3">
-                    <User size={20} className="me-2" />
-                    <h5 className="mb-0">About the Author</h5>
+                <div className='sidebar-widget author-widget mb-4'>
+                  <div className='widget-header d-flex align-items-center mb-3'>
+                    <User size={20} className='me-2' />
+                    <h5 className='mb-0'>About the Author</h5>
                   </div>
-                  <div className="author-card text-center">
-                    <img 
+                  <div className='author-card text-center'>
+                    <img
                       src={post.persona.avatar}
                       alt={post.persona.name}
-                      className="author-avatar-large rounded-circle mx-auto mb-3"
-                      style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                      onError={(e) => {
+                      className='author-avatar-large rounded-circle mx-auto mb-3'
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        objectFit: 'cover',
+                      }}
+                      onError={e => {
                         const target = e.target as HTMLImageElement;
                         target.src = '/assets/img/blog/blog01.jpg';
                       }}
                     />
                     <h6>{post.persona.name}</h6>
-                    <p className="text-muted small">{post.persona.bio}</p>
-                    <Link 
+                    <p className='text-muted small'>{post.persona.bio}</p>
+                    <Link
                       href={`/personas/${post.persona.id}`}
-                      className="btn btn-outline-primary btn-sm"
+                      className='btn btn-outline-primary btn-sm'
                     >
                       View Profile
                     </Link>
@@ -382,30 +417,33 @@ export default function PostDetail({
 
                 {/* Related Posts */}
                 {showRelated && relatedPosts.length > 0 && (
-                  <div className="sidebar-widget related-posts mb-4">
-                    <h5 className="widget-title mb-3">Related Stories</h5>
-                    <div className="related-posts-list">
-                      {relatedPosts.map((relatedPost) => (
-                        <div key={relatedPost.id} className="related-post-item mb-3 pb-3 border-bottom">
-                          <div className="row g-2">
-                            <div className="col-4">
+                  <div className='sidebar-widget related-posts mb-4'>
+                    <h5 className='widget-title mb-3'>Related Stories</h5>
+                    <div className='related-posts-list'>
+                      {relatedPosts.map(relatedPost => (
+                        <div
+                          key={relatedPost.id}
+                          className='related-post-item border-bottom mb-3 pb-3'
+                        >
+                          <div className='row g-2'>
+                            <div className='col-4'>
                               <Link href={`/posts/${relatedPost.id}`}>
-                                <img 
+                                <img
                                   src={`/assets/img/${relatedPost.group}/${relatedPost.img}`}
                                   alt={relatedPost.title}
-                                  className="img-fluid rounded"
+                                  className='img-fluid rounded'
                                   style={{ height: '60px', objectFit: 'cover' }}
                                 />
                               </Link>
                             </div>
-                            <div className="col-8">
-                              <h6 className="related-post-title">
+                            <div className='col-8'>
+                              <h6 className='related-post-title'>
                                 <Link href={`/posts/${relatedPost.id}`}>
                                   {relatedPost.title.slice(0, 60)}...
                                 </Link>
                               </h6>
-                              <small className="text-muted">
-                                <Clock size={12} className="me-1" />
+                              <small className='text-muted'>
+                                <Clock size={12} className='me-1' />
                                 {relatedPost.readingTime} min read
                               </small>
                             </div>
@@ -417,23 +455,23 @@ export default function PostDetail({
                 )}
 
                 {/* Newsletter Signup */}
-                <div className="sidebar-widget newsletter-widget">
-                  <h5 className="widget-title mb-3">Stay Updated</h5>
-                  <p className="text-muted small mb-3">
+                <div className='sidebar-widget newsletter-widget'>
+                  <h5 className='widget-title mb-3'>Stay Updated</h5>
+                  <p className='text-muted small mb-3'>
                     Get the latest viral content delivered to your inbox.
                   </p>
-                  <form className="newsletter-form">
-                    <div className="input-group mb-2">
-                      <input 
-                        type="email" 
-                        className="form-control" 
-                        placeholder="Your email"
+                  <form className='newsletter-form'>
+                    <div className='input-group mb-2'>
+                      <input
+                        type='email'
+                        className='form-control'
+                        placeholder='Your email'
                       />
-                      <button className="btn btn-primary" type="submit">
+                      <button className='btn btn-primary' type='submit'>
                         Subscribe
                       </button>
                     </div>
-                    <small className="text-muted">
+                    <small className='text-muted'>
                       No spam, unsubscribe anytime.
                     </small>
                   </form>
@@ -485,9 +523,9 @@ function generateTags(category: string): string[] {
     travel: ['Travel', 'Adventure', 'Reddit', 'Stories', 'Viral'],
     lifestyle: ['Lifestyle', 'Personal', 'Reddit', 'Stories', 'Viral'],
     news: ['News', 'Current Events', 'Reddit', 'Discussion', 'Viral'],
-    science: ['Science', 'Research', 'Reddit', 'Education', 'Viral']
+    science: ['Science', 'Research', 'Reddit', 'Education', 'Viral'],
   };
-  
+
   return tagMap[category.toLowerCase()] || ['Reddit', 'Viral', 'Discussion'];
 }
 
@@ -502,8 +540,8 @@ function getSubredditForCategory(category: string): string {
     travel: 'travel',
     lifestyle: 'LifeProTips',
     news: 'news',
-    science: 'science'
+    science: 'science',
   };
-  
+
   return subredditMap[category.toLowerCase()] || 'AskReddit';
 }

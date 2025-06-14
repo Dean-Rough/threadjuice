@@ -2,22 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination, EffectFade, Thumbs } from 'swiper/modules';
+import {
+  Autoplay,
+  Navigation,
+  Pagination,
+  EffectFade,
+  Thumbs,
+} from 'swiper/modules';
 import Link from 'next/link';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
 import data from '@/util/blogData';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Play, 
-  Pause, 
-  Eye, 
-  MessageCircle, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause,
+  Eye,
+  MessageCircle,
   Share2,
   Clock,
   TrendingUp,
   Star,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 
 // Import Swiper styles
@@ -65,7 +71,7 @@ export default function FeaturedCarousel({
   slidesPerView = 1,
   showNavigation = true,
   showPagination = true,
-  height = '500px'
+  height = '500px',
 }: FeaturedCarouselProps) {
   const [featuredPosts, setFeaturedPosts] = useState<FeaturedPost[]>([]);
   const [isPlaying, setIsPlaying] = useState(autoplay);
@@ -82,11 +88,11 @@ export default function FeaturedCarousel({
       engagement: {
         views: `${Math.floor(Math.random() * 100) + 20}.${Math.floor(Math.random() * 9)}k`,
         comments: Math.floor(Math.random() * 800) + 200,
-        shares: Math.floor(Math.random() * 300) + 100
+        shares: Math.floor(Math.random() * 300) + 100,
       },
       readingTime: Math.floor(Math.random() * 8) + 4,
       featured: true,
-      redditSource: `r/${getRandomSubreddit()}`
+      redditSource: `r/${getRandomSubreddit()}`,
     }));
 
     setFeaturedPosts(featured);
@@ -103,14 +109,16 @@ export default function FeaturedCarousel({
 
   if (isLoading) {
     return (
-      <div className="featured-carousel-loading" style={{ height }}>
-        <div className="loading-skeleton position-relative">
-          <div className="skeleton-box w-100 h-100 rounded"></div>
-          <div className="loading-overlay position-absolute top-50 start-50 translate-middle text-center">
-            <div className="spinner-border text-white mb-2" role="status">
-              <span className="visually-hidden">Loading featured content...</span>
+      <div className='featured-carousel-loading' style={{ height }}>
+        <div className='loading-skeleton position-relative'>
+          <div className='skeleton-box w-100 h-100 rounded'></div>
+          <div className='loading-overlay position-absolute top-50 start-50 translate-middle text-center'>
+            <div className='spinner-border mb-2 text-white' role='status'>
+              <span className='visually-hidden'>
+                Loading featured content...
+              </span>
             </div>
-            <p className="text-white">Loading viral highlights...</p>
+            <p className='text-white'>Loading viral highlights...</p>
           </div>
         </div>
       </div>
@@ -118,33 +126,33 @@ export default function FeaturedCarousel({
   }
 
   return (
-    <div className="featured-carousel">
-      <div className="carousel-header d-flex justify-content-between align-items-center mb-3">
+    <div className='featured-carousel'>
+      <div className='carousel-header d-flex justify-content-between align-items-center mb-3'>
         <div>
-          <h2 className="carousel-title mb-1">Featured Viral Content</h2>
-          <p className="carousel-subtitle text-muted mb-0">
+          <h2 className='carousel-title mb-1'>Featured Viral Content</h2>
+          <p className='carousel-subtitle text-muted mb-0'>
             The hottest Reddit threads transformed into engaging stories
           </p>
         </div>
-        <div className="carousel-controls d-flex align-items-center gap-2">
+        <div className='carousel-controls d-flex align-items-center gap-2'>
           {autoplay && (
             <button
-              className="control-btn"
+              className='control-btn'
               onClick={toggleAutoplay}
               title={isPlaying ? 'Pause autoplay' : 'Resume autoplay'}
             >
               {isPlaying ? <Pause size={20} /> : <Play size={20} />}
             </button>
           )}
-          <div className="slide-counter">
-            <span className="current-slide">{activeIndex + 1}</span>
-            <span className="separator">/</span>
-            <span className="total-slides">{featuredPosts.length}</span>
+          <div className='slide-counter'>
+            <span className='current-slide'>{activeIndex + 1}</span>
+            <span className='separator'>/</span>
+            <span className='total-slides'>{featuredPosts.length}</span>
           </div>
         </div>
       </div>
 
-      <div className="carousel-main position-relative">
+      <div className='carousel-main position-relative'>
         <Swiper
           modules={[Autoplay, Navigation, Pagination, EffectFade, Thumbs]}
           slidesPerView={slidesPerView}
@@ -152,61 +160,73 @@ export default function FeaturedCarousel({
           loop={loop}
           effect={effect}
           thumbs={showThumbs ? { swiper: thumbsSwiper } : undefined}
-          autoplay={isPlaying ? {
-            delay: 5000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true
-          } : false}
-          navigation={showNavigation ? {
-            nextEl: '.carousel-next',
-            prevEl: '.carousel-prev',
-          } : false}
-          pagination={showPagination ? {
-            el: '.carousel-pagination',
-            clickable: true,
-            dynamicBullets: true,
-          } : false}
+          autoplay={
+            isPlaying
+              ? {
+                  delay: 5000,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                }
+              : false
+          }
+          navigation={
+            showNavigation
+              ? {
+                  nextEl: '.carousel-next',
+                  prevEl: '.carousel-prev',
+                }
+              : false
+          }
+          pagination={
+            showPagination
+              ? {
+                  el: '.carousel-pagination',
+                  clickable: true,
+                  dynamicBullets: true,
+                }
+              : false
+          }
           onSlideChange={handleSlideChange}
-          className="featured-swiper"
+          className='featured-swiper'
           style={{ height }}
         >
           {featuredPosts.map((post, index) => (
             <SwiperSlide key={post.id}>
-              <div className="featured-slide position-relative">
+              <div className='featured-slide position-relative'>
                 {/* Background Image */}
-                <div className="slide-bg">
+                <div className='slide-bg'>
                   <img
                     src={`/assets/img/${post.group}/${post.img}`}
                     alt={post.title}
-                    className="slide-image"
+                    className='slide-image'
                   />
-                  <div className="slide-overlay"></div>
+                  <div className='slide-overlay'></div>
                 </div>
 
                 {/* Content */}
-                <div className="slide-content position-absolute">
-                  <div className="container h-100">
-                    <div className="row h-100 align-items-center">
-                      <div className="col-lg-8 col-xl-7">
-                        <div className="slide-text">
+                <div className='slide-content position-absolute'>
+                  <div className='h-100 container'>
+                    <div className='row h-100 align-items-center'>
+                      <div className='col-lg-8 col-xl-7'>
+                        <div className='slide-text'>
                           {/* Meta Info */}
-                          <div className="slide-meta mb-3">
-                            <div className="d-flex align-items-center flex-wrap gap-3">
-                              <span className="category-badge">
-                                <Star size={14} className="me-1" />
+                          <div className='slide-meta mb-3'>
+                            <div className='d-flex align-items-center flex-wrap gap-3'>
+                              <span className='category-badge'>
+                                <Star size={14} className='me-1' />
                                 Featured
                               </span>
-                              <span className="trending-badge">
-                                <TrendingUp size={14} className="me-1" />
+                              <span className='trending-badge'>
+                                <TrendingUp size={14} className='me-1' />
                                 {post.category}
                               </span>
-                              <span className="reading-time">
-                                <Clock size={14} className="me-1" />
+                              <span className='reading-time'>
+                                <Clock size={14} className='me-1' />
                                 {post.readingTime} min read
                               </span>
                               {post.redditSource && (
-                                <span className="reddit-source">
-                                  <ExternalLink size={14} className="me-1" />
+                                <span className='reddit-source'>
+                                  <ExternalLink size={14} className='me-1' />
                                   {post.redditSource}
                                 </span>
                               )}
@@ -214,62 +234,58 @@ export default function FeaturedCarousel({
                           </div>
 
                           {/* Title */}
-                          <h1 className="slide-title mb-3">
-                            <Link href={`/posts/${post.id}`}>
-                              {post.title}
-                            </Link>
+                          <h1 className='slide-title mb-3'>
+                            <Link href={`/posts/${post.id}`}>{post.title}</Link>
                           </h1>
 
                           {/* Excerpt */}
-                          <p className="slide-excerpt mb-4">
-                            {post.excerpt}
-                          </p>
+                          <p className='slide-excerpt mb-4'>{post.excerpt}</p>
 
                           {/* Author & Engagement */}
-                          <div className="slide-footer d-flex align-items-center justify-content-between">
-                            <div className="author-info d-flex align-items-center">
+                          <div className='slide-footer d-flex align-items-center justify-content-between'>
+                            <div className='author-info d-flex align-items-center'>
                               <img
                                 src={post.persona.avatar}
                                 alt={post.persona.name}
-                                className="author-avatar me-3"
-                                onError={(e) => {
+                                className='author-avatar me-3'
+                                onError={e => {
                                   const target = e.target as HTMLImageElement;
                                   target.src = '/assets/img/blog/blog01.jpg';
                                 }}
                               />
                               <div>
-                                <h6 className="author-name mb-0">
+                                <h6 className='author-name mb-0'>
                                   <Link href={`/personas/${post.persona.id}`}>
                                     {post.persona.name}
                                   </Link>
                                 </h6>
-                                <small className="author-role">
+                                <small className='author-role'>
                                   {post.persona.tone} voice
                                 </small>
                               </div>
                             </div>
 
-                            <div className="engagement-stats d-flex align-items-center gap-3">
-                              <span className="stat-item">
-                                <Eye size={16} className="me-1" />
+                            <div className='engagement-stats d-flex align-items-center gap-3'>
+                              <span className='stat-item'>
+                                <Eye size={16} className='me-1' />
                                 {post.engagement.views}
                               </span>
-                              <span className="stat-item">
-                                <MessageCircle size={16} className="me-1" />
+                              <span className='stat-item'>
+                                <MessageCircle size={16} className='me-1' />
                                 {post.engagement.comments}
                               </span>
-                              <span className="stat-item">
-                                <Share2 size={16} className="me-1" />
+                              <span className='stat-item'>
+                                <Share2 size={16} className='me-1' />
                                 {post.engagement.shares}
                               </span>
                             </div>
                           </div>
 
                           {/* CTA Button */}
-                          <div className="slide-cta mt-4">
+                          <div className='slide-cta mt-4'>
                             <Link
                               href={`/posts/${post.id}`}
-                              className="btn btn-primary btn-lg"
+                              className='btn btn-primary btn-lg'
                             >
                               Read Full Story
                             </Link>
@@ -282,8 +298,8 @@ export default function FeaturedCarousel({
 
                 {/* Progress Bar */}
                 {isPlaying && index === activeIndex && (
-                  <div className="slide-progress">
-                    <div className="progress-bar"></div>
+                  <div className='slide-progress'>
+                    <div className='progress-bar'></div>
                   </div>
                 )}
               </div>
@@ -294,48 +310,48 @@ export default function FeaturedCarousel({
         {/* Navigation */}
         {showNavigation && (
           <>
-            <button className="carousel-nav carousel-prev">
+            <button className='carousel-nav carousel-prev'>
               <ChevronLeft size={24} />
             </button>
-            <button className="carousel-nav carousel-next">
+            <button className='carousel-nav carousel-next'>
               <ChevronRight size={24} />
             </button>
           </>
         )}
 
         {/* Pagination */}
-        {showPagination && (
-          <div className="carousel-pagination"></div>
-        )}
+        {showPagination && <div className='carousel-pagination'></div>}
       </div>
 
       {/* Thumbnails */}
       {showThumbs && (
-        <div className="carousel-thumbs mt-3">
+        <div className='carousel-thumbs mt-3'>
           <Swiper
             modules={[Thumbs]}
             onSwiper={setThumbsSwiper}
             spaceBetween={10}
             slidesPerView={5}
             watchSlidesProgress={true}
-            className="thumbs-swiper"
+            className='thumbs-swiper'
             breakpoints={{
               320: { slidesPerView: 2 },
               480: { slidesPerView: 3 },
               768: { slidesPerView: 4 },
-              1024: { slidesPerView: 5 }
+              1024: { slidesPerView: 5 },
             }}
           >
-            {featuredPosts.map((post) => (
+            {featuredPosts.map(post => (
               <SwiperSlide key={`thumb-${post.id}`}>
-                <div className="thumb-slide">
+                <div className='thumb-slide'>
                   <img
                     src={`/assets/img/${post.group}/${post.img}`}
                     alt={post.title}
-                    className="thumb-image"
+                    className='thumb-image'
                   />
-                  <div className="thumb-overlay">
-                    <h6 className="thumb-title">{post.title.slice(0, 40)}...</h6>
+                  <div className='thumb-overlay'>
+                    <h6 className='thumb-title'>
+                      {post.title.slice(0, 40)}...
+                    </h6>
                   </div>
                 </div>
               </SwiperSlide>
@@ -545,8 +561,12 @@ export default function FeaturedCarousel({
         }
 
         @keyframes slideProgress {
-          from { width: 0; }
-          to { width: 100%; }
+          from {
+            width: 0;
+          }
+          to {
+            width: 100%;
+          }
         }
 
         .thumb-slide {
@@ -605,22 +625,34 @@ export default function FeaturedCarousel({
 // Helper functions
 function generateExcerpt(title: string): string {
   const excerpts = [
-    "This viral Reddit thread started innocent enough, but quickly spiraled into something absolutely fascinating. What began as a simple question unleashed a torrent of responses that will restore your faith in internet humanity.",
+    'This viral Reddit thread started innocent enough, but quickly spiraled into something absolutely fascinating. What began as a simple question unleashed a torrent of responses that will restore your faith in internet humanity.',
     "You won't believe how this seemingly ordinary Reddit post became the most engaging thread of the week. The comments section turned into a masterclass in storytelling and human connection.",
-    "From zero to viral in under 6 hours - this Reddit thread captured hearts and minds across the internet. The story that unfolds in the comments is both heartwarming and utterly unexpected.",
-    "This is why we love Reddit: what started as casual conversation evolved into something profound. The community responses will make you laugh, cry, and question everything you thought you knew.",
-    "Sometimes the internet gets it absolutely right. This Reddit thread proves that among all the chaos, there's still room for genuine human moments that bring us together."
+    'From zero to viral in under 6 hours - this Reddit thread captured hearts and minds across the internet. The story that unfolds in the comments is both heartwarming and utterly unexpected.',
+    'This is why we love Reddit: what started as casual conversation evolved into something profound. The community responses will make you laugh, cry, and question everything you thought you knew.',
+    "Sometimes the internet gets it absolutely right. This Reddit thread proves that among all the chaos, there's still room for genuine human moments that bring us together.",
   ];
-  
+
   return excerpts[Math.floor(Math.random() * excerpts.length)];
 }
 
 function getRandomSubreddit(): string {
   const subreddits = [
-    'AskReddit', 'todayilearned', 'funny', 'pics', 'worldnews', 'gaming', 
-    'aww', 'mildlyinteresting', 'Showerthoughts', 'LifeProTips', 'science', 
-    'technology', 'movies', 'music', 'books'
+    'AskReddit',
+    'todayilearned',
+    'funny',
+    'pics',
+    'worldnews',
+    'gaming',
+    'aww',
+    'mildlyinteresting',
+    'Showerthoughts',
+    'LifeProTips',
+    'science',
+    'technology',
+    'movies',
+    'music',
+    'books',
   ];
-  
+
   return subreddits[Math.floor(Math.random() * subreddits.length)];
 }

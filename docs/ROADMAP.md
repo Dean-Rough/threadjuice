@@ -317,7 +317,7 @@ npm install @supabase/supabase-js zod
 - ✅ `components/features/PostDetail.tsx` - Article layout with sidebar and Reddit attribution
 - ✅ `components/features/CategoryFilter.tsx` - Isotope-powered filtering with search
 - ✅ `components/features/FeaturedCarousel.tsx` - Swiper-based hero carousel
-- 🚧 `components/features/TrendingMarquee.tsx` - Scrolling trending topics (pending)
+- ✅ `components/slider/TrendingSlider.tsx` - Swiper carousel with persona integration
 
 **Sarsa Integrations**:
 
@@ -326,6 +326,8 @@ npm install @supabase/supabase-js zod
 - ✅ Interactive elements with proper animations
 - ✅ Social proof elements (view counts, shares, engagement)
 - ✅ Lucide icons replacing all emoji usage
+- ✅ ThreadJuice branding with proper logo integration
+- ✅ Cream background color theme and bold typography
 
 **Files created**:
 
@@ -334,7 +336,10 @@ npm install @supabase/supabase-js zod
 - ✅ `components/features/PostDetail.tsx` - Full article layout with metadata
 - ✅ `components/features/CategoryFilter.tsx` - Advanced filtering system
 - ✅ `components/features/FeaturedCarousel.tsx` - Hero carousel with autoplay
+- ✅ `components/slider/TrendingSlider.tsx` - Story carousel with click-through
+- ✅ `data/personas.ts` - Eight writing personas with satirical styles
 - ✅ Lucide React icon library integrated
+- ✅ ThreadJuice branding system complete
 
 **Acceptance criteria**:
 
@@ -345,6 +350,10 @@ npm install @supabase/supabase-js zod
 - ✅ FeaturedCarousel with Swiper integration and autoplay
 - ✅ All components use Lucide icons instead of emoji
 - ✅ Persona system fully integrated across all components
+- ✅ Story carousel has working click-through navigation
+- ✅ Eight writing personas defined with em dash restrictions
+- ✅ ThreadJuice branding consistent throughout
+- ✅ Cream background and bold headings applied
 
 ### Task 3.3: Page Implementation with Sarsa Layouts
 
