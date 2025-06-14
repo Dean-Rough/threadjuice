@@ -8,7 +8,7 @@ export default function Home6() {
   return (
     <>
       <Layout headerStyle={6} footerStyle={3} footerClass='black-bg' logoWhite>
-        <section className='tgbanner__area-five pt-80 pb-50'>
+        <section className='tgbanner__area-five pb-50 pt-80'>
           <div className='container'>
             <div className='row'>
               <div className='col-lg-8'>
@@ -129,7 +129,7 @@ export default function Home6() {
             </div>
           </div>
         </section>
-        <section className='latest-post-area pt-80 pb-80'>
+        <section className='latest-post-area pb-80 pt-80'>
           <div className='container'>
             <div className='row justify-content-center'>
               <div className='col-xl-9 col-lg-8'>

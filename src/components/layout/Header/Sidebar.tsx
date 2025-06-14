@@ -6,95 +6,131 @@ interface SidebarProps {
   handleSidebarClose: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ handleSidebarClose }) => {
+export default function Sidebar({ handleSidebarClose }: SidebarProps) {
   return (
-    <div className='offCanvas__wrap'>
-      <div className='offCanvas__body'>
-        <div className='offCanvas__top'>
-          <div className='offCanvas__logo logo'>
-            <Link href='/'>
-              <img src='/assets/img/logo/logo.png' alt='ThreadJuice' />
-            </Link>
-          </div>
+    <>
+      <div className='offCanvas__wrap'>
+        <div className='offCanvas__body'>
           <div className='offCanvas__toggle' onClick={handleSidebarClose}>
-            <i className='fas fa-times'></i>
+            <i className='flaticon-addition' />
           </div>
-        </div>
-
-        <div className='offCanvas__content'>
-          <h2 className='title'>ThreadJuice</h2>
-          <p className='desc'>
-            Discover viral Reddit content transformed into engaging, shareable
-            stories by our AI-powered personas. From TIFU tales to AITA
-            dilemmas, we bring you the internet's most captivating discussions.
-          </p>
-
-          <div className='offCanvas__contact'>
-            <h4 className='small-title'>Contact Info</h4>
-            <ul className='offCanvas__contact-list list-wrap'>
+          <div className='offCanvas__content'>
+            <div className='offCanvas__logo logo'>
+              <Link href='/' className='logo-dark'>
+                <img
+                  src='/assets/img/brand/1x/Logotype-Dark.png'
+                  alt='ThreadJuice'
+                  style={{ height: '28px', width: 'auto' }}
+                />
+              </Link>
+              <Link href='/' className='logo-light'>
+                <img
+                  src='/assets/img/brand/1x/Logotype-Dark.png'
+                  alt='ThreadJuice'
+                  style={{ height: '28px', width: 'auto' }}
+                />
+              </Link>
+            </div>
+            <p>
+              ThreadJuice transforms trending Reddit threads into viral content
+              with AI-powered storytelling and interactive features.
+            </p>
+            <ul className='offCanvas__instagram list-wrap'>
               <li>
-                <a href='mailto:hello@threadjuice.com'>hello@threadjuice.com</a>
+                <Link
+                  href='/assets/img/blog/blog01.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog01.jpg' alt='Thread Preview' />
+                </Link>
               </li>
               <li>
-                <a href='/about'>About ThreadJuice</a>
+                <Link
+                  href='/assets/img/blog/blog02.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog02.jpg' alt='Thread Preview' />
+                </Link>
               </li>
               <li>
-                <a href='/contact'>Get in Touch</a>
+                <Link
+                  href='/assets/img/blog/blog03.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog03.jpg' alt='Thread Preview' />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/assets/img/blog/blog04.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog04.jpg' alt='Thread Preview' />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/assets/img/blog/blog05.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog05.jpg' alt='Thread Preview' />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/assets/img/blog/blog06.jpg'
+                  className='popup-image'
+                >
+                  <img src='/assets/img/blog/blog06.jpg' alt='Thread Preview' />
+                </Link>
               </li>
             </ul>
           </div>
-
-          <div className='offCanvas__newsletter'>
-            <h4 className='small-title'>Newsletter</h4>
-            <form action='#' className='offCanvas__newsletter-form'>
-              <input
-                type='email'
-                placeholder='Get latest updates...'
-                required
-              />
-              <button type='submit'>
-                <i className='fas fa-paper-plane'></i>
-              </button>
-            </form>
-            <p>Subscribe to stay updated with viral content!</p>
-          </div>
-
-          <div className='offCanvas__social'>
-            <h4 className='small-title'>Follow Us</h4>
-            <ul className='offCanvas__social-list list-wrap'>
+          <div className='offCanvas__contact'>
+            <h4 className='title'>Get In Touch</h4>
+            <ul className='offCanvas__contact-list list-wrap'>
               <li>
-                <a href='#' target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-facebook-f'></i>
-                </a>
+                <i className='fas fa-envelope-open' />
+                <Link href='mailto:hello@threadjuice.com'>
+                  hello@threadjuice.com
+                </Link>
               </li>
               <li>
-                <a href='#' target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-twitter'></i>
-                </a>
+                <i className='fab fa-reddit' />
+                <Link href='https://reddit.com/r/threadjuice'>
+                  r/threadjuice
+                </Link>
               </li>
               <li>
-                <a href='#' target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-instagram'></i>
-                </a>
+                <i className='fas fa-globe' /> San Francisco, CA
+              </li>
+            </ul>
+            <ul className='offCanvas__social list-wrap'>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-twitter' />
+                </Link>
               </li>
               <li>
-                <a href='#' target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-linkedin-in'></i>
-                </a>
+                <Link href='#'>
+                  <i className='fab fa-reddit' />
+                </Link>
               </li>
               <li>
-                <a href='#' target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-reddit'></i>
-                </a>
+                <Link href='#'>
+                  <i className='fab fa-youtube' />
+                </Link>
+              </li>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-tiktok' />
+                </Link>
               </li>
             </ul>
           </div>
         </div>
       </div>
-
-      <div className='offCanvas__overly' onClick={handleSidebarClose}></div>
-    </div>
+      <div className='offCanvas__overlay' onClick={handleSidebarClose} />
+    </>
   );
-};
-
-export default Sidebar;
+}

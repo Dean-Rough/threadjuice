@@ -1,106 +1,142 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { UserButton } from '@clerk/nextjs';
 
-export const Menu: React.FC = () => {
+const ThemeSwitch = dynamic(() => import('../../elements/ThemeSwitch'), {
+  ssr: false,
+});
+
+interface MenuProps {
+  handleMobileMenuOpen?: () => void;
+  handleSidebarOpen?: () => void;
+  logoAlt?: boolean;
+  white?: boolean;
+}
+
+export default function Menu({
+  handleMobileMenuOpen,
+  handleSidebarOpen,
+  logoAlt,
+  white,
+}: MenuProps) {
   const pathname = usePathname();
-
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return pathname === '/';
-    }
-    return pathname?.startsWith(path) || false;
-  };
+  const [searchToggle, setSearchToggle] = useState(false);
+  const searchHandle = () => setSearchToggle(!searchToggle);
 
   return (
-    <div className='menu-list'>
-      <ul className='navigation clearfix'>
-        <li className={isActive('/') ? 'current' : ''}>
-          <Link href='/'>Home</Link>
-        </li>
-
-        <li className={`dropdown ${isActive('/category') ? 'current' : ''}`}>
-          <a href='#'>Categories</a>
-          <ul>
-            <li>
-              <Link href='/category/tifu'>TIFU</Link>
-            </li>
-            <li>
-              <Link href='/category/aita'>AITA</Link>
-            </li>
-            <li>
-              <Link href='/category/public-freakouts'>Public Freakouts</Link>
-            </li>
-            <li>
-              <Link href='/category/relationship-drama'>
-                Relationship Drama
-              </Link>
-            </li>
-            <li>
-              <Link href='/category/work-stories'>Work Stories</Link>
-            </li>
-            <li>
-              <Link href='/category/internet-culture'>Internet Culture</Link>
-            </li>
-            <li>
-              <Link href='/category/tech-fails'>Tech Fails</Link>
-            </li>
-            <li>
-              <Link href='/category/life-hacks'>Life Hacks</Link>
-            </li>
-            <li>
-              <Link href='/category/conspiracy-theories'>
-                Conspiracy Theories
-              </Link>
-            </li>
-            <li>
-              <Link href='/category/wholesome'>Wholesome</Link>
-            </li>
-          </ul>
-        </li>
-
-        <li className={isActive('/trending') ? 'current' : ''}>
-          <Link href='/trending'>Trending</Link>
-        </li>
-
-        <li className={`dropdown ${isActive('/features') ? 'current' : ''}`}>
-          <a href='#'>Features</a>
-          <ul>
-            <li>
-              <Link href='/quiz'>Take a Quiz</Link>
-            </li>
-            <li>
-              <Link href='/personas'>Meet the Personas</Link>
-            </li>
-            <li>
-              <Link href='/reddit-integration'>Reddit Integration</Link>
-            </li>
-          </ul>
-        </li>
-
-        <li
-          className={`dropdown ${isActive('/about') || isActive('/contact') ? 'current' : ''}`}
-        >
-          <a href='#'>About</a>
-          <ul>
-            <li>
-              <Link href='/about'>About ThreadJuice</Link>
-            </li>
-            <li>
-              <Link href='/contact'>Contact Us</Link>
-            </li>
-            <li>
-              <Link href='/privacy'>Privacy Policy</Link>
-            </li>
-            <li>
-              <Link href='/terms'>Terms of Service</Link>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <>
+      <div className='tgmenu__wrap'>
+        <nav className='tgmenu__nav'>
+          <div className='logo d-block d-lg-none'>
+            <Link href='/' className='logo-dark'>
+              <img
+                src='/assets/img/brand/1x/Logotype-Dark.png'
+                alt='ThreadJuice'
+                style={{ height: '24px', width: 'auto' }}
+              />
+            </Link>
+            <Link href='/' className='logo-light'>
+              <img
+                src='/assets/img/brand/1x/Logotype-Dark.png'
+                alt='ThreadJuice'
+                style={{ height: '24px', width: 'auto' }}
+              />
+            </Link>
+          </div>
+          {logoAlt && (
+            <div className='d-flex align-items-center gap-4'>
+              <div className='offcanvas-toggle' onClick={handleSidebarOpen}>
+                <Link href='#'>
+                  <i className='flaticon-menu-bar' />
+                </Link>
+              </div>
+              <div className='logo'>
+                <Link href='/'>
+                  <img
+                    src='/assets/img/brand/1x/Lockup.png'
+                    alt='ThreadJuice'
+                    style={{ height: '32px', width: 'auto' }}
+                  />
+                </Link>
+              </div>
+            </div>
+          )}
+          <div className='tgmenu__navbar-wrap tgmenu__main-menu d-none d-lg-flex'>
+            <ul className='navigation'>
+              <li className={pathname === '/' ? 'active' : ''}>
+                <Link href='/'>Home</Link>
+              </li>
+              <li className='menu-item-has-children'>
+                <Link href='#'>Categories</Link>
+                <ul className='sub-menu'>
+                  <li className={pathname === '/technology' ? 'active' : ''}>
+                    <Link href='/technology'>🔬 Technology</Link>
+                  </li>
+                  <li className={pathname === '/entertainment' ? 'active' : ''}>
+                    <Link href='/entertainment'>🎬 Entertainment</Link>
+                  </li>
+                  <li className={pathname === '/news' ? 'active' : ''}>
+                    <Link href='/news'>📡 News</Link>
+                  </li>
+                  <li className={pathname === '/lifestyle' ? 'active' : ''}>
+                    <Link href='/lifestyle'>🌟 Lifestyle</Link>
+                  </li>
+                  <li className={pathname === '/science' ? 'active' : ''}>
+                    <Link href='/science'>🧪 Science</Link>
+                  </li>
+                </ul>
+              </li>
+              <li className={pathname === '/trending' ? 'active' : ''}>
+                <Link href='/trending'>🔥 Trending</Link>
+              </li>
+              <li className={pathname === '/viral' ? 'active' : ''}>
+                <Link href='/viral'>⚡ Viral</Link>
+              </li>
+              <li className={pathname === '/about' ? 'active' : ''}>
+                <Link href='/about'>About</Link>
+              </li>
+            </ul>
+          </div>
+          <div className='tgmenu__action'>
+            <ul className='list-wrap'>
+              <li className='mode-switcher'>
+                <ThemeSwitch />
+              </li>
+              <li className='user'>
+                <UserButton afterSignOutUrl='/' />
+              </li>
+              <li className='header-search'>
+                <Link href='#'>
+                  <i
+                    className={`${
+                      searchToggle ? 'far fa-search fa-times' : 'far fa-search'
+                    }`}
+                    onClick={searchHandle}
+                  />
+                </Link>
+                <div className='header__style-two'>
+                  <div
+                    className={`header__top-search ${
+                      searchToggle ? 'd-block' : 'd-none'
+                    }`}
+                  >
+                    <form action='#'>
+                      <input type='text' placeholder='Search ThreadJuice...' />
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div className='mobile-nav-toggler' onClick={handleMobileMenuOpen}>
+          <i className='fas fa-bars' />
+        </div>
+      </div>
+    </>
   );
-};
-
-export default Menu;
+}

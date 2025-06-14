@@ -4,7 +4,7 @@ export default function Footer3({ footerClass, logoWhite }) {
   return (
     <>
       <footer className={`footer-area ${footerClass}`}>
-        <div className='newsletter-style-two style-three pt-80 pb-80'>
+        <div className='newsletter-style-two style-three pb-80 pt-80'>
           <div className='container'>
             <div className='row justify-content-center'>
               <div className='col-xxl-6 col-xl-7 col-lg-8'>

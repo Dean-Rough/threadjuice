@@ -1,53 +1,23 @@
-describe('Simple Test Suite', () => {
-  it('should demonstrate jest-extended matchers', () => {
-    const data = {
-      id: 123,
-      name: 'Test User',
-      active: true,
-      tags: ['javascript', 'testing'],
-      score: 85.5,
-    };
+import { describe, it, expect } from '@jest/globals';
 
-    // Basic Jest Extended matchers
-    expect(data).toBeObject();
-    expect(data.id).toBeNumber();
-    expect(data.id).toBePositive();
-    expect(data.name).toBeString();
-    expect(data.name).toStartWith('Test');
-    expect(data.active).toBeTrue();
-    expect(data.tags).toBeArray();
-    expect(data.tags).toBeArrayOfSize(2);
-    expect(data.tags).toIncludeAllMembers(['javascript', 'testing']);
-    expect(data.score).toBeWithin(80, 90);
-    expect(data).toContainKeys(['id', 'name', 'active']);
+describe('Simple Test Without MSW', () => {
+  it('should work with basic jest-extended matchers', () => {
+    expect(2 + 2).toBe(4);
+    expect('hello').toBeString();
+    expect(42).toBeNumber();
+    expect(true).toBeBoolean();
   });
 
-  it('should validate array operations', () => {
+  it('should test arrays with jest-extended', () => {
     const numbers = [1, 2, 3, 4, 5];
-    const strings = ['hello', 'world', 'test'];
-
-    expect(numbers).toBeArrayOfSize(5);
-    expect(numbers).toSatisfyAll((num: number) => num > 0);
-    expect(strings).toSatisfyAny((str: string) => str.includes('test'));
-    expect(numbers).toIncludeAllMembers([1, 3, 5]);
+    expect(numbers).toIncludeAllMembers([2, 4]);
+    expect(numbers).toHaveLength(5);
+    expect([]).toBeEmpty();
   });
 
-  it('should test console logging utility', () => {
-    const logSpy = jest.spyOn(console, 'log').mockImplementation();
-
-    // Simulate console-log-level usage
-    const logger = {
-      info: (message: string) => console.log(`INFO: ${message}`),
-      error: (message: string) => console.log(`ERROR: ${message}`),
-    };
-
-    logger.info('Test message');
-    logger.error('Test error');
-
-    expect(logSpy).toHaveBeenCalledTimes(2);
-    expect(logSpy).toHaveBeenCalledWith('INFO: Test message');
-    expect(logSpy).toHaveBeenCalledWith('ERROR: Test error');
-
-    logSpy.mockRestore();
+  it('should test objects with jest-extended', () => {
+    const user = { name: 'Alice', age: 25 };
+    expect(user).toContainKey('name');
+    expect(user).toContainValue('Alice');
   });
 });

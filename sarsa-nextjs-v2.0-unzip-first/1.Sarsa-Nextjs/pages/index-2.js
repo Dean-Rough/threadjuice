@@ -319,7 +319,7 @@ export default function Home2() {
             </div>
           </div>
         </section>
-        <section className='newsletter-style-two black-bg pt-80 pb-80'>
+        <section className='newsletter-style-two black-bg pb-80 pt-80'>
           <div className='container'>
             <div className='row justify-content-center'>
               <div className='col-xxl-6 col-xl-7 col-lg-8'>

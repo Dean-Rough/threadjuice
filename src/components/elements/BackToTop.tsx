@@ -2,48 +2,40 @@
 
 import { useEffect, useState } from 'react';
 
-export const BackToTop: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+export default function BackToTop() {
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
+    const onScroll = () => {
+      if (window.scrollY > 100 && !hasScrolled) {
+        setHasScrolled(true);
+      } else if (window.scrollY < 100 && hasScrolled) {
+        setHasScrolled(false);
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility);
-
+    window.addEventListener('scroll', onScroll);
     return () => {
-      window.removeEventListener('scroll', toggleVisibility);
+      window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [hasScrolled]);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div
-      className={`scroll-top ${isVisible ? 'show' : ''}`}
-      onClick={scrollToTop}
-      role='button'
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          scrollToTop();
-        }
-      }}
-      aria-label='Scroll to top'
-    >
-      <i className='fas fa-angle-up'></i>
-    </div>
+    <>
+      {hasScrolled && (
+        <button
+          className='scroll__top scroll-to-target open'
+          onClick={scrollToTop}
+          style={{ position: 'fixed', zIndex: 2147483647 }}
+          aria-label='Scroll to top'
+        >
+          <i className='fas fa-angle-up'></i>
+        </button>
+      )}
+    </>
   );
-};
-
-export default BackToTop;
+}

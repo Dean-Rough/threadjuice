@@ -1,21 +1,23 @@
 import { http, HttpResponse } from 'msw';
 
+// Example API handlers for mocking
 export const handlers = [
-  // Mock Reddit API
-  http.get('https://oauth.reddit.com/r/:subreddit/hot', ({ params }) => {
+  // Mock Reddit API endpoint
+  http.get('https://oauth.reddit.com/r/*/hot', () => {
     return HttpResponse.json({
       data: {
         children: [
           {
             data: {
-              id: 'test_thread_1',
-              title: 'TIFU by trying to impress my date',
-              selftext: 'So this happened yesterday...',
-              subreddit: params.subreddit,
-              author: 'throwaway_user',
-              score: 1234,
-              num_comments: 567,
-              created_utc: Date.now() / 1000 - 3600,
+              id: 'test123',
+              title: 'Test Reddit Post',
+              selftext: 'This is a test post from Reddit',
+              author: 'testuser',
+              score: 100,
+              num_comments: 25,
+              created_utc: Date.now() / 1000,
+              subreddit: 'test',
+              permalink: '/r/test/comments/test123',
             },
           },
         ],
@@ -23,71 +25,53 @@ export const handlers = [
     });
   }),
 
-  // Mock OpenAI API
+  // Mock OpenAI API endpoint
   http.post('https://api.openai.com/v1/chat/completions', () => {
     return HttpResponse.json({
       choices: [
         {
           message: {
-            content: JSON.stringify({
-              title: 'The Dating Disaster That Went Viral',
-              hook: 'Sometimes trying too hard backfires spectacularly',
-              content: [
-                {
-                  type: 'paragraph',
-                  content:
-                    'Our protagonist thought they had the perfect plan...',
-                },
-              ],
-            }),
+            role: 'assistant',
+            content: 'This is a mocked GPT response for testing.',
           },
         },
       ],
-    });
-  }),
-
-  // Mock ThreadJuice API routes
-  http.get('/api/posts', ({ request }) => {
-    const url = new URL(request.url);
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-
-    return HttpResponse.json({
-      items: [
-        {
-          id: '1',
-          title: 'Mock Post Title',
-          slug: 'mock-post-title',
-          hook: 'This is a mock post for testing',
-          content: [],
-          personaId: 1,
-          status: 'published',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          persona: {
-            id: 1,
-            name: 'The Snarky Sage',
-            avatarUrl: '/avatars/snarky-sage.png',
-            tone: 'sarcastic',
-          },
-        },
-      ],
-      meta: {
-        page,
-        limit,
-        total: 1,
-        totalPages: 1,
+      usage: {
+        prompt_tokens: 10,
+        completion_tokens: 15,
+        total_tokens: 25,
       },
     });
   }),
 
-  http.post('/api/ingest/reddit', async ({ request }) => {
-    const body = await request.json();
+  // Mock internal API endpoints
+  http.get('/api/posts', () => {
+    return HttpResponse.json([
+      {
+        id: '1',
+        title: 'Test Post Title',
+        content: 'Test post content',
+        author: 'The Snarky Sage',
+        createdAt: new Date().toISOString(),
+        tags: ['test', 'example'],
+      },
+    ]);
+  }),
 
-    return HttpResponse.json({
-      jobId: 'mock-job-123',
-      status: 'queued',
-      estimatedTime: '2-3 minutes',
-    });
+  http.post('/api/posts', async ({ request }) => {
+    const body = await request.json();
+    return HttpResponse.json(
+      {
+        id: 'new-post-id',
+        ...body,
+        createdAt: new Date().toISOString(),
+      },
+      { status: 201 }
+    );
+  }),
+
+  // Mock error responses
+  http.get('/api/error-test', () => {
+    return HttpResponse.json({ error: 'Test error message' }, { status: 500 });
   }),
 ];

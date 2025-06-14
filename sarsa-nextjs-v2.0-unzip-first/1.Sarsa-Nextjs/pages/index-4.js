@@ -27,7 +27,7 @@ export default function Home4() {
             </div>
           </div>
         </section>
-        <section className='latest-post-area pt-80 pb-80'>
+        <section className='latest-post-area pb-80 pt-80'>
           <div className='container'>
             <div className='row justify-content-center'>
               <div className='col-xl-9 col-lg-8'>

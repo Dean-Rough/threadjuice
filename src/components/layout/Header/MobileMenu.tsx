@@ -1,151 +1,146 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-export const MobileMenu: React.FC = () => {
-  const pathname = usePathname();
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+interface MobileMenuProps {
+  handleMobileMenuClose: () => void;
+}
 
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return pathname === '/';
+export default function MobileMenu({ handleMobileMenuClose }: MobileMenuProps) {
+  const [isActive, setIsActive] = useState({
+    status: false,
+    key: '',
+  });
+
+  const handleToggle = (key: string) => {
+    if (isActive.key === key) {
+      setIsActive({
+        status: false,
+        key: '',
+      });
+    } else {
+      setIsActive({
+        status: true,
+        key,
+      });
     }
-    return pathname?.startsWith(path) || false;
-  };
-
-  const toggleDropdown = (dropdown: string) => {
-    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
   return (
-    <ul className='navigation'>
-      <li className={isActive('/') ? 'current' : ''}>
-        <Link href='/'>Home</Link>
-      </li>
-
-      <li className={`dropdown ${isActive('/category') ? 'current' : ''}`}>
-        <a
-          href='#'
-          onClick={e => {
-            e.preventDefault();
-            toggleDropdown('categories');
-          }}
-        >
-          Categories
-          <span
-            className={`dropdown-btn ${activeDropdown === 'categories' ? 'open' : ''}`}
-          >
-            <i className='fas fa-angle-down'></i>
-          </span>
-        </a>
-        <ul className={activeDropdown === 'categories' ? 'show' : ''}>
-          <li>
-            <Link href='/category/tifu'>TIFU</Link>
-          </li>
-          <li>
-            <Link href='/category/aita'>AITA</Link>
-          </li>
-          <li>
-            <Link href='/category/public-freakouts'>Public Freakouts</Link>
-          </li>
-          <li>
-            <Link href='/category/relationship-drama'>Relationship Drama</Link>
-          </li>
-          <li>
-            <Link href='/category/work-stories'>Work Stories</Link>
-          </li>
-          <li>
-            <Link href='/category/internet-culture'>Internet Culture</Link>
-          </li>
-          <li>
-            <Link href='/category/tech-fails'>Tech Fails</Link>
-          </li>
-          <li>
-            <Link href='/category/life-hacks'>Life Hacks</Link>
-          </li>
-          <li>
-            <Link href='/category/conspiracy-theories'>
-              Conspiracy Theories
+    <>
+      <div className='tgmobile__menu'>
+        <nav className='tgmobile__menu-box'>
+          <div className='close-btn' onClick={handleMobileMenuClose}>
+            <i className='fas fa-times' />
+          </div>
+          <div className='nav-logo'>
+            <Link href='/' className='logo-dark'>
+              <img
+                src='/assets/img/brand/1x/Logotype-Dark.png'
+                alt='ThreadJuice'
+                style={{ height: '28px', width: 'auto' }}
+              />
             </Link>
-          </li>
-          <li>
-            <Link href='/category/wholesome'>Wholesome</Link>
-          </li>
-        </ul>
-      </li>
-
-      <li className={isActive('/trending') ? 'current' : ''}>
-        <Link href='/trending'>Trending</Link>
-      </li>
-
-      <li className={`dropdown ${isActive('/features') ? 'current' : ''}`}>
-        <a
-          href='#'
-          onClick={e => {
-            e.preventDefault();
-            toggleDropdown('features');
-          }}
-        >
-          Features
-          <span
-            className={`dropdown-btn ${activeDropdown === 'features' ? 'open' : ''}`}
-          >
-            <i className='fas fa-angle-down'></i>
-          </span>
-        </a>
-        <ul className={activeDropdown === 'features' ? 'show' : ''}>
-          <li>
-            <Link href='/quiz'>Take a Quiz</Link>
-          </li>
-          <li>
-            <Link href='/personas'>Meet the Personas</Link>
-          </li>
-          <li>
-            <Link href='/reddit-integration'>Reddit Integration</Link>
-          </li>
-        </ul>
-      </li>
-
-      <li
-        className={`dropdown ${isActive('/about') || isActive('/contact') ? 'current' : ''}`}
-      >
-        <a
-          href='#'
-          onClick={e => {
-            e.preventDefault();
-            toggleDropdown('about');
-          }}
-        >
-          About
-          <span
-            className={`dropdown-btn ${activeDropdown === 'about' ? 'open' : ''}`}
-          >
-            <i className='fas fa-angle-down'></i>
-          </span>
-        </a>
-        <ul className={activeDropdown === 'about' ? 'show' : ''}>
-          <li>
-            <Link href='/about'>About ThreadJuice</Link>
-          </li>
-          <li>
-            <Link href='/contact'>Contact Us</Link>
-          </li>
-          <li>
-            <Link href='/privacy'>Privacy Policy</Link>
-          </li>
-          <li>
-            <Link href='/terms'>Terms of Service</Link>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <Link href='/dashboard'>Dashboard</Link>
-      </li>
-    </ul>
+            <Link href='/' className='logo-light'>
+              <img
+                src='/assets/img/brand/1x/Logotype-Dark.png'
+                alt='ThreadJuice'
+                style={{ height: '28px', width: 'auto' }}
+              />
+            </Link>
+          </div>
+          <div className='tgmobile__search'>
+            <form action='#'>
+              <input type='text' placeholder='Search ThreadJuice...' />
+              <button>
+                <i className='far fa-search' />
+              </button>
+            </form>
+          </div>
+          <div className='tgmobile__menu-outer'>
+            <ul className='navigation'>
+              <li>
+                <Link href='/'>Home</Link>
+              </li>
+              <li
+                className='menu-item-has-children'
+                onClick={() => handleToggle('categories')}
+              >
+                <Link href='#'>Categories</Link>
+                <ul
+                  className='sub-menu'
+                  style={
+                    isActive.key === 'categories'
+                      ? { display: 'block' }
+                      : { display: 'none' }
+                  }
+                >
+                  <li>
+                    <Link href='/technology'>🔬 Technology</Link>
+                  </li>
+                  <li>
+                    <Link href='/entertainment'>🎬 Entertainment</Link>
+                  </li>
+                  <li>
+                    <Link href='/news'>📡 News</Link>
+                  </li>
+                  <li>
+                    <Link href='/lifestyle'>🌟 Lifestyle</Link>
+                  </li>
+                  <li>
+                    <Link href='/science'>🧪 Science</Link>
+                  </li>
+                </ul>
+                <div
+                  className={`dropdown-btn ${
+                    isActive.key === 'categories' ? 'open' : ''
+                  }`}
+                >
+                  <span className='plus-line' />
+                </div>
+              </li>
+              <li>
+                <Link href='/trending'>🔥 Trending</Link>
+              </li>
+              <li>
+                <Link href='/viral'>⚡ Viral</Link>
+              </li>
+              <li>
+                <Link href='/about'>About</Link>
+              </li>
+            </ul>
+          </div>
+          <div className='social-links'>
+            <ul className='list-wrap'>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-twitter' />
+                </Link>
+              </li>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-reddit' />
+                </Link>
+              </li>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-youtube' />
+                </Link>
+              </li>
+              <li>
+                <Link href='#'>
+                  <i className='fab fa-tiktok' />
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div
+        className='tgmobile__menu-backdrop'
+        onClick={handleMobileMenuClose}
+      />
+    </>
   );
-};
-
-export default MobileMenu;
+}

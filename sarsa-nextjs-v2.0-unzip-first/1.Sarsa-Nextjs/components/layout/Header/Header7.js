@@ -40,7 +40,7 @@ export default function Header7({
                   </form>
                 </div>
               </div>
-              <div className='col-xl-3 col-lg-4 col-md-3 col-sm-6 order-lg-2 order-2 col-5'>
+              <div className='col-xl-3 col-lg-4 col-md-3 col-sm-6 order-lg-2 col-5 order-2'>
                 <div className='header__top-right'>
                   <ul className='list-wrap'>
                     <li className='news-btn'>

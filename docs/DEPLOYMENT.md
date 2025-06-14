@@ -4,13 +4,13 @@
 
 ### Core Application
 
-| Key                                 | Description (scope)          | Required |
-| ----------------------------------- | ---------------------------- | -------- |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Frontend Clerk key           | ✅       |
-| `CLERK_SECRET_KEY`                  | Server-side Clerk key        | ✅       |
-| `NEXT_PUBLIC_SUPABASE_URL`          | Supabase project URL         | ✅       |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | Supabase anonymous key       | ✅       |
-| `SUPABASE_SERVICE_ROLE_KEY`         | Supabase service role key    | ✅       |
+| Key                                 | Description (scope)       | Required |
+| ----------------------------------- | ------------------------- | -------- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Frontend Clerk key        | ✅       |
+| `CLERK_SECRET_KEY`                  | Server-side Clerk key     | ✅       |
+| `NEXT_PUBLIC_SUPABASE_URL`          | Supabase project URL      | ✅       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | Supabase anonymous key    | ✅       |
+| `SUPABASE_SERVICE_ROLE_KEY`         | Supabase service role key | ✅       |
 
 ### Reddit Integration
 
@@ -22,30 +22,30 @@
 
 ### AI Services
 
-| Key                  | Description               | Required |
-| -------------------- | ------------------------- | -------- |
-| `OPENAI_API_KEY`     | GPT-4 API key             | ✅       |
+| Key              | Description   | Required |
+| ---------------- | ------------- | -------- |
+| `OPENAI_API_KEY` | GPT-4 API key | ✅       |
 
 ### Optional Services
 
-| Key                           | Description                   | Required |
-| ----------------------------- | ----------------------------- | -------- |
-| `UNSPLASH_ACCESS_KEY`         | Unsplash API key              | ❌       |
-| `WIKIMEDIA_USER_AGENT`        | Wikimedia API user agent     | ❌       |
-| `SENTRY_DSN`                  | Sentry error tracking DSN    | ❌       |
-| `VERCEL_ANALYTICS_ID`         | Vercel analytics ID           | ❌       |
-| `RESEND_API_KEY`              | Resend email service API key | ❌       |
-| `REDIS_URL`                   | Redis connection URL          | ❌       |
+| Key                    | Description                  | Required |
+| ---------------------- | ---------------------------- | -------- |
+| `UNSPLASH_ACCESS_KEY`  | Unsplash API key             | ❌       |
+| `WIKIMEDIA_USER_AGENT` | Wikimedia API user agent     | ❌       |
+| `SENTRY_DSN`           | Sentry error tracking DSN    | ❌       |
+| `VERCEL_ANALYTICS_ID`  | Vercel analytics ID          | ❌       |
+| `RESEND_API_KEY`       | Resend email service API key | ❌       |
+| `REDIS_URL`            | Redis connection URL         | ❌       |
 
 ### Application Configuration
 
-| Key                           | Description                   | Default     |
-| ----------------------------- | ----------------------------- | ----------- |
-| `NODE_ENV`                    | Application environment       | development |
-| `NEXT_PUBLIC_APP_URL`         | Application base URL          | http://localhost:3000 |
-| `RATE_LIMIT_ENABLED`          | Enable rate limiting          | true        |
-| `CONTENT_MODERATION_ENABLED`  | Enable content moderation     | true        |
-| `PROFANITY_FILTER_LEVEL`      | Profanity filter level        | medium      |
+| Key                          | Description               | Default               |
+| ---------------------------- | ------------------------- | --------------------- |
+| `NODE_ENV`                   | Application environment   | development           |
+| `NEXT_PUBLIC_APP_URL`        | Application base URL      | http://localhost:3000 |
+| `RATE_LIMIT_ENABLED`         | Enable rate limiting      | true                  |
+| `CONTENT_MODERATION_ENABLED` | Enable content moderation | true                  |
+| `PROFANITY_FILTER_LEVEL`     | Profanity filter level    | medium                |
 
 ## Environment Files
 
@@ -159,16 +159,19 @@ npm run db:seed
 ### API Keys Setup
 
 1. **Clerk Authentication**:
+
    - Sign up at [clerk.com](https://clerk.com)
    - Create a new application
    - Copy the publishable key and secret key
 
 2. **Supabase Database**:
+
    - Sign up at [supabase.com](https://supabase.com)
    - Create a new project
    - Copy the project URL, anon key, and service role key
 
 3. **Reddit API**:
+
    - Go to [reddit.com/prefs/apps](https://reddit.com/prefs/apps)
    - Create a new "script" application
    - Copy the client ID and secret
@@ -230,16 +233,19 @@ npm test -- --testPathPatterns="env"
 ### Common Issues
 
 1. **Environment validation errors**:
+
    - Check that all required variables are set in `.env.local`
    - Verify API key formats (especially OpenAI and Clerk keys)
    - Ensure URLs are properly formatted
 
 2. **Database connection issues**:
+
    - Verify Supabase URL and keys are correct
    - Check that your Supabase project is active
    - Ensure database schema has been applied
 
 3. **Authentication issues**:
+
    - Verify Clerk keys match your Clerk application
    - Check that Clerk webhook URLs are configured correctly
 

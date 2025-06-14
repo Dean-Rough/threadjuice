@@ -5,11 +5,19 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
 
   whyDidYouRender(React, {
-    trackAllPureComponents: true,
+    trackAllPureComponents: false,
     trackHooks: true,
-    logOnDifferentValues: true,
+    logOwnerReasons: true,
     collapseGroups: true,
-    include: [/.*PostCard.*/, /.*Quiz.*/, /.*TrendingFeed.*/],
-    exclude: [/^Connect/, /^Router/],
+    include: [
+      // Add component names you want to track
+      // Example: /^MyComponent$/
+    ],
+    exclude: [
+      // Exclude noisy components
+      /^NextScript$/,
+      /^Head$/,
+      /^Document$/,
+    ],
   });
 }

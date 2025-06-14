@@ -2,87 +2,115 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import data from '@/util/blogData';
 import Link from 'next/link';
-import { Post } from '@/types/database';
+import { getRandomPersona } from '@/data/personas';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-interface TrendingSliderProps {
-  posts: Post[];
+interface TrendingSiderProps {
+  showItem?: number;
 }
 
-const TrendingSlider: React.FC<TrendingSliderProps> = ({ posts }) => {
+export default function TrendingSlider({ showItem = 4 }: TrendingSiderProps) {
   return (
-    <div className='trending-slider'>
-      <Swiper
-        modules={[Autoplay, Navigation, Pagination]}
-        spaceBetween={30}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 30,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
-        }}
-        className='trending-swiper'
-      >
-        {posts.map(post => (
-          <SwiperSlide key={post.id}>
-            <div className='trending-post-card'>
-              <div className='post-thumb'>
-                <Link href={`/post/${post.slug}`}>
+    <Swiper
+      modules={[Autoplay, Pagination, Navigation]}
+      slidesPerView={showItem}
+      spaceBetween={30}
+      loop={true}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
+      pagination={{
+        clickable: true,
+        el: '.block-gallery-pagination',
+      }}
+      breakpoints={{
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 30,
+        },
+        575: {
+          slidesPerView: 2,
+          spaceBetween: 30,
+        },
+        767: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        991: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        1199: {
+          slidesPerView: showItem,
+          spaceBetween: 30,
+        },
+        1350: {
+          slidesPerView: showItem,
+          spaceBetween: 30,
+        },
+      }}
+      className='swiper-wrapper'
+    >
+      {data.slice(0, 8).map((item, i) => {
+        const persona = getRandomPersona();
+        return (
+          <SwiperSlide key={i}>
+            <div className='trending__post'>
+              <div className='trending__post-thumb tgImage__hover'>
+                <Link href='#' className='addWish'>
+                  <i className='fal fa-heart' />
+                </Link>
+                <Link href={`/posts/${item.id}`}>
                   <img
-                    src={post.featured_image || '/assets/imgs/placeholder.jpg'}
-                    alt={post.title}
-                    className='img-fluid'
+                    src={`/assets/img/${item.group}/${item.img}`}
+                    alt={item.title}
                   />
                 </Link>
-                <div className='post-category'>
-                  <Link href={`/category/${post.category}`}>
-                    {post.category}
+              </div>
+              <div className='trending__post-content'>
+                <ul className='tgbanner__content-meta list-wrap'>
+                  <li className='category'>
+                    <Link href='/category/viral'>🔥 {item.category}</Link>
+                  </li>
+                  <li>
+                    <span className='by'>By</span>{' '}
+                    <Link href={`/personas/${persona.id}`}>{persona.name}</Link>
+                  </li>
+                </ul>
+                <h4 className='title tgcommon__hover'>
+                  <Link href={`/posts/${item.id}`}>
+                    {item.title} (Reddit viral thread)
                   </Link>
-                </div>
-                {post.trending_score > 50 && (
-                  <span className='trending-badge'>
-                    <i className='fas fa-fire' />
-                  </span>
-                )}
-              </div>
-              <div className='post-content'>
-                <h3 className='post-title'>
-                  <Link href={`/post/${post.slug}`}>{post.title}</Link>
-                </h3>
-                <div className='post-meta'>
-                  <span className='post-author'>By ThreadJuice</span>
-                  <span className='post-date'>
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className='post-excerpt'>{post.hook}</p>
-              </div>
+                </h4>
+              <ul className='post__activity list-wrap'>
+                <li>
+                  <i className='fal fa-signal' />{' '}
+                  {Math.floor(Math.random() * 10) + 1}.
+                  {Math.floor(Math.random() * 9)}k
+                </li>
+                <li>
+                  <Link href={`/posts/${item.id}`}>
+                    <i className='fal fa-comment-dots' />{' '}
+                    {Math.floor(Math.random() * 500) + 50}
+                  </Link>
+                </li>
+                <li>
+                  <i className='fal fa-share-alt' />{' '}
+                  {Math.floor(Math.random() * 100) + 10}
+                </li>
+              </ul>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+          </div>
+        </SwiperSlide>
+        );
+      })}
+    </Swiper>
   );
-};
-
-export default TrendingSlider;
+}

@@ -22,7 +22,7 @@ export default function BlogDetails() {
           breadcrumbPostTitle={item.title}
         >
           <>
-            <section className='blog-details-area pt-80 pb-100'>
+            <section className='blog-details-area pb-100 pt-80'>
               <div className='container'>
                 <div className='row justify-content-center'>
                   <div className='col-lg-1'>

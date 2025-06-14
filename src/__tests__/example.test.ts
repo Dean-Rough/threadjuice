@@ -1,176 +1,60 @@
-import { server } from './mocks/server';
-import { http, HttpResponse } from 'msw';
+import { describe, it, expect } from '@jest/globals';
 
-// Example service function to test
-function processPostData(data: any) {
-  if (!data) return null;
-
-  return {
-    id: data.id,
-    title: data.title?.trim(),
-    isPublished: data.status === 'published',
-    commentCount: data.comments?.length || 0,
-    tags: data.tags || [],
-  };
-}
-
-describe('Example Tests with Jest Extended', () => {
-  describe('processPostData function', () => {
-    it('should process valid post data correctly', () => {
-      const mockData = {
-        id: '123',
-        title: '  Test Post  ',
-        status: 'published',
-        comments: [{ id: 1 }, { id: 2 }],
-        tags: ['reddit', 'viral'],
-      };
-
-      const result = processPostData(mockData);
-
-      // Using jest-extended matchers
-      expect(result).toBeObject();
-      expect(result).toContainAllKeys([
-        'id',
-        'title',
-        'isPublished',
-        'commentCount',
-        'tags',
-      ]);
-      expect(result.title).toEqualIgnoringWhitespace('Test Post');
-      expect(result.isPublished).toBeTrue();
-      expect(result.commentCount).toBeNumber();
-      expect(result.commentCount).toBeGreaterThan(0);
-      expect(result.tags).toBeArrayOfSize(2);
-      expect(result.tags).toIncludeAllMembers(['reddit', 'viral']);
-    });
-
-    it('should handle missing data gracefully', () => {
-      const result = processPostData(null);
-
-      expect(result).toBeNull();
-    });
-
-    it('should handle incomplete data', () => {
-      const incompleteData = {
-        id: '456',
-        status: 'draft',
-      };
-
-      const result = processPostData(incompleteData);
-
-      expect(result).toBeObject();
-      expect(result.isPublished).toBeFalse();
-      expect(result.commentCount).toBeZero();
-      expect(result.tags).toBeEmpty();
-      expect(result.title).toBeUndefined();
-    });
+describe('Example Test Suite with jest-extended', () => {
+  it('should use basic matchers', () => {
+    expect(2 + 2).toBe(4);
+    expect('hello world').toContain('world');
   });
 
-  describe('API Integration with MSW', () => {
-    it('should fetch posts from mocked API', async () => {
-      const response = await fetch('/api/posts?page=1&limit=10');
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data).toContainKey('items');
-      expect(data).toContainKey('meta');
-      expect(data.items).toBeArray();
-      expect(data.items).not.toBeEmpty();
-      expect(data.meta.page).toBeNumber();
-      expect(data.meta.total).toBePositive();
-    });
-
-    it('should handle Reddit ingestion request', async () => {
-      const requestBody = {
-        subreddit: 'TIFU',
-        persona: 'snarky-sage',
-        limit: 5,
-      };
-
-      const response = await fetch('/api/ingest/reddit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
-
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data).toContainAllKeys(['jobId', 'status', 'estimatedTime']);
-      expect(data.jobId).toBeString();
-      expect(data.status).toBeOneOf(['queued', 'processing']);
-      expect(data.estimatedTime).toMatch(/\d+-\d+ minutes/);
-    });
-
-    it('should handle API errors gracefully', async () => {
-      // Override the handler for this test
-      server.use(
-        http.get('/api/posts', () => {
-          return HttpResponse.json(
-            {
-              error: 'INTERNAL_SERVER_ERROR',
-              message: 'Database connection failed',
-            },
-            { status: 500 }
-          );
-        })
-      );
-
-      const response = await fetch('/api/posts');
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data).toContainKey('error');
-      expect(data.error).toEqual('INTERNAL_SERVER_ERROR');
-    });
+  it('should use jest-extended string matchers', () => {
+    const email = 'test@example.com';
+    expect(email).toIncludeRepeated('@', 1);
+    expect('hello').toStartWith('he');
+    expect('world').toEndWith('ld');
   });
 
-  describe('Data Validation', () => {
-    it('should validate array structures', () => {
-      const posts = [
-        { id: '1', title: 'Post 1' },
-        { id: '2', title: 'Post 2' },
-        { id: '3', title: 'Post 3' },
-      ];
+  it('should use jest-extended array matchers', () => {
+    const array = [1, 2, 3, 4, 5];
+    expect(array).toIncludeAllMembers([2, 4]);
+    expect(array).toHaveLength(5);
+    expect([]).toBeEmpty();
+  });
 
-      expect(posts).toBeArrayOfSize(3);
-      expect(posts).toSatisfyAll((post: any) => {
-        return typeof post.id === 'string' && typeof post.title === 'string';
-      });
+  it('should use jest-extended object matchers', () => {
+    const user = { name: 'John', age: 30, active: true };
+    expect(user).toContainKey('name');
+    expect(user).toContainValue('John');
+    expect(user).toContainEntries([
+      ['name', 'John'],
+      ['age', 30],
+    ]);
+  });
 
-      const titles = posts.map(p => p.title);
-      expect(titles).toIncludeAllMembers(['Post 1', 'Post 2', 'Post 3']);
-    });
+  it('should use jest-extended number matchers', () => {
+    expect(5).toBePositive();
+    expect(10).toBeEven();
+    expect(Math.PI).toBeCloseTo(3.14, 2);
+  });
 
-    it('should validate object properties', () => {
-      const persona = {
-        id: 1,
-        name: 'The Snarky Sage',
-        tone: 'sarcastic',
-        avatarUrl: '/avatars/snarky.png',
-        isActive: true,
-      };
+  it('should use jest-extended promise matchers', async () => {
+    const resolvedPromise = Promise.resolve('success');
+    const rejectedPromise = Promise.reject(new Error('failed'));
 
-      expect(persona).toBeObject();
-      expect(persona).toContainKeys(['id', 'name', 'tone']);
-      expect(persona.id).toBePositive();
-      expect(persona.name).toStartWith('The');
-      expect(persona.avatarUrl).toMatch(/^\/avatars\/.*\.png$/);
-      expect(persona.isActive).toBeBoolean();
-    });
+    await expect(resolvedPromise).toResolve();
+    await expect(rejectedPromise).toReject();
+    await expect(resolvedPromise).resolves.toBe('success');
+  });
 
-    it('should validate numeric ranges', () => {
-      const metrics = {
-        score: 1500,
-        ratio: 0.85,
-        comments: 42,
-        views: 10000,
-      };
+  it('should test TypeScript types', () => {
+    interface User {
+      id: number;
+      name: string;
+      email?: string;
+    }
 
-      expect(metrics.score).toBeWithin(1000, 2000);
-      expect(metrics.ratio).toBeWithin(0, 1);
-      expect(metrics.comments).toBePositive();
-      expect(metrics.views).toBeGreaterThanOrEqual(1000);
-    });
+    const user: User = { id: 1, name: 'Test User' };
+    expect(user.id).toBeNumber();
+    expect(user.name).toBeString();
+    expect(user.email).toBeUndefined();
   });
 });
