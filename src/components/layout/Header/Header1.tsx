@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import Menu from './Menu';
 import MobileMenu from './MobileMenu';
 import Sidebar from './Sidebar';
+import AuthButtons from '../../auth/AuthButtons';
 
 interface Header1Props {
   scroll: boolean;
@@ -42,14 +42,16 @@ const Header1 = ({
                 <div className='header__top-logo logo text-lg-center'>
                   <Link href='/' className='logo-dark'>
                     <img
-                      src='/assets/img/brand/1x/Logotype-Dark.png'
+                      src='/assets/img/logo/lockup.svg'
                       alt='ThreadJuice'
+                      style={{ height: '40px' }}
                     />
                   </Link>
                   <Link href='/' className='logo-light'>
                     <img
-                      src='/assets/img/brand/1x/Logotype-White.png'
+                      src='/assets/img/logo/lockup.svg'
                       alt='ThreadJuice'
+                      style={{ height: '40px' }}
                     />
                   </Link>
                 </div>
@@ -57,27 +59,7 @@ const Header1 = ({
               <div className='col-lg-4 col-md-3 col-sm-6 d-none d-sm-block order-3'>
                 <div className='header__top-right'>
                   <ul className='list-wrap'>
-                    <SignedOut>
-                      <li className='news-btn'>
-                        <SignInButton>
-                          <button className='btn'>
-                            <span className='btn-text'>Sign In</span>
-                          </button>
-                        </SignInButton>
-                      </li>
-                    </SignedOut>
-                    <SignedIn>
-                      <li className='user-profile'>
-                        <UserButton
-                          afterSignOutUrl='/'
-                          appearance={{
-                            elements: {
-                              avatarBox: 'w-8 h-8',
-                            },
-                          }}
-                        />
-                      </li>
-                    </SignedIn>
+                    <AuthButtons />
                     <li className='sidebar__menu'>
                       <div
                         className='sidebar__menu-btn'
@@ -101,12 +83,17 @@ const Header1 = ({
                 <div className='tgmenu__navbar'>
                   <div className='tgmenu__navbar-logo logo d-block d-md-none'>
                     <Link href='/' className='logo-dark'>
-                      <img src='/assets/img/logo/logo.png' alt='ThreadJuice' />
+                      <img 
+                        src='/assets/img/logo/lockup.svg' 
+                        alt='ThreadJuice'
+                        style={{ height: '35px' }}
+                      />
                     </Link>
                     <Link href='/' className='logo-light'>
                       <img
-                        src='/assets/img/logo/w_logo.png'
+                        src='/assets/img/logo/lockup.svg'
                         alt='ThreadJuice'
+                        style={{ height: '35px' }}
                       />
                     </Link>
                   </div>

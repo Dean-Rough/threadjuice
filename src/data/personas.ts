@@ -20,7 +20,12 @@ export interface WriterPersona {
     | 'chaotic'
     | 'dry'
     | 'poetic';
+  specialty: string; // Main specialty for compatibility
+  sampleQuote: string; // For About page display
 }
+
+// Alias for type compatibility
+export type Persona = WriterPersona;
 
 export const writerPersonas: WriterPersona[] = [
   {
@@ -32,6 +37,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/barry.jpg',
     specialties: ['lifestyle', 'absurdist takes', 'everyday chaos'],
     tone: 'chaotic',
+    specialty: 'Lifestyle Chaos',
+    sampleQuote:
+      'Life gave me lemons, so I started a cult around citrus fruit. It seemed reasonable at the time.',
   },
   {
     id: 'sarah',
@@ -42,6 +50,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/sarah.jpg',
     specialties: ['relationships', 'social commentary', 'brutal honesty'],
     tone: 'witty',
+    specialty: 'Social Commentary',
+    sampleQuote:
+      'I tell people the truth because someone has to, and apparently I drew the short straw.',
   },
   {
     id: 'diane',
@@ -52,6 +63,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/diane.jpg',
     specialties: ['politics', 'culture wars', 'media criticism'],
     tone: 'brutal',
+    specialty: 'Politics',
+    sampleQuote:
+      'I could write a better ending to this dumpster fire, and I probably will.',
   },
   {
     id: 'helen',
@@ -62,6 +76,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/helen.jpg',
     specialties: ['lifestyle', 'food culture', 'social decay'],
     tone: 'sarcastic',
+    specialty: 'Lifestyle',
+    sampleQuote:
+      'I tell people the truth because someone has to, and apparently I drew the short straw.',
   },
   {
     id: 'victoria',
@@ -72,6 +89,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/victoria.jpg',
     specialties: ['class commentary', 'luxury lifestyle', 'social hierarchy'],
     tone: 'condescending',
+    specialty: 'Class Commentary',
+    sampleQuote:
+      "Facts don't care about your feelings, but I care about facts. We're not the same.",
   },
   {
     id: 'margaret',
@@ -82,6 +102,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/margaret.jpg',
     specialties: ['politics', 'academia', 'philosophical rants'],
     tone: 'intellectual',
+    specialty: 'Academia',
+    sampleQuote:
+      "I've seen enough corporate buzzword bingo to know when someone's selling snake oil.",
   },
   {
     id: 'claire',
@@ -92,6 +115,9 @@ export const writerPersonas: WriterPersona[] = [
     avatar: '/assets/img/personas/claire.jpg',
     specialties: ['pop culture', 'fashion', 'entertainment'],
     tone: 'dry',
+    specialty: 'Pop Culture',
+    sampleQuote:
+      'Beauty exists in the spaces between heartbeats, where truth lives quietly.',
   },
   {
     id: 'emily',
@@ -106,6 +132,9 @@ export const writerPersonas: WriterPersona[] = [
       'poetic destruction',
     ],
     tone: 'poetic',
+    specialty: 'Emotional Essays',
+    sampleQuote:
+      'Sometimes the most honest thing you can do is fall apart beautifully.',
   },
 ];
 
@@ -139,4 +168,37 @@ export function getPersonaByTone(tone: WriterPersona['tone']): WriterPersona[] {
  */
 export function getPersonaById(id: string): WriterPersona | undefined {
   return writerPersonas.find(persona => persona.id === id);
+}
+
+/**
+ * Get all personas
+ */
+export function getAllPersonas(): WriterPersona[] {
+  const defaultQuotes = {
+    barry:
+      'Life gave me lemons, so I started a cult around citrus fruit. It seemed reasonable at the time.',
+    sarah:
+      'I tell people the truth because someone has to, and apparently I drew the short straw.',
+    diane:
+      'I could write a better ending to this dumpster fire, and I probably will.',
+    marcus:
+      "Facts don't care about your feelings, but I care about facts. We're not the same.",
+    gordon:
+      "I've seen enough corporate buzzword bingo to know when someone's selling snake oil.",
+    elena:
+      'Beauty exists in the spaces between heartbeats, where truth lives quietly.',
+    raj: "The universe is absurd, but at least we're all absurd together.",
+    emily:
+      'Sometimes the most honest thing you can do is fall apart beautifully.',
+  };
+
+  return writerPersonas.map(persona => ({
+    ...persona,
+    specialty:
+      persona.specialties[0]?.charAt(0).toUpperCase() +
+        persona.specialties[0]?.slice(1) || 'General',
+    sampleQuote:
+      defaultQuotes[persona.id as keyof typeof defaultQuotes] ||
+      'Words are my weapon of choice.',
+  }));
 }

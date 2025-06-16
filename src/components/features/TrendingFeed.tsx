@@ -74,8 +74,8 @@ export default function TrendingFeed({
     setPosts(postsWithMetadata);
     setFilteredPosts(postsWithMetadata);
 
-    // Simulate loading delay for smooth animations
-    setTimeout(() => setIsLoading(false), 500);
+    // Remove setTimeout - set loading to false immediately
+    setIsLoading(false);
   }, [postsPerPage]);
 
   // Filter functionality
@@ -375,8 +375,8 @@ export default function TrendingFeed({
 }
 
 // Helper function to get category icons
-function getCategoryIcon(category: string): JSX.Element {
-  const iconMap: { [key: string]: JSX.Element } = {
+function getCategoryIcon(category: string): React.ReactElement {
+  const iconMap: { [key: string]: React.ReactElement } = {
     gaming: <Gamepad2 size={16} className='me-1' />,
     tech: <Monitor size={16} className='me-1' />,
     movie: <Film size={16} className='me-1' />,
@@ -392,4 +392,22 @@ function getCategoryIcon(category: string): JSX.Element {
   return (
     iconMap[category.toLowerCase()] || <Radio size={16} className='me-1' />
   );
+}
+
+// Helper function to get category emojis
+function getCategoryEmoji(category: string): string {
+  const emojiMap: { [key: string]: string } = {
+    gaming: '🎮',
+    tech: '💻',
+    movie: '🎬',
+    sports: '🏆',
+    music: '🎵',
+    food: '🍽️',
+    travel: '✈️',
+    lifestyle: '✨',
+    news: '📰',
+    science: '🔬',
+  };
+
+  return emojiMap[category.toLowerCase()] || '📰';
 }

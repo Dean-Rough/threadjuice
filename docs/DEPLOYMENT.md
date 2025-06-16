@@ -1,5 +1,15 @@
 # Deployment & Environment Setup
 
+## Table of Contents
+
+- [Environment Variables](#required-environment-variables)
+- [Local Development](#local-development)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Production Deployment](#production-deployment)
+- [Monitoring & Error Tracking](#monitoring--error-tracking)
+- [Security Configuration](#security-configuration)
+- [Troubleshooting](#troubleshooting)
+
 ## Required Environment Variables
 
 ### Core Application
@@ -227,6 +237,171 @@ npm test -- --testPathPatterns="env"
 - **Rotate API keys** regularly
 - **Monitor API usage** to detect unauthorized access
 - **Use Vercel's encrypted environment variables** for production
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment.
+
+### Pipeline Stages
+
+1. **Test & Quality Checks**
+   - Type checking with TypeScript
+   - Code linting with ESLint
+   - Unit tests with Jest
+   - Code coverage reporting
+
+2. **Security Audit**
+   - npm audit for dependency vulnerabilities
+   - Security scanning with audit-ci
+
+3. **E2E Testing**
+   - End-to-end tests with Playwright
+   - Browser compatibility testing
+
+4. **Preview Deployment**
+   - Automatic preview deployments for PRs
+   - Preview URL posted as PR comment
+
+5. **Production Deployment**
+   - Deploy to production on main branch push
+   - Health check verification
+   - Sentry release tracking
+
+6. **Performance Audit**
+   - Lighthouse performance testing
+   - Core Web Vitals monitoring
+
+### Required GitHub Secrets
+
+Configure these secrets in your GitHub repository:
+
+```
+VERCEL_TOKEN
+VERCEL_ORG_ID
+VERCEL_PROJECT_ID
+SENTRY_AUTH_TOKEN
+SENTRY_ORG
+SENTRY_PROJECT
+CODECOV_TOKEN (optional)
+```
+
+## Production Deployment
+
+### Automatic Deployment
+
+The project is configured for automatic deployment via GitHub integration:
+
+1. **Fork/Clone** the repository
+2. **Connect** to Vercel via GitHub
+3. **Configure** environment variables in Vercel dashboard
+4. **Deploy** automatically on push to main branch
+
+### Manual Deployment
+
+For manual deployments:
+
+1. Install Vercel CLI:
+```bash
+npm install -g vercel
+```
+
+2. Login to Vercel:
+```bash
+vercel login
+```
+
+3. Deploy:
+```bash
+# Preview deployment
+vercel
+
+# Production deployment
+vercel --prod
+```
+
+### Vercel Configuration
+
+The `vercel.json` file includes:
+
+- **Framework**: Next.js optimization
+- **Regions**: Multi-region deployment (IAD1, SFO1)
+- **Functions**: API route timeout configuration
+- **Headers**: Security headers (CSP, XSS protection)
+- **Caching**: Static asset caching rules
+- **Redirects**: URL redirects and rewrites
+- **Cron Jobs**: Scheduled tasks for content ingestion
+
+## Monitoring & Error Tracking
+
+### Sentry Setup
+
+1. Create a Sentry project
+2. Get your DSN from project settings
+3. Configure environment variables
+4. Monitoring initializes automatically
+
+### Health Checks
+
+The application provides health check endpoints:
+
+- **GET /api/health** - Detailed health status
+- **HEAD /api/health** - Simple health probe
+
+Health checks monitor:
+- Database connectivity
+- External API availability
+- Memory usage
+- Response times
+
+### Performance Monitoring
+
+Built-in performance tracking:
+
+- **Core Web Vitals** (FCP, LCP, FID, CLS)
+- **API response times**
+- **Database query performance**
+- **Custom metrics** via `performanceTracker`
+
+### Logging
+
+Structured logging with:
+- **Environment context**
+- **Request tracing**
+- **Error correlation**
+- **Performance metrics**
+
+## Security Configuration
+
+### Headers
+
+Security headers configured in `vercel.json`:
+
+- **X-Content-Type-Options**: nosniff
+- **X-Frame-Options**: DENY
+- **X-XSS-Protection**: enabled
+- **Referrer-Policy**: strict-origin-when-cross-origin
+- **Permissions-Policy**: restricted permissions
+
+### Authentication
+
+- **Clerk** for user authentication
+- **JWT validation** on API routes
+- **Role-based access control**
+- **Session management**
+
+### API Security
+
+- **Rate limiting** on API endpoints
+- **CORS configuration** for cross-origin requests
+- **Input validation** with Zod schemas
+- **SQL injection prevention** via parameterized queries
+
+### Environment Security
+
+- **Secret management** via environment variables
+- **No sensitive data** in client bundles
+- **Secure cookie configuration**
+- **HTTPS enforcement**
 
 ## Troubleshooting
 

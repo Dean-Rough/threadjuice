@@ -1,4 +1,3 @@
-import Layout from '@/components/layout/Layout';
 import Link from 'next/link';
 import Isotope from 'isotope-layout';
 import { useEffect, useRef } from 'react';

@@ -1,17 +1,31 @@
+@import '/assets/css/bootstrap.min.css';
+@import '/assets/css/fontawesome-all.min.css';
+@import '/assets/css/flaticon.css';
+@import '/assets/css/animate.min.css';
+@import '/assets/css/slick.css';
+@import '/assets/css/magnific-popup.css';
+@import '/assets/css/swiper-bundle.css';
+@import '/assets/css/imageRevealHover.css';
+@import '/assets/css/main.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import Sarsa main styles after Tailwind */
-@import '/assets/css/main.css';
-
 /* ThreadJuice Brand - Override Sarsa CSS Variables */
 :root {
-  /* Override Sarsa's theme colors with ThreadJuice brand */
+  /* ThreadJuice Brand Colors */
   --tg-theme-primary: #ff6b35 !important; /* ThreadJuice orange */
   --tg-theme-secondary: #004e98 !important; /* ThreadJuice deep blue */
-
-  /* Override typography with Geist fonts */
+  --tg-theme-accent: #f3f4f6 !important; /* Light gray */
+  --tg-theme-dark: #1a1a2e !important; /* ThreadJuice dark */
+  
+  /* Override Sarsa colors with ThreadJuice palette */
+  --tg-common-color-blue: #004e98 !important;
+  --tg-common-color-orange: #ff6b35 !important;
+  --tg-common-color-pink: #ff6b35 !important; /* Use orange instead of pink */
+  
+  /* Typography */
   --tg-body-font-family:
     var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, sans-serif !important;
@@ -19,21 +33,49 @@
     var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, sans-serif !important;
 
-  /* Override heading and body colors for ThreadJuice */
-  --tg-heading-color: #1a1a2e !important; /* ThreadJuice dark */
-  --tg-body-color: #495057 !important; /* Readable gray */
+  /* Text Colors */
+  --tg-heading-color: #1a1a2e !important;
+  --tg-body-color: #374151 !important;
+  --tg-white-color: #ffffff !important;
+  
+  /* Component Colors */
+  --tg-btn-primary-bg: #ff6b35 !important;
+  --tg-btn-primary-hover-bg: #e55a2b !important;
+  --tg-link-color: #004e98 !important;
+  --tg-link-hover-color: #ff6b35 !important;
+}
 
-  /* Override common colors with ThreadJuice palette */
-  --tg-common-color-orange: #f7931e !important; /* ThreadJuice accent orange */
-  --tg-common-color-red: #ff006e !important; /* Viral pink for hot content */
-  --tg-common-color-yellow: #ffd23f !important; /* Warning yellow */
+/* ThreadJuice Custom Styling */
+.tags {
+  background: var(--tg-theme-primary) !important;
+  color: white !important;
+}
 
-  /* Background color - cream */
-  --tg-body-bg-color: #fefbf3 !important; /* Cream background */
+.btn {
+  background: var(--tg-theme-primary) !important;
+  border-color: var(--tg-theme-primary) !important;
+}
 
-  /* Custom ThreadJuice variables for specific use cases */
-  --tj-viral: #ff006e; /* Hot pink for viral indicators */
-  --tj-trending: #ff4500; /* Reddit orange for trending */
+.btn:hover {
+  background: var(--tg-btn-primary-hover-bg) !important;
+  border-color: var(--tg-btn-primary-hover-bg) !important;
+}
+
+/* ThreadJuice Header Styling */
+.tgmenu__main-menu .navigation > li > a:hover,
+.tgmenu__main-menu .navigation > li.active > a {
+  color: var(--tg-theme-primary) !important;
+}
+
+/* ThreadJuice Category Colors */
+.category a {
+  background: var(--tg-theme-secondary) !important;
+  color: white !important;
+}
+
+/* ThreadJuice Post Meta */
+.tgbanner__content-meta li a:hover {
+  color: var(--tg-theme-primary) !important;
 }
 
 /* Apply cream background to body */

@@ -1,20 +1,36 @@
 'use client';
 
+import React from 'react';
 import { getPersonaById } from '@/data/personas';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
 interface PersonaDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function PersonaDetailPage({ params }: PersonaDetailPageProps) {
-  const persona = getPersonaById(params.id);
+  // Since this is a client component, we need to handle the Promise differently
+  const [id, setId] = React.useState<string | null>(null);
+  const [persona, setPersona] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
 
-  if (!persona) {
-    notFound();
+  React.useEffect(() => {
+    params.then(p => {
+      setId(p.id);
+      const foundPersona = getPersonaById(p.id);
+      setPersona(foundPersona);
+      setLoading(false);
+      if (!foundPersona) {
+        notFound();
+      }
+    });
+  }, [params]);
+
+  if (loading || !id || !persona) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -67,7 +83,7 @@ export default function PersonaDetailPage({ params }: PersonaDetailPageProps) {
             <div className='persona-specialties mb-4'>
               <h5>Specialties</h5>
               <div className='mt-2'>
-                {persona.specialties.map((specialty, index) => (
+                {persona.specialties.map((specialty: string, index: number) => (
                   <span key={index} className='badge badge-outline mb-2 me-2'>
                     {specialty}
                   </span>
@@ -86,8 +102,8 @@ export default function PersonaDetailPage({ params }: PersonaDetailPageProps) {
               <h5>Sample Content by {persona.name}</h5>
               <div className='sample-box border-start border-primary p-3'>
                 <p className='fst-italic text-muted mb-2'>
-                  "Coming soon: See how {persona.name} transforms Reddit threads
-                  into viral content..."
+                  &quot;Coming soon: See how {persona.name} transforms Reddit
+                  threads into viral content...&quot;
                 </p>
                 <small className='text-muted'>
                   Sample content will be generated once the GPT content pipeline

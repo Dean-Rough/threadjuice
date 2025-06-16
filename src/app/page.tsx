@@ -1,225 +1,128 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import ThreadJuiceLayout from '@/components/layout/ThreadJuiceLayout';
-import TrendingSlider from '@/components/slider/TrendingSlider';
-import data from '@/util/blogData';
+import FeaturedCarousel from '@/components/features/FeaturedCarousel';
+import TrendingFeed from '@/components/features/TrendingFeed';
+import CategoryFilter from '@/components/features/CategoryFilter';
+import { mockPosts } from '@/data/mockPosts';
 
 export default function Home() {
-  const [isOpen, setOpen] = useState(false);
+  // Get featured posts (top 5 trending)
+  const featuredPosts = mockPosts
+    .filter(post => post.category === 'viral' || post.category === 'trending')
+    .slice(0, 5);
+
+  // Get trending posts for the main feed
+  const trendingPosts = mockPosts
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 12);
+
+  // Category data for filter
+  const categories = [
+    { id: 'all', name: 'All', count: mockPosts.length },
+    { id: 'viral', name: 'Viral', count: mockPosts.filter(p => p.category === 'viral').length },
+    { id: 'trending', name: 'Trending', count: mockPosts.filter(p => p.category === 'trending').length },
+    { id: 'chaos', name: 'Chaos', count: mockPosts.filter(p => p.category === 'chaos').length },
+    { id: 'wholesome', name: 'Wholesome', count: mockPosts.filter(p => p.category === 'wholesome').length },
+    { id: 'drama', name: 'Drama', count: mockPosts.filter(p => p.category === 'drama').length },
+  ];
+
+  const handleFilter = (filteredItems: any[]) => {
+    // Handle filtering logic here
+    console.log('Filtered items:', filteredItems);
+  };
 
   return (
-    <ThreadJuiceLayout headerStyle={3}>
-      {/* Hero Banner */}
-      <section className='tgbanner__area'>
-        <div className='container'>
-          <div className='tgbanner__grid'>
-            <div className='tgbanner__post big-post'>
-              <div className='tgbanner__thumb tgImage__hover'>
-                <Link href='/posts/time-travel-theory'>
-                  <img
-                    src='/assets/img/blog/blog01.jpg'
-                    alt='Viral Reddit Thread'
-                  />
-                </Link>
-              </div>
-              <div className='tgbanner__content'>
-                <ul className='tgbanner__content-meta list-wrap'>
-                  <li className='category'>
-                    <Link href='/technology'>🔬 Technology</Link>
-                  </li>
-                  <li>
-                    <span className='by'>By</span>{' '}
-                    <Link href='/personas/snarky-sage'>The Snarky Sage</Link>
-                  </li>
-                  <li>🔥 Viral • 24.5k upvotes</li>
-                </ul>
-                <h2 className='title tgcommon__hover'>
-                  <Link href='/posts/time-travel-theory'>
-                    🚀 This Reddit physicist just broke time travel theory and
-                    the internet can't handle it
-                  </Link>
-                </h2>
-              </div>
-            </div>
-            <div className='tgbanner__side-post'>
-              <div className='tgbanner__post small-post'>
-                <div className='tgbanner__thumb tgImage__hover'>
-                  <Link href='/posts/ai-relationship-advice'>
-                    <img
-                      src='/assets/img/blog/blog02.jpg'
-                      alt='AI Reddit Bot'
-                    />
-                  </Link>
-                </div>
-                <div className='tgbanner__content'>
-                  <ul className='tgbanner__content-meta list-wrap'>
-                    <li className='category'>
-                      <Link href='/technology'>🤖 AI Drama</Link>
-                    </li>
-                  </ul>
-                  <h2 className='title tgcommon__hover'>
-                    <Link href='/posts/ai-relationship-advice'>
-                      AI bot gives better relationship advice than humans,
-                      Reddit loses its mind
-                    </Link>
-                  </h2>
-                </div>
-              </div>
-              <div className='tgbanner__post small-post'>
-                <div className='tgbanner__thumb tgImage__hover'>
-                  <Link href='/posts/crypto-pizza-disaster'>
-                    <img src='/assets/img/blog/blog03.jpg' alt='Crypto Pizza' />
-                  </Link>
-                </div>
-                <div className='tgbanner__content'>
-                  <ul className='tgbanner__content-meta list-wrap'>
-                    <li className='category'>
-                      <Link href='/finance'>💸 Crypto Fails</Link>
-                    </li>
-                  </ul>
-                  <h2 className='title tgcommon__hover'>
-                    <Link href='/posts/crypto-pizza-disaster'>
-                      $50k crypto pizza order goes wrong, gas fees cost more
-                      than a Tesla
-                    </Link>
-                  </h2>
-                </div>
-              </div>
-            </div>
+    <ThreadJuiceLayout>
+      {/* Hero Section with Featured Carousel */}
+      <section className="pb-50 pt-80">
+        <div className="container">
+          <div className="mb-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              🧵 Reddit Stories, Reimagined for Virality
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
+              AI-powered storytelling transforms trending Reddit threads into engaging content with custom personas and social media optimization.
+            </p>
           </div>
+          
+          <FeaturedCarousel />
         </div>
       </section>
 
-      {/* Trending Reddit Threads */}
-      <section className='trending-post-area section__hover-line pt-25'>
-        <div className='container'>
-          <div className='section__title-wrap mb-40'>
-            <div className='row align-items-end'>
-              <div className='col-sm-6'>
-                <div className='section__title'>
-                  <span className='section__sub-title'>🔥 Hot on Reddit</span>
-                  <h3 className='section__main-title'>Trending Threads</h3>
-                </div>
-              </div>
-              <div className='col-sm-6'>
-                <div className='section__read-more text-sm-end text-start'>
-                  <Link href='/trending'>
-                    More Viral Posts <i className='far fa-long-arrow-right' />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='trending__slider'>
-            <div className='swiper-container trending-active'>
-              <TrendingSlider showItem={4} />
-            </div>
-          </div>
+      {/* Category Filter and Search */}
+      <section className="py-8 bg-gray-50">
+        <div className="container">
+          <CategoryFilter 
+            items={trendingPosts}
+            onFilter={handleFilter}
+            categories={categories}
+          />
         </div>
       </section>
 
-      {/* Featured ThreadJuice Stories */}
-      <section className='featured-post-area section__hover-line pt-75'>
-        <div className='container'>
-          <div className='section__title-wrap mb-40'>
-            <div className='row align-items-end'>
-              <div className='col-sm-6'>
-                <div className='section__title'>
-                  <span className='section__sub-title'>
-                    ✨ ThreadJuice Originals
-                  </span>
-                  <h3 className='section__main-title'>AI-Enhanced Stories</h3>
-                </div>
+      {/* Trending Posts Feed */}
+      <section className="py-16">
+        <div className="container">
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-sm font-semibold text-orange-600 uppercase tracking-wide">Trending Now</span>
+                <h2 className="text-3xl font-bold text-gray-900 mt-2">🔥 Viral Stories</h2>
+                <p className="text-gray-600 mt-2">The hottest Reddit threads transformed into engaging stories</p>
               </div>
-              <div className='col-sm-6'>
-                <div className='section__read-more text-sm-end text-start'>
-                  <Link href='/featured'>
-                    More Featured Stories{' '}
-                    <i className='far fa-long-arrow-right' />
-                  </Link>
-                </div>
+              <div className="hidden sm:block">
+                <a 
+                  href="/posts" 
+                  className="text-orange-600 hover:text-orange-700 font-medium inline-flex items-center"
+                >
+                  View All Posts
+                  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
-          <div className='row'>
-            {data.slice(8, 14).map((item, i) => (
-              <div className='col-lg-4 col-sm-6' key={i}>
-                <div className='featured__post'>
-                  <div
-                    className='featured__thumb'
-                    style={{
-                      backgroundImage: `url(/assets/img/blog/${item.img})`,
-                    }}
-                  >
-                    #{item.id}
-                  </div>
-                  <div className='featured__content'>
-                    <ul className='tgbanner__content-meta list-wrap'>
-                      <li className='category'>
-                        <Link href='/category/viral'>🚀 {item.category}</Link>
-                      </li>
-                      <li>
-                        <span className='by'>By</span>{' '}
-                        <Link href='/personas'>AI Persona</Link>
-                      </li>
-                    </ul>
-                    <h4 className='title tgcommon__hover'>
-                      <Link href={`/posts/${item.id}`}>
-                        🔥 {item.title} (Reddit thread goes viral)
-                      </Link>
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          
+          <TrendingFeed />
         </div>
       </section>
 
-      {/* Newsletter - ThreadJuice Style */}
-      <section className='newsletter-area pb-80'>
-        <div className='container'>
-          <div className='newsletter__wrap'>
-            <div className='row align-items-center'>
-              <div className='col-xl-5 col-lg-6'>
-                <div className='newsletter__title'>
-                  <span className='sub-title'>🚀 Stay Updated</span>
-                  <h4 className='title'>
-                    Get notified when Reddit threads go viral
-                  </h4>
+      {/* About Section */}
+      <section className="py-16 bg-cream">
+        <div className="container">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Transform Reddit Into Viral Content
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">🤖</span>
                 </div>
+                <h3 className="text-xl font-semibold mb-2">AI-Powered Curation</h3>
+                <p className="text-gray-600">
+                  Our AI scans trending Reddit threads and transforms them into engaging, viral-ready stories.
+                </p>
               </div>
-              <div className='col-xl-7 col-lg-6'>
-                <div className='newsletter__form-wrap'>
-                  <form action='#' className='newsletter__form'>
-                    <div className='newsletter__form-grp'>
-                      <input
-                        type='email'
-                        placeholder='Your email for viral alerts...'
-                        required
-                      />
-                      <div className='form-check'>
-                        <input
-                          className='form-check-input'
-                          type='checkbox'
-                          id='flexCheckDefault'
-                        />
-                        <label
-                          className='form-check-label'
-                          htmlFor='flexCheckDefault'
-                        >
-                          I want daily viral thread summaries
-                        </label>
-                      </div>
-                    </div>
-                    <button className='btn' type='submit'>
-                      <span className='text'>Join ThreadJuice</span>{' '}
-                      <i className='fas fa-paper-plane' />
-                    </button>
-                  </form>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">🎭</span>
                 </div>
+                <h3 className="text-xl font-semibold mb-2">Custom Personas</h3>
+                <p className="text-gray-600">
+                  Stories are told through unique writer personas, each with distinct voices and perspectives.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">📱</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Social Ready</h3>
+                <p className="text-gray-600">
+                  Optimized for sharing across social platforms with built-in engagement tools and analytics.
+                </p>
               </div>
             </div>
           </div>

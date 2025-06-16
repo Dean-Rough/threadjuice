@@ -1,6 +1,10 @@
+'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Link from 'next/link';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export default function SidePostSlider() {
   return (

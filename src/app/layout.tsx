@@ -10,34 +10,96 @@ if (process.env.NODE_ENV === 'development') {
 // Geist fonts: GeistSans for headers/body, GeistMono for tags/buttons
 
 export const metadata = {
-  title: 'ThreadJuice - Reddit to Viral Content Engine',
-  description: 'Transform Reddit threads into viral content with AI ✨',
-  keywords: ['reddit', 'content', 'viral', 'nextjs', 'ai'],
-  authors: [{ name: 'Dean Newton' }],
-  creator: 'Dean Newton',
+  metadataBase: new URL('https://threadjuice.com'),
+  title: {
+    default: 'ThreadJuice - AI-Powered Reddit Content Engine',
+    template: '%s | ThreadJuice',
+  },
+  description:
+    'Discover viral Reddit threads transformed into engaging stories by AI personas. Stay updated with trending discussions, analysis, and insights from across Reddit.',
+  keywords: [
+    'ThreadJuice',
+    'Reddit content',
+    'viral threads',
+    'AI content generation',
+    'Reddit stories',
+    'trending discussions',
+    'AI personas',
+    'content transformation',
+    'social media trends',
+    'Reddit analysis',
+  ],
+  authors: [{ name: 'Dean Newton', url: 'https://threadjuice.com' }],
+  creator: 'ThreadJuice',
+  publisher: 'ThreadJuice',
+  category: 'Technology',
+  classification: 'Content Platform',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://threadjuice.com',
-    title: 'ThreadJuice - Reddit to Viral Content Engine',
-    description: 'Transform Reddit threads into viral content with AI ✨',
+    title: 'ThreadJuice - AI-Powered Reddit Content Engine',
+    description:
+      'Discover viral Reddit threads transformed into engaging stories by AI personas.',
     siteName: 'ThreadJuice',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ThreadJuice - AI-Powered Reddit Content Engine',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ThreadJuice - Reddit to Viral Content Engine',
-    description: 'Transform Reddit threads into viral content with AI ✨',
+    title: 'ThreadJuice - AI-Powered Reddit Content Engine',
+    description:
+      'Discover viral Reddit threads transformed into engaging stories by AI personas.',
     creator: '@threadjuice',
+    site: '@threadjuice',
+    images: ['/twitter-image.jpg'],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        url: '/android-chrome-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        url: '/android-chrome-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
+  },
+  manifest: '/site.webmanifest',
+  verification: {
+    google: 'google-site-verification-token',
+    yandex: 'yandex-verification-token',
+    other: {
+      'msvalidate.01': 'bing-site-verification-token',
     },
   },
 };
@@ -48,21 +110,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
       <html lang='en' className='scroll-smooth'>
-        <head>
-          {/* Sarsa CSS */}
-          <link rel='stylesheet' href='/assets/css/bootstrap.min.css' />
-          <link rel='stylesheet' href='/assets/css/animate.min.css' />
-          <link rel='stylesheet' href='/assets/css/magnific-popup.css' />
-          <link rel='stylesheet' href='/assets/css/fontawesome-all.min.css' />
-          <link rel='stylesheet' href='/assets/css/flaticon.css' />
-          <link rel='stylesheet' href='/assets/css/swiper-bundle.css' />
-          <link rel='stylesheet' href='/assets/css/slick.css' />
-          <link rel='stylesheet' href='/assets/css/spacing.css' />
-          <link rel='stylesheet' href='/assets/css/main.css' />
-          <link rel='stylesheet' href='/assets/css/imageRevealHover.css' />
-        </head>
+        <head></head>
         <body
           className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
           style={

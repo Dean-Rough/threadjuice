@@ -96,7 +96,8 @@ export default function FeaturedCarousel({
     }));
 
     setFeaturedPosts(featured);
-    setTimeout(() => setIsLoading(false), 1000);
+    // Remove setTimeout - set loading to false immediately
+    setIsLoading(false);
   }, []);
 
   const toggleAutoplay = () => {

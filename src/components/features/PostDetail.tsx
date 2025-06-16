@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 interface PostDetailProps {
-  postId: number;
+  postId: string;
   showSidebar?: boolean;
   showRelated?: boolean;
 }
@@ -69,7 +69,7 @@ export default function PostDetail({
 
   useEffect(() => {
     // Simulate loading post data
-    const postData = data.find(p => p.id === postId);
+    const postData = data.find(p => p.id === parseInt(postId));
     if (postData) {
       const enhancedPost: PostData = {
         ...postData,
@@ -99,7 +99,7 @@ export default function PostDetail({
       // Get related posts
       if (showRelated) {
         const related = data
-          .filter(p => p.id !== postId && p.category === postData.category)
+          .filter(p => p.id !== parseInt(postId) && p.category === postData.category)
           .slice(0, 4)
           .map(p => ({
             ...p,

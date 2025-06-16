@@ -1,6 +1,9 @@
+'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Link from 'next/link';
-import { Pagination } from 'swiper';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 export default function VerticalSider() {
   return (
@@ -23,7 +26,7 @@ export default function VerticalSider() {
           <div className='tgslider__trending-content'>
             <h6 className='title'>
               <Link href='/blog/1'>
-                How to climb the career latter and don’t waste your youth...
+                How to climb the career latter and don't waste your youth...
               </Link>
             </h6>
           </div>

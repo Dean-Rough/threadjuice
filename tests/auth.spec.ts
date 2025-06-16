@@ -11,13 +11,6 @@ test('homepage shows sign in and sign up buttons when not authenticated', async 
 
   // Check for main heading
   await expect(
-    page.getByText(/Transform Reddit into Viral Content/i)
-  ).toBeVisible();
-
-  // Check for description text
-  await expect(
-    page.getByText(
-      /ThreadJuice scrapes and curates Reddit's most outrageous threads/i
-    )
+    page.getByRole('heading', { name: /Trending Threads/i })
   ).toBeVisible();
 });

@@ -1,7 +1,11 @@
+'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import data from '@/util/blogData';
 import Link from 'next/link';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 
 export default function PopularSlider() {
   return (

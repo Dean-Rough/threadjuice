@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Block admin pages
+Disallow: /dashboard/
+Disallow: /(auth)/
+Disallow: /api/
+
+# Allow specific API endpoints for search engines
+Allow: /api/posts
+Allow: /api/personas
+
+# Sitemap location
+Sitemap: https://threadjuice.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

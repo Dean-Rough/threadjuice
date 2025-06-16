@@ -1,89 +1,124 @@
 'use client';
 
-import { writerPersonas } from '@/data/personas';
+import BlogSidebar from '@/components/elements/BlogSidebar';
+import Layout from '@/components/layout/Layout';
 import Link from 'next/link';
+import { writerPersonas } from '@/data/personas';
 
 export default function PersonasPage() {
   return (
-    <div className='container'>
-      <div className='row'>
-        <div className='col-12'>
-          <div className='section__title-wrap mb-4 text-center'>
-            <h2 className='section__title'>Our Writer Personas</h2>
-            <p className='section__sub-title'>
-              Meet the satirical voices behind ThreadJuice's viral content
-              transformation
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className='row'>
-        {writerPersonas.map(persona => (
-          <div key={persona.id} className='col-lg-6 col-md-6 mb-4'>
-            <div className='persona-card rounded border p-4'>
-              <div className='persona-header d-flex align-items-center mb-3'>
-                <div className='persona-avatar me-3'>
-                  <img
-                    src={persona.avatar}
-                    alt={persona.name}
-                    className='rounded-circle'
-                    style={{
-                      width: '60px',
-                      height: '60px',
-                      objectFit: 'cover',
-                    }}
-                    onError={e => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/assets/img/blog/blog01.jpg'; // Fallback image
-                    }}
-                  />
-                </div>
-                <div>
-                  <h4 className='persona-name mb-1'>{persona.name}</h4>
-                  <span className={`badge badge-${persona.tone} mb-2`}>
-                    {persona.tone}
-                  </span>
+    <>
+      <Layout 
+        headerStyle={1}
+        footerStyle={1}
+        breadcrumbCategory='Writers' 
+        breadcrumbPostTitle='Our AI Personas'
+        footerClass=""
+        headTitle="Our AI Personas"
+        logoWhite={false}
+      >
+        <section className='blog-details-area pb-100 pt-80'>
+          <div className='container'>
+            <div className='row justify-content-center'>
+              <div className='col-lg-1'>
+                <div className='blog-details-social'>
+                  <ul className='list-wrap'>
+                    <li>
+                      <Link href='#'>
+                        <i className='fab fa-facebook-f' />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href='#'>
+                        <i className='fab fa-twitter' />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href='#'>
+                        <i className='fab fa-linkedin-in' />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href='#'>
+                        <i className='fab fa-reddit' />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href='#'>
+                        <i className='fas fa-share' />
+                      </Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
+              <div className='col-xl-8 col-lg-7'>
+                <div className='blog-post-wrapper'>
+                  <div className='section__title-wrap mb-40'>
+                    <div className='section__title'>
+                      <h2 className='section__main-title'>Meet Our AI Writers</h2>
+                      <p>Each story is crafted by one of our unique AI personalities, bringing different perspectives to Reddit's most entertaining threads.</p>
+                    </div>
+                  </div>
 
-              <p className='persona-bio mb-3'>{persona.bio}</p>
-
-              <div className='persona-specialties mb-3'>
-                <small className='text-muted'>Specialties:</small>
-                <div className='mt-1'>
-                  {persona.specialties.map((specialty, index) => (
-                    <span key={index} className='badge badge-outline me-1'>
-                      {specialty}
-                    </span>
+                  {writerPersonas.map((persona) => (
+                    <div key={persona.id} className='latest__post-item'>
+                      <div className='latest__post-thumb tgImage__hover'>
+                        <Link href={`/personas/${persona.id}`}>
+                          <img
+                            src={persona.avatar}
+                            alt={persona.name}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/assets/img/blog/blog01.jpg';
+                            }}
+                          />
+                        </Link>
+                      </div>
+                      <div className='latest__post-content'>
+                        <ul className='tgbanner__content-meta list-wrap'>
+                          <li className='category'>
+                            <Link href='/personas'>writer</Link>
+                          </li>
+                          <li>
+                            <span className='by'>Tone:</span> {persona.tone}
+                          </li>
+                        </ul>
+                        <h3 className='title tgcommon__hover'>
+                          <Link href={`/personas/${persona.id}`}>
+                            {persona.name}
+                          </Link>
+                        </h3>
+                        <p>{persona.bio}</p>
+                        <div className='persona-specialties mb-3'>
+                          <strong>Specialties:</strong>{' '}
+                          {persona.specialties.join(', ')}
+                        </div>
+                        <div className='latest__post-read-more'>
+                          <Link href={`/personas/${persona.id}`}>
+                            View Stories <i className='far fa-long-arrow-right' />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
                   ))}
+
+                  <div className='section-info bg-light rounded p-4 mt-4'>
+                    <h5>How It Works</h5>
+                    <p className='mb-0'>
+                      Each Reddit thread gets randomly assigned to one of our AI personas, 
+                      who transform raw Reddit content into engaging satirical stories with 
+                      their unique voice and perspective. No two stories sound the same.
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              <Link
-                href={`/personas/${persona.id}`}
-                className='btn btn-outline-primary btn-sm'
-              >
-                View Writing Style
-              </Link>
+              <div className='col-xl-3 col-lg-4 col-md-6'>
+                <BlogSidebar />
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className='row mt-5'>
-        <div className='col-12 text-center'>
-          <div className='persona-info-box bg-light rounded p-4'>
-            <h5>How It Works</h5>
-            <p className='mb-0'>
-              Each Reddit thread gets randomly assigned to one of these eight
-              personas, who transform raw Reddit content into engaging satirical
-              stories with their unique voice and perspective. No two stories
-              sound the same.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+        </section>
+      </Layout>
+    </>
   );
 }

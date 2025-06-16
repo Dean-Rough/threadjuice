@@ -1,4 +1,4 @@
-/// <reference types="@welldone-software/why-did-you-render" />
+// /// <reference types="@welldone-software/why-did-you-render" />
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   const React = require('react');
@@ -21,3 +21,5 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     ],
   });
 }
+
+export {};

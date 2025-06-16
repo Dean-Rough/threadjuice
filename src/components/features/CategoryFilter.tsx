@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Filter, Grid, List, Search, X } from 'lucide-react';
 
@@ -8,7 +8,7 @@ interface FilterItem {
   id: string;
   name: string;
   count: number;
-  icon?: JSX.Element;
+  icon?: React.ReactElement;
 }
 
 interface CategoryFilterProps {
