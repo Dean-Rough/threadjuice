@@ -1,12 +1,11 @@
-import type { Config } from 'jest';
-import nextJest from 'next/jest.js';
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
   dir: './',
 });
 
-const config: Config = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.basic.ts'],
+const config = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -27,19 +26,6 @@ const config: Config = {
   ],
   testTimeout: 10000,
   transformIgnorePatterns: ['node_modules/(?!(msw|@mswjs)/)'],
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  preset: 'ts-jest',
-  transform: {
-    '^.+\\.(ts|tsx)$': [
-      'ts-jest',
-      {
-        useESM: true,
-        tsconfig: {
-          jsx: 'react-jsx',
-        },
-      },
-    ],
-  },
 };
 
-export default createJestConfig(config);
+module.exports = createJestConfig(config);
