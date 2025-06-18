@@ -1,33 +1,47 @@
 # ThreadJuice
 
-ThreadJuice transforms viral Reddit content into engaging, persona-driven articles with interactive quizzes. Built with Next.js 15, enhanced with the professional Sarsa news/magazine template for a polished editorial experience.
+ThreadJuice is a modern viral content aggregator that transforms Reddit threads into engaging, persona-driven stories with interactive elements. Built with Next.js 15 and enhanced with shadcn/ui for a polished, professional user experience.
 
 ## Features
 
 ### Core Functionality
 
-- **Reddit Integration**: Automated scraping of trending threads with rate limiting
-- **AI Content Generation**: GPT-4 powered summarization with persona-specific voices
-- **Interactive Quizzes**: Auto-generated quizzes with shareable results
-- **Multi-Persona System**: Different writing styles (Casual, Professional, Humorous)
-- **Event Aggregation**: Groups related posts by trending topics
+- **Viral Content Aggregation**: Curated viral stories with engaging headlines and imagery
+- **Advanced Filtering**: Dynamic category and author filtering with clean URL routing
+- **Interactive Elements**: Voting systems, comments, bookmarks, and social sharing
+- **Multi-Persona System**: Three distinct writer voices (The Snarky Sage, Down-to-Earth Buddy, Dry Cynic)
+- **Content Management**: Professional article layouts with Reddit-style comment integration
+- **Automated Story Generation**: AI-powered story creation with dual image systems (stock + AI-generated)
+- **Related Stories**: Intelligent tag-based story recommendations
+- **Template Architecture**: Single master template for easy global changes
 
-### Sarsa Template Integration
+### Modern UI/UX
 
-- **8 Unique Layouts**: Multiple homepage and content layouts for different content types
-- **Professional UI**: News and magazine-style components and layouts
-- **Advanced Animations**: WOW.js, Swiper carousels, scrolling marquees, typewriter effects
-- **Responsive Design**: Bootstrap 5 + Tailwind CSS for optimal mobile/desktop experience
-- **Dark Mode Support**: Built-in theme switching functionality
-- **Grid Filtering**: Isotope-powered content filtering and sorting
+- **Dark Mode Theme**: Complete shadcn/ui theming with CSS variables
+- **Professional Typography**: Geist fonts with extrabold headings (800 weight)
+- **ThreadJuice Branding**: Custom SVG logos and orange accent colors
+- **Hero Carousel**: Auto-cycling background images with navigation dots
+- **Category Ticker**: Continuous scrolling navigation with clickable categories
+- **Responsive Design**: Mobile-optimized layouts with touch interactions
+- **Lucide Icons**: Professional icon system with themed colors
 
-### Technical Features
+### Interactive Features
 
-- **Next.js 15**: App Router with server components and streaming
+- **Dual Voting Toolbars**: Engagement elements at article start and end
+- **Filter Pages**: Dynamic `/filter/category/[name]` and `/filter/author/[name]` routing
+- **Clickable Elements**: Author names, category badges, and tag systems
+- **Sidebar Widgets**: "Today's Top 5" and "Top Shared" content sections
+- **Related Stories**: Intelligent content recommendations based on shared tags
+- **Master Template System**: Single component controls all story pages for easy updates
+
+### Technical Stack
+
+- **Next.js 15**: App Router with React Server Components
 - **TypeScript**: Full type safety across frontend and backend
-- **Clerk Authentication**: Secure user management with social logins
-- **Supabase**: PostgreSQL database with real-time subscriptions
-- **Comprehensive Testing**: Jest unit tests, Playwright E2E tests, MSW API mocking
+- **shadcn/ui**: Modern component library with dark mode support
+- **Tailwind CSS**: Utility-first CSS framework with custom variables
+- **React Query**: Data fetching and state management
+- **Lucide React**: Professional icon library
 
 ## Quick Start
 
@@ -50,22 +64,18 @@ npm run dev
 Create `.env.local` with the following variables:
 
 ```bash
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-CLERK_SECRET_KEY=sk_test_your_secret_here
+# Database
+DATABASE_URL=postgresql://username:password@localhost:5432/threadjuice
+DIRECT_URL=postgresql://username:password@localhost:5432/threadjuice
 
-# Supabase Database
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
-
-# Reddit API
+# Reddit API (for future content ingestion)
 REDDIT_CLIENT_ID=your_reddit_client_id
 REDDIT_CLIENT_SECRET=your_reddit_client_secret
 REDDIT_USER_AGENT=ThreadJuice/1.0
 
-# OpenAI API
+# OpenAI API (for content generation)
 OPENAI_API_KEY=sk-your_openai_api_key_here
+OPENAI_IMAGE_API_KEY=sk-your_image_generation_api_key_here  # Optional: Separate key for image generation
 
 # Optional: Image APIs
 UNSPLASH_ACCESS_KEY=your_unsplash_key
@@ -87,63 +97,11 @@ npm run test:watch   # Jest watch mode
 npm run test:coverage # Jest with coverage report
 npm run test:e2e     # Playwright E2E tests
 npm run test:e2e:ui  # Playwright with UI mode
-npm run test:e2e:debug # Playwright debug mode
-npm run test:all     # Run all tests (unit + E2E)
+
+# Story Generation
+node generate-full-automated-story.js  # Generate new viral story with stock images
+# Edit script to use generateFullStory(true) for AI-generated images
 ```
-
-## Testing Guide
-
-### Unit Testing (Jest)
-
-- **Framework**: Jest with TypeScript support via ts-jest
-- **Extensions**: jest-extended for additional matchers
-- **Mocking**: MSW for API request mocking
-- **React Testing**: @testing-library/react for component tests
-
-```bash
-# Run tests with coverage
-npm run test:coverage
-
-# Watch mode for development
-npm run test:watch
-
-# Debug React re-renders (development mode)
-# why-did-you-render automatically enabled
-```
-
-### E2E Testing (Playwright)
-
-- **Browsers**: Chromium, Firefox, WebKit
-- **Features**: Screenshots, videos, trace viewer
-- **Debugging**: UI mode and debug mode available
-
-```bash
-# Install browser dependencies (first time)
-npm run playwright:install
-
-# Run E2E tests with UI
-npm run test:e2e:ui
-
-# Debug specific test
-npm run test:e2e:debug
-
-# Open trace viewer after test run
-npx playwright show-trace test-results/[test-name]/trace.zip
-```
-
-### Mock Service Worker (MSW)
-
-- **Purpose**: Mock external APIs (Reddit, OpenAI) during testing
-- **Configuration**: `src/__tests__/mocks/handlers.ts`
-- **Usage**: Automatically enabled in Jest, browser setup available
-
-### Sarsa Template Features
-
-- **Animation Libraries**: WOW.js for scroll animations, Swiper for carousels
-- **Grid System**: Isotope layout for filtering and masonry grids
-- **Interactive Elements**: Modal videos, scrolling marquees, typewriter effects
-- **Layout Variants**: 8 different homepage layouts, multiple header/footer styles
-- **SCSS Support**: Sass compilation for advanced styling alongside Tailwind
 
 ## Project Structure
 
@@ -151,56 +109,133 @@ npx playwright show-trace test-results/[test-name]/trace.zip
 threadjuice/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
-│   │   ├── (auth)/            # Protected routes
-│   │   ├── posts/[slug]/      # Dynamic post pages
-│   │   ├── category/[cat]/    # Category archive pages
+│   │   ├── blog/[slug]/       # Dynamic article pages
+│   │   ├── filter/[type]/[value]/ # Category/author filter pages
+│   │   ├── personas/          # Writer personas page
 │   │   └── api/               # API routes
 │   ├── components/            # React components
-│   │   ├── layout/           # Sarsa layout components
-│   │   │   ├── Header/       # Multiple header variants
-│   │   │   └── Footer/       # Footer variations
-│   │   ├── ui/               # Core UI components (Sarsa-styled)
+│   │   ├── ui/               # shadcn/ui components
 │   │   ├── features/         # Feature components
-│   │   ├── slider/           # Carousel components
-│   │   ├── sidebar/          # Sidebar widgets
-│   │   └── elements/         # Animation wrappers
-│   ├── lib/                  # Utility functions
+│   │   ├── HeroCarousel.tsx  # Main hero carousel
+│   │   └── TrendingFeed.tsx  # Content feed component
 │   ├── hooks/                # Custom React hooks
-│   ├── types/                # TypeScript definitions
+│   │   └── usePosts.ts       # Data fetching hook
+│   ├── lib/                  # Utility functions
+│   │   └── utils.ts          # shadcn/ui utilities
+│   ├── providers/            # React providers
+│   │   └── QueryProvider.tsx # React Query provider
+│   ├── services/             # Data services
+│   │   └── postService.ts    # Post data service
+│   ├── constants/            # App constants
+│   │   └── categories.ts     # Category definitions
+│   ├── contexts/             # React contexts
+│   │   └── UIContext.tsx     # UI state management
 │   └── __tests__/            # Test files
-├── docs/                     # Documentation
-├── database/                 # Database schema and migrations
+├── docs/                     # Comprehensive documentation
 ├── tests/                    # E2E tests
 └── public/                   # Static assets
-    └── assets/               # Sarsa template assets
+    └── assets/               # Logos and branding
 ```
 
-## Architecture
+## Core Components
 
-ThreadJuice uses a modern, scalable architecture:
+### HeroCarousel
+Auto-cycling hero section with background images and navigation dots.
 
-- **Frontend**: Next.js 15 with Sarsa template integration for professional news/magazine UI
-- **Backend**: Supabase PostgreSQL with Row Level Security
-- **Authentication**: Clerk with social login support
-- **AI Integration**: OpenAI GPT-4 for content generation
-- **External APIs**: Reddit API for content sourcing
-- **Styling**: Tailwind CSS + Sarsa SCSS + Bootstrap 5
-- **Animations**: WOW.js, Swiper, React Fast Marquee, Typewriter Effect
-- **Testing**: Jest + Playwright with comprehensive coverage
+### TrendingFeed
+Main content feed with filtering capabilities and engagement metrics.
 
-## Development Workflow
+### Filter Pages
+Dynamic routing for category and author filtering (`/filter/[type]/[value]`).
 
-1. **Content Ingestion**: Reddit threads → AI processing → Database storage
-2. **Content Display**: Database → React components → Sarsa layouts → User interface
-3. **User Interaction**: Quiz taking → Result generation → Social sharing
-4. **Analytics**: User behavior tracking → Performance metrics → Content optimization
+### Blog Detail Pages
+Professional article layout with inline images, voting toolbars, and Reddit-style comments.
+
+### Category Ticker
+Continuous scrolling navigation bar with clickable category pills.
+
+## UI Architecture
+
+### Design System
+- **shadcn/ui**: Modern component library
+- **Tailwind CSS**: Utility-first styling
+- **CSS Variables**: Theme-aware color system
+- **Geist Fonts**: Professional typography stack
+
+### Theme Configuration
+```css
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  /* Complete dark mode color system */
+}
+```
+
+### Component Pattern
+```typescript
+// Consistent component structure
+export function ComponentName() {
+  return (
+    <Card className="hover:shadow-lg transition-shadow">
+      <CardContent className="p-4">
+        {/* Component content */}
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+## Data Architecture
+
+### Mock Data System
+- Viral content stories with realistic engagement metrics
+- Three writer personas with distinct voices
+- 20+ content categories for filtering
+- Dual image system (curated stock photos + AI generation)
+
+### Automated Story Generation
+- **AI Content Creation**: GPT-4o generates complete viral stories with persona voice
+- **Intelligent Image Selection**: Content analysis matches stock photos to story themes
+- **Alternative AI Images**: DALL-E 3 generation with fallback system
+- **Template Structure**: Modular sections with dramatic quotes and Reddit comments
+- **Related Stories**: Automatic tag-based content recommendations
+
+### API Routes
+- `GET /api/posts` - Fetch posts with filtering options
+- `GET /api/posts/[id]` - Individual story with related content
+- Dynamic filtering via URL parameters
+- File-based story serving for generated content
+
+### State Management
+- React Query for server state
+- React Context for UI state
+- Local component state for interactions
+
+## Deployment
+
+### Production Build
+```bash
+npm run build
+npm run start
+```
+
+### Environment Variables
+Ensure all required environment variables are configured for production deployment.
+
+### Performance Considerations
+- Image optimization with Next.js Image component
+- Code splitting with dynamic imports
+- CSS optimization with Tailwind purging
+- Bundle analysis available via `npm run analyze`
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes and add tests
-4. Ensure all tests pass: `npm run test:all`
+4. Ensure all tests pass: `npm run test`
 5. Commit your changes: `git commit -m 'Add amazing feature'`
 6. Push to the branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
@@ -211,9 +246,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- **Sarsa Template**: Professional news/magazine Next.js template by AliThemes
-- **Next.js Team**: For the excellent React framework
-- **Vercel**: For hosting and deployment platform
-- **Supabase**: For the backend-as-a-service platform
-- **Clerk**: For authentication services
-- **OpenAI**: For GPT-4 API access
+- **shadcn/ui**: Modern React component library
+- **Lucide**: Beautiful icon system
+- **Next.js Team**: Excellent React framework
+- **Tailwind CSS**: Utility-first CSS framework
+- **Geist**: Professional font family by Vercel

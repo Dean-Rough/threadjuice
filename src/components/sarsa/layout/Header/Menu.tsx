@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import ThemeSwitch from '../../elements/ThemeSwitch';
+import { getDisplayCategories } from '@/constants/categories';
 
 interface MenuProps {
   handleMobileMenuOpen: () => void;
@@ -74,32 +75,28 @@ export default function Menu({
               <li className='menu-item-has-children'>
                 <Link href='#'>Categories</Link>
                 <ul className='sub-menu'>
-                  <li
-                    className={
-                      pathname === '/category/technology' ? 'active' : ''
-                    }
-                  >
-                    <Link href='/category/technology'>Technology</Link>
-                  </li>
-                  <li
-                    className={
-                      pathname === '/category/lifestyle' ? 'active' : ''
-                    }
-                  >
-                    <Link href='/category/lifestyle'>Lifestyle</Link>
-                  </li>
-                  <li
-                    className={pathname === '/category/travel' ? 'active' : ''}
-                  >
-                    <Link href='/category/travel'>Travel</Link>
-                  </li>
-                  <li
-                    className={
-                      pathname === '/category/entertainment' ? 'active' : ''
-                    }
-                  >
-                    <Link href='/category/entertainment'>Entertainment</Link>
-                  </li>
+                  {getDisplayCategories(false).slice(0, 8).map((category) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <li
+                        key={category.id}
+                        className={
+                          pathname === `/filter/category/${category.id}` ? 'active' : ''
+                        }
+                      >
+                        <Link 
+                          href={`/filter/category/${category.id}`}
+                          className="flex items-center gap-2"
+                        >
+                          <IconComponent 
+                            className="h-4 w-4 text-orange-500" 
+                            style={{ color: '#f97316' }}
+                          />
+                          <span>{category.name}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </li>
               <li className='menu-item-has-children'>
