@@ -3,6 +3,7 @@
 import BlogSidebar from '@/components/elements/BlogSidebar';
 import Layout from '@/components/layout/Layout';
 import Link from 'next/link';
+import Image from 'next/image';
 import { writerPersonas } from '@/data/personas';
 
 export default function PersonasPage() {
@@ -64,13 +65,12 @@ export default function PersonasPage() {
                     <div key={persona.id} className='latest__post-item'>
                       <div className='latest__post-thumb tgImage__hover'>
                         <Link href={`/personas/${persona.id}`}>
-                          <img
+                          <Image
                             src={persona.avatar}
                             alt={persona.name}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = '/assets/img/blog/blog01.jpg';
-                            }}
+                            width={300}
+                            height={200}
+                            className="w-full h-48 object-cover rounded-lg"
                           />
                         </Link>
                       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import {
   Trophy,
   Clock,
@@ -142,10 +143,7 @@ export default function Quiz({
   if (isLoading) {
     return (
       <div className='quiz-loading py-5 text-center'>
-        <div className='spinner-border text-primary mb-3' role='status'>
-          <span className='visually-hidden'>Generating quiz...</span>
-        </div>
-        <p className='text-muted'>AI is creating your personalized quiz...</p>
+        <LoadingSpinner size="lg" text="AI is creating your personalized quiz..." />
       </div>
     );
   }

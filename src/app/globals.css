@@ -1,249 +1,108 @@
-@import '/assets/css/bootstrap.min.css';
-@import '/assets/css/fontawesome-all.min.css';
-@import '/assets/css/flaticon.css';
-@import '/assets/css/animate.min.css';
-@import '/assets/css/slick.css';
-@import '/assets/css/magnific-popup.css';
-@import '/assets/css/swiper-bundle.css';
-@import '/assets/css/imageRevealHover.css';
-@import '/assets/css/main.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ThreadJuice Brand - Override Sarsa CSS Variables */
-:root {
-  /* ThreadJuice Brand Colors */
-  --tg-theme-primary: #ff6b35 !important; /* ThreadJuice orange */
-  --tg-theme-secondary: #004e98 !important; /* ThreadJuice deep blue */
-  --tg-theme-accent: #f3f4f6 !important; /* Light gray */
-  --tg-theme-dark: #1a1a2e !important; /* ThreadJuice dark */
-  
-  /* Override Sarsa colors with ThreadJuice palette */
-  --tg-common-color-blue: #004e98 !important;
-  --tg-common-color-orange: #ff6b35 !important;
-  --tg-common-color-pink: #ff6b35 !important; /* Use orange instead of pink */
-  
-  /* Typography */
-  --tg-body-font-family:
-    var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, sans-serif !important;
-  --tg-heading-font-family:
-    var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, sans-serif !important;
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --radius: 0.5rem;
+  }
 
-  /* Text Colors */
-  --tg-heading-color: #1a1a2e !important;
-  --tg-body-color: #374151 !important;
-  --tg-white-color: #ffffff !important;
-  
-  /* Component Colors */
-  --tg-btn-primary-bg: #ff6b35 !important;
-  --tg-btn-primary-hover-bg: #e55a2b !important;
-  --tg-link-color: #004e98 !important;
-  --tg-link-hover-color: #ff6b35 !important;
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
 }
 
-/* ThreadJuice Custom Styling */
-.tags {
-  background: var(--tg-theme-primary) !important;
-  color: white !important;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-extrabold;
+  }
 }
 
-.btn {
-  background: var(--tg-theme-primary) !important;
-  border-color: var(--tg-theme-primary) !important;
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
 }
 
-.btn:hover {
-  background: var(--tg-btn-primary-hover-bg) !important;
-  border-color: var(--tg-btn-primary-hover-bg) !important;
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
 }
 
-/* ThreadJuice Header Styling */
-.tgmenu__main-menu .navigation > li > a:hover,
-.tgmenu__main-menu .navigation > li.active > a {
-  color: var(--tg-theme-primary) !important;
+@keyframes slideInContent {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
 }
 
-/* ThreadJuice Category Colors */
-.category a {
-  background: var(--tg-theme-secondary) !important;
-  color: white !important;
-}
-
-/* ThreadJuice Post Meta */
-.tgbanner__content-meta li a:hover {
-  color: var(--tg-theme-primary) !important;
-}
-
-/* Apply cream background to body */
-body {
-  background-color: var(--tg-body-bg-color) !important;
-}
-
-/* Set heading font weights to 700 */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  font-weight: 700 !important;
-}
-
-/* Geist Typography System */
-.geist-sans {
-  font-family: var(--font-geist-sans);
-}
-
-.geist-mono {
-  font-family: var(--font-geist-mono);
-}
-
-/* Typography hierarchy with Geist */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.heading {
-  font-family: var(--font-geist-sans);
-  font-weight: 700; /* Bold for headers */
-}
-
-body,
-p,
-.body-text {
-  font-family: var(--font-geist-sans);
-  font-weight: 400; /* Regular for body */
-}
-
-.tag,
-.badge,
-.button,
-.btn,
-button,
-.mono {
-  font-family: var(--font-geist-mono);
-  font-weight: 500; /* Medium weight for UI elements */
-}
-
-/* Override Sarsa typography with Geist */
-.title,
-.tgcommon__hover,
-.trending__post-content h4 {
-  font-family: var(--font-geist-sans) !important;
-  font-weight: 700 !important;
-}
-
-.category,
-.by,
-.post__activity {
-  font-family: var(--font-geist-mono) !important;
-  font-weight: 500 !important;
-}
-
-/* ThreadJuice-Specific Customizations (Working WITH Sarsa) */
-
-/* Viral content indicators using ThreadJuice colors */
-.category a {
-  background: var(--tj-viral);
-  color: var(--tg-common-color-white);
-  font-family: var(--font-geist-mono);
-  font-weight: var(--tg-fw-medium);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Trending content uses Reddit orange */
-.trending__post-content .category a {
-  background: var(--tj-trending);
-}
-
-/* Navigation menu with Geist Mono for tech feel */
-.navigation > li > a {
-  font-family: var(--font-geist-mono);
-  font-weight: var(--tg-fw-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Buttons inherit from Sarsa's theme but use Geist Mono */
-.btn {
-  font-family: var(--font-geist-mono);
-  font-weight: var(--tg-fw-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Activity metrics with monospace for data feel */
-.post__activity {
-  font-family: var(--font-geist-mono);
-  font-size: 13px;
-}
-
-/* Newsletter gradient using ThreadJuice colors */
-.newsletter__wrap {
-  background: linear-gradient(
-    135deg,
-    var(--tg-theme-primary),
-    var(--tg-theme-secondary)
-  );
-}
-
-/* Dark mode support for ThreadJuice */
-.dark-theme {
-  --tg-theme-primary: #ff6b35;
-  --tg-theme-secondary: var(--tj-dark);
-  --tg-body-color: #aeaeae;
-  --tg-heading-color: var(--tg-common-color-white);
-}
-
-.dark-theme .category a {
-  background: var(--tj-viral);
-  color: var(--tg-common-color-white);
-}
-
-.dark-theme .trending__post-content .category a {
-  background: var(--tj-trending);
-}
-
-/* Fix any conflicts between Tailwind and Sarsa */
-.main {
-  /* Sarsa main class overrides */
-}
-
-/* ThreadJuice-specific animations */
-@keyframes viral-pulse {
-  0%,
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
   100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
+    transform: translateX(-100%);
   }
 }
 
-.viral-pulse {
-  animation: viral-pulse 2s ease-in-out infinite;
-}
-
-/* Responsive improvements */
-@media (max-width: 768px) {
-  .tgbanner__grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
 }

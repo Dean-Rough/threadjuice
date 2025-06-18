@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 import { env } from './env';
 import { openaiRateLimiter } from './rateLimiter';
 import { generateContentPrompt, getPersonaPrompt } from './prompts';
@@ -36,14 +36,13 @@ export interface SummarizationResult {
 }
 
 export class GPTSummariser {
-  private openai: OpenAIApi;
+  private openai: OpenAI;
   private defaultModel = 'gpt-4-turbo-preview';
 
   constructor() {
-    const configuration = new Configuration({
+    this.openai = new OpenAI({
       apiKey: env.OPENAI_API_KEY,
     });
-    this.openai = new OpenAIApi(configuration);
   }
 
   /**
@@ -86,7 +85,7 @@ export class GPTSummariser {
 
       // Make OpenAI request with rate limiting
       const completion = await openaiRateLimiter.executeWithBackoff(async () => {
-        return this.openai.createChatCompletion({
+        return this.openai.chat.completions.create({
           model: this.defaultModel,
           messages: [
             {
@@ -102,7 +101,7 @@ export class GPTSummariser {
         });
       });
 
-      const rawContent = completion.data.choices[0]?.message?.content;
+      const rawContent = completion.choices[0]?.message?.content;
       if (!rawContent) {
         throw new Error('OpenAI returned empty content');
       }
@@ -182,7 +181,7 @@ Make it fun but informative!`;
 
     try {
       const completion = await openaiRateLimiter.executeWithBackoff(async () => {
-        return this.openai.createChatCompletion({
+        return this.openai.chat.completions.create({
           model: this.defaultModel,
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.8,
@@ -190,7 +189,7 @@ Make it fun but informative!`;
         });
       });
 
-      const rawContent = completion.data.choices[0]?.message?.content;
+      const rawContent = completion.choices[0]?.message?.content;
       if (!rawContent) {
         throw new Error('OpenAI returned empty quiz content');
       }

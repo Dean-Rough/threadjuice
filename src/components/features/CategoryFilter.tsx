@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Filter, Grid, List, Search, X } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface FilterItem {
   id: string;
@@ -196,14 +197,8 @@ export default function CategoryFilter({
               <div className='results-count me-3'>
                 <span className='text-muted'>
                   {isFiltering ? (
-                    <span className='d-flex align-items-center'>
-                      <div
-                        className='spinner-border spinner-border-sm me-2'
-                        role='status'
-                      >
-                        <span className='visually-hidden'>Filtering...</span>
-                      </div>
-                      Filtering...
+                    <span className='flex items-center'>
+                      <LoadingSpinner size="sm" text="Filtering..." />
                     </span>
                   ) : (
                     `${getFilteredCount()} results`
@@ -284,10 +279,7 @@ export default function CategoryFilter({
       {isFiltering && animated && (
         <div className='filter-loading-overlay'>
           <div className='filter-loading-content'>
-            <div className='spinner-border text-primary mb-2' role='status'>
-              <span className='visually-hidden'>Filtering content...</span>
-            </div>
-            <p className='text-muted mb-0'>Applying filters...</p>
+            <LoadingSpinner size="md" text="Applying filters..." />
           </div>
         </div>
       )}

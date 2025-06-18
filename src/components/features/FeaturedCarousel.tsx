@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
 import data from '@/util/blogData';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import {
   ChevronLeft,
   ChevronRight,
@@ -110,18 +111,8 @@ export default function FeaturedCarousel({
 
   if (isLoading) {
     return (
-      <div className='featured-carousel-loading' style={{ height }}>
-        <div className='loading-skeleton position-relative'>
-          <div className='skeleton-box w-100 h-100 rounded'></div>
-          <div className='loading-overlay position-absolute top-50 start-50 translate-middle text-center'>
-            <div className='spinner-border mb-2 text-white' role='status'>
-              <span className='visually-hidden'>
-                Loading featured content...
-              </span>
-            </div>
-            <p className='text-white'>Loading viral highlights...</p>
-          </div>
-        </div>
+      <div className='featured-carousel-loading flex items-center justify-center' style={{ height }}>
+        <LoadingSpinner size="lg" text="Loading viral highlights..." />
       </div>
     );
   }

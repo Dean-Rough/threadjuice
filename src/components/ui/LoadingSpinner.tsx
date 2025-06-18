@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Loader2, RefreshCw, Zap } from 'lucide-react';
 
 export interface LoadingSpinnerProps {
@@ -10,7 +10,7 @@ export interface LoadingSpinnerProps {
   text?: string;
   className?: string;
   fullScreen?: boolean;
-  animate?: boolean; // For WOW.js integration
+  animate?: boolean; // For entrance animation
 }
 
 export function LoadingSpinner({
@@ -24,24 +24,11 @@ export function LoadingSpinner({
 }: LoadingSpinnerProps) {
   const spinnerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize WOW.js animation if enabled
-  useEffect(() => {
-    if (animate && spinnerRef.current && typeof window !== 'undefined') {
-      // Add WOW.js classes for entrance animation
-      spinnerRef.current.classList.add('wow', 'fadeIn');
-      
-      // Dynamically import and initialize WOW.js
-      import('wowjs').then(({ WOW }) => {
-        new WOW({
-          boxClass: 'wow',
-          animateClass: 'animated',
-          offset: 0,
-          mobile: true,
-          live: true,
-        }).init();
-      }).catch(console.error);
-    }
-  }, [animate]);
+  // Pure CSS animation classes
+  const getAnimationClass = () => {
+    if (!animate) return '';
+    return 'animate-fade-in';
+  };
 
   // Size configurations
   const sizeConfig = {
@@ -115,7 +102,7 @@ export function LoadingSpinner({
   return (
     <div
       ref={spinnerRef}
-      className={`${containerClass} ${className}`}
+      className={`${containerClass} ${getAnimationClass()} ${className}`}
       data-testid="loading-spinner"
       role="status"
       aria-label={text || 'Loading'}
@@ -132,6 +119,23 @@ export function LoadingSpinner({
       <span className="sr-only">
         {text || 'Loading content...'}
       </span>
+      
+      <style jsx>{`
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

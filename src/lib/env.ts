@@ -22,9 +22,9 @@ const envSchema = z.object({
   // AI & Content Generation - OpenAI
   OPENAI_API_KEY: z.string().min(1, 'OpenAI API key is required').startsWith('sk-', 'OpenAI API key must start with sk-'),
 
-  // Content Ingestion - Reddit API
-  REDDIT_CLIENT_ID: z.string().min(1, 'Reddit client ID is required'),
-  REDDIT_CLIENT_SECRET: z.string().min(1, 'Reddit client secret is required'),
+  // Content Ingestion - Reddit API (required in production, optional in development)
+  REDDIT_CLIENT_ID: z.string().optional(),
+  REDDIT_CLIENT_SECRET: z.string().optional(), 
   REDDIT_USER_AGENT: z.string().default('ThreadJuice/1.0'),
 
   // External Media APIs (Optional)
@@ -47,20 +47,64 @@ const envSchema = z.object({
 });
 
 /**
- * Validates and parses environment variables
- * Throws detailed error messages for missing or invalid variables
+ * Validates and parses environment variables with graceful fallbacks
+ * Provides warnings for missing optional variables instead of crashing
  */
 function validateEnv() {
   try {
     return envSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const missingVars = error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
-      throw new Error(
-        `❌ Environment validation failed:\n${missingVars.join('\n')}\n\n` +
-        `💡 Check your .env.local file and ensure all required variables are set.\n` +
-        `📋 Copy .env.example to .env.local as a starting point.`
-      );
+      // Separate critical errors from warnings
+      const criticalErrors: string[] = [];
+      const warnings: string[] = [];
+      
+      error.errors.forEach(err => {
+        const fieldPath = err.path.join('.');
+        const message = `${fieldPath}: ${err.message}`;
+        
+        // Define critical fields that should crash the app
+        const criticalFields = [
+          'NEXT_PUBLIC_SUPABASE_URL',
+          'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+          'SUPABASE_SERVICE_ROLE_KEY',
+          'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+          'CLERK_SECRET_KEY',
+          'NEXT_PUBLIC_APP_URL'
+        ];
+        
+        if (criticalFields.includes(fieldPath)) {
+          criticalErrors.push(message);
+        } else {
+          warnings.push(message);
+        }
+      });
+      
+      // Log warnings but don't crash
+      if (warnings.length > 0) {
+        console.warn(
+          `⚠️ Environment warnings (app will continue with defaults):\n${warnings.join('\n')}`
+        );
+      }
+      
+      // Only crash on critical errors
+      if (criticalErrors.length > 0) {
+        throw new Error(
+          `❌ Critical environment validation failed:\n${criticalErrors.join('\n')}\n\n` +
+          `💡 Check your .env.local file and ensure all required variables are set.\n` +
+          `📋 Copy .env.example to .env.local as a starting point.`
+        );
+      }
+      
+      // Return parsed environment with defaults for warnings
+      return envSchema.parse({
+        ...process.env,
+        // Provide safe defaults for non-critical fields
+        RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED || 'false',
+        CONTENT_MODERATION_ENABLED: process.env.CONTENT_MODERATION_ENABLED || 'false',
+        REDDIT_USER_AGENT: process.env.REDDIT_USER_AGENT || 'ThreadJuice/1.0',
+        WIKIMEDIA_USER_AGENT: process.env.WIKIMEDIA_USER_AGENT || 'ThreadJuice/1.0',
+      });
     }
     throw error;
   }

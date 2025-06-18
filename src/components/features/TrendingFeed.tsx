@@ -1,30 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import data from '@/util/blogData';
+import Image from 'next/image';
+import { usePosts, usePostsByCategory } from '@/hooks/usePosts';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { CATEGORIES, getCategoryIcon, getCategoryEmoji } from '@/constants/categories';
 import {
   Flame,
   Eye,
   MessageCircle,
   Share2,
   Filter,
-  Zap,
-  Star,
-  Gamepad2,
-  Monitor,
-  Film,
-  Trophy,
-  Music,
-  UtensilsCrossed,
-  Plane,
-  Sparkles,
-  Radio,
-  FlaskConical,
 } from 'lucide-react';
 
-interface PostWithPersona {
+// Updated interface to match API response
+interface Post {
   id: number;
   title: string;
   img: string;
@@ -33,8 +25,8 @@ interface PostWithPersona {
   category: string;
   author: string;
   date: string;
-  persona: WriterPersona;
-  engagement: {
+  persona?: WriterPersona;
+  engagement?: {
     views: string;
     comments: number;
     shares: number;
@@ -54,93 +46,130 @@ export default function TrendingFeed({
   showFilters = true,
   featured = false,
 }: TrendingFeedProps) {
-  const [posts, setPosts] = useState<PostWithPersona[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<PostWithPersona[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Generate posts with personas and engagement data
-  useEffect(() => {
-    const postsWithMetadata = data.slice(0, postsPerPage).map(post => ({
+  // Use React Query hooks for data fetching
+  const { 
+    data: postsResponse, 
+    isLoading, 
+    error,
+    isError,
+    isPending
+  } = usePosts({ 
+    featured, 
+    trending: !featured,
+    limit: postsPerPage 
+  });
+
+  // Debug logging
+  console.log('TrendingFeed render state:', {
+    isLoading,
+    isPending,
+    isError,
+    error: error?.message,
+    postsResponse,
+    hasData: !!postsResponse?.posts?.length
+  });
+
+  // Use category-specific query when filter is active
+  const { 
+    data: categoryPostsResponse, 
+    isLoading: categoryLoading 
+  } = usePostsByCategory(
+    activeFilter !== 'all' ? activeFilter : '', 
+    postsPerPage
+  );
+
+  // Determine which data to use
+  const posts = activeFilter === 'all' 
+    ? postsResponse?.posts || [] 
+    : categoryPostsResponse || [];
+
+  const currentLoading = activeFilter === 'all' ? (isLoading || isPending) : categoryLoading;
+
+  // Add personas and engagement data to posts if not present
+  // Use deterministic engagement based on post ID for consistency
+  const postsWithMetadata = posts.map(post => {
+    // Generate deterministic engagement based on post ID for SEO consistency
+    const postId = post.id || 1;
+    const seed = postId * 12345; // Simple seeding
+    
+    return {
       ...post,
-      persona: getRandomPersona(),
-      engagement: {
-        views: `${Math.floor(Math.random() * 50) + 5}.${Math.floor(Math.random() * 9)}k`,
-        comments: Math.floor(Math.random() * 500) + 50,
-        shares: Math.floor(Math.random() * 200) + 25,
+      persona: post.persona || getRandomPersona(),
+      engagement: post.engagement || {
+        views: `${Math.floor((seed % 45) + 5)}.${Math.floor((seed % 9) + 1)}k`,
+        comments: Math.floor((seed % 450) + 50),
+        shares: Math.floor((seed % 175) + 25),
       },
-    }));
+    };
+  });
 
-    setPosts(postsWithMetadata);
-    setFilteredPosts(postsWithMetadata);
-
-    // Remove setTimeout - set loading to false immediately
-    setIsLoading(false);
-  }, [postsPerPage]);
-
-  // Filter functionality
-  const categories = [
-    'all',
-    ...Array.from(new Set(posts.map(post => post.category.toLowerCase()))),
-  ];
+  // Use centralized category definitions
+  const categories = CATEGORIES.map(cat => cat.id);
 
   const handleFilter = (category: string) => {
     setActiveFilter(category);
-    if (category === 'all') {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(
-        posts.filter(post => post.category.toLowerCase() === category)
-      );
-    }
+    // The actual filtering happens via React Query hooks above
   };
 
-  if (isLoading) {
+  // Handle loading states
+  if (currentLoading) {
     return (
-      <div className='trending-feed-loading py-5 text-center'>
-        <div className='spinner-border text-primary mb-3' role='status'>
-          <span className='visually-hidden'>Loading...</span>
-        </div>
-        <p className='text-muted'>Loading viral content...</p>
+      <div className='trending-feed-loading py-12 text-center'>
+        <LoadingSpinner size="lg" text="Loading viral content..." />
       </div>
     );
   }
+
+  // Handle error states
+  if (error) {
+    return (
+      <div className='trending-feed-error py-12 text-center'>
+        <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Content</h3>
+        <p className="text-gray-600">Please try refreshing the page.</p>
+      </div>
+    );
+  }
+
+  // Use the processed posts with metadata
+  const filteredPosts = postsWithMetadata;
 
   return (
     <div className='trending-feed'>
       {/* Filter Bar */}
       {showFilters && (
         <div className='filter-bar mb-4'>
-          <div className='row align-items-center'>
-            <div className='col-lg-8'>
+          <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4'>
+            <div className='flex-1'>
               <div className='filter-buttons'>
                 {categories.map(category => (
                   <button
                     key={category}
-                    className={`btn mb-2 me-2 ${
+                    className={`px-4 py-2 mb-2 mr-2 rounded-lg font-medium transition-colors ${
                       activeFilter === category
-                        ? 'btn-primary'
-                        : 'btn-outline-primary'
+                        ? 'bg-orange-600 text-white hover:bg-orange-700'
+                        : 'border border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white'
                     }`}
                     onClick={() => handleFilter(category)}
                   >
                     {category === 'all' ? (
                       <>
-                        <Flame size={16} className='me-1' />
+                        <Flame size={16} className='mr-1' />
                         All
                       </>
                     ) : (
                       <>
-                        {getCategoryIcon(category)} {category}
+                        {React.createElement(getCategoryIcon(category), { size: 16, className: 'mr-1' })} {category}
                       </>
                     )}
                   </button>
                 ))}
               </div>
             </div>
-            <div className='col-lg-4 text-end'>
+            <div className='lg:text-right'>
               <div className='feed-meta'>
-                <span className='text-muted'>
+                <span className='text-gray-500'>
                   {filteredPosts.length} viral{' '}
                   {filteredPosts.length === 1 ? 'story' : 'stories'}
                 </span>
@@ -152,69 +181,68 @@ export default function TrendingFeed({
 
       {/* Featured Post (if enabled) */}
       {featured && filteredPosts.length > 0 && (
-        <div className='featured-post mb-5'>
-          <div className='row'>
-            <div className='col-lg-8'>
-              <div className='featured-post-card position-relative'>
+        <div className='featured-post mb-12'>
+          <div className='grid lg:grid-cols-12 gap-6'>
+            <div className='lg:col-span-8'>
+              <div className='featured-post-card relative'>
                 <div className='featured-post-thumb'>
                   <Link href={`/posts/${filteredPosts[0].id}`}>
-                    <img
+                    <Image
                       src={`/assets/img/${filteredPosts[0].group}/${filteredPosts[0].img}`}
                       alt={filteredPosts[0].title}
-                      className='img-fluid rounded'
-                      style={{
-                        height: '400px',
-                        width: '100%',
-                        objectFit: 'cover',
-                      }}
+                      width={800}
+                      height={400}
+                      className='w-full h-96 object-cover rounded'
+                      priority
                     />
                   </Link>
-                  <div className='featured-badge position-absolute start-0 top-0 m-3'>
-                    <span className='badge bg-danger fs-6'>⚡ FEATURED</span>
+                  <div className='featured-badge absolute left-0 top-0 m-3'>
+                    <span className='bg-red-600 text-white px-3 py-1 rounded text-sm font-medium'>⚡ FEATURED</span>
                   </div>
                 </div>
                 <div className='featured-post-content mt-3'>
                   <div className='meta-info mb-2'>
-                    <span className='category me-3'>
+                    <span className='category mr-3'>
                       <Link
                         href={`/category/${filteredPosts[0].category.toLowerCase()}`}
+                        className="text-orange-600 hover:text-orange-700"
                       >
                         🔥 {filteredPosts[0].category}
                       </Link>
                     </span>
                     <span className='author'>
                       By{' '}
-                      <Link href={`/personas/${filteredPosts[0].persona.id}`}>
+                      <Link href={`/personas/${filteredPosts[0].persona.id}`} className="text-blue-600 hover:text-blue-700">
                         {filteredPosts[0].persona.name}
                       </Link>
                     </span>
                   </div>
-                  <h2 className='featured-title'>
+                  <h2 className='featured-title text-2xl font-bold text-gray-900 hover:text-orange-600 mb-2'>
                     <Link href={`/posts/${filteredPosts[0].id}`}>
                       {filteredPosts[0].title} (Reddit viral thread)
                     </Link>
                   </h2>
-                  <p className='featured-excerpt text-muted'>
+                  <p className='featured-excerpt text-gray-600 mb-4'>
                     {filteredPosts[0].persona.bio}
                   </p>
-                  <div className='engagement-stats'>
-                    <span className='me-3'>
-                      <i className='fal fa-signal me-1'></i>
+                  <div className='engagement-stats flex space-x-4 text-sm text-gray-500'>
+                    <span className='flex items-center'>
+                      <Eye size={14} className='mr-1' />
                       {filteredPosts[0].engagement.views}
                     </span>
-                    <span className='me-3'>
-                      <i className='fal fa-comment-dots me-1'></i>
+                    <span className='flex items-center'>
+                      <MessageCircle size={14} className='mr-1' />
                       {filteredPosts[0].engagement.comments}
                     </span>
-                    <span>
-                      <i className='fal fa-share-alt me-1'></i>
+                    <span className='flex items-center'>
+                      <Share2 size={14} className='mr-1' />
                       {filteredPosts[0].engagement.shares}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className='col-lg-4'>
+            <div className='lg:col-span-4'>
               {/* Trending sidebar content could go here */}
             </div>
           </div>
@@ -223,11 +251,11 @@ export default function TrendingFeed({
 
       {/* Posts Grid */}
       <div className={`posts-grid layout-${layout}`}>
-        <div className={`row ${layout === 'masonry' ? 'masonry-grid' : ''}`}>
+        <div className={`${layout === 'masonry' ? 'masonry-grid' : layout === 'list' ? 'space-y-6' : 'grid lg:grid-cols-3 md:grid-cols-2 gap-6'}`}>
           {filteredPosts.slice(featured ? 1 : 0).map((post, index) => (
             <div
               key={post.id}
-              className={` ${layout === 'list' ? 'col-12' : 'col-lg-4 col-md-6'} post-item mb-4`}
+              className={`post-item ${layout === 'list' ? 'w-full' : ''}`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <article
@@ -235,63 +263,61 @@ export default function TrendingFeed({
               >
                 {layout === 'list' ? (
                   // Horizontal layout for list view
-                  <div className='row g-0 h-100'>
-                    <div className='col-md-4'>
-                      <div className='post-thumb position-relative'>
+                  <div className='flex h-full bg-white rounded-lg shadow-sm overflow-hidden'>
+                    <div className='w-1/3 md:w-1/4'>
+                      <div className='post-thumb relative'>
                         <Link href={`/posts/${post.id}`}>
-                          <img
+                          <Image
                             src={`/assets/img/${post.group}/${post.img}`}
                             alt={post.title}
-                            className='img-fluid rounded-start'
-                            style={{
-                              height: '200px',
-                              width: '100%',
-                              objectFit: 'cover',
-                            }}
+                            width={320}
+                            height={192}
+                            className='w-full h-48 object-cover'
                           />
                         </Link>
                         {post.trending && (
-                          <div className='trending-badge position-absolute end-0 top-0 m-2'>
-                            <span className='badge bg-warning'>
+                          <div className='trending-badge absolute top-2 right-2'>
+                            <span className='bg-yellow-500 text-black px-2 py-1 rounded text-sm font-medium'>
                               🔥 TRENDING
                             </span>
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className='col-md-8'>
-                      <div className='post-content h-100 d-flex flex-column p-4'>
+                    <div className='flex-1'>
+                      <div className='post-content h-full flex flex-col p-4'>
                         <div className='meta-info mb-2'>
-                          <span className='category me-3'>
+                          <span className='category mr-3'>
                             <Link
                               href={`/category/${post.category.toLowerCase()}`}
+                              className='text-orange-600 hover:text-orange-700'
                             >
                               {getCategoryEmoji(post.category)} {post.category}
                             </Link>
                           </span>
-                          <span className='author text-muted'>
+                          <span className='author text-gray-500'>
                             By{' '}
-                            <Link href={`/personas/${post.persona.id}`}>
+                            <Link href={`/personas/${post.persona.id}`} className='text-blue-600 hover:text-blue-700'>
                               {post.persona.name}
                             </Link>
                           </span>
                         </div>
-                        <h4 className='post-title flex-grow-1'>
+                        <h4 className='post-title flex-grow font-semibold text-gray-900 hover:text-orange-600'>
                           <Link href={`/posts/${post.id}`}>
                             {post.title} (Reddit viral thread)
                           </Link>
                         </h4>
-                        <div className='engagement-stats mt-auto'>
-                          <span className='me-3'>
-                            <i className='fal fa-signal me-1'></i>
+                        <div className='engagement-stats mt-auto text-sm text-gray-500 flex space-x-4'>
+                          <span className='flex items-center'>
+                            <Eye size={14} className='mr-1' />
                             {post.engagement.views}
                           </span>
-                          <span className='me-3'>
-                            <i className='fal fa-comment-dots me-1'></i>
+                          <span className='flex items-center'>
+                            <MessageCircle size={14} className='mr-1' />
                             {post.engagement.comments}
                           </span>
-                          <span>
-                            <i className='fal fa-share-alt me-1'></i>
+                          <span className='flex items-center'>
+                            <Share2 size={14} className='mr-1' />
                             {post.engagement.shares}
                           </span>
                         </div>
@@ -300,63 +326,61 @@ export default function TrendingFeed({
                   </div>
                 ) : (
                   // Vertical layout for grid/masonry view
-                  <>
-                    <div className='post-thumb position-relative'>
+                  <div className='bg-white rounded-lg shadow-sm overflow-hidden h-full'>
+                    <div className='post-thumb relative'>
                       <Link href={`/posts/${post.id}`}>
-                        <img
+                        <Image
                           src={`/assets/img/${post.group}/${post.img}`}
                           alt={post.title}
-                          className='img-fluid rounded-top'
-                          style={{
-                            height: '200px',
-                            width: '100%',
-                            objectFit: 'cover',
-                          }}
+                          width={400}
+                          height={192}
+                          className='w-full h-48 object-cover'
                         />
                       </Link>
                       {post.trending && (
-                        <div className='trending-badge position-absolute end-0 top-0 m-2'>
-                          <span className='badge bg-warning'>🔥 TRENDING</span>
+                        <div className='trending-badge absolute top-2 right-2'>
+                          <span className='bg-yellow-500 text-black px-2 py-1 rounded text-sm font-medium'>🔥 TRENDING</span>
                         </div>
                       )}
-                      <div className='post-overlay position-absolute bottom-0 end-0 start-0 p-2'>
-                        <span className='category'>
+                      <div className='post-overlay absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent'>
+                        <span className='category text-white font-medium text-sm'>
                           <Link
                             href={`/category/${post.category.toLowerCase()}`}
+                            className='hover:text-orange-300'
                           >
                             {getCategoryEmoji(post.category)} {post.category}
                           </Link>
                         </span>
                       </div>
                     </div>
-                    <div className='post-content p-3'>
+                    <div className='post-content p-4 flex-1 flex flex-col'>
                       <div className='meta-info mb-2'>
-                        <span className='author text-muted'>
+                        <span className='author text-gray-500 text-sm'>
                           By{' '}
-                          <Link href={`/personas/${post.persona.id}`}>
+                          <Link href={`/personas/${post.persona.id}`} className='text-blue-600 hover:text-blue-700'>
                             {post.persona.name}
                           </Link>
                         </span>
                       </div>
-                      <h5 className='post-title'>
+                      <h5 className='post-title font-semibold text-gray-900 hover:text-orange-600 flex-grow'>
                         <Link href={`/posts/${post.id}`}>{post.title}</Link>
                       </h5>
-                      <div className='engagement-stats mt-3'>
-                        <span className='me-3'>
-                          <i className='fal fa-signal me-1'></i>
+                      <div className='engagement-stats mt-4 text-sm text-gray-500 flex space-x-4'>
+                        <span className='flex items-center'>
+                          <Eye size={14} className='mr-1' />
                           {post.engagement.views}
                         </span>
-                        <span className='me-3'>
-                          <i className='fal fa-comment-dots me-1'></i>
+                        <span className='flex items-center'>
+                          <MessageCircle size={14} className='mr-1' />
                           {post.engagement.comments}
                         </span>
-                        <span>
-                          <i className='fal fa-share-alt me-1'></i>
+                        <span className='flex items-center'>
+                          <Share2 size={14} className='mr-1' />
                           {post.engagement.shares}
                         </span>
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
               </article>
             </div>
@@ -365,8 +389,8 @@ export default function TrendingFeed({
       </div>
 
       {/* Load More Button */}
-      <div className='load-more mt-5 text-center'>
-        <button className='btn btn-outline-primary btn-lg'>
+      <div className='load-more mt-12 text-center'>
+        <button className='px-8 py-3 border border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white rounded-lg font-semibold text-lg transition-colors'>
           Load More Viral Content
         </button>
       </div>
@@ -374,40 +398,3 @@ export default function TrendingFeed({
   );
 }
 
-// Helper function to get category icons
-function getCategoryIcon(category: string): React.ReactElement {
-  const iconMap: { [key: string]: React.ReactElement } = {
-    gaming: <Gamepad2 size={16} className='me-1' />,
-    tech: <Monitor size={16} className='me-1' />,
-    movie: <Film size={16} className='me-1' />,
-    sports: <Trophy size={16} className='me-1' />,
-    music: <Music size={16} className='me-1' />,
-    food: <UtensilsCrossed size={16} className='me-1' />,
-    travel: <Plane size={16} className='me-1' />,
-    lifestyle: <Sparkles size={16} className='me-1' />,
-    news: <Radio size={16} className='me-1' />,
-    science: <FlaskConical size={16} className='me-1' />,
-  };
-
-  return (
-    iconMap[category.toLowerCase()] || <Radio size={16} className='me-1' />
-  );
-}
-
-// Helper function to get category emojis
-function getCategoryEmoji(category: string): string {
-  const emojiMap: { [key: string]: string } = {
-    gaming: '🎮',
-    tech: '💻',
-    movie: '🎬',
-    sports: '🏆',
-    music: '🎵',
-    food: '🍽️',
-    travel: '✈️',
-    lifestyle: '✨',
-    news: '📰',
-    science: '🔬',
-  };
-
-  return emojiMap[category.toLowerCase()] || '📰';
-}

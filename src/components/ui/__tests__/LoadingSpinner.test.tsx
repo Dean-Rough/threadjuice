@@ -5,12 +5,7 @@
 import { render, screen } from '@testing-library/react';
 import { LoadingSpinner, type LoadingSpinnerProps } from '../LoadingSpinner';
 
-// Mock WOW.js
-jest.mock('wowjs', () => ({
-  WOW: jest.fn().mockImplementation(() => ({
-    init: jest.fn(),
-  })),
-}));
+// No need to mock WOW.js anymore since we use pure CSS animations
 
 describe('LoadingSpinner', () => {
   beforeEach(() => {
@@ -162,12 +157,18 @@ describe('LoadingSpinner', () => {
     expect(loadingText).toBeInTheDocument();
   });
 
-  it('does not initialize WOW.js when animate is false', () => {
+  it('applies fade-in animation when animate is true', () => {
+    render(<LoadingSpinner animate={true} />);
+
+    const spinner = screen.getByTestId('loading-spinner');
+    expect(spinner).toHaveClass('animate-fade-in');
+  });
+
+  it('does not apply animation class when animate is false', () => {
     render(<LoadingSpinner animate={false} />);
 
-    // Should not have wow classes
     const spinner = screen.getByTestId('loading-spinner');
-    expect(spinner).not.toHaveClass('wow', 'fadeIn');
+    expect(spinner).not.toHaveClass('animate-fade-in');
   });
 
   it('creates three dots for dots variant', () => {
