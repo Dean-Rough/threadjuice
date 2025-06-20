@@ -1,312 +1,454 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { createClient } from '@supabase/supabase-js';
-import { env } from '@/lib/env';
-import { createPostSchema, postQuerySchema, validateRequestBody, validateQueryParams } from '@/lib/validations';
+import { z } from 'zod';
+// import { prisma } from '@/lib/prisma';
 
-// Mock data for development when database is not available
-function getMockPosts(limit: number = 12) {
-  const mockWriters = [
-    { id: 1, name: "Alex Chen", avatar_url: "/avatars/alex.png", tone: "witty" },
-    { id: 2, name: "Sam Rivera", avatar_url: "/avatars/sam.png", tone: "thoughtful" },
-    { id: 3, name: "Jordan Blake", avatar_url: "/avatars/jordan.png", tone: "sharp" },
-    { id: 4, name: "Casey Morgan", avatar_url: "/avatars/casey.png", tone: "insightful" }
-  ];
+const PostQuerySchema = z.object({
+  page: z.string().transform(Number).pipe(z.number().min(1)).optional(),
+  limit: z
+    .string()
+    .transform(Number)
+    .pipe(z.number().min(1).max(50))
+    .optional(),
+  category: z.string().nullable().optional(),
+  author: z.string().nullable().optional(),
+  trending: z
+    .string()
+    .nullable()
+    .transform(val => val === 'true')
+    .optional(),
+  featured: z
+    .string()
+    .nullable()
+    .transform(val => val === 'true')
+    .optional(),
+  search: z.string().nullable().optional(),
+  sortBy: z
+    .enum(['views', 'shares', 'comments', 'latest', 'trending'])
+    .nullable()
+    .optional(),
+});
 
-  const viralTitles = [
-    "This restaurant charged me $50 for 'emotional labor' after I complained about my cold food",
-    "My neighbor keeps stealing my packages so I started sending myself glitter bombs",
-    "UPDATE: I told my coworkers I was 'working from home' but I was actually at Disneyland",
-    "My roommate replaced all my furniture with cardboard replicas as a 'prank'",
-    "I found out my boyfriend has been catfishing me... with better photos of himself",
-    "My mom rated my cooking 2 stars on Google Reviews (she doesn't know I can see who wrote it)",
-    "I've been pretending to be twins to get double vacation days at work for 3 years",
-    "My landlord installed a doorbell that plays 'Baby Shark' and now I can't turn it off",
-    "I accidentally became the most popular food critic in town by reviewing gas station snacks",
-    "My dating app match turned out to be my therapist's other patient",
-    "I've been living in an Airbnb for 8 months because the host forgot they listed it",
-    "My ex is trying to copyright the breakup letter I wrote to them"
-  ];
-
-  const excerpts = [
-    "What started as a normal dinner turned into the most expensive meal of my life...",
-    "Sometimes petty revenge is the only way to restore balance to the universe.",
-    "The Mickey Mouse ears were a dead giveaway, but somehow I thought I could get away with it.",
-    "I came home to find my entire apartment looking like a cardboard city.",
-    "The audacity of this man to catfish me with his own face but better lighting.",
-    "Mom, if you're reading this, your meatloaf really isn't that great.",
-    "The elaborate web of lies I've constructed is finally catching up to me.",
-    "It's been 47 days and I've heard Baby Shark approximately 2,847 times.",
-    "Who knew that reviewing a 7-Eleven hot dog could launch a career?",
-    "The session got really awkward when we realized we both knew the same person intimately.",
-    "At this point I think I legally live here now.",
-    "Apparently creativity in breakup letters can be considered intellectual property."
-  ];
-
-  const categories = ["lifestyle", "relationships", "work", "food", "tech", "random"];
-  
-  const images = [
-    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop&crop=center", 
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1494790108755-2616c6d77eed?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?w=400&h=300&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop&crop=center"
-  ];
-
-  const heroImages = [
-    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=1200&h=600&fit=crop&crop=center",
-    "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?w=1200&h=600&fit=crop&crop=center"
-  ];
-
-  const mockPosts = [];
-  for (let i = 1; i <= limit; i++) {
-    const writer = mockWriters[(i - 1) % mockWriters.length];
-    const titleIndex = (i - 1) % viralTitles.length;
-    mockPosts.push({
-      id: `story-${i}`,
-      title: viralTitles[titleIndex],
-      slug: `story-${i}`,
-      content: { text: "Full story content would go here..." },
-      excerpt: excerpts[titleIndex],
-      image_url: images[titleIndex % images.length],
-      hero_image: heroImages[titleIndex % heroImages.length],
-      persona_id: writer.id,
-      personas: writer,
-      category: categories[i % categories.length],
-      featured: i <= 3,
-      trending: i <= 8,
-      published: true,
-      view_count: Math.floor(Math.random() * 50000) + 5000,
-      share_count: Math.floor(Math.random() * 2000) + 100,
-      created_at: new Date(Date.now() - i * 3600000).toISOString(),
-      updated_at: new Date(Date.now() - i * 3600000).toISOString()
-    });
+// Mock data for development - replace with Prisma when database is ready
+const mockPosts = [
+  {
+    id: '1',
+    title: 'Coworker Discovered My Secret Reddit Addiction During Teams Meeting',
+    slug: 'coworker-discovered-secret-reddit-addiction',
+    excerpt: 'Forgot to close my tabs during screen share. Now they know about my 47-hour binge of r/antiwork stories.',
+    imageUrl: 'https://images.unsplash.com/photo-1606868306217-dbf5046868d2?w=800',
+    category: 'Work Drama',
+    author: 'the-snarky-sage',
+    viewCount: 12847,
+    upvoteCount: 287,
+    commentCount: 156,
+    shareCount: 89,
+    bookmarkCount: 234,
+    trending: true,
+    featured: true,
+    status: 'published',
+    createdAt: new Date('2024-06-19T10:30:00Z'),
+    updatedAt: new Date('2024-06-19T10:30:00Z'),
+  },
+  {
+    id: '2',
+    title: 'Landlord Tried to Charge Me for "Excessive Breathing" in Lease Renewal',
+    slug: 'landlord-excessive-breathing-charge',
+    excerpt: 'Apparently my respiratory rate exceeds the "standard tenant oxygen consumption allowance." I wish I was making this up.',
+    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
+    category: 'Housing Hell',
+    author: 'the-dry-cynic',
+    viewCount: 8934,
+    upvoteCount: 445,
+    commentCount: 289,
+    shareCount: 156,
+    bookmarkCount: 167,
+    trending: true,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-19T08:15:00Z'),
+    updatedAt: new Date('2024-06-19T08:15:00Z'),
+  },
+  {
+    id: '3',
+    title: 'Gym Bro Asked if I "Even Lift" While I Was Literally Mid-Deadlift',
+    slug: 'gym-bro-do-you-even-lift',
+    excerpt: 'Had 315 pounds in my hands. Apparently that doesn\'t count unless you grunt loud enough for the entire facility to hear.',
+    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
+    category: 'Gym Life',
+    author: 'the-down-to-earth-buddy',
+    viewCount: 15623,
+    upvoteCount: 672,
+    commentCount: 394,
+    shareCount: 203,
+    bookmarkCount: 445,
+    trending: true,
+    featured: true,
+    status: 'published',
+    createdAt: new Date('2024-06-19T07:45:00Z'),
+    updatedAt: new Date('2024-06-19T07:45:00Z'),
+  },
+  {
+    id: '4',
+    title: 'Karen at Starbucks Demanded to Speak to the Manager of My Laptop',
+    slug: 'karen-starbucks-laptop-manager',
+    excerpt: 'Apparently my MacBook was "hogging bandwidth" from her Instagram live stream. She wanted Apple\'s corporate number.',
+    imageUrl: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=800',
+    category: 'Public Freakouts',
+    author: 'the-snarky-sage',
+    viewCount: 22156,
+    upvoteCount: 834,
+    commentCount: 567,
+    shareCount: 289,
+    bookmarkCount: 623,
+    trending: false,
+    featured: true,
+    status: 'published',
+    createdAt: new Date('2024-06-18T16:20:00Z'),
+    updatedAt: new Date('2024-06-18T16:20:00Z'),
+  },
+  {
+    id: '5',
+    title: 'Uber Driver Started Livestreaming Our Conversation Without Permission',
+    slug: 'uber-driver-livestream-conversation',
+    excerpt: 'Found out I was the unwilling star of "Awkward Passenger Reactions" on TikTok. My social anxiety is now viral content.',
+    imageUrl: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800',
+    category: 'Tech Nightmares',
+    author: 'the-dry-cynic',
+    viewCount: 18742,
+    upvoteCount: 523,
+    commentCount: 298,
+    shareCount: 167,
+    bookmarkCount: 389,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-18T14:30:00Z'),
+    updatedAt: new Date('2024-06-18T14:30:00Z'),
+  },
+  {
+    id: '6',
+    title: 'Neighbor\'s WiFi Name Changed to "Pay Your Rent Steve" After Argument',
+    slug: 'neighbor-wifi-name-pay-rent',
+    excerpt: 'Now every device in my apartment reminds me of our property line dispute. Even my smart TV is taking sides.',
+    imageUrl: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800',
+    category: 'Neighbor Wars',
+    author: 'the-down-to-earth-buddy',
+    viewCount: 9876,
+    upvoteCount: 345,
+    commentCount: 178,
+    shareCount: 123,
+    bookmarkCount: 234,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-18T12:15:00Z'),
+    updatedAt: new Date('2024-06-18T12:15:00Z'),
+  },
+  {
+    id: '7',
+    title: 'Dating App Match Asked for My Credit Score on First Message',
+    slug: 'dating-app-credit-score-request',
+    excerpt: 'Apparently "Hey gorgeous" is too mainstream. Modern romance requires a full financial disclosure and three references.',
+    imageUrl: 'https://images.unsplash.com/photo-1516307365426-bea591f05011?w=800',
+    category: 'Dating Disasters',
+    author: 'the-snarky-sage',
+    viewCount: 16789,
+    upvoteCount: 598,
+    commentCount: 423,
+    shareCount: 245,
+    bookmarkCount: 456,
+    trending: true,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-18T09:30:00Z'),
+    updatedAt: new Date('2024-06-18T09:30:00Z'),
+  },
+  {
+    id: '8',
+    title: 'Boss Scheduled "Mandatory Fun" Meeting to Discuss Why Morale is Low',
+    slug: 'boss-mandatory-fun-morale-meeting',
+    excerpt: 'Nothing says "we care about employee happiness" like forcing people to explain why they\'re miserable at 8 AM on Monday.',
+    imageUrl: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800',
+    category: 'Work Drama',
+    author: 'the-dry-cynic',
+    viewCount: 25643,
+    upvoteCount: 892,
+    commentCount: 634,
+    shareCount: 378,
+    bookmarkCount: 567,
+    trending: true,
+    featured: true,
+    status: 'published',
+    createdAt: new Date('2024-06-17T15:45:00Z'),
+    updatedAt: new Date('2024-06-17T15:45:00Z'),
+  },
+  {
+    id: '9',
+    title: 'Mother-in-Law Critiqued My Grocery Receipt Line by Line',
+    slug: 'mother-in-law-grocery-receipt-critique',
+    excerpt: 'Apparently organic milk is "showing off" and store-brand cereal means I don\'t love her son enough. Peak holiday family time.',
+    imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800',
+    category: 'Family Drama',
+    author: 'the-down-to-earth-buddy',
+    viewCount: 13456,
+    upvoteCount: 467,
+    commentCount: 289,
+    shareCount: 189,
+    bookmarkCount: 334,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-17T11:20:00Z'),
+    updatedAt: new Date('2024-06-17T11:20:00Z'),
+  },
+  {
+    id: '10',
+    title: 'Food Delivery Driver Left My Order with "Suspicious Guy in Hoodie"',
+    slug: 'delivery-driver-suspicious-guy-hoodie',
+    excerpt: 'Plot twist: I was the suspicious guy in a hoodie. Apparently my own appearance made me untrustworthy to receive my own food.',
+    imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800',
+    category: 'Tech Nightmares',
+    author: 'the-snarky-sage',
+    viewCount: 11234,
+    upvoteCount: 389,
+    commentCount: 156,
+    shareCount: 134,
+    bookmarkCount: 278,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-17T08:10:00Z'),
+    updatedAt: new Date('2024-06-17T08:10:00Z'),
+  },
+  {
+    id: '11',
+    title: 'Zoom Meeting Turned into Accidental Therapy Session',
+    slug: 'zoom-meeting-accidental-therapy-session',
+    excerpt: 'Client started oversharing about their divorce. Somehow I became their unpaid counselor while trying to discuss quarterly reports.',
+    imageUrl: 'https://images.unsplash.com/photo-1587613754099-6b1e83b92b1c?w=800',
+    category: 'Work Drama',
+    author: 'the-dry-cynic',
+    viewCount: 8967,
+    upvoteCount: 234,
+    commentCount: 167,
+    shareCount: 89,
+    bookmarkCount: 189,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-16T14:55:00Z'),
+    updatedAt: new Date('2024-06-16T14:55:00Z'),
+  },
+  {
+    id: '12',
+    title: 'Barista Wrote "Disappointed Dad" Instead of My Name on Cup',
+    slug: 'barista-disappointed-dad-name',
+    excerpt: 'Ordered a simple latte. Got an emotional intervention instead. Apparently my life choices are written all over my face.',
+    imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800',
+    category: 'Public Freakouts',
+    author: 'the-down-to-earth-buddy',
+    viewCount: 7845,
+    upvoteCount: 298,
+    commentCount: 134,
+    shareCount: 67,
+    bookmarkCount: 156,
+    trending: false,
+    featured: false,
+    status: 'published',
+    createdAt: new Date('2024-06-16T10:30:00Z'),
+    updatedAt: new Date('2024-06-16T10:30:00Z'),
   }
-  return mockPosts;
-}
+];
 
-// Initialize Supabase client
-const supabase = createClient(
-  env.NEXT_PUBLIC_SUPABASE_URL,
-  env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-/**
- * GET /api/posts - List posts with pagination and filtering
- */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const queryValidation = validateQueryParams(postQuerySchema as any, Object.fromEntries(searchParams));
-    
-    if (!queryValidation.success) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters', message: queryValidation.error },
-        { status: 400 }
-      );
-    }
 
-    const { 
-      page, 
-      limit, 
-      category, 
-      persona_id, 
-      published, 
-      search,
-      featured,
-      trending,
-      offset: directOffset 
-    } = queryValidation.data as any;
-    
-    // Support both page-based and offset-based pagination
-    const offset = directOffset !== undefined ? directOffset : (page - 1) * limit;
-
-    // Build query
-    let query = supabase
-      .from('posts')
-      .select(`
-        *,
-        personas (
-          id,
-          name,
-          avatar_url,
-          tone
-        )
-      `, { count: 'exact' });
-
-    // Apply filters
-    if (category) query = query.eq('category', category);
-    if (persona_id) query = query.eq('persona_id', persona_id);
-    if (published !== undefined) query = query.eq('published', published);
-    if (featured !== undefined) query = query.eq('featured', featured);
-    if (trending !== undefined) query = query.eq('trending', trending);
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%,excerpt.ilike.%${search}%`);
-    }
-
-    // Apply pagination and ordering
-    query = query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    const { data: posts, error, count } = await query;
-
-    if (error) {
-      console.error('Database error:', error);
-      
-      // Handle missing schema/relationship gracefully with mock data
-      if (error.code === 'PGRST200' || error.message?.includes('relationship')) {
-        console.warn('Database schema not initialized, returning mock data');
-        return NextResponse.json({
-          posts: getMockPosts(limit),
-          total: 50,
-          hasMore: true,
-          page: page,
-          pagination: {
-            page,
-            limit,
-            total: 50,
-            total_pages: Math.ceil(50 / limit),
-            has_next: page < Math.ceil(50 / limit),
-            has_prev: page > 1,
-          },
-          timestamp: new Date().toISOString(),
-        });
-      }
-      
-      return NextResponse.json(
-        { error: 'Database error', message: 'Failed to fetch posts' },
-        { status: 500 }
-      );
-    }
-
-    const totalPages = Math.ceil((count || 0) / limit);
-
-    // Format response to match frontend expectations
-    const hasMore = (offset + limit) < (count || 0);
-    
-    return NextResponse.json({
-      posts: posts || [],
-      total: count || 0,
-      hasMore,
-      page: directOffset !== undefined ? Math.floor(offset / limit) + 1 : page,
-      pagination: {
-        page: directOffset !== undefined ? Math.floor(offset / limit) + 1 : page,
-        limit,
-        total: count || 0,
-        total_pages: totalPages,
-        has_next: page < totalPages,
-        has_prev: page > 1,
-      },
-      timestamp: new Date().toISOString(),
+    // Parse and validate query parameters
+    const queryResult = PostQuerySchema.safeParse({
+      page: searchParams.get('page') || '1',
+      limit: searchParams.get('limit') || '12',
+      category: searchParams.get('category'),
+      author: searchParams.get('author'),
+      trending: searchParams.get('trending'),
+      featured: searchParams.get('featured'),
+      search: searchParams.get('search'),
+      sortBy: searchParams.get('sortBy'),
     });
 
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', message: 'An unexpected error occurred' },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * POST /api/posts - Create a new post (requires authentication)
- */
-export async function POST(request: NextRequest) {
-  try {
-    // Check authentication
-    const { userId } = await auth();
-    if (!userId) {
+    if (!queryResult.success) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-    // Parse and validate request body
-    const body = await request.json();
-    const validation = validateRequestBody(createPostSchema, body);
-
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid request body', message: validation.error },
+        {
+          error: 'VALIDATION_ERROR',
+          message: 'Invalid query parameters',
+          details: queryResult.error.format(),
+        },
         { status: 400 }
       );
     }
 
-    const postData = validation.data;
+    const {
+      page = 1,
+      limit = 12,
+      category,
+      author,
+      trending,
+      featured,
+      search,
+      sortBy,
+    } = queryResult.data;
 
-    // Check if persona exists
-    const { data: persona, error: personaError } = await supabase
-      .from('personas')
-      .select('id')
-      .eq('id', postData.persona_id)
-      .single();
+    // Build where clause based on filters
+    const where: any = {
+      status: 'published',
+    };
 
-    if (personaError || !persona) {
-      return NextResponse.json(
-        { error: 'Invalid persona', message: 'Persona not found' },
-        { status: 400 }
-      );
+    if (category) {
+      where.category = category;
     }
 
-    // Generate slug from title
-    const slug = postData.title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .slice(0, 100);
-
-    // Create post
-    const { data: post, error: createError } = await supabase
-      .from('posts')
-      .insert({
-        ...postData,
-        slug,
-        author_id: userId,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .select(`
-        *,
-        personas (
-          id,
-          name,
-          avatar_url,
-          tone
-        )
-      `)
-      .single();
-
-    if (createError) {
-      console.error('Database error:', createError);
-      return NextResponse.json(
-        { error: 'Database error', message: 'Failed to create post' },
-        { status: 500 }
-      );
+    if (author) {
+      // Convert display name back to slug format for database lookup
+      const authorSlug = author.toLowerCase().replace(/\s+/g, '-');
+      where.author = {
+        contains: authorSlug,
+        mode: 'insensitive',
+      };
     }
+
+    if (trending === true) {
+      where.trending = trending;
+    }
+
+    if (featured === true) {
+      where.featured = featured;
+    }
+
+    if (search) {
+      where.OR = [
+        {
+          title: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          excerpt: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+
+    // Filter mock posts based on query parameters
+    let filteredPosts = mockPosts.filter(post => {
+      // Status filter (all mock posts are published)
+      if (post.status !== 'published') return false;
+      
+      // Category filter
+      if (category && post.category !== category) return false;
+      
+      // Author filter
+      if (author) {
+        const authorSlug = author.toLowerCase().replace(/\s+/g, '-');
+        if (!post.author.toLowerCase().includes(authorSlug)) return false;
+      }
+      
+      // Trending filter
+      if (trending === true && !post.trending) return false;
+      
+      // Featured filter  
+      if (featured === true && !post.featured) return false;
+      
+      // Search filter
+      if (search) {
+        const searchLower = search.toLowerCase();
+        const titleMatch = post.title.toLowerCase().includes(searchLower);
+        const excerptMatch = post.excerpt?.toLowerCase().includes(searchLower);
+        if (!titleMatch && !excerptMatch) return false;
+      }
+      
+      return true;
+    });
+
+    // Sort posts based on sortBy parameter
+    switch (sortBy) {
+      case 'views':
+        filteredPosts.sort((a, b) => b.viewCount - a.viewCount);
+        break;
+      case 'shares':
+        filteredPosts.sort((a, b) => b.shareCount - a.shareCount);
+        break;
+      case 'comments':
+        filteredPosts.sort((a, b) => b.commentCount - a.commentCount);
+        break;
+      case 'trending':
+        filteredPosts.sort((a, b) => {
+          if (b.trending !== a.trending) return b.trending ? 1 : -1;
+          return b.viewCount - a.viewCount;
+        });
+        break;
+      case 'latest':
+        filteredPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      default:
+        // Default ordering: trending first, then featured, then by date
+        filteredPosts.sort((a, b) => {
+          if (b.trending !== a.trending) return b.trending ? 1 : -1;
+          if (b.featured !== a.featured) return b.featured ? 1 : -1;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+    }
+
+    // Calculate pagination
+    const total = filteredPosts.length;
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+    const skip = (page - 1) * limit;
+    const posts = filteredPosts.slice(skip, skip + limit);
+
+    // Transform posts for API response
+    const transformedPosts = posts.map(post => ({
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      image_url: post.imageUrl,
+      category: post.category,
+      author: post.author,
+      view_count: post.viewCount,
+      upvote_count: post.upvoteCount,
+      comment_count: post.commentCount,
+      share_count: post.shareCount,
+      bookmark_count: post.bookmarkCount,
+      trending: post.trending,
+      featured: post.featured,
+      created_at: post.createdAt.toISOString(),
+      updated_at: post.updatedAt.toISOString(),
+    }));
 
     return NextResponse.json({
-      success: true,
-      data: post,
-      timestamp: new Date().toISOString(),
-    }, { status: 201 });
-
+      posts: transformedPosts,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext,
+        hasPrev,
+      },
+    });
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Posts API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', message: 'An unexpected error occurred' },
+      {
+        error: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch posts',
+        request_id: crypto.randomUUID(),
+      },
       { status: 500 }
     );
   }
