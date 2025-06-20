@@ -128,14 +128,44 @@ export function TrendingFeed() {
     );
   }
 
+  // Create mixed content array with ads injected every 10th position
+  const createMixedContent = () => {
+    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
+    
+    posts.forEach((post, index) => {
+      // Add the post
+      mixedContent.push({ type: 'post', data: post, index });
+      
+      // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
+      if ((index + 1) % 10 === 0) {
+        mixedContent.push({ type: 'ad', index: index + 1 });
+      }
+    });
+    
+    return mixedContent;
+  };
+
+  const mixedContent = createMixedContent();
+
   return (
     <div className='space-y-6'>
-      {/* 3x4 Bento Grid (12 posts to fill the space) */}
+      {/* 3x4 Bento Grid with integrated ads */}
       <div className='grid auto-rows-[320px] grid-cols-3 gap-4'>
-        {posts.slice(0, 12).map((post: Post, index: number) => {
-          // 3x4 grid - each post gets equal space
+        {mixedContent.map((item, gridIndex) => {
           const cardClasses = 'col-span-1 row-span-1';
 
+          if (item.type === 'ad') {
+            return (
+              <div key={`ad-${item.index}`} className={cardClasses}>
+                <FeedAd 
+                  position={item.index} 
+                  className='h-full'
+                />
+              </div>
+            );
+          }
+
+          const post = item.data!;
           return (
             <React.Fragment key={post.id}>
               <Link
