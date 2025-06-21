@@ -406,7 +406,7 @@ export function QuizBuilder({
         {quiz.questions.length === 0 && (
           <div className='py-12 text-center text-gray-500'>
             <HelpCircle className='mx-auto mb-4 h-12 w-12 opacity-50' />
-            <p>No questions yet. Click "Add Question" to get started.</p>
+            <p>No questions yet. Click &quot;Add Question&quot; to get started.</p>
           </div>
         )}
       </div>

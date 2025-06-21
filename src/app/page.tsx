@@ -31,15 +31,15 @@ export default function HomePage() {
           </div>
 
           {/* Sidebar - 1 column reserved, starts right after hero */}
-          <div className='py-6 md:py-8 lg:col-span-1'>
-            <div className='sticky top-4 space-y-6'>
+          <div className='relative py-6 md:py-8 lg:col-span-1'>
+            <div className='sticky top-20 space-y-6'>
               {/* Sidebar Ads */}
               <SidebarAd />
               {/* Top 5 Popular Posts */}
               <div className='mb-6 rounded-lg border bg-card p-6'>
                 <h3 className='mb-4 flex items-center gap-2 text-lg font-extrabold text-foreground'>
                   <Trophy className='h-5 w-5 text-orange-500' />
-                  Today's Top 5
+                  Today&apos;s Top 5
                 </h3>
                 <div className='space-y-4'>
                   {popularLoading

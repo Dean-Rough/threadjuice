@@ -11,7 +11,7 @@ import { twitterRateLimiter } from '@/lib/twitterRateLimiter';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🎭 Starting real-time Twitter drama detection...');
+    // Starting real-time Twitter drama detection
     
     // Check for testing override
     const { searchParams } = new URL(request.url);
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.log('✅ Twitter API configured and within rate limits, fetching drama tweets...');
+    // Twitter API configured and within rate limits, fetching drama tweets
 
     // Fetch recent high-engagement tweets (conservative limits for free tier)
     const twitterTweets = await twitterApiClient.searchDramaTweets({
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       maxResults: 10    // Small batch for free tier
     });
 
-    console.log(`📥 Retrieved ${twitterTweets.length} tweets from Twitter API`);
+    // Retrieved tweets from Twitter API
 
     if (twitterTweets.length === 0) {
       return NextResponse.json({
@@ -75,11 +75,11 @@ export async function GET(request: NextRequest) {
 
     // Analyze tweets for drama potential
     const dramaThreads = twitterDramaDetector.analyzeTrendingTopics(twitterTweets);
-    console.log(`🔥 Detected ${dramaThreads.length} potential drama threads`);
+    // Detected potential drama threads
 
     // Convert high-drama threads to ThreadJuice stories
     const stories = await twitterToStoryConverter.convertMultipleDramas(dramaThreads);
-    console.log(`📝 Generated ${stories.length} ThreadJuice stories`);
+    // Generated ThreadJuice stories
 
     // Return comprehensive results
     const results = {

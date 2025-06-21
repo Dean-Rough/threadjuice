@@ -47,7 +47,7 @@ function loadGeneratedStories() {
     // Sort by creation date, newest first
     return stories.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   } catch (error) {
-    console.warn('Failed to load generated stories:', error);
+    // Failed to load generated stories
     return [];
   }
 }
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     // Try Supabase first
     try {
-      console.log('🔍 Attempting to fetch from Supabase...');
+      // Attempting to fetch from Supabase
       
       let query = supabase
         .from('posts')
@@ -146,18 +146,17 @@ export async function GET(request: NextRequest) {
       // Apply pagination
       const from = (page - 1) * limit;
       const to = from + limit - 1;
-      console.log(`📄 Pagination: from=${from}, to=${to}, page=${page}, limit=${limit}`);
+      // Pagination parameters calculated
       query = query.range(from, to);
 
       const { data, error, count } = await query;
 
       if (error) {
-        console.log('❌ Supabase error:', error.message);
+        // Supabase error encountered
         throw error;
       }
 
-      console.log('✅ Successfully fetched from Supabase:', data?.length || 0, 'posts');
-      console.log('First 3 post titles:', data?.slice(0, 3).map(p => p.title));
+      // Successfully fetched from Supabase
       
       // Transform Supabase data to match expected format
       posts = data?.map(post => ({
@@ -190,8 +189,7 @@ export async function GET(request: NextRequest) {
       usedSupabase = true;
 
     } catch (supabaseError) {
-      console.log('⚠️  Supabase unavailable, falling back to file system');
-      console.log('   Error:', supabaseError.message);
+      // Supabase unavailable, falling back to file system
       
       // Fallback to file-based system
       const generatedStories = loadGeneratedStories();

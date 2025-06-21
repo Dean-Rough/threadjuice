@@ -78,7 +78,7 @@ export default function LandingPage() {
     },
     {
       quote:
-        "The AI writers are surprisingly engaging. It's like having a curated news feed with personality.",
+        &quot;The AI writers are surprisingly engaging. It&apos;s like having a curated news feed with personality.&quot;,
       author: 'Mike R.',
       role: 'Marketing Manager',
     },
@@ -307,7 +307,7 @@ export default function LandingPage() {
             {testimonials.map((testimonial, index) => (
               <div key={index} className='rounded-xl bg-gray-50 p-6'>
                 <p className='mb-4 italic text-gray-700'>
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </p>
                 <div>
                   <p className='font-semibold text-gray-900'>
@@ -328,7 +328,7 @@ export default function LandingPage() {
             Ready to Transform Your Content Diet?
           </h2>
           <p className='mx-auto mb-8 max-w-2xl text-xl text-orange-100'>
-            Join thousands of readers who've upgraded from endless scrolling to
+            Join thousands of readers who&apos;ve upgraded from endless scrolling to
             curated entertainment.
           </p>
           <Link

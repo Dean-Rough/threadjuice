@@ -9,19 +9,19 @@ import { twitterToStoryConverter } from '@/lib/twitterToStoryConverter';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🎭 Testing Twitter Drama Detection Pipeline...');
+    // Testing Twitter Drama Detection Pipeline
     
     // Step 1: Get mock Twitter data (in production, this would be real Twitter API data)
     const mockTweets = twitterDramaDetector.generateMockDramaData();
-    console.log(`📥 Retrieved ${mockTweets.length} mock tweets`);
+    // Retrieved mock tweets
     
     // Step 2: Analyze tweets for drama potential
     const dramaThreads = twitterDramaDetector.analyzeTrendingTopics(mockTweets);
-    console.log(`🔥 Found ${dramaThreads.length} potential drama threads`);
+    // Found potential drama threads
     
     // Step 3: Convert drama to ThreadJuice stories
     const stories = await twitterToStoryConverter.convertMultipleDramas(dramaThreads);
-    console.log(`📝 Generated ${stories.length} ThreadJuice stories`);
+    // Generated ThreadJuice stories
     
     // Step 4: Return comprehensive test results
     const testResults = {

@@ -225,7 +225,7 @@ export default function NotificationCenter({
                   <Bell className='mx-auto mb-3 h-12 w-12 text-gray-300' />
                   <p className='text-sm text-gray-500'>No notifications yet</p>
                   <p className='mt-1 text-xs text-gray-400'>
-                    You'll see updates about comments, likes, and more here
+                    You&apos;ll see updates about comments, likes, and more here
                   </p>
                 </div>
               ) : (

@@ -250,7 +250,7 @@ export default function CategoryFilter({
 
               {searchTerm && (
                 <span className='filter-badge'>
-                  Search: "{searchTerm}"
+                  Search: &quot;{searchTerm}&quot;
                   <button
                     className='remove-filter ms-1'
                     onClick={clearSearch}

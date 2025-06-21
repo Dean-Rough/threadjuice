@@ -11,18 +11,17 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    console.log('🎭 LIVE TWITTER DRAMA STORY GENERATION');
-    console.log('='.repeat(50));
+    // Live Twitter drama story generation
 
     // Step 1: Get fresh Twitter drama from all available sources
-    console.log('🔍 Scanning Twitter for fresh drama...');
+    // Scanning Twitter for fresh drama
     const aggregationResult = await socialDramaAggregator.aggregateDramaContent();
 
-    console.log(`📊 Found ${aggregationResult.summary.total_tweets} tweets, ${aggregationResult.summary.drama_threads_found} drama threads`);
+    // Found tweets and drama threads
 
     // Check if we found any quality drama
     if (aggregationResult.best_dramas.length === 0) {
-      console.log('💡 No high-quality drama found, creating simulated story...');
+      // No high-quality drama found, creating simulated story
       
       // Fall back to our proven simulation approach
       const simulatedStory = await createSimulatedTwitterStory();
@@ -42,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Step 2: Convert best drama to ThreadJuice story
     const bestDrama = aggregationResult.best_dramas[0];
-    console.log(`🎯 Converting drama (score: ${bestDrama.drama_score}) to ThreadJuice story...`);
+    // Converting drama to ThreadJuice story
 
     const story = await twitterToStoryConverter.convertDramaToStory(bestDrama);
 
@@ -71,9 +70,7 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    console.log(`✅ Generated story: "${story.title}"`);
-    console.log(`🎭 Drama score: ${bestDrama.drama_score}/100`);
-    console.log(`📱 Source: ${aggregationResult.summary.sources_used.join(', ')}`);
+    // Story generated successfully
 
     return NextResponse.json({
       success: true,
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest) {
     
     // If live generation fails, fall back to simulation
     try {
-      console.log('🔄 Falling back to simulated story...');
+      // Falling back to simulated story
       const simulatedStory = await createSimulatedTwitterStory();
       
       return NextResponse.json({

@@ -355,11 +355,7 @@ export default function SimplePostDetail({
         setPost(postData);
 
         // Analyze content quality and adapt sections
-        console.log('📚 POST DATA:', { 
-          title: postData.title, 
-          category: postData.category,
-          sectionsCount: postData.content?.sections?.length 
-        });
+        // Analyzing post data
         
         
         if (postData.content?.sections) {
@@ -381,11 +377,7 @@ export default function SimplePostDetail({
 
           setContentQuality(quality);
           
-          console.log('🔍 Content Quality Analysis:', {
-            tier: quality.qualityTier,
-            score: quality.overallQuality,
-            action: quality.recommendedAction
-          });
+          // Content quality analyzed
           
           
           // Adapt sections based on quality
@@ -399,51 +391,42 @@ export default function SimplePostDetail({
           });
           setEmotionalAnalysis(emotions);
           
-          console.log('🎭 Emotion Analysis:', emotions.map(e => ({ 
-            type: e.sectionType, 
-            emotion: e.emotion, 
-            intensity: e.intensity,
-            sectionIndex: e.sectionIndex
-          })));
+          // Emotion analysis completed
 
           // Enhance story with GIF reactions for all published content
           if (quality.passesPublishingThreshold) {
-            console.log('🎬 Enhancing story with GIFs...');
+            // Enhancing story with GIFs
             const enhancedSections = await enhanceStoryWithGifs(adaptedSections, emotions);
-            console.log('✅ Enhanced sections count:', enhancedSections.length);
             setAdaptiveSections(enhancedSections);
           } else {
-            console.log('⚠️ Story quality too low for GIF enhancement:', quality.qualityTier);
+            // Story quality too low for GIF enhancement
           }
 
           // Extract metaphor for all published content (70%+ quality)
           if (quality.passesPublishingThreshold) {
-            console.log('🧠 Generating Terry\'s metaphor for quality content...');
+            // Generating Terry's metaphor for quality content
             const insight = metaphorExtractor.extractMetaphor(
               postData.title,
               postData.content.sections.map((s: any) => s.content).join('\n\n'),
               postData.category,
               emotions[0]?.emotion || 'pure_entertainment'
             );
-            console.log('💬 Terry\'s insight:', insight.terryVoice);
             setMetaphorInsight(insight);
             
             // Show Terry's bubble after a delay for quality content
-            console.log('⏱️ Setting Terry\'s bubble timer...');
             setTimeout(() => {
-              console.log('🗣️ Showing Terry\'s bubble now!');
               setShowTerrysBubble(true);
             }, 8000);
           } else {
-            console.log('⚠️ Story quality too low for Terry\'s corner - score:', quality.overallQuality);
+            // Story quality too low for Terry's corner
           }
           } catch (qualityError) {
-            console.error('❌ Error in quality analysis:', qualityError);
+            // Error in quality analysis
           }
         }
 
         // Fetch related stories based on category and tags
-        console.log('📚 Fetching related stories for category:', postData.category, 'tags:', postData.tags);
+        // Fetching related stories
         await fetchRelatedStories(postData.category, postData.tags || [], postData.id);
       } catch (err) {
         console.error('Error fetching post:', err);
@@ -488,7 +471,7 @@ export default function SimplePostDetail({
             })
             .slice(0, 3); // Take top 3
 
-          console.log('📖 Found', related.length, 'related stories');
+          // Found related stories
           
           // If we didn't find enough related stories, get some popular ones
           if (related.length < 3) {
@@ -498,7 +481,7 @@ export default function SimplePostDetail({
               .slice(0, 3 - related.length);
             
             related.push(...popular);
-            console.log('📖 Added', popular.length, 'popular stories to fill');
+            // Added popular stories to fill
           }
           
           setRelatedStories(related);
@@ -631,7 +614,7 @@ export default function SimplePostDetail({
       
       // Insert GIF reactions at optimal points based on emotional analysis
       if (emotion && shouldInsertGifReaction(emotion, i, sections.length)) {
-        console.log(`🎯 Inserting GIF for emotion: ${emotion.emotion} (intensity: ${emotion.intensity})`);
+        // Inserting GIF for emotion
         try {
           const gifResult = await giphyService.searchReactionGif({
             searchTerms: emotion.giffSearchTerms,
@@ -641,7 +624,7 @@ export default function SimplePostDetail({
           });
 
           if (gifResult) {
-            console.log('✅ GIF found:', gifResult.title);
+            // GIF found
             const gifSection = {
               type: 'gif-reaction',
               content: getGifCaption(emotion),
@@ -660,13 +643,13 @@ export default function SimplePostDetail({
 
             enhancedSections.push(gifSection);
           } else {
-            console.log('❌ No GIF found for emotion:', emotion.emotion);
+            // No GIF found for emotion
           }
         } catch (error) {
-          console.warn('❌ Failed to fetch GIF for emotion:', emotion.emotion, error);
+          // Failed to fetch GIF for emotion
         }
       } else if (emotion) {
-        console.log(`⚪ Skipping GIF for emotion: ${emotion.emotion} (intensity: ${emotion.intensity}) - doesn't meet criteria`);
+        // Skipping GIF - doesn't meet criteria
       }
     }
 
@@ -808,7 +791,7 @@ export default function SimplePostDetail({
                   className='w-full object-cover'
                   style={{ maxHeight: '400px' }}
                   onError={(e) => {
-                    console.error('❌ Embedded image failed to load:', section.metadata.imageUrl);
+                    // Embedded image failed to load
                     e.currentTarget.src = '/assets/img/blog/blog01.jpg'; // Fallback
                   }}
                 />
@@ -1141,7 +1124,7 @@ export default function SimplePostDetail({
                     alt={section.title || 'Video thumbnail'}
                     className='h-full w-full object-cover'
                     onError={(e) => {
-                      console.error('❌ Image failed to load:', section.metadata.thumbnail);
+                      // Image failed to load
                       e.currentTarget.style.display = 'none';
                     }}
                   />
@@ -1402,10 +1385,10 @@ export default function SimplePostDetail({
 
               {/* Story Content - Direct from Database */}
               <div className='story-content space-y-8'>
-                {console.log('📝 Rendering sections:', post.content?.sections?.length, 'sections')}
+                {/* Rendering sections */}
                 {(post.content?.sections || []).map((section: any, index: number) => (
                   <React.Fragment key={index}>
-                    {console.log(`🔍 Section ${index + 1}:`, section.type, section.title || '')}
+                    {/* Section rendering */}
                     {renderSection(section, index)}
 
                     {/* Insert inline ad after 2nd section (after intro) */}
@@ -1521,7 +1504,7 @@ export default function SimplePostDetail({
               )}
 
               {/* More Stories Like This Section */}
-              {console.log('🔍 Rendering related stories:', showRelated, relatedStories.length)}
+              {/* Rendering related stories */}
               {showRelated && relatedStories.length > 0 && (
                 <div className='more-stories-section mt-16 pt-12 border-t border-border'>
                   <h2 className='mb-8 text-3xl font-extrabold text-foreground'>
@@ -1595,8 +1578,11 @@ export default function SimplePostDetail({
 
           {/* Sidebar */}
           {showSidebar && (
-            <div className='lg:col-span-1'>
-              <div className='sticky top-8 space-y-6'>
+            <div className='relative lg:col-span-1'>
+              <div className='sticky top-20 space-y-6'>
+                {/* Sidebar Ad */}
+                <SidebarAd />
+                
                 <div className='rounded-lg border bg-card p-6'>
                   <h3 className='mb-4 text-lg font-extrabold text-foreground'>
                     Trending Now

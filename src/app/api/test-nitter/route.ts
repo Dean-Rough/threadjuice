@@ -12,34 +12,34 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    console.log('🎭 Testing Nitter scraper and social drama aggregator...');
+    // Testing Nitter scraper and social drama aggregator
 
     // Test 1: Quick health check of all systems
-    console.log('📊 Checking system health...');
+    // Checking system health
     const healthCheck = await socialDramaAggregator.getSystemHealth();
 
     // Test 2: Run smart drama detection (tries best available source)
-    console.log('🔍 Running smart drama detection...');
+    // Running smart drama detection
     const smartResults = await socialDramaAggregator.smartDramaDetection();
 
     // Test 3: Get quick drama check (fastest source)
-    console.log('⚡ Quick drama check...');
+    // Quick drama check
     const quickDramas = await socialDramaAggregator.getQuickDrama();
 
     // Test 4: Full aggregation from all sources
-    console.log('🌐 Full social drama aggregation...');
+    // Full social drama aggregation
     const fullResults = await socialDramaAggregator.aggregateDramaContent();
 
     // Test 5: Convert best drama to ThreadJuice story if found
     let convertedStory = null;
     if (fullResults.best_dramas.length > 0) {
-      console.log('📝 Converting best drama to ThreadJuice story...');
+      // Converting best drama to ThreadJuice story
       const bestDrama = fullResults.best_dramas[0];
       convertedStory = await twitterToStoryConverter.convertDramaToStory(bestDrama);
     }
 
     // Test 6: Check Nitter instance health
-    console.log('🕸️ Checking Nitter instance health...');
+    // Checking Nitter instance health
     const nitterHealth = await nitterScraper.checkInstanceHealth();
 
     const testResults = {
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
       ]
     };
 
-    console.log(`✅ Test completed in ${testResults.execution_time}ms`);
+    // Test completed
     
     return NextResponse.json(testResults, { status: 200 });
 

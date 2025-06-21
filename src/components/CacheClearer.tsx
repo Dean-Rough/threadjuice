@@ -21,7 +21,7 @@ export function CacheClearer() {
       });
     }
     
-    console.log('✅ Cache cleared at:', new Date().toISOString());
+    // Cache cleared
   }, [queryClient]);
   
   return null;

@@ -48,7 +48,7 @@ export default function FilterPage() {
                   />
                 </Link>
                 <p className='text-muted-foreground'>
-                  Get ratio'd • The best stories from around the web
+                  Get ratio&apos;d • The best stories from around the web
                 </p>
               </div>
               <nav className='hidden space-x-6 md:flex'>
@@ -172,11 +172,11 @@ export default function FilterPage() {
                 <div className='mb-6 rounded-lg border bg-card p-6'>
                   <h3 className='mb-4 flex items-center gap-2 text-lg font-extrabold text-foreground'>
                     <Trophy className='h-5 w-5 text-orange-500' />
-                    Today's Top 5
+                    Today&apos;s Top 5
                   </h3>
                   <div className='space-y-4'>
                     {[
-                      "Restaurant charged me $50 for 'emotional labor'",
+                      &quot;Restaurant charged me $50 for &apos;emotional labor&apos;&quot;,
                       'Neighbor steals packages, gets glitter bombed',
                       'Working from Disneyland instead of home',
                       'Roommate replaced furniture with cardboard',
@@ -206,15 +206,15 @@ export default function FilterPage() {
                     {[
                       {
                         title:
-                          "My landlord installed a doorbell that plays 'Baby Shark'",
+                          &quot;My landlord installed a doorbell that plays &apos;Baby Shark&apos;&quot;,
                         shares: '3.2k',
                       },
                       {
-                        title: "I accidentally became the town's food critic",
+                        title: &quot;I accidentally became the town&apos;s food critic&quot;,
                         shares: '2.8k',
                       },
                       {
-                        title: "My dating app match was my therapist's patient",
+                        title: &quot;My dating app match was my therapist&apos;s patient&quot;,
                         shares: '2.1k',
                       },
                       {
@@ -263,7 +263,7 @@ export default function FilterPage() {
                 />
                 <p className='text-sm text-muted-foreground'>
                   Your daily dose of internet chaos, wholesome moments, and
-                  "wait, what?" stories. We find the stuff that makes you stop
+                  &quot;wait, what?&quot; stories. We find the stuff that makes you stop
                   scrolling and actually read the comments.
                 </p>
               </div>

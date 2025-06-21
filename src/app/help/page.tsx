@@ -333,7 +333,7 @@ export default function HelpPage() {
               Still need help?
             </h2>
             <p className='mb-8 text-gray-600'>
-              Can't find what you're looking for? Our support team is here to
+              Can&apos;t find what you&apos;re looking for? Our support team is here to
               help.
             </p>
 

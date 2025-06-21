@@ -68,6 +68,7 @@ export default function TrendingFeed({
       },
       // Map API fields to component expectations
       img: post.image_url || '/assets/img/lifestyle/life_style01.jpg',
+      imageUrl: post.image_url || '/assets/img/lifestyle/life_style01.jpg',
       group: post.category,
       date: new Date(post.created_at).toLocaleDateString(),
     };

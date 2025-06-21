@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
     
-    console.log(`🔍 Fetching post with ID/slug: ${id}`);
+    // Fetching post with ID/slug
     
     // Try to fetch by ID first (UUID), then by slug
     let query = supabase
@@ -37,14 +37,14 @@ export async function GET(
     const { data, error } = await query.single();
     
     if (error || !data) {
-      console.log(`❌ Post not found: ${id}`);
+      // Post not found
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       );
     }
     
-    console.log(`✅ Found post: ${data.title}`);
+    // Found post
     
     // Transform to match expected format
     const transformedPost = {

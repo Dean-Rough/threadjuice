@@ -26,7 +26,7 @@ export default function VerticalSider() {
           <div className='tgslider__trending-content'>
             <h6 className='title'>
               <Link href='/blog/1'>
-                How to climb the career latter and don't waste your youth...
+                How to climb the career latter and don&apos;t waste your youth...
               </Link>
             </h6>
           </div>

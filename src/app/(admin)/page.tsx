@@ -44,13 +44,13 @@ export default function AdminDashboard() {
     {
       id: 2,
       type: 'quiz',
-      title: 'Quiz "Are you a tech guru?" completed',
+      title: 'Quiz &quot;Are you a tech guru?&quot; completed',
       time: '4 hours ago',
     },
     {
       id: 3,
       type: 'comment',
-      title: 'New comment on "Reddit Drama Explained"',
+      title: 'New comment on &quot;Reddit Drama Explained&quot;',
       time: '6 hours ago',
     },
   ]);
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold text-gray-900'>Admin Dashboard</h1>
         <p className='mt-2 text-gray-600'>
-          Welcome back! Here's what's happening with your content.
+          Welcome back! Here&apos;s what&apos;s happening with your content.
         </p>
       </div>
 

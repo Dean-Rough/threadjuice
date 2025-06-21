@@ -101,7 +101,7 @@ export default function AnimatedSpeechBubble({
             <button
               onClick={handleDismiss}
               className="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center transition-colors duration-200 shadow-md"
-              aria-label="Dismiss Terry's comment"
+              aria-label="Dismiss Terry&apos;s comment"
             >
               <X className="w-3 h-3" />
             </button>
@@ -110,7 +110,7 @@ export default function AnimatedSpeechBubble({
             <div className="mb-3 flex items-center gap-2">
               <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
               <h4 className="text-sm font-bold text-orange-600 dark:text-orange-400">
-                Terry's Metaphor Corner
+                Terry&apos;s Metaphor Corner
               </h4>
             </div>
 

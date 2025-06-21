@@ -29,7 +29,7 @@ export function Header() {
               />
             </Link>
             <p className='hidden text-muted-foreground md:block'>
-              Get ratio'd • The best stories from around the web
+              Get ratio&apos;d • The best stories from around the web
             </p>
           </div>
           <nav className='hidden space-x-6 md:flex'>

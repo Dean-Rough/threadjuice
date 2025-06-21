@@ -87,7 +87,7 @@ export default function TestStoryPage() {
                 />
               </Link>
               <p className='text-muted-foreground'>
-                Get ratio'd • The best stories from around the web
+                Get ratio&apos;d • The best stories from around the web
               </p>
             </div>
             <div className='flex items-center space-x-2 rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-white'>
@@ -108,7 +108,7 @@ export default function TestStoryPage() {
                 🎭 First ThreadJuice Modular Story Generated!
               </h1>
               <p className='mb-4 text-lg text-green-700'>
-                Your story "<strong>{story.title}</strong>" has been
+                Your story &quot;<strong>{story.title}</strong>&quot; has been
                 successfully created with all 8 modular sections.
               </p>
               <div className='mb-6 grid grid-cols-2 gap-4 text-sm text-green-600'>
