@@ -253,3 +253,17 @@ export class AIStoryContext extends PipelineContext {
     super('ai-generated', { prompt, category, persona });
   }
 }
+
+/**
+ * Factory function to create appropriate context based on source type
+ */
+export function createContext(sourceType: string, data: any): PipelineContext {
+  switch (sourceType) {
+    case 'reddit':
+      return new RedditStoryContext(data);
+    case 'ai-generated':
+      return new AIStoryContext(data.prompt, data.category, data.persona);
+    default:
+      return new PipelineContext(sourceType as any, data);
+  }
+}

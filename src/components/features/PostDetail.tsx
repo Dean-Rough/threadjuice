@@ -311,7 +311,7 @@ export default function PostDetail({
           <div className='quote-section my-5 text-center'>
             <Quote size={32} className='mx-auto mb-3 text-orange-500' />
             <blockquote className='mb-3 text-2xl font-extrabold leading-tight text-foreground md:text-3xl'>
-              "{section.content}"
+              &quot;{section.content}&quot;
             </blockquote>
             {section.metadata?.attribution && (
               <div className='quote-attribution text-muted-foreground'>
@@ -377,7 +377,7 @@ export default function PostDetail({
       <div className='post-not-found py-5 text-center'>
         <h2>Post Not Found</h2>
         <p className='text-muted'>
-          The viral content you're looking for doesn't exist.
+          The viral content you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link href='/' className='btn btn-primary'>
           <ArrowLeft size={16} className='me-2' />

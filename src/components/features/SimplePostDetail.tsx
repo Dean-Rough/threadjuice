@@ -1101,7 +1101,7 @@ export default function SimplePostDetail({
                 className='h-12 w-12 rounded-full'
               />
               <h3 className='text-xl font-extrabold text-foreground'>
-                Terry's Corner
+                Terry&apos;s Corner
               </h3>
             </div>
             <p className='text-lg font-medium italic leading-relaxed text-foreground'>
@@ -1160,7 +1160,7 @@ export default function SimplePostDetail({
                   <div className='mt-4 rounded-lg bg-muted/50 p-4'>
                     <p className='mb-2 text-sm font-semibold text-foreground'>Transcript:</p>
                     <p className='text-sm italic text-muted-foreground'>
-                      "{section.metadata.transcript}"
+                      &quot;{section.metadata.transcript}&quot;
                     </p>
                   </div>
                 )}
@@ -1430,7 +1430,7 @@ export default function SimplePostDetail({
                           className="text-sm font-medium text-white mb-1"
                           style={{ fontFamily: "'Bouchers Sans', sans-serif" }}
                         >
-                          Terry's Take
+                          Terry&apos;s Take
                         </div>
                         <p 
                           className="text-black leading-relaxed"

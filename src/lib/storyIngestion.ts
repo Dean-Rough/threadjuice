@@ -286,32 +286,4 @@ export class StoryIngestionService {
     return result.count;
   }
 
-  /**
-   * Generate bulk stories using the existing script
-   */
-  static async generateBulkStories(count: number): Promise<{ success: number; errors: string[] }> {
-    const results = { success: 0, errors: [] as string[] };
-    
-    for (let i = 0; i < count; i++) {
-      try {
-        // Run the story generation script
-        const { execSync } = require('child_process');
-        execSync('node generate-full-automated-story.js', { 
-          stdio: 'inherit',
-          cwd: process.cwd()
-        });
-        
-        // The script will create a new file, we'll ingest it in the next migration
-        results.success++;
-        
-        // Wait a bit between generations to avoid rate limits
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      } catch (error) {
-        console.error(`Error generating story ${i + 1}:`, error);
-        results.errors.push(`Story ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    }
-
-    return results;
-  }
 }

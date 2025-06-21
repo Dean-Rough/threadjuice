@@ -1,15 +1,130 @@
-node_modules/
+# Build outputs
 .next/
-out/
-build/
 dist/
+build/
+out/
+.vercel/
+
+# Dependencies
+node_modules/
+
+# Testing & Coverage
 coverage/
 .nyc_output/
-*.min.js
-*.min.css
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Binary & Asset files
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+*.mp4
+*.mov
+*.pdf
+*.zip
+*.tar.gz
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.otf
+
+# Configuration & Environment
+.env
+.env.*
+*.lock
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
-.env*
-.DS_Store
+
+# Logs
 *.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+prisma/dev.db
+prisma/migrations/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.cache
+
+# Archive & Legacy
+archive/
+legacy/
+old/
+backup/
+*.bak
+*.old
+
+# Generated files
+generated/
+auto-generated-*.json
+data/generated-stories/
+data/pipeline-test-output/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Documentation (when auto-generated)
+CHANGELOG.md
+
+# Server files
+server.log
+*.pid
+
+# OS Files
+Thumbs.db
+
+# Next.js specific
+.next/
+out/
+next-env.d.ts
+
+# Prisma
+prisma/generated/
+
+# Supabase
+.supabase/
+
+# Public assets (already minified/optimized)
+public/assets/
+
+# Minified files
+*.min.js
+*.min.css
+
+# Test artifacts
+test-results/
+tests/coverage/
+e2e-results/

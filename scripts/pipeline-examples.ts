@@ -7,7 +7,6 @@
 import { 
   createRedditPipeline, 
   createAIPipeline,
-  createContext,
   Pipeline,
   PipelineContext,
   RedditSource,
@@ -27,7 +26,7 @@ import {
 // Example 1: Simple Reddit story ingestion
 async function ingestRedditStory() {
   const pipeline = createRedditPipeline('tifu');
-  const result = await pipeline.execute(createContext());
+  const result = await pipeline.execute(new PipelineContext('reddit', {}));
   
   console.log('Story saved:', result.output.story?.title);
 }
@@ -35,7 +34,7 @@ async function ingestRedditStory() {
 // Example 2: AI story generation with custom persona
 async function generateAIStory() {
   const pipeline = createAIPipeline('workplace', 'the-dry-cynic');
-  const result = await pipeline.execute(createContext());
+  const result = await pipeline.execute(new PipelineContext('ai-generated', {}));
   
   return result.output.story;
 }
@@ -65,7 +64,7 @@ async function customPipeline() {
     // Save to both database and file
     .pipe(DualOutput());
     
-  return await pipeline.execute(createContext());
+  return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
 // Example 4: Minimal pipeline for testing
@@ -77,7 +76,7 @@ async function testPipeline() {
     .pipe(new TransformStage())
     .pipe(FileOutput('./test-stories'));
     
-  return await pipeline.execute(createContext());
+  return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
 // Example 5: Using the orchestrator for multiple pipelines
@@ -87,13 +86,13 @@ async function orchestratorExample() {
   // Execute Reddit pipeline
   const redditResult = await orchestrator.execute(
     'reddit-viral',
-    createContext()
+    new PipelineContext('reddit', {})
   );
   
   // Execute AI pipeline
   const aiResult = await orchestrator.execute(
     'ai-generated',
-    createContext()
+    new PipelineContext('ai-generated', {})
   );
   
   // Get pipeline stats
@@ -114,7 +113,7 @@ async function batchProcess() {
       .pipe(new TransformStage())
       .pipe(DatabaseOutput());
       
-    const result = await pipeline.execute(createContext());
+    const result = await pipeline.execute(new PipelineContext('reddit', {}));
     results.push(result);
   }
   
@@ -136,7 +135,7 @@ async function robustPipeline() {
   let retries = 3;
   while (retries > 0) {
     try {
-      const result = await pipeline.execute(createContext());
+      const result = await pipeline.execute(new PipelineContext('reddit', {}));
       if (result.output.story) {
         return result;
       }
@@ -178,7 +177,7 @@ async function conditionalPipeline(options: {
     pipeline.pipe(DatabaseOutput());
   }
   
-  return await pipeline.execute(createContext());
+  return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
 // Export all examples

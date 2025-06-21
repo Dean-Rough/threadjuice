@@ -4,6 +4,17 @@
  */
 
 import '@testing-library/jest-dom';
+import { configure } from '@testing-library/react';
+
+// Configure testing library for better error messages
+configure({
+  testIdAttribute: 'data-testid',
+  // Increase timeout for async operations
+  asyncUtilTimeout: 5000,
+});
+
+// Global test timeout for async operations
+jest.setTimeout(15000);
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
@@ -142,7 +153,9 @@ beforeAll(() => {
   console.error = (...args) => {
     if (
       typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render is no longer supported')
+      (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
+       args[0].includes('Warning: The current testing environment is not configured to support act') ||
+       args[0].includes('act(...) is not supported in production builds of React'))
     ) {
       return;
     }

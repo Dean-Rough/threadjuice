@@ -74,7 +74,7 @@ export default function Blog() {
                         </Link>
                       </h3>
                       <p>
-                        Reddit user discovers their roommate's viral dance
+                        Reddit user discovers their roommate&apos;s viral dance
                         practice sessions are creating chaos during important
                         work meetings. The drama unfolds as boundaries clash
                         with social media ambitions in this millennial nightmare
@@ -158,13 +158,13 @@ export default function Blog() {
                       </ul>
                       <h3 className='title tgcommon__hover'>
                         <Link href='/blog/3'>
-                          Office worker accidentally CC's entire company on
+                          Office worker accidentally CC&apos;s entire company on
                           resignation email
                         </Link>
                       </h3>
                       <p>
                         A simple typo turns into corporate entertainment as one
-                        employee's brutally honest resignation letter reaches
+                        employee&apos;s brutally honest resignation letter reaches
                         1,247 coworkers instead of just HR. The chaos that
                         ensued will restore your faith in workplace drama.
                       </p>

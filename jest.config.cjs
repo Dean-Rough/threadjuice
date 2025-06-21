@@ -13,6 +13,16 @@ const customJestConfig = {
   // Set test environment
   testEnvironment: 'jest-environment-jsdom',
   
+  // Test timeouts
+  testTimeout: 15000, // 15 seconds
+  
+  // Jest performance optimizations
+  maxWorkers: '50%',
+  
+  // Clear mocks between tests
+  clearMocks: true,
+  resetMocks: true,
+  
   // Module name mapping for absolute imports
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

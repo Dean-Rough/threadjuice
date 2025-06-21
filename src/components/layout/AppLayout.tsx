@@ -39,7 +39,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 />
                 <p className='text-sm text-muted-foreground'>
                   Your daily dose of internet chaos, wholesome moments, and
-                  "wait, what?" stories. We find the stuff that makes you stop
+                  &quot;wait, what?&quot; stories. We find the stuff that makes you stop
                   scrolling and actually read the comments.
                 </p>
               </div>

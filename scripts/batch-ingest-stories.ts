@@ -101,22 +101,32 @@ async function batchIngestStories() {
             title: topic,
             selftext: `Generate an engaging story about: ${topic}`,
             author: 'AI_Generated',
+            subreddit: 'ThreadJuice_AI',
+            subreddit_name_prefixed: 'r/ThreadJuice_AI',
             score: 10000 + Math.floor(Math.random() * 5000),
+            upvote_ratio: 0.95,
             num_comments: 500 + Math.floor(Math.random() * 500),
             created_utc: Date.now() / 1000,
-            subreddit: 'ThreadJuice_AI',
+            permalink: `/ai/${Date.now()}`,
             url: `https://threadjuice.com/ai/${Date.now()}`,
-            permalink: `/ai/${Date.now()}`
+            is_self: true,
+            stickied: false,
+            over_18: false
           };
           
           // Transform with AI
           const transformed = await contentTransformer.transformContent(mockPost, []);
           
           if (transformed && contentTransformer.validateContent(transformed)) {
-            // Get image
+            // Get image - extract text content from sections for image search
+            const contentText = transformed.content?.sections
+              .map(section => section.content)
+              .join(' ')
+              .slice(0, 500) || transformed.excerpt;
+              
             const imageResult = await imageService.findBestImageIntelligent(
               transformed.title,
-              transformed.content || transformed.excerpt,
+              contentText,
               transformed.category
             );
             const processedImage = await imageService.processImageForStorage(imageResult);
@@ -176,7 +186,7 @@ async function batchIngestStories() {
         for (let i = 0; i < twitterStoriesToProcess; i++) {
           try {
             const drama = dramas[i];
-            console.log(`  - Converting drama: "${drama.main_tweet.text.slice(0, 50)}..."`);
+            console.log(`  - Converting drama: "${drama.original_tweet.text.slice(0, 50)}..."`);
             
             // Convert to story
             const story = await twitterToStoryConverter.convertDramaToStory(drama);
@@ -185,14 +195,14 @@ async function batchIngestStories() {
               // Get image
               const imageResult = await imageService.findBestImageIntelligent(
                 story.title,
-                story.content || story.excerpt,
+                story.excerpt,
                 story.category
               );
               const processedImage = await imageService.processImageForStorage(imageResult);
               
               // Get persona
               const persona = await prisma.persona.findFirst({
-                where: { slug: story.persona }
+                where: { slug: story.author }
               });
               
               // Create post
@@ -201,7 +211,7 @@ async function batchIngestStories() {
                   title: story.title,
                   slug: story.slug,
                   excerpt: story.excerpt,
-                  content: story.content,
+                  content: story.excerpt,
                   imageUrl: processedImage.processed_url,
                   category: story.category,
                   author: persona?.name || 'ThreadJuice',
@@ -209,11 +219,11 @@ async function batchIngestStories() {
                   status: 'published',
                   trending: drama.drama_score >= 80,
                   featured: drama.drama_score >= 90,
-                  viewCount: Math.floor(drama.total_engagement * 0.1),
-                  upvoteCount: Math.floor(drama.total_engagement * 0.05),
-                  commentCount: drama.reply_count,
-                  shareCount: Math.floor(drama.total_engagement * 0.02),
-                  bookmarkCount: Math.floor(drama.total_engagement * 0.01)
+                  viewCount: Math.floor((drama.original_tweet.metrics.retweets + drama.original_tweet.metrics.likes + drama.original_tweet.metrics.replies) * 0.1),
+                  upvoteCount: Math.floor((drama.original_tweet.metrics.retweets + drama.original_tweet.metrics.likes + drama.original_tweet.metrics.replies) * 0.05),
+                  commentCount: drama.replies.length,
+                  shareCount: Math.floor((drama.original_tweet.metrics.retweets + drama.original_tweet.metrics.likes + drama.original_tweet.metrics.replies) * 0.02),
+                  bookmarkCount: Math.floor((drama.original_tweet.metrics.retweets + drama.original_tweet.metrics.likes + drama.original_tweet.metrics.replies) * 0.01)
                 }
               });
               

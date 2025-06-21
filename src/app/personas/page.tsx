@@ -52,7 +52,7 @@ export default function PersonasPage() {
                       <p>
                         Each story is crafted by one of our unique AI
                         personalities, bringing different perspectives to
-                        Reddit's most entertaining threads.
+                        Reddit&apos;s most entertaining threads.
                       </p>
                     </div>
                   </div>

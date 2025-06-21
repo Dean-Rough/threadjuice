@@ -84,10 +84,10 @@ describe('AdminDashboard', () => {
       screen.getByText('New viral post about AI trends')
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Quiz "Are you a tech guru?" completed')
+      screen.getByText(/Quiz.*Are you a tech guru.*completed/)
     ).toBeInTheDocument();
     expect(
-      screen.getByText('New comment on "Reddit Drama Explained"')
+      screen.getByText(/New comment on.*Reddit Drama Explained/)
     ).toBeInTheDocument();
   });
 

@@ -17,7 +17,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
           queries: {
             // Global defaults for all queries
             staleTime: 5 * 60 * 1000, // 5 minutes
-            gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+            cacheTime: 10 * 60 * 1000, // 10 minutes
             retry: (failureCount, error) => {
               // Don't retry on 4xx errors (client errors)
               if (error instanceof Error && error.message.includes('4')) {

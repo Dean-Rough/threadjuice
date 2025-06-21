@@ -27,6 +27,26 @@ export * from './integrations';
 // Example configurations
 export * from './integrations/ExamplePipelines';
 
+// Output classes
+export { OutputStage, DatabaseOutput, FileOutput, DualOutput } from './stages/OutputStage';
+
+// Orchestrator
+export { PipelineOrchestrator } from './core/PipelineOrchestrator';
+
+// Context creation helper
+export { createContext } from './core/PipelineContext';
+
+// Default orchestrator factory
+export function createDefaultOrchestrator() {
+  const { PipelineOrchestrator } = require('./core/PipelineOrchestrator');
+  return new PipelineOrchestrator({
+    defaultOptions: { debug: false },
+    maxConcurrent: 3,
+    cacheEnabled: true,
+    monitoring: true
+  });
+}
+
 // Helper function to create a standard pipeline
 export function createStandardPipeline(options: {
   source: 'reddit' | 'twitter' | 'ai';
