@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
-import { 
-  CheckCircle, 
-  ArrowRight, 
-  ArrowLeft, 
-  User, 
-  Mail, 
-  Zap, 
+import {
+  CheckCircle,
+  ArrowRight,
+  ArrowLeft,
+  User,
+  Mail,
+  Zap,
   TrendingUp,
-  X
+  X,
 } from 'lucide-react';
 
 /**
@@ -23,7 +23,12 @@ interface OnboardingStep {
   id: string;
   title: string;
   description: string;
-  component: React.ComponentType<{ onNext: () => void; onBack: () => void; data: any; setData: (data: any) => void }>;
+  component: React.ComponentType<{
+    onNext: () => void;
+    onBack: () => void;
+    data: any;
+    setData: (data: any) => void;
+  }>;
 }
 
 interface OnboardingData {
@@ -43,55 +48,62 @@ interface OnboardingData {
 }
 
 // Step 1: Welcome
-function WelcomeStep({ onNext }: { onNext: () => void; onBack: () => void; data: any; setData: (data: any) => void }) {
+function WelcomeStep({
+  onNext,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  data: any;
+  setData: (data: any) => void;
+}) {
   const { user } = useUser();
 
   return (
-    <div className="text-center">
-      <div className="mb-8">
+    <div className='text-center'>
+      <div className='mb-8'>
         <Image
-          src="/assets/img/logo/logo.svg"
-          alt="ThreadJuice"
+          src='/assets/img/logo/logo.svg'
+          alt='ThreadJuice'
           width={80}
           height={80}
-          className="mx-auto mb-4"
+          className='mx-auto mb-4'
         />
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className='mb-4 text-3xl font-bold text-gray-900'>
           Welcome to ThreadJuice! 🧃
         </h1>
-        <p className="text-lg text-gray-600 max-w-md mx-auto">
-          Hi {user?.firstName || 'there'}! Let's get you set up to discover the best stories from Reddit, 
-          transformed by our AI writers.
+        <p className='mx-auto max-w-md text-lg text-gray-600'>
+          Hi {user?.firstName || 'there'}! Let's get you set up to discover the
+          best stories from Reddit, transformed by our AI writers.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="text-center p-4">
-          <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <TrendingUp className="w-8 h-8 text-blue-600" />
+      <div className='mb-8 grid gap-6 md:grid-cols-3'>
+        <div className='p-4 text-center'>
+          <div className='mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100'>
+            <TrendingUp className='h-8 w-8 text-blue-600' />
           </div>
-          <h3 className="font-semibold text-gray-900 mb-2">Trending Content</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className='mb-2 font-semibold text-gray-900'>Trending Content</h3>
+          <p className='text-sm text-gray-600'>
             AI discovers the hottest Reddit threads
           </p>
         </div>
 
-        <div className="text-center p-4">
-          <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <Zap className="w-8 h-8 text-green-600" />
+        <div className='p-4 text-center'>
+          <div className='mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-green-100'>
+            <Zap className='h-8 w-8 text-green-600' />
           </div>
-          <h3 className="font-semibold text-gray-900 mb-2">AI Writers</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className='mb-2 font-semibold text-gray-900'>AI Writers</h3>
+          <p className='text-sm text-gray-600'>
             Unique personalities craft engaging stories
           </p>
         </div>
 
-        <div className="text-center p-4">
-          <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <Mail className="w-8 h-8 text-purple-600" />
+        <div className='p-4 text-center'>
+          <div className='mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100'>
+            <Mail className='h-8 w-8 text-purple-600' />
           </div>
-          <h3 className="font-semibold text-gray-900 mb-2">Curated Feed</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className='mb-2 font-semibold text-gray-900'>Curated Feed</h3>
+          <p className='text-sm text-gray-600'>
             No endless scrolling, just great content
           </p>
         </div>
@@ -99,32 +111,86 @@ function WelcomeStep({ onNext }: { onNext: () => void; onBack: () => void; data:
 
       <button
         onClick={onNext}
-        className="bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-colors flex items-center mx-auto"
+        className='mx-auto flex items-center rounded-lg bg-orange-600 px-8 py-3 text-white transition-colors hover:bg-orange-700'
       >
         Let's Get Started
-        <ArrowRight className="w-5 h-5 ml-2" />
+        <ArrowRight className='ml-2 h-5 w-5' />
       </button>
     </div>
   );
 }
 
 // Step 2: Content Preferences
-function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void; onBack: () => void; data: OnboardingData; setData: (data: OnboardingData) => void }) {
+function PreferencesStep({
+  onNext,
+  onBack,
+  data,
+  setData,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  data: OnboardingData;
+  setData: (data: OnboardingData) => void;
+}) {
   const categories = [
-    { id: 'technology', name: 'Technology', description: 'Programming, gadgets, AI, and tech news' },
-    { id: 'entertainment', name: 'Entertainment', description: 'Movies, TV shows, games, and pop culture' },
-    { id: 'science', name: 'Science', description: 'Research, discoveries, and scientific discussions' },
-    { id: 'lifestyle', name: 'Lifestyle', description: 'Health, relationships, and life advice' },
-    { id: 'humor', name: 'Humor', description: 'Funny stories, memes, and comedy' },
-    { id: 'news', name: 'News & Politics', description: 'Current events and political discussions' },
-    { id: 'business', name: 'Business', description: 'Entrepreneurship, finance, and career advice' },
-    { id: 'sports', name: 'Sports', description: 'Sports news, highlights, and discussions' },
+    {
+      id: 'technology',
+      name: 'Technology',
+      description: 'Programming, gadgets, AI, and tech news',
+    },
+    {
+      id: 'entertainment',
+      name: 'Entertainment',
+      description: 'Movies, TV shows, games, and pop culture',
+    },
+    {
+      id: 'science',
+      name: 'Science',
+      description: 'Research, discoveries, and scientific discussions',
+    },
+    {
+      id: 'lifestyle',
+      name: 'Lifestyle',
+      description: 'Health, relationships, and life advice',
+    },
+    {
+      id: 'humor',
+      name: 'Humor',
+      description: 'Funny stories, memes, and comedy',
+    },
+    {
+      id: 'news',
+      name: 'News & Politics',
+      description: 'Current events and political discussions',
+    },
+    {
+      id: 'business',
+      name: 'Business',
+      description: 'Entrepreneurship, finance, and career advice',
+    },
+    {
+      id: 'sports',
+      name: 'Sports',
+      description: 'Sports news, highlights, and discussions',
+    },
   ];
 
   const frequencies = [
-    { id: 'daily', name: 'Daily Digest', description: 'Get the best stories every morning' },
-    { id: 'weekly', name: 'Weekly Roundup', description: 'A curated collection every Sunday' },
-    { id: 'instant', name: 'Real-time', description: 'Get notified as stories are published' },
+    {
+      id: 'daily',
+      name: 'Daily Digest',
+      description: 'Get the best stories every morning',
+    },
+    {
+      id: 'weekly',
+      name: 'Weekly Roundup',
+      description: 'A curated collection every Sunday',
+    },
+    {
+      id: 'instant',
+      name: 'Real-time',
+      description: 'Get notified as stories are published',
+    },
   ];
 
   const toggleCategory = (categoryId: string) => {
@@ -132,7 +198,7 @@ function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void
     const newCategories = currentCategories.includes(categoryId)
       ? currentCategories.filter(id => id !== categoryId)
       : [...currentCategories, categoryId];
-    
+
     setData({
       ...data,
       preferences: {
@@ -154,35 +220,39 @@ function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className='mb-8 text-center'>
+        <h2 className='mb-2 text-2xl font-bold text-gray-900'>
           What interests you?
         </h2>
-        <p className="text-gray-600">
+        <p className='text-gray-600'>
           Choose the topics you'd like to see in your feed
         </p>
       </div>
 
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Categories</h3>
-        <div className="grid md:grid-cols-2 gap-3">
-          {categories.map((category) => (
+      <div className='mb-8'>
+        <h3 className='mb-4 text-lg font-semibold text-gray-900'>
+          Content Categories
+        </h3>
+        <div className='grid gap-3 md:grid-cols-2'>
+          {categories.map(category => (
             <button
               key={category.id}
               onClick={() => toggleCategory(category.id)}
-              className={`p-4 rounded-lg border-2 transition-all text-left ${
+              className={`rounded-lg border-2 p-4 text-left transition-all ${
                 data.preferences.categories.includes(category.id)
                   ? 'border-orange-500 bg-orange-50'
                   : 'border-gray-200 hover:border-orange-300'
               }`}
             >
-              <div className="flex items-center justify-between">
+              <div className='flex items-center justify-between'>
                 <div>
-                  <h4 className="font-medium text-gray-900">{category.name}</h4>
-                  <p className="text-sm text-gray-600">{category.description}</p>
+                  <h4 className='font-medium text-gray-900'>{category.name}</h4>
+                  <p className='text-sm text-gray-600'>
+                    {category.description}
+                  </p>
                 </div>
                 {data.preferences.categories.includes(category.id) && (
-                  <CheckCircle className="w-5 h-5 text-orange-600" />
+                  <CheckCircle className='h-5 w-5 text-orange-600' />
                 )}
               </div>
             </button>
@@ -190,26 +260,28 @@ function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void
         </div>
       </div>
 
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">How often would you like updates?</h3>
-        <div className="space-y-3">
-          {frequencies.map((freq) => (
+      <div className='mb-8'>
+        <h3 className='mb-4 text-lg font-semibold text-gray-900'>
+          How often would you like updates?
+        </h3>
+        <div className='space-y-3'>
+          {frequencies.map(freq => (
             <button
               key={freq.id}
               onClick={() => setFrequency(freq.id as any)}
-              className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+              className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
                 data.preferences.frequency === freq.id
                   ? 'border-orange-500 bg-orange-50'
                   : 'border-gray-200 hover:border-orange-300'
               }`}
             >
-              <div className="flex items-center justify-between">
+              <div className='flex items-center justify-between'>
                 <div>
-                  <h4 className="font-medium text-gray-900">{freq.name}</h4>
-                  <p className="text-sm text-gray-600">{freq.description}</p>
+                  <h4 className='font-medium text-gray-900'>{freq.name}</h4>
+                  <p className='text-sm text-gray-600'>{freq.description}</p>
                 </div>
                 {data.preferences.frequency === freq.id && (
-                  <CheckCircle className="w-5 h-5 text-orange-600" />
+                  <CheckCircle className='h-5 w-5 text-orange-600' />
                 )}
               </div>
             </button>
@@ -217,22 +289,22 @@ function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className='flex justify-between'>
         <button
           onClick={onBack}
-          className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+          className='flex items-center px-6 py-3 text-gray-600 transition-colors hover:text-gray-800'
         >
-          <ArrowLeft className="w-5 h-5 mr-2" />
+          <ArrowLeft className='mr-2 h-5 w-5' />
           Back
         </button>
-        
+
         <button
           onClick={onNext}
           disabled={data.preferences.categories.length === 0}
-          className="bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+          className='flex items-center rounded-lg bg-orange-600 px-8 py-3 text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50'
         >
           Continue
-          <ArrowRight className="w-5 h-5 ml-2" />
+          <ArrowRight className='ml-2 h-5 w-5' />
         </button>
       </div>
     </div>
@@ -240,7 +312,17 @@ function PreferencesStep({ onNext, onBack, data, setData }: { onNext: () => void
 }
 
 // Step 3: Writer Personas
-function WritersStep({ onNext, onBack, data, setData }: { onNext: () => void; onBack: () => void; data: OnboardingData; setData: (data: OnboardingData) => void }) {
+function WritersStep({
+  onNext,
+  onBack,
+  data,
+  setData,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  data: OnboardingData;
+  setData: (data: OnboardingData) => void;
+}) {
   const writers = [
     {
       id: 'snarky-sage',
@@ -277,7 +359,7 @@ function WritersStep({ onNext, onBack, data, setData }: { onNext: () => void; on
     const newWriters = currentWriters.includes(writerId)
       ? currentWriters.filter(id => id !== writerId)
       : [...currentWriters, writerId];
-    
+
     setData({
       ...data,
       preferences: {
@@ -289,61 +371,61 @@ function WritersStep({ onNext, onBack, data, setData }: { onNext: () => void; on
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className='mb-8 text-center'>
+        <h2 className='mb-2 text-2xl font-bold text-gray-900'>
           Meet our AI writers
         </h2>
-        <p className="text-gray-600">
+        <p className='text-gray-600'>
           Choose the writing personalities you'd like to read from
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
-        {writers.map((writer) => (
+      <div className='mb-8 grid gap-4 md:grid-cols-2'>
+        {writers.map(writer => (
           <button
             key={writer.id}
             onClick={() => toggleWriter(writer.id)}
-            className={`p-6 rounded-lg border-2 transition-all text-left ${
+            className={`rounded-lg border-2 p-6 text-left transition-all ${
               data.preferences.writers.includes(writer.id)
                 ? 'border-orange-500 bg-orange-50'
                 : 'border-gray-200 hover:border-orange-300'
             }`}
           >
-            <div className="flex items-start space-x-4">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-gray-600" />
+            <div className='flex items-start space-x-4'>
+              <div className='flex h-16 w-16 items-center justify-center rounded-full bg-gray-200'>
+                <User className='h-8 w-8 text-gray-600' />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-900">{writer.name}</h3>
+              <div className='flex-1'>
+                <div className='mb-2 flex items-center justify-between'>
+                  <h3 className='font-semibold text-gray-900'>{writer.name}</h3>
                   {data.preferences.writers.includes(writer.id) && (
-                    <CheckCircle className="w-5 h-5 text-orange-600" />
+                    <CheckCircle className='h-5 w-5 text-orange-600' />
                   )}
                 </div>
-                <p className="text-gray-600 mb-2">{writer.description}</p>
-                <p className="text-sm text-orange-600">{writer.personality}</p>
+                <p className='mb-2 text-gray-600'>{writer.description}</p>
+                <p className='text-sm text-orange-600'>{writer.personality}</p>
               </div>
             </div>
           </button>
         ))}
       </div>
 
-      <div className="flex justify-between">
+      <div className='flex justify-between'>
         <button
           onClick={onBack}
-          className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+          className='flex items-center px-6 py-3 text-gray-600 transition-colors hover:text-gray-800'
         >
-          <ArrowLeft className="w-5 h-5 mr-2" />
+          <ArrowLeft className='mr-2 h-5 w-5' />
           Back
         </button>
-        
+
         <button
           onClick={onNext}
           disabled={data.preferences.writers.length === 0}
-          className="bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+          className='flex items-center rounded-lg bg-orange-600 px-8 py-3 text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50'
         >
           Continue
-          <ArrowRight className="w-5 h-5 ml-2" />
+          <ArrowRight className='ml-2 h-5 w-5' />
         </button>
       </div>
     </div>
@@ -351,7 +433,15 @@ function WritersStep({ onNext, onBack, data, setData }: { onNext: () => void; on
 }
 
 // Step 4: Completion
-function CompletionStep({ onNext, data }: { onNext: () => void; onBack: () => void; data: OnboardingData; setData: (data: OnboardingData) => void }) {
+function CompletionStep({
+  onNext,
+  data,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  data: OnboardingData;
+  setData: (data: OnboardingData) => void;
+}) {
   const { user } = useUser();
 
   const handleFinish = async () => {
@@ -380,49 +470,57 @@ function CompletionStep({ onNext, data }: { onNext: () => void; onBack: () => vo
   };
 
   return (
-    <div className="text-center">
-      <div className="mb-8">
-        <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+    <div className='text-center'>
+      <div className='mb-8'>
+        <CheckCircle className='mx-auto mb-4 h-20 w-20 text-green-500' />
+        <h2 className='mb-4 text-3xl font-bold text-gray-900'>
           You're all set! 🎉
         </h2>
-        <p className="text-lg text-gray-600 max-w-md mx-auto">
-          Welcome to ThreadJuice, {user?.firstName}! Your personalized feed is ready.
+        <p className='mx-auto max-w-md text-lg text-gray-600'>
+          Welcome to ThreadJuice, {user?.firstName}! Your personalized feed is
+          ready.
         </p>
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
-        <h3 className="font-semibold text-gray-900 mb-4">Your Preferences:</h3>
-        <div className="space-y-3 text-sm">
+      <div className='mx-auto mb-8 max-w-md rounded-lg bg-gray-50 p-6 text-left'>
+        <h3 className='mb-4 font-semibold text-gray-900'>Your Preferences:</h3>
+        <div className='space-y-3 text-sm'>
           <div>
-            <span className="text-gray-600">Categories:</span>
-            <div className="flex flex-wrap gap-1 mt-1">
+            <span className='text-gray-600'>Categories:</span>
+            <div className='mt-1 flex flex-wrap gap-1'>
               {data.preferences.categories.map(cat => (
-                <span key={cat} className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
+                <span
+                  key={cat}
+                  className='rounded bg-orange-100 px-2 py-1 text-xs text-orange-800'
+                >
                   {cat}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <span className="text-gray-600">Updates:</span>
-            <span className="ml-2 capitalize">{data.preferences.frequency}</span>
+            <span className='text-gray-600'>Updates:</span>
+            <span className='ml-2 capitalize'>
+              {data.preferences.frequency}
+            </span>
           </div>
           <div>
-            <span className="text-gray-600">Favorite Writers:</span>
-            <span className="ml-2">{data.preferences.writers.length} selected</span>
+            <span className='text-gray-600'>Favorite Writers:</span>
+            <span className='ml-2'>
+              {data.preferences.writers.length} selected
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className='space-y-3'>
         <button
           onClick={handleFinish}
-          className="w-full bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-colors"
+          className='w-full rounded-lg bg-orange-600 px-8 py-3 text-white transition-colors hover:bg-orange-700'
         >
           Start Reading Stories
         </button>
-        <p className="text-sm text-gray-500">
+        <p className='text-sm text-gray-500'>
           You can update these preferences anytime in your settings
         </p>
       </div>
@@ -496,31 +594,31 @@ export default function UserOnboarding({ onComplete }: UserOnboardingProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+      <div className='mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl'>
         {/* Progress bar */}
-        <div className="px-8 pt-6 pb-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-sm font-medium text-gray-500">
+        <div className='px-8 pb-4 pt-6'>
+          <div className='mb-4 flex items-center justify-between'>
+            <h2 className='text-sm font-medium text-gray-500'>
               Step {currentStep + 1} of {steps.length}
             </h2>
             <button
               onClick={onComplete}
-              className="text-gray-400 hover:text-gray-600"
+              className='text-gray-400 hover:text-gray-600'
             >
-              <X className="w-6 h-6" />
+              <X className='h-6 w-6' />
             </button>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className='h-2 w-full rounded-full bg-gray-200'>
             <div
-              className="bg-orange-600 h-2 rounded-full transition-all duration-300"
+              className='h-2 rounded-full bg-orange-600 transition-all duration-300'
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Step content */}
-        <div className="px-8 pb-8">
+        <div className='px-8 pb-8'>
           <CurrentStepComponent
             onNext={handleNext}
             onBack={handleBack}

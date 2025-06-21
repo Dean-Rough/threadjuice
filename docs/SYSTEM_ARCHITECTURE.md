@@ -29,7 +29,7 @@ ThreadJuice is a Next.js 15 application that transforms viral Reddit content int
 ### External APIs
 
 - **Reddit API**: OAuth2 authentication, content scraping
-- **OpenAI API**: GPT-4 for content summarization and quiz generation
+- **OpenAI API**: gpt-4o for content summarization and quiz generation
 - **Image APIs**: Wikimedia Commons, Unsplash (Creative Commons)
 
 ### Infrastructure

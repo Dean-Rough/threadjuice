@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import ThreadJuiceLayout from '@/components/layout/ThreadJuiceLayout';
 import { getAllPersonas } from '@/data/personas';
+import Image from 'next/image';
 import {
   Brain,
   Zap,
@@ -31,7 +31,7 @@ export default function AboutPage() {
   const personas = getAllPersonas();
 
   return (
-    <ThreadJuiceLayout headerStyle={5}>
+    <>
       {/* Hero Section - Minimal Layout 5 */}
       <section className='about-hero-area pt-100 pb-80'>
         <div className='container'>
@@ -42,7 +42,7 @@ export default function AboutPage() {
                   Transforming Reddit into
                   <span className='text-primary'> Engaging Stories</span>
                 </h1>
-                <p className='hero-description text-muted mb-30 fs-5'>
+                <p className='hero-description mb-30 fs-5 text-muted'>
                   ThreadJuice is an AI-powered content engine that discovers
                   viral Reddit threads and transforms them into compelling,
                   shareable stories through our unique AI personas.
@@ -51,24 +51,24 @@ export default function AboutPage() {
                   <div className='row text-center'>
                     <div className='col-md-4'>
                       <div className='stat-item'>
-                        <h3 className='stat-number text-primary mb-5'>10K+</h3>
-                        <p className='stat-label text-muted mb-0'>
+                        <h3 className='stat-number mb-5 text-primary'>10K+</h3>
+                        <p className='stat-label mb-0 text-muted'>
                           Threads Processed
                         </p>
                       </div>
                     </div>
                     <div className='col-md-4'>
                       <div className='stat-item'>
-                        <h3 className='stat-number text-primary mb-5'>8</h3>
-                        <p className='stat-label text-muted mb-0'>
+                        <h3 className='stat-number mb-5 text-primary'>8</h3>
+                        <p className='stat-label mb-0 text-muted'>
                           AI Personas
                         </p>
                       </div>
                     </div>
                     <div className='col-md-4'>
                       <div className='stat-item'>
-                        <h3 className='stat-number text-primary mb-5'>95%</h3>
-                        <p className='stat-label text-muted mb-0'>
+                        <h3 className='stat-number mb-5 text-primary'>95%</h3>
+                        <p className='stat-label mb-0 text-muted'>
                           Accuracy Rate
                         </p>
                       </div>
@@ -91,29 +91,29 @@ export default function AboutPage() {
             <div className='col-lg-6'>
               <div className='mission-content'>
                 <h2 className='section-title mb-20'>Our Mission</h2>
-                <p className='text-muted mb-20'>
+                <p className='mb-20 text-muted'>
                   Reddit is a goldmine of fascinating stories, debates, and
                   insights. But with millions of posts daily, the best content
                   often gets buried. ThreadJuice solves this by using advanced
                   AI to identify, curate, and transform viral threads into
                   accessible, engaging narratives.
                 </p>
-                <p className='text-muted mb-30'>
+                <p className='mb-30 text-muted'>
                   Our AI personas don&apos;t just summarize content—they analyze
                   context, capture nuance, and present stories in distinct
                   voices that make complex threads digestible and entertaining.
                 </p>
                 <div className='mission-features'>
                   <div className='feature-item d-flex align-items-center mb-15'>
-                    <Brain size={20} className='text-primary me-3' />
+                    <Brain size={20} className='me-3 text-primary' />
                     <span>AI-powered content analysis and transformation</span>
                   </div>
                   <div className='feature-item d-flex align-items-center mb-15'>
-                    <Target size={20} className='text-primary me-3' />
+                    <Target size={20} className='me-3 text-primary' />
                     <span>Curated selection of truly viral content</span>
                   </div>
                   <div className='feature-item d-flex align-items-center mb-15'>
-                    <Zap size={20} className='text-primary me-3' />
+                    <Zap size={20} className='me-3 text-primary' />
                     <span>Real-time processing and publication</span>
                   </div>
                 </div>
@@ -121,10 +121,10 @@ export default function AboutPage() {
             </div>
             <div className='col-lg-6'>
               <div className='mission-image text-center'>
-                <div className='bg-primary rounded-4 bg-opacity-10 p-5'>
-                  <Globe size={120} className='text-primary mb-20' />
+                <div className='rounded-4 bg-primary bg-opacity-10 p-5'>
+                  <Globe size={120} className='mb-20 text-primary' />
                   <h4 className='mb-10'>Making Viral Content Accessible</h4>
-                  <p className='text-muted mb-0'>
+                  <p className='mb-0 text-muted'>
                     Bridging the gap between Reddit&apos;s raw discussions and
                     mainstream content consumption
                   </p>
@@ -152,7 +152,7 @@ export default function AboutPage() {
             <div className='col-lg-3 col-md-6 mb-30'>
               <div className='process-step text-center'>
                 <div
-                  className='step-icon bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-20 text-white'
+                  className='step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-20 bg-primary text-white'
                   style={{ width: '60px', height: '60px' }}
                 >
                   <span className='fw-bold'>1</span>
@@ -168,7 +168,7 @@ export default function AboutPage() {
             <div className='col-lg-3 col-md-6 mb-30'>
               <div className='process-step text-center'>
                 <div
-                  className='step-icon bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-20 text-white'
+                  className='step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-20 bg-primary text-white'
                   style={{ width: '60px', height: '60px' }}
                 >
                   <span className='fw-bold'>2</span>
@@ -184,7 +184,7 @@ export default function AboutPage() {
             <div className='col-lg-3 col-md-6 mb-30'>
               <div className='process-step text-center'>
                 <div
-                  className='step-icon bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-20 text-white'
+                  className='step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-20 bg-primary text-white'
                   style={{ width: '60px', height: '60px' }}
                 >
                   <span className='fw-bold'>3</span>
@@ -200,7 +200,7 @@ export default function AboutPage() {
             <div className='col-lg-3 col-md-6 mb-30'>
               <div className='process-step text-center'>
                 <div
-                  className='step-icon bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-20 text-white'
+                  className='step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-20 bg-primary text-white'
                   style={{ width: '60px', height: '60px' }}
                 >
                   <span className='fw-bold'>4</span>
@@ -237,7 +237,7 @@ export default function AboutPage() {
               <div key={persona.id} className='col-lg-4 col-md-6 mb-30'>
                 <div className='persona-showcase-card h-100 rounded border bg-white p-4'>
                   <div className='persona-header mb-20 text-center'>
-                    <img
+                    <Image
                       src={persona.avatar}
                       alt={persona.name}
                       className='rounded-circle mb-15'
@@ -245,17 +245,17 @@ export default function AboutPage() {
                       height={60}
                     />
                     <h5 className='persona-name mb-5'>{persona.name}</h5>
-                    <span className='badge bg-primary text-primary bg-opacity-10'>
+                    <span className='badge bg-primary bg-opacity-10 text-primary'>
                       {persona.specialty}
                     </span>
                   </div>
                   <div className='persona-quote mb-15'>
-                    <Quote size={20} className='text-primary mb-10' />
-                    <p className='fst-italic text-muted mb-0'>
+                    <Quote size={20} className='mb-10 text-primary' />
+                    <p className='fst-italic mb-0 text-muted'>
                       &quot;{persona.sampleQuote}&quot;
                     </p>
                   </div>
-                  <p className='persona-description text-muted small'>
+                  <p className='persona-description small text-muted'>
                     {persona.bio}
                   </p>
                 </div>
@@ -288,7 +288,7 @@ export default function AboutPage() {
           <div className='row'>
             <div className='col-lg-4 col-md-6 mb-30'>
               <div className='value-item text-center'>
-                <Users size={48} className='text-primary mb-20' />
+                <Users size={48} className='mb-20 text-primary' />
                 <h5 className='value-title mb-15'>Community First</h5>
                 <p className='value-description text-muted'>
                   We always credit original Reddit authors and link back to
@@ -299,7 +299,7 @@ export default function AboutPage() {
             </div>
             <div className='col-lg-4 col-md-6 mb-30'>
               <div className='value-item text-center'>
-                <Target size={48} className='text-primary mb-20' />
+                <Target size={48} className='mb-20 text-primary' />
                 <h5 className='value-title mb-15'>Accuracy & Context</h5>
                 <p className='value-description text-muted'>
                   Our AI preserves the original intent and context of
@@ -310,7 +310,7 @@ export default function AboutPage() {
             </div>
             <div className='col-lg-4 col-md-6 mb-30'>
               <div className='value-item text-center'>
-                <TrendingUp size={48} className='text-primary mb-20' />
+                <TrendingUp size={48} className='mb-20 text-primary' />
                 <h5 className='value-title mb-15'>Quality Over Quantity</h5>
                 <p className='value-description text-muted'>
                   We curate only the most engaging, insightful, and truly viral
@@ -328,7 +328,7 @@ export default function AboutPage() {
         <div className='container'>
           <div className='row justify-content-center'>
             <div className='col-lg-8 text-center'>
-              <div className='cta-content bg-primary rounded-4 p-5 text-white'>
+              <div className='cta-content rounded-4 bg-primary p-5 text-white'>
                 <h3 className='cta-title mb-15 text-white'>
                   Ready to Experience Viral Content Differently?
                 </h3>
@@ -349,6 +349,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-    </ThreadJuiceLayout>
+    </>
   );
 }

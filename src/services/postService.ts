@@ -5,41 +5,69 @@
 
 export interface PostFilters {
   category?: string;
+  author?: string;
   featured?: boolean;
   trending?: boolean;
+  page?: number;
   limit?: number;
-  offset?: number;
   search?: string;
 }
 
 export interface Post {
-  id: number;
+  id: string;
   title: string;
-  img: string;
-  group: string;
-  trending: boolean;
+  slug: string;
+  excerpt?: string;
+  image_url?: string;
   category: string;
   author: string;
-  date: string;
+  view_count: number;
+  upvote_count: number;
+  comment_count: number;
+  share_count: number;
+  bookmark_count: number;
+  trending: boolean;
+  featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PostDetail extends Post {
+  content?: any;
   persona?: {
-    id: string;
+    id: number;
     name: string;
+    slug: string;
     bio: string;
-    avatar: string;
-    style: string;
+    avatar_url: string;
+    tone: string;
+    story_count: number;
+    rating: number;
   };
-  engagement?: {
-    views: string;
-    comments: number;
-    shares: number;
+  stats: {
+    view_count: number;
+    upvote_count: number;
+    comment_count: number;
+    share_count: number;
+    bookmark_count: number;
+  };
+  reddit_source?: {
+    thread_id: string;
+    subreddit: string;
+    original_url: string;
   };
 }
 
 export interface PostsResponse {
   posts: Post[];
-  total: number;
-  hasMore: boolean;
-  page: number;
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 }
 
 class PostService {
@@ -49,13 +77,16 @@ class PostService {
     const params = new URLSearchParams();
     
     if (filters.category) params.set('category', filters.category);
+    if (filters.author) params.set('author', filters.author);
     if (filters.featured !== undefined) params.set('featured', filters.featured.toString());
     if (filters.trending !== undefined) params.set('trending', filters.trending.toString());
+    if (filters.page) params.set('page', filters.page.toString());
     if (filters.limit) params.set('limit', filters.limit.toString());
-    if (filters.offset) params.set('offset', filters.offset.toString());
     if (filters.search) params.set('search', filters.search);
 
-    const response = await fetch(`${this.baseUrl}?${params.toString()}`);
+    const url = `${this.baseUrl}?${params.toString()}`;
+    
+    const response = await fetch(url);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);
@@ -64,7 +95,7 @@ class PostService {
     return response.json();
   }
 
-  async getPost(id: string | number): Promise<Post> {
+  async getPost(id: string): Promise<{ post: PostDetail }> {
     const response = await fetch(`${this.baseUrl}/${id}`);
     
     if (!response.ok) {

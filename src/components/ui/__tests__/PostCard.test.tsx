@@ -7,17 +7,21 @@ import { PostCard, type PostCardProps } from '../PostCard';
 
 // Mock Next.js components
 jest.mock('next/link', () => {
-  return ({ children, href, ...props }: any) => (
+  const MockLink = ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
     </a>
   );
+  MockLink.displayName = 'MockLink';
+  return MockLink;
 });
 
 jest.mock('next/image', () => {
-  return ({ src, alt, ...props }: any) => (
+  const MockImage = ({ src, alt, ...props }: any) => (
     <img src={src} alt={alt} {...props} />
   );
+  MockImage.displayName = 'MockImage';
+  return MockImage;
 });
 
 describe('PostCard', () => {
@@ -52,7 +56,9 @@ describe('PostCard', () => {
 
     expect(screen.getByTestId('post-card')).toBeInTheDocument();
     expect(screen.getByText('Test Post Title')).toBeInTheDocument();
-    expect(screen.getByText('This is a test excerpt for the post.')).toBeInTheDocument();
+    expect(
+      screen.getByText('This is a test excerpt for the post.')
+    ).toBeInTheDocument();
     expect(screen.getByText('The Snarky Sage')).toBeInTheDocument();
     expect(screen.getByText('5 min read')).toBeInTheDocument();
   });
@@ -97,7 +103,7 @@ describe('PostCard', () => {
 
   it('displays tags when provided', () => {
     render(<PostCard {...mockProps} />);
-    
+
     expect(screen.getByText('#reddit')).toBeInTheDocument();
     expect(screen.getByText('#viral')).toBeInTheDocument();
     expect(screen.getByText('#humor')).toBeInTheDocument();
@@ -126,7 +132,9 @@ describe('PostCard', () => {
   });
 
   it('formats date correctly for yesterday', () => {
-    const yesterdayDate = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(); // 25 hours ago
+    const yesterdayDate = new Date(
+      Date.now() - 25 * 60 * 60 * 1000
+    ).toISOString(); // 25 hours ago
     const yesterdayProps = { ...mockProps, publishedAt: yesterdayDate };
     render(<PostCard {...yesterdayProps} />);
 
@@ -153,12 +161,15 @@ describe('PostCard', () => {
     const image = screen.getByAltText('Test Post Title');
     fireEvent.error(image);
 
-    expect(image).toHaveAttribute('src', '/assets/img/lifestyle/life_style01.jpg');
+    expect(image).toHaveAttribute(
+      'src',
+      '/assets/img/lifestyle/life_style01.jpg'
+    );
   });
 
   it('applies custom className when provided', () => {
-    render(<PostCard {...mockProps} className="custom-class" />);
-    
+    render(<PostCard {...mockProps} className='custom-class' />);
+
     const postCard = screen.getByTestId('post-card');
     expect(postCard).toHaveClass('custom-class');
   });
@@ -177,7 +188,7 @@ describe('PostCard', () => {
     render(<PostCard {...mockProps} />);
 
     expect(screen.getByText('1.3K')).toBeInTheDocument(); // view count
-    expect(screen.getByText('45')).toBeInTheDocument(); // comment count  
+    expect(screen.getByText('45')).toBeInTheDocument(); // comment count
     expect(screen.getByText('12')).toBeInTheDocument(); // share count
   });
 

@@ -53,7 +53,7 @@ export class IngestionService {
    * Start Reddit content ingestion
    */
   async startIngestion(request: IngestionJobPayload): Promise<string> {
-    console.log(`🚀 Starting ingestion for r/${request.subreddit}`);
+    // console.log(`🚀 Starting ingestion for r/${request.subreddit}`);
     
     const jobId = jobQueue.addJob('reddit-ingestion', request, {
       priority: 10,
@@ -70,7 +70,7 @@ export class IngestionService {
     const payload = job.payload as IngestionJobPayload;
     const { subreddit, limit = 25, timeFilter = 'day', minScore = 100, forceRefresh = false } = payload;
 
-    console.log(`📡 Fetching posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
+    // console.log(`📡 Fetching posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
 
     try {
       // Fetch posts from Reddit
@@ -82,10 +82,10 @@ export class IngestionService {
         minScore,
       });
 
-      console.log(`✅ Fetched ${posts.length} posts from r/${subreddit}`);
+      // console.log(`✅ Fetched ${posts.length} posts from r/${subreddit}`);
 
       if (posts.length === 0) {
-        console.log(`ℹ️ No posts found matching criteria for r/${subreddit}`);
+        // console.log(`ℹ️ No posts found matching criteria for r/${subreddit}`);
         return;
       }
 
@@ -93,7 +93,7 @@ export class IngestionService {
       let postsToProcess = posts;
       if (!forceRefresh) {
         postsToProcess = await this.filterExistingPosts(posts);
-        console.log(`📝 ${postsToProcess.length} new posts to process (${posts.length - postsToProcess.length} already exist)`);
+        // console.log(`📝 ${postsToProcess.length} new posts to process (${posts.length - postsToProcess.length} already exist)`);
       }
 
       // Create individual post generation jobs
@@ -111,7 +111,7 @@ export class IngestionService {
         });
       }
 
-      console.log(`🎯 Created ${postsToProcess.length} post generation jobs`);
+      // console.log(`🎯 Created ${postsToProcess.length} post generation jobs`);
 
     } catch (error) {
       console.error(`❌ Ingestion job failed for r/${subreddit}:`, error);
@@ -125,7 +125,7 @@ export class IngestionService {
   private async processPostGenerationJob(job: JobData): Promise<void> {
     const { post, personaId, userId, subreddit } = job.payload;
 
-    console.log(`🤖 Generating content for "${post.title}" with ${personaId}`);
+    // console.log(`🤖 Generating content for "${post.title}" with ${personaId}`);
 
     try {
       // Fetch comments for the post
@@ -154,7 +154,7 @@ export class IngestionService {
       // Save to database
       const dbPost = await this.savePostToDatabase(post, summary, personaId, userId, subreddit);
       
-      console.log(`✅ Created post: ${dbPost.id} - "${summary.title}"`);
+      // console.log(`✅ Created post: ${dbPost.id} - "${summary.title}"`);
 
     } catch (error) {
       console.error(`❌ Post generation failed for "${post.title}":`, error);
@@ -339,7 +339,7 @@ export class IngestionService {
    */
   async cancelIngestion(subreddit: string): Promise<number> {
     // This would require enhancing the job queue to support cancellation
-    console.log(`⚠️ Cancellation requested for r/${subreddit} (not implemented)`);
+    // console.log(`⚠️ Cancellation requested for r/${subreddit} (not implemented)`);
     return 0;
   }
 }

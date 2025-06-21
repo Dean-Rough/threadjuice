@@ -74,7 +74,7 @@ export class JobQueue {
     };
 
     this.jobs.set(jobId, job);
-    console.log(`📥 Job added: ${jobId} (${type})`);
+    // console.log(`📥 Job added: ${jobId} (${type})`);
     
     return jobId;
   }
@@ -145,7 +145,7 @@ export class JobQueue {
     }
 
     if (removed > 0) {
-      console.log(`🧹 Cleaned up ${removed} old jobs`);
+      // console.log(`🧹 Cleaned up ${removed} old jobs`);
     }
 
     return removed;
@@ -242,13 +242,13 @@ export class JobQueue {
     this.processing.add(job.id);
     job.startedAt = new Date();
 
-    console.log(`⚡ Processing job: ${job.id} (${job.type})`);
+    // console.log(`⚡ Processing job: ${job.id} (${job.type})`);
 
     try {
       const result = await handler(job);
       
       job.completedAt = new Date();
-      console.log(`✅ Job completed: ${job.id} (${job.type})`);
+      // console.log(`✅ Job completed: ${job.id} (${job.type})`);
       
     } catch (error) {
       console.error(`❌ Job failed: ${job.id} (${job.type})`, error);
@@ -256,7 +256,7 @@ export class JobQueue {
       job.retryCount++;
       
       if (job.retryCount <= job.maxRetries) {
-        console.log(`🔄 Retrying job: ${job.id} (attempt ${job.retryCount}/${job.maxRetries})`);
+        // console.log(`🔄 Retrying job: ${job.id} (attempt ${job.retryCount}/${job.maxRetries})`);
         // Job will be retried in next processing cycle
       } else {
         this.failJob(job, error instanceof Error ? error.message : String(error));

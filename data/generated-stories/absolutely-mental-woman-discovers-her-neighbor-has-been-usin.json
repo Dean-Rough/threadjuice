@@ -1,0 +1,87 @@
+{
+  "id": "real-story-1750439653016-q46emyu8f",
+  "title": "Absolutely Mental: Woman Discovers Her Neighbor Has Been Using Her WiFi to Mine Cryptocurrency for Three Years",
+  "slug": "absolutely-mental-woman-discovers-her-neighbor-has-been-usin",
+  "excerpt": "Three years of mysteriously high electricity bills finally explained when Sarah discovered her 'helpful' neighbor Bob had been running a full crypto mining operation off her internet connection.",
+  "imageUrl": "/assets/img/technology/tech_01.jpg",
+  "category": "Tech Drama",
+  "author": "the-down-to-earth-buddy",
+  "persona": {
+    "name": "The Down-to-Earth Buddy",
+    "avatar": "/assets/img/personas/down-to-earth-buddy.svg",
+    "description": "Relatable insights with genuine warmth"
+  },
+  "viewCount": 3284,
+  "upvoteCount": 99,
+  "commentCount": 51,
+  "shareCount": 34,
+  "bookmarkCount": 22,
+  "readingTime": 4,
+  "createdAt": "2025-06-20T17:14:13.016Z",
+  "tags": [
+    "technology",
+    "neighbors",
+    "cryptocurrency",
+    "electricity-bills",
+    "privacy"
+  ],
+  "viral_score": 100,
+  "content": {
+    "sections": [
+      {
+        "type": "describe-1",
+        "title": "The Setup",
+        "content": "Sarah Patterson thought she was going crazy. For three years, her electricity bills had been climbing steadily, despite no changes to her usage patterns. No new appliances, no lifestyle changes, just mysteriously increasing costs that made her question everything from her meter to her sanity.\n\nThen she decided to check her WiFi settings."
+      },
+      {
+        "type": "image",
+        "title": "The Evidence",
+        "content": "The moment when everything became crystal clear.",
+        "metadata": {
+          "context": "Visual proof of the situation",
+          "imageCredit": "Generated illustration"
+        }
+      },
+      {
+        "type": "quotes",
+        "content": "I trusted this man with my spare key when I went on vacation. He was watering my plants while mining Bitcoin in my basement.",
+        "metadata": {
+          "attribution": "The moment everything clicked",
+          "context": "When reality hit"
+        }
+      },
+      {
+        "type": "describe-2",
+        "title": "How It All Unfolded",
+        "content": "What Sarah found in her router logs changed everything. Unknown devices. Massive data usage during hours when she was asleep. Traffic patterns that looked nothing like her Netflix-and-email lifestyle.\n\nA little detective work revealed the truth: her neighbor Bob, the guy who'd been 'so helpful' when she moved in three years ago, had somehow gained access to her network. Not just casual browsing access—full-scale cryptocurrency mining operation access."
+      },
+      {
+        "type": "comments-1",
+        "title": "The Internet Reacts",
+        "content": "The collective response was swift and merciless.",
+        "metadata": {
+          "platform": "Social Media",
+          "engagement": "High viral potential"
+        }
+      },
+      {
+        "type": "discussion",
+        "title": "The Bigger Picture",
+        "content": "This isn't just about WiFi theft—it's about the erosion of basic trust in an increasingly connected world. When your neighbor can literally profit off your utilities without your knowledge, what does that say about digital privacy and consent?\n\nThe cryptocurrency angle makes it even more insidious. Bob wasn't just checking email on Sarah's dime; he was running a business operation that transferred the costs to an unknowing victim.\n\nThe Terry observes this phenomenon reveals the artificial nature of modern social dynamics—where trust becomes vulnerability, and neighbors become unwitting business partners in digital exploitation."
+      },
+      {
+        "type": "quotes",
+        "content": "Sometimes the most ordinary situations reveal the most extraordinary truths about human nature.",
+        "metadata": {
+          "attribution": "The Terry's final observation",
+          "context": "Peak wisdom moment"
+        }
+      },
+      {
+        "type": "outro",
+        "title": "The Takeaway",
+        "content": "Sarah changed her WiFi password and filed a police report. Bob moved out the following month, presumably to find new neighbors with better security practices. The electricity bill returned to normal, but the trust in neighborhood relationships? That's going to take longer to restore."
+      }
+    ]
+  }
+}

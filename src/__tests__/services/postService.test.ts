@@ -66,7 +66,9 @@ describe('PostService', () => {
 
       await postService.getPosts(filters);
 
-      expect(fetch).toHaveBeenCalledWith('/api/posts?category=tech&featured=true&limit=5');
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/posts?category=tech&featured=true&limit=5'
+      );
     });
 
     it('should handle API errors', async () => {
@@ -75,7 +77,9 @@ describe('PostService', () => {
         statusText: 'Internal Server Error',
       });
 
-      await expect(postService.getPosts()).rejects.toThrow('Failed to fetch posts: Internal Server Error');
+      await expect(postService.getPosts()).rejects.toThrow(
+        'Failed to fetch posts: Internal Server Error'
+      );
     });
   });
 
@@ -216,7 +220,9 @@ describe('PostService', () => {
 
       const result = await postService.searchPosts('search query', 15);
 
-      expect(fetch).toHaveBeenCalledWith('/api/posts?limit=15&search=search+query');
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/posts?limit=15&search=search+query'
+      );
       expect(result).toEqual(mockResponse.posts);
     });
   });

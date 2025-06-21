@@ -18,13 +18,15 @@ const conversionEventSchema = z.object({
   sessionId: z.string(),
   value: z.number().optional(), // Monetary value or engagement score
   properties: z.record(z.any()).optional(),
-  funnel: z.object({
-    step: z.string(),
-    stage: z.string(),
-    source: z.string().optional(),
-    medium: z.string().optional(),
-    campaign: z.string().optional(),
-  }).optional(),
+  funnel: z
+    .object({
+      step: z.string(),
+      stage: z.string(),
+      source: z.string().optional(),
+      medium: z.string().optional(),
+      campaign: z.string().optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -40,13 +42,15 @@ async function handleConversionEvent(request: NextRequest) {
       ...conversionData,
       timestamp: Date.now(),
       userAgent: request.headers.get('user-agent'),
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+      ip:
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip'),
       referer: request.headers.get('referer'),
       environment: process.env.NODE_ENV,
     };
 
     // Log conversion for debugging
-    console.log('Conversion Event:', enrichedConversion);
+    // console.log('Conversion Event:', enrichedConversion);
 
     // Track key conversion events
     await Promise.all([
@@ -60,16 +64,13 @@ async function handleConversionEvent(request: NextRequest) {
       await sendConversionWebhook(enrichedConversion);
     }
 
-    return NextResponse.json(
-      { success: true },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: 'Validation failed', 
-          details: error.errors 
+        {
+          error: 'Validation failed',
+          details: error.errors,
         },
         { status: 400 }
       );
@@ -152,7 +153,10 @@ async function trackGoogleAnalyticsConversion(conversion: any) {
     );
 
     if (!response.ok) {
-      console.error('Google Analytics conversion error:', await response.text());
+      console.error(
+        'Google Analytics conversion error:',
+        await response.text()
+      );
     }
   } catch (error) {
     console.error('Failed to track Google Analytics conversion:', error);
@@ -172,7 +176,7 @@ async function trackFacebookConversion(conversion: any) {
     }
 
     const eventName = getFacebookEventName(conversion.type);
-    
+
     const response = await fetch(
       `https://graph.facebook.com/v18.0/${FACEBOOK_PIXEL_ID}/events`,
       {
@@ -218,12 +222,12 @@ async function trackFacebookConversion(conversion: any) {
 async function trackCustomConversion(conversion: any) {
   try {
     // Send to your custom analytics service
-    console.log('Custom conversion tracked:', {
-      type: conversion.type,
-      userId: conversion.userId,
-      value: conversion.value,
-      timestamp: new Date(conversion.timestamp),
-    });
+    // console.log('Custom conversion tracked:', {
+    //   type: conversion.type,
+    //   userId: conversion.userId,
+    //   value: conversion.value,
+    //   timestamp: new Date(conversion.timestamp),
+    // });
   } catch (error) {
     console.error('Failed to track custom conversion:', error);
   }
@@ -255,8 +259,7 @@ async function storeConversionInDatabase(conversion: any) {
       referer: conversion.referer,
     });
     */
-    
-    console.log('Conversion stored in database (placeholder):', conversion.type);
+    // console.log('Conversion stored in database (placeholder):', conversion.type);
   } catch (error) {
     console.error('Failed to store conversion in database:', error);
   }
@@ -281,12 +284,12 @@ async function updateUserFunnel(conversion: any) {
       total_conversions: 1, // Would increment existing value
     });
     */
-    
-    console.log('User funnel updated (placeholder):', {
-      userId: conversion.userId,
-      stage: conversion.funnel?.stage,
-      conversion: conversion.type,
-    });
+
+    // console.log('User funnel updated (placeholder):', {
+    //   userId: conversion.userId,
+    //   stage: conversion.funnel?.stage,
+    //   conversion: conversion.type,
+    // });
   } catch (error) {
     console.error('Failed to update user funnel:', error);
   }
@@ -331,7 +334,7 @@ function getGoogleAnalyticsEventName(type: string): string {
     email_verified: 'verify_email',
     preferences_set: 'set_preferences',
   };
-  
+
   return mapping[type] || 'custom_conversion';
 }
 
@@ -350,7 +353,7 @@ function getFacebookEventName(type: string): string {
     email_verified: 'CompleteRegistration',
     preferences_set: 'CustomizeProduct',
   };
-  
+
   return mapping[type] || 'CustomEvent';
 }
 

@@ -24,7 +24,7 @@ const mockCanvas = {
     })),
   })),
   toDataURL: jest.fn(() => 'data:image/jpeg;base64,mock'),
-  toBlob: jest.fn((callback) => callback(new Blob())),
+  toBlob: jest.fn(callback => callback(new Blob())),
 };
 
 const mockImage = {
@@ -100,7 +100,7 @@ describe('Image Optimization', () => {
   describe('getOptimizedImageProps', () => {
     it('should return optimized props for hero images', () => {
       const props = getOptimizedImageProps('/test.jpg', 'hero', 'Test image');
-      
+
       expect(props.src).toBe('/test.jpg');
       expect(props.alt).toBe('Test image');
       expect(props.width).toBe(1200);
@@ -110,8 +110,12 @@ describe('Image Optimization', () => {
     });
 
     it('should return optimized props for thumbnails', () => {
-      const props = getOptimizedImageProps('/thumb.jpg', 'thumbnail', 'Thumbnail');
-      
+      const props = getOptimizedImageProps(
+        '/thumb.jpg',
+        'thumbnail',
+        'Thumbnail'
+      );
+
       expect(props.width).toBe(300);
       expect(props.height).toBe(200);
       expect(props.sizes).toBe(imageConfig.sizes.thumbnail);
@@ -122,7 +126,7 @@ describe('Image Optimization', () => {
         priority: true,
         style: { borderRadius: '8px' },
       });
-      
+
       expect(props.priority).toBe(true);
       expect(props.style).toMatchObject({
         objectFit: 'cover',
@@ -134,7 +138,7 @@ describe('Image Optimization', () => {
   describe('generateBlurDataUrl', () => {
     it('should generate blur data URL', () => {
       const result = generateBlurDataUrl(100, 100);
-      
+
       expect(mockCanvas.width).toBe(100);
       expect(mockCanvas.height).toBe(100);
       expect(mockCanvas.toDataURL).toHaveBeenCalledWith('image/jpeg', 0.1);
@@ -145,11 +149,11 @@ describe('Image Optimization', () => {
       // Temporarily remove document
       const originalDocument = global.document;
       delete (global as any).document;
-      
+
       const result = generateBlurDataUrl(100, 100);
-      
+
       expect(result).toContain('data:image/jpeg;base64');
-      
+
       // Restore document
       global.document = originalDocument;
     });
@@ -158,7 +162,7 @@ describe('Image Optimization', () => {
   describe('preloadImage', () => {
     it('should preload image in browser', () => {
       preloadImage('/test.jpg');
-      
+
       expect(document.createElement).toHaveBeenCalledWith('link');
       expect(mockLink.rel).toBe('preload');
       expect(mockLink.as).toBe('image');
@@ -170,12 +174,12 @@ describe('Image Optimization', () => {
       // Temporarily remove window
       const originalWindow = global.window;
       delete (global as any).window;
-      
+
       preloadImage('/test.jpg');
-      
+
       // Should not crash and not call document methods
       expect(document.createElement).not.toHaveBeenCalled();
-      
+
       // Restore window
       global.window = originalWindow;
     });
@@ -183,7 +187,7 @@ describe('Image Optimization', () => {
 
   describe('createImageObserver', () => {
     const mockIntersectionObserver = jest.fn();
-    
+
     beforeEach(() => {
       global.IntersectionObserver = mockIntersectionObserver;
     });
@@ -191,7 +195,7 @@ describe('Image Optimization', () => {
     it('should create intersection observer', () => {
       const callback = jest.fn();
       const observer = createImageObserver(callback);
-      
+
       expect(mockIntersectionObserver).toHaveBeenCalledWith(
         expect.any(Function),
         {
@@ -204,22 +208,22 @@ describe('Image Optimization', () => {
 
     it('should return null when IntersectionObserver not available', () => {
       delete (global as any).IntersectionObserver;
-      
+
       const callback = jest.fn();
       const observer = createImageObserver(callback);
-      
+
       expect(observer).toBeNull();
     });
 
     it('should return null in SSR', () => {
       const originalWindow = global.window;
       delete (global as any).window;
-      
+
       const callback = jest.fn();
       const observer = createImageObserver(callback);
-      
+
       expect(observer).toBeNull();
-      
+
       global.window = originalWindow;
     });
   });
@@ -227,16 +231,16 @@ describe('Image Optimization', () => {
   describe('compressImage', () => {
     it('should compress image file', async () => {
       const mockFile = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
-      
+
       // Mock image load
       setTimeout(() => {
         if (mockImage.onload) {
           mockImage.onload();
         }
       }, 0);
-      
+
       const result = await compressImage(mockFile, 800, 600, 0.8);
-      
+
       expect(result).toBeInstanceOf(Blob);
       expect(mockCanvas.width).toBe(800);
       expect(mockCanvas.height).toBe(600);
@@ -246,15 +250,15 @@ describe('Image Optimization', () => {
       const mockFile = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
       mockImage.width = 1600;
       mockImage.height = 800;
-      
+
       setTimeout(() => {
         if (mockImage.onload) {
           mockImage.onload();
         }
       }, 0);
-      
+
       await compressImage(mockFile, 800, 600, 0.8);
-      
+
       // Should scale width-first (1600 -> 800, 800 -> 400)
       expect(mockCanvas.width).toBe(800);
       expect(mockCanvas.height).toBe(400);
@@ -264,29 +268,29 @@ describe('Image Optimization', () => {
   describe('supportsWebP', () => {
     it('should detect WebP support', () => {
       mockCanvas.toDataURL.mockReturnValue('data:image/webp;base64,mock');
-      
+
       const result = supportsWebP();
-      
+
       expect(result).toBe(true);
       expect(mockCanvas.toDataURL).toHaveBeenCalledWith('image/webp');
     });
 
     it('should return false when WebP not supported', () => {
       mockCanvas.toDataURL.mockReturnValue('data:image/png;base64,mock');
-      
+
       const result = supportsWebP();
-      
+
       expect(result).toBe(false);
     });
 
     it('should return false in SSR', () => {
       const originalWindow = global.window;
       delete (global as any).window;
-      
+
       const result = supportsWebP();
-      
+
       expect(result).toBe(false);
-      
+
       global.window = originalWindow;
     });
   });
@@ -294,7 +298,7 @@ describe('Image Optimization', () => {
   describe('generateSrcSet', () => {
     it('should generate srcSet with default widths', () => {
       const result = generateSrcSet('/test.jpg');
-      
+
       expect(result).toContain('320w');
       expect(result).toContain('640w');
       expect(result).toContain('1920w');
@@ -303,7 +307,7 @@ describe('Image Optimization', () => {
 
     it('should generate srcSet with custom widths', () => {
       const result = generateSrcSet('/test.jpg', [400, 800]);
-      
+
       expect(result).toContain('400w');
       expect(result).toContain('800w');
       expect(result.split(',').length).toBe(2);
@@ -318,7 +322,7 @@ describe('Image Optimization', () => {
         quality: 90,
         format: 'webp',
       });
-      
+
       expect(result).toContain('/_next/image');
       expect(result).toContain('url=%2Ftest.jpg');
       expect(result).toContain('q=90');
@@ -327,14 +331,14 @@ describe('Image Optimization', () => {
 
     it('should use default quality when not specified', () => {
       const result = buildImageUrl('/test.jpg', { width: 400 });
-      
+
       expect(result).toContain('q=85');
       expect(result).toContain('w=400');
     });
 
     it('should handle URL without dimensions', () => {
       const result = buildImageUrl('/test.jpg');
-      
+
       expect(result).toContain('/_next/image');
       expect(result).toContain('q=85');
       expect(result).not.toContain('w=');
@@ -345,24 +349,24 @@ describe('Image Optimization', () => {
   describe('Error handling', () => {
     it('should handle missing canvas context gracefully', () => {
       mockCanvas.getContext.mockReturnValue(null);
-      
+
       const result = generateBlurDataUrl(100, 100);
-      
+
       expect(result).toBe('');
     });
 
     it('should handle image compression errors gracefully', async () => {
       const mockFile = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
-      mockCanvas.toBlob.mockImplementation((callback) => callback(null));
-      
+      mockCanvas.toBlob.mockImplementation(callback => callback(null));
+
       setTimeout(() => {
         if (mockImage.onload) {
           mockImage.onload();
         }
       }, 0);
-      
+
       const result = await compressImage(mockFile);
-      
+
       expect(result).toBeInstanceOf(Blob);
     });
   });

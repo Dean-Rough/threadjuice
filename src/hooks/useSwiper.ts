@@ -7,27 +7,42 @@ interface SwiperOptions {
   slidesPerView?: number | 'auto';
   spaceBetween?: number;
   loop?: boolean;
-  autoplay?: {
-    delay?: number;
-    disableOnInteraction?: boolean;
-    pauseOnMouseEnter?: boolean;
-  } | boolean;
-  pagination?: {
-    el?: string;
-    clickable?: boolean;
-    dynamicBullets?: boolean;
-  } | boolean;
-  navigation?: {
-    nextEl?: string;
-    prevEl?: string;
-  } | boolean;
-  scrollbar?: {
-    el?: string;
-    draggable?: boolean;
-  } | boolean;
+  autoplay?:
+    | {
+        delay?: number;
+        disableOnInteraction?: boolean;
+        pauseOnMouseEnter?: boolean;
+      }
+    | boolean;
+  pagination?:
+    | {
+        el?: string;
+        clickable?: boolean;
+        dynamicBullets?: boolean;
+      }
+    | boolean;
+  navigation?:
+    | {
+        nextEl?: string;
+        prevEl?: string;
+      }
+    | boolean;
+  scrollbar?:
+    | {
+        el?: string;
+        draggable?: boolean;
+      }
+    | boolean;
   breakpoints?: Record<number, Partial<SwiperOptions>>;
   direction?: 'horizontal' | 'vertical';
-  effect?: 'slide' | 'fade' | 'cube' | 'coverflow' | 'flip' | 'cards' | 'creative';
+  effect?:
+    | 'slide'
+    | 'fade'
+    | 'cube'
+    | 'coverflow'
+    | 'flip'
+    | 'cards'
+    | 'creative';
   speed?: number;
   grabCursor?: boolean;
   centeredSlides?: boolean;
@@ -110,7 +125,18 @@ export function useSwiper(options: SwiperOptions = {}): UseSwiperReturn {
       try {
         // Dynamically import Swiper modules
         const { Swiper } = await import('swiper');
-        const { Navigation, Pagination, Scrollbar, Autoplay, EffectFade, EffectCube, EffectCoverflow, EffectFlip, EffectCards, EffectCreative } = await import('swiper/modules');
+        const {
+          Navigation,
+          Pagination,
+          Scrollbar,
+          Autoplay,
+          EffectFade,
+          EffectCube,
+          EffectCoverflow,
+          EffectFlip,
+          EffectCards,
+          EffectCreative,
+        } = await import('swiper/modules');
 
         // Configure modules based on options
         const modules = [];
@@ -118,7 +144,7 @@ export function useSwiper(options: SwiperOptions = {}): UseSwiperReturn {
         if (defaultOptions.pagination) modules.push(Pagination);
         if (defaultOptions.scrollbar) modules.push(Scrollbar);
         if (defaultOptions.autoplay) modules.push(Autoplay);
-        
+
         // Add effect modules
         switch (defaultOptions.effect) {
           case 'fade':
@@ -146,11 +172,11 @@ export function useSwiper(options: SwiperOptions = {}): UseSwiperReturn {
             ...defaultOptions,
             modules,
             on: {
-              slideChange: (swiper) => {
+              slideChange: swiper => {
                 setCurrentSlide(swiper.activeIndex);
                 defaultOptions.on?.slideChange?.(swiper);
               },
-              init: (swiper) => {
+              init: swiper => {
                 setCurrentSlide(swiper.activeIndex);
                 defaultOptions.on?.init?.(swiper);
               },
@@ -163,7 +189,8 @@ export function useSwiper(options: SwiperOptions = {}): UseSwiperReturn {
           setError(null);
         }
       } catch (err) {
-        const error = err instanceof Error ? err : new Error('Failed to initialize Swiper');
+        const error =
+          err instanceof Error ? err : new Error('Failed to initialize Swiper');
         setError(error);
         console.error('Swiper initialization failed:', error);
       }

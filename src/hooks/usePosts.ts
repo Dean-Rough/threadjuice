@@ -4,7 +4,13 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { postService, type PostFilters, type Post, type PostsResponse } from '@/services/postService';
+import {
+  postService,
+  type PostFilters,
+  type Post,
+  type PostDetail,
+  type PostsResponse,
+} from '@/services/postService';
 
 // Query keys for consistent caching
 export const postKeys = {
@@ -15,7 +21,8 @@ export const postKeys = {
   detail: (id: string | number) => [...postKeys.details(), id] as const,
   featured: () => [...postKeys.all, 'featured'] as const,
   trending: () => [...postKeys.all, 'trending'] as const,
-  category: (category: string) => [...postKeys.all, 'category', category] as const,
+  category: (category: string) =>
+    [...postKeys.all, 'category', category] as const,
   search: (query: string) => [...postKeys.all, 'search', query] as const,
 };
 
@@ -23,14 +30,14 @@ export const postKeys = {
 export const usePosts = (filters: PostFilters = {}) => {
   return useQuery({
     queryKey: postKeys.list(filters),
-    queryFn: () => postService.getPostsWithCache(filters),
+    queryFn: () => postService.getPosts(filters),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
   });
 };
 
 // Hook for fetching a single post
-export const usePost = (id: string | number) => {
+export const usePost = (id: string) => {
   return useQuery({
     queryKey: postKeys.detail(id),
     queryFn: () => postService.getPost(id),
@@ -139,7 +146,7 @@ export const useUpdatePost = () => {
 
       return response.json();
     },
-    onSuccess: (updatedPost) => {
+    onSuccess: updatedPost => {
       // Update the post in cache
       queryClient.setQueryData(postKeys.detail(updatedPost.id), updatedPost);
       // Invalidate lists to ensure consistency
@@ -164,7 +171,7 @@ export const useDeletePost = () => {
 
       return { id };
     },
-    onSuccess: (deletedPost) => {
+    onSuccess: deletedPost => {
       // Remove from cache
       queryClient.removeQueries({ queryKey: postKeys.detail(deletedPost.id) });
       // Invalidate lists
@@ -189,13 +196,16 @@ export const usePrefetchPost = () => {
 // Custom hook for loading states across multiple queries
 export const usePostsLoadingState = () => {
   const queryClient = useQueryClient();
-  
+
   const isFetching = queryClient.isFetching({ queryKey: postKeys.all }) > 0;
-  const isLoading = queryClient.isFetching({ queryKey: postKeys.all, type: 'active' }) > 0;
-  
+  const isLoading =
+    queryClient.isFetching({ queryKey: postKeys.all, type: 'active' }) > 0;
+
   return {
     isFetching,
     isLoading,
-    hasAnyData: queryClient.getQueryCache().findAll({ queryKey: postKeys.all }).length > 0,
+    hasAnyData:
+      queryClient.getQueryCache().findAll({ queryKey: postKeys.all }).length >
+      0,
   };
 };

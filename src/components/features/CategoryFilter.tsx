@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Filter, Grid, List, Search, X } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -38,11 +38,7 @@ export default function CategoryFilter({
   const filterContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize Isotope-like filtering
-  useEffect(() => {
-    applyFilters();
-  }, [activeFilter, searchTerm, items]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     setIsFiltering(true);
 
     // Simulate loading delay for smooth animations
@@ -75,7 +71,11 @@ export default function CategoryFilter({
       },
       animated ? 300 : 0
     );
-  };
+  }, [activeFilter, searchTerm, items]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const handleCategoryFilter = (categoryId: string) => {
     setActiveFilter(categoryId);
@@ -198,7 +198,7 @@ export default function CategoryFilter({
                 <span className='text-muted'>
                   {isFiltering ? (
                     <span className='flex items-center'>
-                      <LoadingSpinner size="sm" text="Filtering..." />
+                      <LoadingSpinner size='sm' text='Filtering...' />
                     </span>
                   ) : (
                     `${getFilteredCount()} results`
@@ -279,7 +279,7 @@ export default function CategoryFilter({
       {isFiltering && animated && (
         <div className='filter-loading-overlay'>
           <div className='filter-loading-content'>
-            <LoadingSpinner size="md" text="Applying filters..." />
+            <LoadingSpinner size='md' text='Applying filters...' />
           </div>
         </div>
       )}

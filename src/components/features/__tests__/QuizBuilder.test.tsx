@@ -9,7 +9,7 @@ import { QuizBuilder, type QuizBuilderProps } from '../QuizBuilder';
 describe('QuizBuilder', () => {
   const mockOnSave = jest.fn();
   const mockOnCancel = jest.fn();
-  
+
   const mockPersonas = [
     { id: 'persona-1', name: 'The Snarky Sage' },
     { id: 'persona-2', name: 'The Down-to-Earth Buddy' },
@@ -104,7 +104,7 @@ describe('QuizBuilder', () => {
 
     const personaSelect = screen.getByLabelText(/persona/i);
     expect(personaSelect).toBeInTheDocument();
-    
+
     expect(screen.getByText('The Snarky Sage')).toBeInTheDocument();
     expect(screen.getByText('The Down-to-Earth Buddy')).toBeInTheDocument();
   });
@@ -214,9 +214,9 @@ describe('QuizBuilder', () => {
     expect(screen.getAllByPlaceholderText(/option/i)).toHaveLength(3);
 
     // Remove an option
-    const deleteButtons = screen.getAllByTitle(/delete/i).filter(btn => 
-      btn.closest('[class*="space-x-2"]')
-    );
+    const deleteButtons = screen
+      .getAllByTitle(/delete/i)
+      .filter(btn => btn.closest('[class*="space-x-2"]'));
     await user.click(deleteButtons[0]);
 
     expect(screen.getAllByPlaceholderText(/option/i)).toHaveLength(2);
@@ -231,12 +231,17 @@ describe('QuizBuilder', () => {
 
     // Should have 2 options and no delete buttons (minimum reached)
     expect(screen.getAllByPlaceholderText(/option/i)).toHaveLength(2);
-    
+
     // Check that delete buttons for options are not present when at minimum
-    const optionDeleteButtons = screen.queryAllByTitle(/delete/i).filter(btn => 
-      btn.closest('[class*="space-x-2"]') && 
-      btn.closest('[class*="space-x-2"]')?.querySelector('input[placeholder*="Option"]')
-    );
+    const optionDeleteButtons = screen
+      .queryAllByTitle(/delete/i)
+      .filter(
+        btn =>
+          btn.closest('[class*="space-x-2"]') &&
+          btn
+            .closest('[class*="space-x-2"]')
+            ?.querySelector('input[placeholder*="Option"]')
+      );
     expect(optionDeleteButtons).toHaveLength(0);
   });
 
@@ -270,11 +275,11 @@ describe('QuizBuilder', () => {
     const questionInputs = screen.getAllByLabelText(/question \*/i);
     await user.clear(questionInputs[0]);
     await user.type(questionInputs[0], 'First question');
-    
+
     // Collapse first question to see the second one
     const editButtons = screen.getAllByTitle(/edit/i);
     await user.click(editButtons[0]);
-    
+
     await user.clear(questionInputs[1]);
     await user.type(questionInputs[1], 'Second question');
 
@@ -305,16 +310,22 @@ describe('QuizBuilder', () => {
 
     // Add third question
     await user.click(screen.getByText('Add Question'));
-    
+
     // Fill in question details for all questions
     const questionInputs = screen.getAllByLabelText(/question \*/i);
     for (let i = 0; i < questionInputs.length; i++) {
       await user.clear(questionInputs[i]);
       await user.type(questionInputs[i], `Question ${i + 1}?`);
-      
+
       // Set correct answer for each question
       const correctAnswerSelects = screen.getAllByLabelText(/correct answer/i);
-      await user.selectOptions(correctAnswerSelects[i], questionInputs[i].closest('[class*="space-y-4"]')?.querySelector('input[placeholder="Option 1"]')?.getAttribute('value') || '');
+      await user.selectOptions(
+        correctAnswerSelects[i],
+        questionInputs[i]
+          .closest('[class*="space-y-4"]')
+          ?.querySelector('input[placeholder="Option 1"]')
+          ?.getAttribute('value') || ''
+      );
     }
 
     expect(saveButton).not.toBeDisabled();
@@ -334,22 +345,28 @@ describe('QuizBuilder', () => {
     // Add minimum questions
     for (let i = 0; i < 3; i++) {
       await user.click(screen.getByText('Add Question'));
-      
+
       const questionInputs = screen.getAllByLabelText(/question \*/i);
       await user.clear(questionInputs[i]);
       await user.type(questionInputs[i], `Question ${i + 1}?`);
-      
+
       // Fill in options
       const optionInputs = screen.getAllByPlaceholderText(/option/i);
-      const questionOptions = Array.from(optionInputs).slice(i * 2, (i + 1) * 2);
+      const questionOptions = Array.from(optionInputs).slice(
+        i * 2,
+        (i + 1) * 2
+      );
       await user.clear(questionOptions[0]);
       await user.type(questionOptions[0], `Option A for Q${i + 1}`);
       await user.clear(questionOptions[1]);
       await user.type(questionOptions[1], `Option B for Q${i + 1}`);
-      
+
       // Set correct answer
       const correctAnswerSelects = screen.getAllByLabelText(/correct answer/i);
-      await user.selectOptions(correctAnswerSelects[i], `Option A for Q${i + 1}`);
+      await user.selectOptions(
+        correctAnswerSelects[i],
+        `Option A for Q${i + 1}`
+      );
     }
 
     // Check publish checkbox
@@ -391,13 +408,15 @@ describe('QuizBuilder', () => {
 
   it('shows loading state during save', async () => {
     const user = userEvent.setup();
-    const slowOnSave = jest.fn(() => new Promise(resolve => setTimeout(resolve, 100)));
-    
+    const slowOnSave = jest.fn(
+      () => new Promise(resolve => setTimeout(resolve, 100))
+    );
+
     render(<QuizBuilder {...defaultProps} onSave={slowOnSave} />);
 
     // Set up valid quiz
     await user.type(screen.getByLabelText(/title/i), 'Test Quiz');
-    
+
     for (let i = 0; i < 3; i++) {
       await user.click(screen.getByText('Add Question'));
       const questionInputs = screen.getAllByLabelText(/question \*/i);
@@ -444,13 +463,13 @@ describe('QuizBuilder', () => {
     await user.click(screen.getByText('Add Question'));
 
     const pointsInput = screen.getByLabelText(/points/i);
-    
+
     // Test minimum value
     await user.clear(pointsInput);
     await user.type(pointsInput, '0');
     // Should default back to 1 due to min constraint
     expect(pointsInput).toHaveAttribute('min', '1');
-    
+
     // Test maximum value
     await user.clear(pointsInput);
     await user.type(pointsInput, '15');
@@ -460,7 +479,9 @@ describe('QuizBuilder', () => {
   it('shows empty state when no questions', () => {
     render(<QuizBuilder {...defaultProps} />);
 
-    expect(screen.getByText('No questions yet. Click "Add Question" to get started.')).toBeInTheDocument();
+    expect(
+      screen.getByText('No questions yet. Click "Add Question" to get started.')
+    ).toBeInTheDocument();
   });
 
   it('displays question count correctly', async () => {
@@ -477,9 +498,11 @@ describe('QuizBuilder', () => {
   });
 
   it('handles custom className', () => {
-    render(<QuizBuilder {...defaultProps} className="custom-class" />);
+    render(<QuizBuilder {...defaultProps} className='custom-class' />);
 
-    const quizBuilder = screen.getByText('Create New Quiz').closest('.quiz-builder');
+    const quizBuilder = screen
+      .getByText('Create New Quiz')
+      .closest('.quiz-builder');
     expect(quizBuilder).toHaveClass('custom-class');
   });
 });

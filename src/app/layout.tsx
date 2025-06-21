@@ -1,18 +1,19 @@
 import './globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
+// import { ClerkProvider } from '@clerk/nextjs';
 import { GeistSans, GeistMono } from 'geist/font';
+import { AppLayout } from '@/components/layout/AppLayout';
 
-// Load why-did-you-render in development
-if (process.env.NODE_ENV === 'development') {
-  import('../lib/whydidyourender');
-}
+// Load why-did-you-render in development (temporarily disabled)
+// if (process.env.NODE_ENV === 'development') {
+//   import('../lib/whydidyourender');
+// }
 
 // Geist fonts: GeistSans for headers/body, GeistMono for tags/buttons
 
 export const metadata = {
   metadataBase: new URL('https://threadjuice.com'),
   title: {
-    default: 'ThreadJuice - Get Ratio\'d • The Best Stories from Around the Web',
+    default: "ThreadJuice - Get Ratio'd • The Best Stories from Around the Web",
     template: '%s | ThreadJuice',
   },
   description:
@@ -110,23 +111,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    >
-      <html lang='en' className='scroll-smooth'>
-        <head></head>
-        <body
-          className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
-          style={
-            {
-              '--font-geist-sans': GeistSans.style.fontFamily,
-              '--font-geist-mono': GeistMono.style.fontFamily,
-            } as React.CSSProperties
-          }
-        >
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang='en' className='scroll-smooth'>
+      <head></head>
+      <body
+        className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
+        style={
+          {
+            '--font-geist-sans': GeistSans.style.fontFamily,
+            '--font-geist-mono': GeistMono.style.fontFamily,
+          } as React.CSSProperties
+        }
+      >
+        <AppLayout>{children}</AppLayout>
+      </body>
+    </html>
   );
 }

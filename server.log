@@ -1,0 +1,40 @@
+
+> threadjuice@1.0.0 dev
+> npm run kill-ports && next dev -p 4242
+
+
+> threadjuice@1.0.0 kill-ports
+> lsof -ti:4242 | xargs kill -9 2>/dev/null || true
+
+   ▲ Next.js 15.3.3
+   - Local:        http://localhost:4242
+   - Network:      http://192.168.1.225:4242
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+ ✓ Starting...
+ ✓ Ready in 1174ms
+ ○ Compiling /api/ingest/reddit ...
+ ✓ Compiled /api/ingest/reddit in 716ms (480 modules)
+[Ingestion job_1750373293144_153dmfifm] Starting content ingestion...
+[Ingestion job_1750373293144_153dmfifm] Targeting 1 subreddits: AmItheAsshole
+[Ingestion job_1750373293144_153dmfifm] Fetching posts from r/AmItheAsshole...
+ POST /api/ingest/reddit 200 in 879ms
+Reddit: OAuth authentication successful
+[Ingestion job_1750373293144_153dmfifm] Found 2 viral posts in r/AmItheAsshole
+ ✓ Compiled /api/ingest/status/[jobId] in 201ms (482 modules)
+Error: Route "/api/ingest/status/[jobId]" used `params.jobId`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at GET (src/app/api/ingest/status/[jobId]/route.ts:12:12)
+  10 | ) {
+  11 |   try {
+> 12 |     const { jobId } = params
+     |            ^
+  13 |
+  14 |     if (!jobId) {
+  15 |       return NextResponse.json(
+ GET /api/ingest/status/job_1750373293144_153dmfifm 404 in 597ms
+ ✓ Compiled in 66ms (203 modules)
+ GET /api/ingest/status/job_1750373293144_153dmfifm 404 in 52ms
+ GET /api/ingest/reddit 200 in 8ms
+[?25h

@@ -9,14 +9,18 @@ const preferencesSchema = z.object({
     frequency: z.enum(['daily', 'weekly', 'instant']),
     writers: z.array(z.string()),
   }),
-  profile: z.object({
-    firstName: z.string().optional(),
-    interests: z.array(z.string()).optional(),
-  }).optional(),
-  notifications: z.object({
-    email: z.boolean(),
-    push: z.boolean(),
-  }).optional(),
+  profile: z
+    .object({
+      firstName: z.string().optional(),
+      interests: z.array(z.string()).optional(),
+    })
+    .optional(),
+  notifications: z
+    .object({
+      email: z.boolean(),
+      push: z.boolean(),
+    })
+    .optional(),
 });
 
 /**
@@ -28,12 +32,9 @@ const preferencesSchema = z.object({
 async function handleGetPreferences(request: NextRequest) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // In a real implementation, you would fetch from your database
@@ -67,22 +68,19 @@ async function handleGetPreferences(request: NextRequest) {
 async function handleSavePreferences(request: NextRequest) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const validatedData = preferencesSchema.parse(body);
 
     // In a real implementation, you would save to your database
-    console.log('Saving user preferences:', {
-      userId,
-      preferences: validatedData,
-    });
+    // console.log('Saving user preferences:', {
+    //   userId,
+    //   preferences: validatedData,
+    // });
 
     // Track preference update
     if (typeof globalThis !== 'undefined' && (globalThis as any).va) {
@@ -95,7 +93,7 @@ async function handleSavePreferences(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { 
+      {
         success: true,
         message: 'Preferences saved successfully',
       },
@@ -104,9 +102,9 @@ async function handleSavePreferences(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: 'Validation failed', 
-          details: error.errors 
+        {
+          error: 'Validation failed',
+          details: error.errors,
         },
         { status: 400 }
       );

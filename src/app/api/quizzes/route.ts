@@ -48,11 +48,12 @@ interface Quiz {
 }
 
 // Mock data store
-let quizzes: Quiz[] = [
+const quizzes: Quiz[] = [
   {
     id: 'quiz-1',
     title: 'Reddit Drama Knowledge Test',
-    description: 'Test your knowledge of infamous Reddit drama and controversies',
+    description:
+      'Test your knowledge of infamous Reddit drama and controversies',
     category: 'drama',
     difficulty: 'medium',
     timeLimit: 300,
@@ -60,28 +61,49 @@ let quizzes: Quiz[] = [
       {
         id: 'q1',
         type: 'multiple-choice',
-        question: 'Which subreddit was infamous for the "Boston Bomber" incident?',
-        options: ['/r/news', '/r/FindBostonBombers', '/r/worldnews', '/r/Boston'],
+        question:
+          'Which subreddit was infamous for the "Boston Bomber" incident?',
+        options: [
+          '/r/news',
+          '/r/FindBostonBombers',
+          '/r/worldnews',
+          '/r/Boston',
+        ],
         correctAnswer: '/r/FindBostonBombers',
-        explanation: 'Reddit users incorrectly identified the Boston Marathon bomber, leading to harassment of innocent people.',
+        explanation:
+          'Reddit users incorrectly identified the Boston Marathon bomber, leading to harassment of innocent people.',
         points: 2,
       },
       {
         id: 'q2',
         type: 'true-false',
-        question: 'The "We did it Reddit!" meme originated from successfully solving a crime.',
+        question:
+          'The "We did it Reddit!" meme originated from successfully solving a crime.',
         options: ['True', 'False'],
         correctAnswer: 'False',
-        explanation: 'The meme is actually sarcastic, referring to Reddit\'s failed attempts at amateur detective work.',
+        explanation:
+          "The meme is actually sarcastic, referring to Reddit's failed attempts at amateur detective work.",
         points: 1,
       },
       {
         id: 'q3',
         type: 'ranking',
-        question: 'Rank these Reddit controversies by year (earliest to latest):',
-        options: ['Ellen Pao resignation', 'The Fappening', 'API changes protest', 'GameStop stock saga'],
-        correctAnswer: ['The Fappening', 'Ellen Pao resignation', 'GameStop stock saga', 'API changes protest'],
-        explanation: 'The Fappening (2014), Ellen Pao (2015), GameStop (2021), API changes (2023).',
+        question:
+          'Rank these Reddit controversies by year (earliest to latest):',
+        options: [
+          'Ellen Pao resignation',
+          'The Fappening',
+          'API changes protest',
+          'GameStop stock saga',
+        ],
+        correctAnswer: [
+          'The Fappening',
+          'Ellen Pao resignation',
+          'GameStop stock saga',
+          'API changes protest',
+        ],
+        explanation:
+          'The Fappening (2014), Ellen Pao (2015), GameStop (2021), API changes (2023).',
         points: 3,
       },
     ],
@@ -108,18 +130,24 @@ export async function GET(request: NextRequest) {
 
     // Filter quizzes
     let filteredQuizzes = quizzes;
-    
+
     if (category) {
-      filteredQuizzes = filteredQuizzes.filter(quiz => quiz.category === category);
+      filteredQuizzes = filteredQuizzes.filter(
+        quiz => quiz.category === category
+      );
     }
-    
+
     if (difficulty) {
-      filteredQuizzes = filteredQuizzes.filter(quiz => quiz.difficulty === difficulty);
+      filteredQuizzes = filteredQuizzes.filter(
+        quiz => quiz.difficulty === difficulty
+      );
     }
-    
+
     if (published !== null) {
       const isPublished = published === 'true';
-      filteredQuizzes = filteredQuizzes.filter(quiz => quiz.isPublished === isPublished);
+      filteredQuizzes = filteredQuizzes.filter(
+        quiz => quiz.isPublished === isPublished
+      );
     }
 
     // Pagination
@@ -148,7 +176,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: 'Authentication required' },

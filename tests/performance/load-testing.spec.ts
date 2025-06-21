@@ -182,7 +182,7 @@ test.describe('Performance Testing', () => {
       const scrollMetrics = await page.evaluate(() => {
         return new Promise((resolve) => {
           let frameCount = 0;
-          let startTime = performance.now();
+          const startTime = performance.now();
           
           const measureFrames = () => {
             frameCount++;

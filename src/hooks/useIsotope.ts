@@ -5,7 +5,15 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 // Types for Isotope
 interface IsotopeOptions {
   itemSelector?: string;
-  layoutMode?: 'masonry' | 'fitRows' | 'cellsByRow' | 'masonryHorizontal' | 'fitColumns' | 'cellsByColumn' | 'horiz' | 'vert';
+  layoutMode?:
+    | 'masonry'
+    | 'fitRows'
+    | 'cellsByRow'
+    | 'masonryHorizontal'
+    | 'fitColumns'
+    | 'cellsByColumn'
+    | 'horiz'
+    | 'vert';
   masonry?: {
     columnWidth?: number | string;
     gutter?: number | string;
@@ -13,7 +21,10 @@ interface IsotopeOptions {
   fitRows?: {
     gutter?: number | string;
   };
-  getSortData?: Record<string, string | ((element: Element) => string | number)>;
+  getSortData?: Record<
+    string,
+    string | ((element: Element) => string | number)
+  >;
   sortBy?: string;
   sortAscending?: boolean;
   filter?: string;
@@ -85,15 +96,21 @@ export function useIsotope(options: IsotopeOptions = {}): UseIsotopeReturn {
       try {
         // Dynamically import Isotope
         const Isotope = (await import('isotope-layout')).default;
-        
+
         if (containerRef.current) {
-          isotopeInstance = new Isotope(containerRef.current, defaultOptions) as IsotopeInstance;
+          isotopeInstance = new Isotope(
+            containerRef.current,
+            defaultOptions
+          ) as IsotopeInstance;
           isotopeRef.current = isotopeInstance;
           setIsReady(true);
           setError(null);
         }
       } catch (err) {
-        const error = err instanceof Error ? err : new Error('Failed to initialize Isotope');
+        const error =
+          err instanceof Error
+            ? err
+            : new Error('Failed to initialize Isotope');
         setError(error);
         console.error('Isotope initialization failed:', error);
       }

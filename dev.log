@@ -1,0 +1,22 @@
+
+> threadjuice@1.0.0 dev
+> npm run kill-ports && next dev -p 4242
+
+
+> threadjuice@1.0.0 kill-ports
+> lsof -ti:4242 | xargs kill -9 2>/dev/null || true
+
+   ▲ Next.js 15.3.3
+   - Local:        http://localhost:4242
+   - Network:      http://192.168.1.225:4242
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+ ✓ Starting...
+ ✓ Ready in 1276ms
+ ○ Compiling /api/posts ...
+ ✓ Compiled /api/posts in 598ms (477 modules)
+🔍 Attempting to fetch from Supabase...
+✅ Successfully fetched from Supabase: 12 posts
+ GET /api/posts?sortBy=latest 200 in 917ms

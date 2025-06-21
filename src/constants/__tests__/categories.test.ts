@@ -15,12 +15,23 @@ describe('Category Constants', () => {
   describe('CATEGORIES array', () => {
     it('should contain all expected categories', () => {
       const expectedIds = [
-        'all', 'viral', 'trending', 'gaming', 'tech', 'movie',
-        'sports', 'music', 'food', 'travel', 'lifestyle', 'news', 'science'
+        'all',
+        'viral',
+        'trending',
+        'gaming',
+        'tech',
+        'movie',
+        'sports',
+        'music',
+        'food',
+        'travel',
+        'lifestyle',
+        'news',
+        'science',
       ];
-      
+
       expect(CATEGORIES).toHaveLength(expectedIds.length);
-      
+
       expectedIds.forEach(id => {
         const category = CATEGORIES.find(cat => cat.id === id);
         expect(category).toBeDefined();
@@ -36,7 +47,7 @@ describe('Category Constants', () => {
         expect(category).toHaveProperty('icon');
         expect(category).toHaveProperty('description');
         expect(category).toHaveProperty('color');
-        
+
         expect(typeof category.id).toBe('string');
         expect(typeof category.name).toBe('string');
         expect(typeof category.emoji).toBe('string');
@@ -174,7 +185,7 @@ describe('Category Constants', () => {
       // This should fail at compile time if CATEGORIES is not readonly
       // @ts-expect-error - Cannot assign to readonly array
       // CATEGORIES.push({} as Category);
-      
+
       // But accessing should work fine
       expect(CATEGORIES[0]).toBeDefined();
     });
@@ -185,21 +196,32 @@ describe('Category Constants', () => {
       CATEGORIES.forEach(category => {
         // Names should be capitalized
         expect(category.name[0]).toBe(category.name[0].toUpperCase());
-        
+
         // IDs should be lowercase
         expect(category.id).toBe(category.id.toLowerCase());
-        
+
         // Descriptions should end with proper punctuation or be meaningful
         expect(category.description.length).toBeGreaterThan(5);
-        
+
         // Emojis should be actual emoji characters (basic check)
         expect(category.emoji.length).toBeGreaterThanOrEqual(1);
         expect(category.emoji.length).toBeLessThanOrEqual(4);
-        
+
         // Colors should be valid CSS color names (basic validation)
         const validColors = [
-          'orange', 'red', 'green', 'purple', 'blue', 'yellow', 'indigo',
-          'pink', 'amber', 'cyan', 'rose', 'gray', 'emerald'
+          'orange',
+          'red',
+          'green',
+          'purple',
+          'blue',
+          'yellow',
+          'indigo',
+          'pink',
+          'amber',
+          'cyan',
+          'rose',
+          'gray',
+          'emerald',
         ];
         expect(validColors).toContain(category.color);
       });

@@ -14,26 +14,26 @@ function TestComponent() {
 
   return (
     <div>
-      <div data-testid="mobile-menu-state">
+      <div data-testid='mobile-menu-state'>
         {mobileMenuOpen ? 'Menu Open' : 'Menu Closed'}
       </div>
-      <div data-testid="sidebar-state">
+      <div data-testid='sidebar-state'>
         {sidebarOpen ? 'Sidebar Open' : 'Sidebar Closed'}
       </div>
-      <button data-testid="toggle-mobile" onClick={toggleMobileMenu}>
+      <button data-testid='toggle-mobile' onClick={toggleMobileMenu}>
         Toggle Mobile Menu
       </button>
-      <button data-testid="toggle-sidebar" onClick={toggleSidebar}>
+      <button data-testid='toggle-sidebar' onClick={toggleSidebar}>
         Toggle Sidebar
       </button>
       <button
-        data-testid="set-mobile-true"
+        data-testid='set-mobile-true'
         onClick={() => setMobileMenuOpen(true)}
       >
         Open Mobile Menu
       </button>
       <button
-        data-testid="set-sidebar-false"
+        data-testid='set-sidebar-false'
         onClick={() => setSidebarOpen(false)}
       >
         Close Sidebar

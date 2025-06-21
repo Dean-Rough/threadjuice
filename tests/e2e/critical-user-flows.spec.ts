@@ -197,7 +197,7 @@ test.describe('Critical User Flows', () => {
         }
       } catch (error) {
         // FCP measurement failed, but don't fail the test
-        console.log('FCP measurement not available');
+        // console.log('FCP measurement not available');
       }
     });
 

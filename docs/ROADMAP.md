@@ -504,6 +504,44 @@ npm install @supabase/supabase-js zod
 - ✅ Real-time notifications working with browser integration
 - ✅ Comprehensive test coverage with 56+ passing tests
 
+### Task 4.4: Writer Management Dashboard 🔄
+
+**Prompt**: Build writer management system for content personas and voice control
+
+```typescript
+// Create writer persona management interface
+// Add voice style configuration and examples
+// Build persona assignment workflow for posts
+// Implement voice consistency validation
+```
+
+**Writer Management Features**:
+
+- Writer persona creation and management interface
+- Voice style configuration with examples and tone settings
+- Avatar upload and persona branding system
+- Content assignment workflow for different writers
+- Voice consistency validation and suggestions
+- Performance analytics per writer persona
+- A/B testing capabilities for different writing styles
+
+**Files to create**:
+
+- `app/(admin)/writers/` - Writer management admin pages
+- `components/admin/WriterManager.tsx` - Writer persona management interface
+- `components/admin/VoiceEditor.tsx` - Voice style configuration component
+- `lib/voiceValidation.ts` - Voice consistency checking utilities
+- `lib/personaAnalytics.ts` - Writer performance tracking
+
+**Acceptance criteria**:
+
+- [ ] Complete writer persona management system
+- [ ] Voice style configuration with real-time preview
+- [ ] Content assignment workflow integrated with CMS
+- [ ] Voice consistency validation for published content
+- [ ] Analytics dashboard showing writer performance metrics
+- [ ] Comprehensive test coverage for writer management features
+
 ## Phase 5: Performance & Optimization
 
 ### Task 5.1: Performance Optimization ✅

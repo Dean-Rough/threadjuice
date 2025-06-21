@@ -45,40 +45,45 @@ export function PersonaBadge({
   const classes = sizeClasses[size];
 
   return (
-    <div className={`flex items-center space-x-2 ${className}`} data-testid="persona-badge">
+    <div
+      className={`flex items-center space-x-2 ${className}`}
+      data-testid='persona-badge'
+    >
       {/* Avatar */}
       {showAvatar && (
-        <div className={`${classes.avatar} rounded-full overflow-hidden bg-gray-200 flex-shrink-0`}>
+        <div
+          className={`${classes.avatar} flex-shrink-0 overflow-hidden rounded-full bg-gray-200`}
+        >
           {author.avatar ? (
             <Image
               src={author.avatar}
               alt={author.name}
               width={size === 'sm' ? 24 : size === 'md' ? 32 : 40}
               height={size === 'sm' ? 24 : size === 'md' ? 32 : 40}
-              className="w-full h-full object-cover"
-              onError={(e) => {
+              className='h-full w-full object-cover'
+              onError={e => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
               }}
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-              <User className="w-1/2 h-1/2 text-white" />
+            <div className='flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-400 to-purple-500'>
+              <User className='h-1/2 w-1/2 text-white' />
             </div>
           )}
         </div>
       )}
 
       {/* Author Info */}
-      <div className="flex flex-col min-w-0">
+      <div className='flex min-w-0 flex-col'>
         <Link
           href={`/personas/${author.id}`}
-          className={`font-medium text-gray-900 hover:text-primary transition-colors truncate ${classes.text}`}
+          className={`truncate font-medium text-gray-900 transition-colors hover:text-primary ${classes.text}`}
         >
           {author.name}
         </Link>
         {showTone && (
-          <span className={`text-gray-500 truncate ${classes.tone}`}>
+          <span className={`truncate text-gray-500 ${classes.tone}`}>
             {author.tone}
           </span>
         )}

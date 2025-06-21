@@ -2,10 +2,10 @@
  * Simplified analytics tests focusing on core functionality
  */
 
-import { 
-  ServerAnalytics, 
-  checkPerformanceBudgets, 
-  PERFORMANCE_BUDGETS 
+import {
+  ServerAnalytics,
+  checkPerformanceBudgets,
+  PERFORMANCE_BUDGETS,
 } from '../analytics';
 
 // Mock fetch
@@ -23,27 +23,31 @@ describe('Analytics Core Functionality', () => {
   describe('ServerAnalytics', () => {
     it('should track server events', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      
-      await ServerAnalytics.trackServerEvent('test_event', { prop: 'value' }, 'user123');
-      
+
+      await ServerAnalytics.trackServerEvent(
+        'test_event',
+        { prop: 'value' },
+        'user123'
+      );
+
       expect(consoleSpy).toHaveBeenCalledWith('Server event:', {
         event: 'test_event',
         properties: { prop: 'value' },
         userId: 'user123',
       });
-      
+
       consoleSpy.mockRestore();
     });
 
     it('should calculate engagement metrics', () => {
       const metrics = ServerAnalytics.calculateEngagementMetrics(
         1000, // pageViews
-        500,  // uniqueVisitors  
+        500, // uniqueVisitors
         15000, // totalSessionTime
-        100,  // bounces
-        25    // conversions
+        100, // bounces
+        25 // conversions
       );
-      
+
       expect(metrics.pageViews).toBe(1000);
       expect(metrics.uniqueVisitors).toBe(500);
       expect(metrics.sessionDuration).toBe(30); // 15000 / 500
@@ -69,9 +73,9 @@ describe('Analytics Core Functionality', () => {
         cls: 0.05,
         ttfb: 600,
       };
-      
+
       const result = checkPerformanceBudgets(metrics);
-      
+
       expect(result.passed).toBe(true);
       expect(result.violations).toHaveLength(0);
     });
@@ -80,13 +84,13 @@ describe('Analytics Core Functionality', () => {
       const metrics = {
         fcp: 2000, // Exceeds 1500ms
         lcp: 3000, // Exceeds 2500ms
-        fid: 150,  // Exceeds 100ms
-        cls: 0.2,  // Exceeds 0.1
+        fid: 150, // Exceeds 100ms
+        cls: 0.2, // Exceeds 0.1
         ttfb: 1000, // Exceeds 800ms
       };
-      
+
       const result = checkPerformanceBudgets(metrics);
-      
+
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(5);
       expect(result.violations[0]).toContain('FCP: 2000ms > 1500ms');
@@ -100,9 +104,9 @@ describe('Analytics Core Functionality', () => {
       const metrics = {
         fcp: 2000, // Only this exceeds budget
       };
-      
+
       const result = checkPerformanceBudgets(metrics);
-      
+
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(1);
       expect(result.violations[0]).toContain('FCP: 2000ms > 1500ms');
@@ -110,7 +114,7 @@ describe('Analytics Core Functionality', () => {
 
     it('should handle empty metrics', () => {
       const result = checkPerformanceBudgets({});
-      
+
       expect(result.passed).toBe(true);
       expect(result.violations).toHaveLength(0);
     });
@@ -120,17 +124,25 @@ describe('Analytics Core Functionality', () => {
     it('should handle edge cases in engagement calculations', () => {
       // Test division by zero
       const metricsZeroVisitors = ServerAnalytics.calculateEngagementMetrics(
-        100, 0, 1000, 10, 5
+        100,
+        0,
+        1000,
+        10,
+        5
       );
-      
+
       expect(metricsZeroVisitors.sessionDuration).toBe(Infinity);
       expect(metricsZeroVisitors.conversionRate).toBe(Infinity);
 
       // Test zero page views
       const metricsZeroPageViews = ServerAnalytics.calculateEngagementMetrics(
-        0, 100, 1000, 10, 5
+        0,
+        100,
+        1000,
+        10,
+        5
       );
-      
+
       expect(metricsZeroPageViews.bounceRate).toBe(Infinity);
     });
   });

@@ -60,7 +60,7 @@ export class RateLimiter {
     if (this.tracker.requestCount >= this.tracker.maxRequests) {
       const waitTime = this.tracker.windowDuration - (now - this.tracker.windowStart);
       if (waitTime > 0) {
-        console.log(`Rate limit exceeded. Waiting ${waitTime}ms`);
+        // console.log(`Rate limit exceeded. Waiting ${waitTime}ms`);
         await this.delay(waitTime);
         
         // Reset after waiting
@@ -93,7 +93,7 @@ export class RateLimiter {
       // Check if error is rate limit related
       if (this.isRateLimitError(error)) {
         const delay = this.calculateBackoffDelay(retryCount);
-        console.log(`Rate limit error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
+        // console.log(`Rate limit error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
         
         await this.delay(delay);
         return this.executeWithBackoff(requestFn, retryCount + 1);
@@ -102,7 +102,7 @@ export class RateLimiter {
       // If it's not a rate limit error, check if it's a temporary error
       if (this.isTemporaryError(error)) {
         const delay = this.calculateBackoffDelay(retryCount);
-        console.log(`Temporary error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
+        // console.log(`Temporary error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
         
         await this.delay(delay);
         return this.executeWithBackoff(requestFn, retryCount + 1);

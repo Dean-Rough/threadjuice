@@ -1,0 +1,140 @@
+{
+  "id": "auto-story-1750284444160",
+  "title": "Entitled Customer Demands the Impossible, Employee Executes Perfect Revenge Plan",
+  "slug": "entitled-customer-demands-impossible",
+  "excerpt": "When an entitled customer tried to make a simple coffee run a living nightmare, one clever employee brewed up sweet, sweet revenge.",
+  "category": "customer",
+  "status": "published",
+  "trending": true,
+  "featured": true,
+  "author": "The Snarky Sage",
+  "createdAt": "2025-06-18T22:07:24.161Z",
+  "updatedAt": "2025-06-18T22:07:24.161Z",
+  "persona": {
+    "id": "snarky-sage",
+    "name": "The Snarky Sage",
+    "bio": "Professional chaos observer with a PhD in human stupidity.",
+    "avatar": "/assets/img/personas/snarky-sage.png",
+    "tone": "Sarcastic and deadpan with brutal honesty"
+  },
+  "content": {
+    "sections": [
+      {
+        "type": "image",
+        "content": "Professional business meeting or presentation",
+        "metadata": {
+          "image_source": "Stock photo from ThreadJuice library",
+          "image_url": "/assets/img/blog/blog01.jpg",
+          "attribution": "Stock photo",
+          "source": "ThreadJuice curated library",
+          "selection_timestamp": "2025-06-18T22:07:24.160Z",
+          "image_type": "stock"
+        }
+      },
+      {
+        "type": "describe-1",
+        "title": "The Setup",
+        "content": "Welcome to Brewed Awakening, home to overpriced caffeine and, apparently, the world's most entitled customers. Meet our hero, Emma, a barista with the patience of a saint and the wit of a stand-up comic. On a particularly busy Monday morning, Emma was managing the counter, handling the usual rush when in strutted Karen. Yes, a real-life Karen, complete with the demanding attitude and haircut that screams 'I want to speak to the manager.' She ordered a 'grande mocha frappuccino, extra hot, with almond milk, triple blended, and a dash of unicorn tears.' Emma, used to such requests, responded with her best professional smile, but little did she know, this was just the beginning."
+      },
+      {
+        "type": "quotes",
+        "content": "This is lukewarm at best, and I asked for it extra hot!",
+        "metadata": {
+          "attribution": "Karen",
+          "context": "Karen complained about the temperature of her frappuccino, contradicting the very definition of the drink."
+        }
+      },
+      {
+        "type": "describe-2",
+        "title": "Things Get Worse",
+        "content": "Karen, apparently not satisfied with just complicating a simple drink order, decided to critique everything in the café. 'These tables are filthy,' she scoffed, even as she spilled her designer handbag onto said table. 'And your Wi-Fi is slower than a snail on tranquilizers.' Emma, still maintaining her composure, nodded and continued her duties. But the pièce de résistance came when Karen, unhappy with the drink's temperature, demanded a new one. 'This is lukewarm at best, and I asked for it extra hot,' she barked, though frappuccinos are, by definition, cold. Emma explained this with a customer-service smile, only to be met with, 'Well, you should have said that before I ordered!' Clearly, logic was not Karen's strong suit."
+      },
+      {
+        "type": "quotes",
+        "content": "An extra hot frappuccino, just as you requested.",
+        "metadata": {
+          "attribution": "Emma",
+          "context": "Emma delivered the ultimate comeback by serving Karen an undrinkably hot 'frappuccino'."
+        }
+      },
+      {
+        "type": "comments-1",
+        "title": "Reddit Reactions",
+        "content": "The internet had THOUGHTS about this situation:",
+        "metadata": {
+          "comments": [
+            {
+              "author": "throwaway123",
+              "content": "Emma deserves a medal for keeping her cool and delivering such an epic comeback!"
+            },
+            {
+              "author": "RedditUser2024",
+              "content": "I can't believe she asked for a hot frappuccino. Someone get this woman a dictionary!"
+            },
+            {
+              "author": "BaristaBlues",
+              "content": "As a fellow barista, this is the kind of story that makes me feel all warm and fuzzy inside."
+            },
+            {
+              "author": "JavaLover",
+              "content": "The real MVP is Emma, taking customer service revenge to a new level. Brilliant!"
+            }
+          ]
+        }
+      },
+      {
+        "type": "discussion",
+        "title": "What Really Happened",
+        "content": "Emma, however, was not one to be easily defeated. She calmly assured Karen, 'Let me fix that for you,' and whisked the drink away. As she prepared a new drink, Emma had a lightbulb moment. She decided to make Karen the hottest frappuccino she'd ever had — by accidentally forgetting to blend it. What came out was a perfectly steaming cup of milk with a smattering of coffee and chocolate at the bottom. Emma returned, steaming concoction in hand, with the cheeriest of smiles. Karen took a sip, recoiling in horror as if she'd just consumed molten lava. 'What is this?!' she screeched. Emma responded, 'An extra hot frappuccino, just as you requested.' The logic bomb detonated, leaving Karen speechless, which was a first. She left, muttering about writing a review, but everyone knew her power ended at the café doors."
+      },
+      {
+        "type": "quotes",
+        "content": "Our Wi-Fi is slower than a snail on tranquilizers.",
+        "metadata": {
+          "attribution": "Karen",
+          "context": "Karen criticized every aspect of the café, including the Wi-Fi, in her quest for chaos."
+        }
+      },
+      {
+        "type": "comments-2",
+        "title": "Controversial Comments",
+        "content": "The most divisive takes (sorted by controversial):",
+        "metadata": {
+          "comments": [
+            {
+              "author": "DevilsAdvocate",
+              "content": "While this is funny, isn't it risking the customer service reputation of the café?"
+            },
+            {
+              "author": "KarenApologist",
+              "content": "Maybe Karen had a bad day. Shouldn't we be more compassionate?"
+            },
+            {
+              "author": "EthicsObserver",
+              "content": "Isn't it unprofessional to mess with someone's drink, even if they're being rude?"
+            }
+          ]
+        }
+      },
+      {
+        "type": "outro",
+        "title": "The Aftermath",
+        "content": "The incident quickly became legendary among the staff and regulars. Emma was hailed as a hero, a true defender of the service industry. Karen did attempt to leave a scathing review on Yelp, but the community, well-informed of her antics, downvoted it into oblivion. Brewed Awakening saw a sudden influx of new customers, eager to meet the barista who served up justice with a side of sass. Emma continued to work there, her legend growing with every retelling, while Karen presumably moved on to terrorize another unsuspecting establishment. Wherever she went, she now faced the daunting reality that not everyone would bend to her will."
+      }
+    ]
+  },
+  "imageUrl": "/assets/img/blog/blog01.jpg",
+  "viewCount": 19429,
+  "upvoteCount": 8947,
+  "commentCount": 1480,
+  "shareCount": 3435,
+  "bookmarkCount": 777,
+  "tags": ["customer", "revenge", "viral", "justice"],
+  "viral_score": 9,
+  "redditSource": {
+    "subreddit": "pettyrevenge",
+    "originalPost": "Auto-generated story thread",
+    "threadUrl": "https://reddit.com/r/pettyrevenge"
+  },
+  "readingTime": 3
+}

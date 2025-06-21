@@ -4,7 +4,14 @@ import TrendingFeed from '@/components/features/TrendingFeed';
 
 // Mock next/image
 jest.mock('next/image', () => {
-  return function MockImage({ src, alt, width, height, className, priority }: any) {
+  return function MockImage({
+    src,
+    alt,
+    width,
+    height,
+    className,
+    priority,
+  }: any) {
     return (
       <img
         src={src}
@@ -13,7 +20,7 @@ jest.mock('next/image', () => {
         height={height}
         className={className}
         data-priority={priority}
-        data-testid="optimized-image"
+        data-testid='optimized-image'
       />
     );
   };
@@ -102,9 +109,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
     },
   });
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
 
@@ -115,18 +120,18 @@ describe('Image Optimization in TrendingFeed', () => {
         <TrendingFeed featured={true} postsPerPage={2} />
       </TestWrapper>
     );
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     // Should have at least one image for featured post
     expect(images.length).toBeGreaterThan(0);
-    
+
     // Featured image should have priority
-    const featuredImage = images.find(img => 
-      img.getAttribute('data-priority') === 'true'
+    const featuredImage = images.find(
+      img => img.getAttribute('data-priority') === 'true'
     );
     expect(featuredImage).toBeTruthy();
-    
+
     // Check image properties
     expect(featuredImage).toHaveAttribute('width', '800');
     expect(featuredImage).toHaveAttribute('height', '400');
@@ -137,43 +142,47 @@ describe('Image Optimization in TrendingFeed', () => {
   it('should use next/image for grid layout images', () => {
     render(
       <TestWrapper>
-        <TrendingFeed layout="grid" postsPerPage={2} />
+        <TrendingFeed layout='grid' postsPerPage={2} />
       </TestWrapper>
     );
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     // Should have images for grid posts
     expect(images.length).toBeGreaterThan(0);
-    
+
     // Check grid image dimensions
-    const gridImages = images.filter(img => 
-      img.getAttribute('width') === '400' && 
-      img.getAttribute('height') === '192'
+    const gridImages = images.filter(
+      img =>
+        img.getAttribute('width') === '400' &&
+        img.getAttribute('height') === '192'
     );
     expect(gridImages.length).toBeGreaterThan(0);
-    
+
     // Verify image sources
     gridImages.forEach(img => {
-      expect(img.getAttribute('src')).toMatch(/^\/assets\/img\/[a-z]+\/test[0-9]+\.jpg$/);
+      expect(img.getAttribute('src')).toMatch(
+        /^\/assets\/img\/[a-z]+\/test[0-9]+\.jpg$/
+      );
     });
   });
 
   it('should use next/image for list layout images', () => {
-    render(<TrendingFeed layout="list" postsPerPage={2} />);
-    
+    render(<TrendingFeed layout='list' postsPerPage={2} />);
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     // Should have images for list posts
     expect(images.length).toBeGreaterThan(0);
-    
+
     // Check list image dimensions
-    const listImages = images.filter(img => 
-      img.getAttribute('width') === '320' && 
-      img.getAttribute('height') === '192'
+    const listImages = images.filter(
+      img =>
+        img.getAttribute('width') === '320' &&
+        img.getAttribute('height') === '192'
     );
     expect(listImages.length).toBeGreaterThan(0);
-    
+
     // Verify responsive classes
     listImages.forEach(img => {
       expect(img).toHaveClass('w-full', 'h-48', 'object-cover');
@@ -182,9 +191,9 @@ describe('Image Optimization in TrendingFeed', () => {
 
   it('should have proper alt text for accessibility', () => {
     render(<TrendingFeed postsPerPage={2} />);
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     images.forEach(img => {
       const altText = img.getAttribute('alt');
       expect(altText).toBeTruthy();
@@ -195,9 +204,9 @@ describe('Image Optimization in TrendingFeed', () => {
 
   it('should use correct image paths', () => {
     render(<TrendingFeed postsPerPage={2} />);
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     images.forEach(img => {
       const src = img.getAttribute('src');
       expect(src).toMatch(/^\/assets\/img\/[a-z]+\/[a-z0-9]+\.jpg$/);
@@ -206,21 +215,21 @@ describe('Image Optimization in TrendingFeed', () => {
 
   it('should handle images without featured flag', () => {
     render(<TrendingFeed featured={false} postsPerPage={2} />);
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     // No image should have priority when not featured
-    const priorityImages = images.filter(img => 
-      img.getAttribute('data-priority') === 'true'
+    const priorityImages = images.filter(
+      img => img.getAttribute('data-priority') === 'true'
     );
     expect(priorityImages.length).toBe(0);
   });
 
   it('should maintain image aspect ratios with object-cover', () => {
     render(<TrendingFeed postsPerPage={2} />);
-    
+
     const images = screen.getAllByTestId('optimized-image');
-    
+
     images.forEach(img => {
       expect(img).toHaveClass('object-cover');
     });
@@ -228,13 +237,15 @@ describe('Image Optimization in TrendingFeed', () => {
 
   it('should use appropriate image sizes for different layouts', () => {
     // Test grid layout
-    const { rerender } = render(<TrendingFeed layout="grid" postsPerPage={1} />);
+    const { rerender } = render(
+      <TrendingFeed layout='grid' postsPerPage={1} />
+    );
     let images = screen.getAllByTestId('optimized-image');
     expect(images[0]).toHaveAttribute('width', '400');
     expect(images[0]).toHaveAttribute('height', '192');
 
     // Test list layout
-    rerender(<TrendingFeed layout="list" postsPerPage={1} />);
+    rerender(<TrendingFeed layout='list' postsPerPage={1} />);
     images = screen.getAllByTestId('optimized-image');
     expect(images[0]).toHaveAttribute('width', '320');
     expect(images[0]).toHaveAttribute('height', '192');
@@ -242,8 +253,8 @@ describe('Image Optimization in TrendingFeed', () => {
     // Test featured layout
     rerender(<TrendingFeed featured={true} postsPerPage={1} />);
     images = screen.getAllByTestId('optimized-image');
-    const featuredImage = images.find(img => 
-      img.getAttribute('data-priority') === 'true'
+    const featuredImage = images.find(
+      img => img.getAttribute('data-priority') === 'true'
     );
     expect(featuredImage).toHaveAttribute('width', '800');
     expect(featuredImage).toHaveAttribute('height', '400');

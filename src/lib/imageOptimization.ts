@@ -19,8 +19,8 @@ export const imageConfig = {
     avatar: '(max-width: 768px) 10vw, 5vw',
     social: '(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 60vw',
     story: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw',
-    square: '(max-width: 768px) 50vw, 25vw'
-  }
+    square: '(max-width: 768px) 50vw, 25vw',
+  },
 };
 
 // Standard image dimensions for consistency
@@ -31,7 +31,7 @@ export const imageDimensions = {
   avatar: { width: 100, height: 100 },
   social: { width: 1200, height: 630 },
   story: { width: 1080, height: 1920 },
-  square: { width: 500, height: 500 }
+  square: { width: 500, height: 500 },
 };
 
 // Generate optimized image props for different use cases
@@ -55,40 +55,41 @@ export function getOptimizedImageProps(
     sizes,
     style: {
       objectFit: 'cover',
-      ...options.style
+      ...options.style,
     },
-    ...options
+    ...options,
   };
 }
 
 // Generate blur data URL for placeholder
 export function generateBlurDataUrl(width: number, height: number): string {
-  const canvas = typeof window !== 'undefined' ? document.createElement('canvas') : null;
+  const canvas =
+    typeof window !== 'undefined' ? document.createElement('canvas') : null;
   if (!canvas) {
     // Fallback for SSR
     return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=';
   }
-  
+
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
   if (!ctx) return '';
-  
+
   // Create simple gradient blur
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, '#f3f4f6');
   gradient.addColorStop(1, '#e5e7eb');
-  
+
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
-  
+
   return canvas.toDataURL('image/jpeg', 0.1);
 }
 
 // Preload critical images
 export function preloadImage(src: string, as: 'image' = 'image'): void {
   if (typeof window === 'undefined') return;
-  
+
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = as;
@@ -109,10 +110,10 @@ export function createImageObserver(
     root: null,
     rootMargin: '50px',
     threshold: 0.1,
-    ...options
+    ...options,
   };
 
-  return new IntersectionObserver((entries) => {
+  return new IntersectionObserver(entries => {
     entries.forEach(callback);
   }, defaultOptions);
 }
@@ -124,7 +125,7 @@ export async function compressImage(
   maxHeight: number = 800,
   quality: number = 0.8
 ): Promise<Blob> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const img = new Image();
@@ -132,7 +133,7 @@ export async function compressImage(
     img.onload = () => {
       // Calculate new dimensions maintaining aspect ratio
       let { width, height } = img;
-      
+
       if (width > height) {
         if (width > maxWidth) {
           height = (height * maxWidth) / width;
@@ -153,7 +154,7 @@ export async function compressImage(
       }
 
       canvas.toBlob(
-        (blob) => {
+        blob => {
           resolve(blob || new Blob());
         },
         'image/jpeg',
@@ -168,11 +169,11 @@ export async function compressImage(
 // WebP support detection
 export function supportsWebP(): boolean {
   if (typeof window === 'undefined') return false;
-  
+
   const canvas = document.createElement('canvas');
   canvas.width = 1;
   canvas.height = 1;
-  
+
   return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
 }
 
@@ -201,15 +202,21 @@ export function buildImageUrl(
     fit?: 'cover' | 'contain' | 'fill';
   } = {}
 ): string {
-  const { width, height, quality = 85, format = 'webp', fit = 'cover' } = options;
-  
+  const {
+    width,
+    height,
+    quality = 85,
+    format = 'webp',
+    fit = 'cover',
+  } = options;
+
   // For Next.js built-in image optimization
   const url = new URL('/_next/image', window.location.origin);
   url.searchParams.set('url', src);
   url.searchParams.set('q', quality.toString());
-  
+
   if (width) url.searchParams.set('w', width.toString());
   if (height) url.searchParams.set('h', height.toString());
-  
+
   return url.toString();
 }

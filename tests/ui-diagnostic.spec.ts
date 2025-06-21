@@ -17,17 +17,17 @@ test.describe('UI Diagnostic Tests', () => {
     // Log console errors
     page.on('console', msg => {
       if (msg.type() === 'error') {
-        console.log('Browser console error:', msg.text());
+        // console.log('Browser console error:', msg.text());
       }
     });
     
     // Check for basic page structure
     const bodyText = await page.textContent('body');
-    console.log('Page body text length:', bodyText?.length || 0);
+    // console.log('Page body text length:', bodyText?.length || 0);
     
     // Check if CSS is loading
     const stylesheets = await page.$$('link[rel="stylesheet"]');
-    console.log('Number of stylesheets loaded:', stylesheets.length);
+    // console.log('Number of stylesheets loaded:', stylesheets.length);
     
     // Check for JavaScript errors
     const errors: string[] = [];
@@ -40,7 +40,7 @@ test.describe('UI Diagnostic Tests', () => {
     
     // Log any JavaScript errors
     if (errors.length > 0) {
-      console.log('JavaScript errors found:', errors);
+      // console.log('JavaScript errors found:', errors);
     }
     
     // Check if basic elements are visible
@@ -48,9 +48,9 @@ test.describe('UI Diagnostic Tests', () => {
     const main = page.locator('main');
     const footer = page.locator('footer');
     
-    console.log('Header exists:', await header.count() > 0);
-    console.log('Main content exists:', await main.count() > 0);
-    console.log('Footer exists:', await footer.count() > 0);
+    // console.log('Header exists:', await header.count() > 0);
+    // console.log('Main content exists:', await main.count() > 0);
+    // console.log('Footer exists:', await footer.count() > 0);
   });
 
   test('Check CSS and styling', async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe('UI Diagnostic Tests', () => {
     
     // Check if Tailwind CSS is working
     const bodyClasses = await page.getAttribute('body', 'class');
-    console.log('Body classes:', bodyClasses);
+    // console.log('Body classes:', bodyClasses);
     
     // Check computed styles of key elements
     const body = page.locator('body');
@@ -71,13 +71,13 @@ test.describe('UI Diagnostic Tests', () => {
         color: computed.color
       };
     });
-    console.log('Body computed styles:', bodyStyles);
+    // console.log('Body computed styles:', bodyStyles);
     
     // Check if fonts are loading
     const fontFamilies = await page.evaluate(() => {
       return Array.from(document.fonts).map(font => font.family);
     });
-    console.log('Loaded fonts:', fontFamilies);
+    // console.log('Loaded fonts:', fontFamilies);
   });
 
   test('Check interactive elements', async ({ page }) => {
@@ -88,16 +88,16 @@ test.describe('UI Diagnostic Tests', () => {
     const buttons = await page.$$('button');
     const links = await page.$$('a');
     
-    console.log('Number of buttons found:', buttons.length);
-    console.log('Number of links found:', links.length);
+    // console.log('Number of buttons found:', buttons.length);
+    // console.log('Number of links found:', links.length);
     
     // Check if React has hydrated
     const reactRoot = await page.$('[data-reactroot]');
-    console.log('React root element found:', reactRoot !== null);
+    // console.log('React root element found:', reactRoot !== null);
     
     // Check for any loading spinners or error states
     const loadingElements = await page.$$('[data-testid*="loading"], .loading, .spinner');
-    console.log('Loading elements found:', loadingElements.length);
+    // console.log('Loading elements found:', loadingElements.length);
   });
 
   test('Network requests analysis', async ({ page }) => {
@@ -125,15 +125,15 @@ test.describe('UI Diagnostic Tests', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     
-    console.log('Total requests made:', allRequests.length);
-    console.log('Failed requests:', failedRequests);
+    // console.log('Total requests made:', allRequests.length);
+    // console.log('Failed requests:', failedRequests);
     
     // Check specifically for CSS and JS files
     const cssRequests = allRequests.filter(req => req.resourceType === 'stylesheet');
     const jsRequests = allRequests.filter(req => req.resourceType === 'script');
     
-    console.log('CSS requests:', cssRequests.length);
-    console.log('JS requests:', jsRequests.length);
+    // console.log('CSS requests:', cssRequests.length);
+    // console.log('JS requests:', jsRequests.length);
     
     // Log failed CSS/JS requests
     const failedAssets = failedRequests.filter(req => 
@@ -141,7 +141,7 @@ test.describe('UI Diagnostic Tests', () => {
     );
     
     if (failedAssets.length > 0) {
-      console.log('Failed asset requests:', failedAssets);
+      // console.log('Failed asset requests:', failedAssets);
     }
   });
 });

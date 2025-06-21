@@ -1,0 +1,95 @@
+{
+  "id": "story-test-123",
+  "title": "🔥 Test Story with Short Slug",
+  "slug": "test-story",
+  "excerpt": "A simple test story to check if the modular system works with shorter URLs.",
+  "category": "test",
+  "status": "published",
+  "trending": true,
+  "featured": true,
+  "author": "The Snarky Sage",
+  "createdAt": "2025-06-18T18:00:00.000Z",
+  "updatedAt": "2025-06-18T18:00:00.000Z",
+  "persona": {
+    "id": "snarky-sage",
+    "name": "The Snarky Sage",
+    "bio": "Professional chaos observer.",
+    "avatar": "/assets/img/personas/snarky-sage.png",
+    "tone": "Sarcastic and deadpan"
+  },
+  "content": {
+    "sections": [
+      {
+        "type": "image",
+        "content": "A simple test image",
+        "metadata": {
+          "image_prompt": "test image"
+        }
+      },
+      {
+        "type": "describe-1",
+        "title": "Test Section",
+        "content": "This is a test story to verify the modular system works."
+      },
+      {
+        "type": "describe-2",
+        "title": "Second Section",
+        "content": "This is the second section of our test story."
+      },
+      {
+        "type": "comments-1",
+        "title": "Comments",
+        "content": "Here are some comments:",
+        "metadata": {
+          "comments": [
+            {
+              "author": "TestUser",
+              "content": "This is a test comment.",
+              "score": 100,
+              "replies": 5
+            }
+          ]
+        }
+      },
+      {
+        "type": "comments-2",
+        "title": "More Comments",
+        "content": "More comments here:",
+        "metadata": {
+          "comments": [
+            {
+              "author": "TestUser2",
+              "content": "Another test comment.",
+              "score": 50,
+              "replies": 2
+            }
+          ]
+        }
+      },
+      {
+        "type": "discussion",
+        "title": "Discussion",
+        "content": "This is the discussion section."
+      },
+      {
+        "type": "outro",
+        "title": "Conclusion",
+        "content": "This concludes our test story."
+      }
+    ]
+  },
+  "tags": ["test"],
+  "viral_score": 5,
+  "imageUrl": "/assets/img/lifestyle/life_style01.jpg",
+  "viewCount": 100,
+  "upvoteCount": 50,
+  "commentCount": 10,
+  "shareCount": 5,
+  "bookmarkCount": 2,
+  "redditSource": {
+    "subreddit": "test",
+    "originalPost": "Test post",
+    "threadUrl": "https://reddit.com/r/test"
+  },
+  "readingTime": 2
+}

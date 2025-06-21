@@ -143,7 +143,10 @@ export default function Quiz({
   if (isLoading) {
     return (
       <div className='quiz-loading py-5 text-center'>
-        <LoadingSpinner size="lg" text="AI is creating your personalized quiz..." />
+        <LoadingSpinner
+          size='lg'
+          text='AI is creating your personalized quiz...'
+        />
       </div>
     );
   }

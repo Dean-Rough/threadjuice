@@ -1,0 +1,151 @@
+{
+  "id": "auto-story-1750282326434",
+  "title": "When Instagram Lies: How I Turned My Cousin's Fake Life Upside Down in One Epic Post",
+  "slug": "instagram-lies-cousin-exposed",
+  "excerpt": "Everyone knew my cousin was living a lie on Instagram. But no one expected how her web of deceit would unravel at the family reunion, live-streamed for the world to see.",
+  "category": "family",
+  "status": "published",
+  "trending": true,
+  "featured": true,
+  "author": "The Snarky Sage",
+  "createdAt": "2025-06-18T21:32:08.195Z",
+  "updatedAt": "2025-06-18T21:32:08.195Z",
+  "persona": {
+    "id": "snarky-sage",
+    "name": "The Snarky Sage",
+    "bio": "Professional chaos observer with a PhD in human stupidity.",
+    "avatar": "/assets/img/personas/snarky-sage.png",
+    "tone": "Sarcastic and deadpan with brutal honesty"
+  },
+  "content": {
+    "sections": [
+      {
+        "type": "image",
+        "content": "AI-generated image capturing the dramatic moment of this family story",
+        "metadata": {
+          "image_prompt": "Auto-generated with DALL-E 3",
+          "generated_image_url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-rj2C1VSzqnhW3XNOVrueFO2E/user-4NVRwnuDvbaNb7gThkDUQ2D5/img-35b2YFCIMP3zW9j0TvDc1i1D.png?st=2025-06-18T20%3A32%3A06Z&se=2025-06-18T22%3A32%3A06Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-18T14%3A25%3A06Z&ske=2025-06-19T14%3A25%3A06Z&sks=b&skv=2024-08-04&sig=FyhT3eU0BaJrP5zec1I57UxucJrZwuxMRTfGIGGit7c%3D",
+          "local_image_path": "/assets/img/generated/instagram-lies-cousin-exposed-auto-generated.png",
+          "generation_timestamp": "2025-06-18T21:32:08.194Z",
+          "dall_e_model": "dall-e-3"
+        }
+      },
+      {
+        "type": "describe-1",
+        "title": "The Setup",
+        "content": "Meet my cousin, Jessica, the self-proclaimed 'Queen of Insta.' To the world, she's living her best life, always on a tropical vacation, with a wardrobe to die for and a lifestyle that seems like a never-ending dream. To the family, though, she's just Jessica, the girl who still hasn't moved out of her mom's basement and somehow thinks posing in front of a parked Maserati makes her an influencer. Our family reunion was coming up, and let's just say, the anticipation of seeing Jess try to keep up appearances was more entertaining than any reality TV. My aunt, Jess's mom, was hosting, and the entire extended family was invited. I was asked to help organize the event, which gave me a front-row seat to Jess's shenanigans. Little did she know, I was about to blow her cover."
+      },
+      {
+        "type": "quotes",
+        "content": "Wait, that's not hers?",
+        "metadata": {
+          "attribution": "A shocked Instagram follower",
+          "context": "During the live stream when it was revealed that the Maserati wasn't Jessica's."
+        }
+      },
+      {
+        "type": "describe-2",
+        "title": "Things Get Worse",
+        "content": "The event started like any other family gathering: awkward hugs, forced smiles, and way too much food. Jessica arrived fashionably late, draped in what she called an 'authentic Gucci ensemble,' but it looked more like a Guccci with an extra 'c.' She was instantly the center of attention, narrating her latest 'trip to Bali' with photoshopped pictures that had even the least observant family members squinting in skepticism. While she was busy spinning her tales of luxury, I noticed her phone buzzing non-stop with Instagram notifications, each more sycophantic than the last. 'Your life is goals!' 'How can I be you?' they read. It was nauseating. That's when I decided to take matters into my own hands. I set up a private Instagram story for family eyes only and started gathering evidence."
+      },
+      {
+        "type": "quotes",
+        "content": "Finally, some truth!",
+        "metadata": {
+          "attribution": "My uncle",
+          "context": "After the family witnessed Jessica's fake lifestyle being exposed."
+        }
+      },
+      {
+        "type": "comments-1",
+        "title": "Reddit Reactions",
+        "content": "The internet had THOUGHTS about this situation:",
+        "metadata": {
+          "comments": [
+            {
+              "author": "SkepticalAuntie",
+              "content": "Always knew something was off about those photos. This was the plot twist I needed today."
+            },
+            {
+              "author": "RealTruthSeeker",
+              "content": "The fact she thought she could fool her own family is just... wow. Props to you!"
+            },
+            {
+              "author": "BasementBanter",
+              "content": "I live in my mom's basement too, but you don't see me pretending it's a penthouse."
+            },
+            {
+              "author": "InfluencerExposed",
+              "content": "Influencers getting caught in their own web is my favorite genre of drama."
+            }
+          ]
+        }
+      },
+      {
+        "type": "discussion",
+        "title": "What Really Happened",
+        "content": "As the reunion continued, Jessica never missed a chance to update her followers. She staged a live stream, angling the camera to capture the rented decorations and gourmet caterer my aunt had hired. The facade was sickening. So, during her most recent live stream, I decided to give her audience a reality check. 'Hey Jess, isn't it great that Aunt Linda's Maserati is parked right outside? Perfect for your next photoshoot!' I said loud enough for the camera’s mic to pick it up. Jess's eyes widened as she struggled to mute the stream without looking suspicious. But the comments section was already lighting up. 'Wait, that's not hers?' one follower wrote. 'Didn't she say she owned a Maserati?' another questioned. As panic set in, I posted the private story showing behind-the-scenes footage. The unedited version of her 'Bali trip' was actually a green screen app from her phone. And guess what? Her 'Gucci' haul was from a local thrift store. The final nail in the coffin was a video of her rehearsing her 'spontaneous' live speech in front of a mirror. The family was watching the unraveling unfold live, jaws dropping in unison."
+      },
+      {
+        "type": "quotes",
+        "content": "Your life is goals!",
+        "metadata": {
+          "attribution": "Random Instagram follower",
+          "context": "Comment on Jessica's post before her lifestyle was exposed as fake."
+        }
+      },
+      {
+        "type": "comments-2",
+        "title": "Controversial Comments",
+        "content": "The most divisive takes (sorted by controversial):",
+        "metadata": {
+          "comments": [
+            {
+              "author": "JustHere4ThePopcorn",
+              "content": "This is exactly why I follow family reunions religiously."
+            },
+            {
+              "author": "TruthBombMaster",
+              "content": "You did what every family secretly wishes they could do. Legend."
+            },
+            {
+              "author": "SocialMediaMythBuster",
+              "content": "And this is why you don't believe everything on the 'Gram. Instant karma!"
+            },
+            {
+              "author": "CandidCousin",
+              "content": "Bet she didn't see that coming. Family knows best!"
+            }
+          ]
+        }
+      },
+      {
+        "type": "outro",
+        "title": "The Aftermath",
+        "content": "The fall of the Instagram ‘Queen’ was swift and brutal. Jessica's follower count plummeted faster than you can say 'fake news.' Her live stream turned into a riot of disbelief and outrage, and she quickly ended the broadcast in tears. The family, meanwhile, found the whole thing deeply cathartic, having long tired of her antics. 'Finally, some truth!' my uncle exclaimed, as the room erupted into laughter. Aunt Linda, though embarrassed, thanked me for putting an end to the charade. Jess retreated to her basement lair, her empire of lies in ruins. On social media, she rebranded herself as a 'Simplicity Advocate,' but the damage was done. She was no longer the Queen of Insta; she was just 'Jessica from the Block.' I might have lost a few followers myself, but the satisfaction of exposing the truth was worth more than any number of likes."
+      },
+      {
+        "type": "quotes",
+        "content": "Simplicity Advocate",
+        "metadata": {
+          "attribution": "Jessica's new social media persona",
+          "context": "Her attempt to rebrand after being exposed."
+        }
+      }
+    ]
+  },
+  "imageUrl": "/assets/img/generated/instagram-lies-cousin-exposed-auto-generated.png",
+  "viewCount": 25222,
+  "upvoteCount": 25807,
+  "commentCount": 2246,
+  "shareCount": 4042,
+  "bookmarkCount": 805,
+  "tags": ["family", "revenge", "viral", "justice"],
+  "viral_score": 10,
+  "redditSource": {
+    "subreddit": "pettyrevenge",
+    "originalPost": "Auto-generated story thread",
+    "threadUrl": "https://reddit.com/r/pettyrevenge"
+  },
+  "readingTime": 4
+}

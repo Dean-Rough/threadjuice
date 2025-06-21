@@ -111,8 +111,11 @@ export default function FeaturedCarousel({
 
   if (isLoading) {
     return (
-      <div className='featured-carousel-loading flex items-center justify-center' style={{ height }}>
-        <LoadingSpinner size="lg" text="Loading viral highlights..." />
+      <div
+        className='featured-carousel-loading flex items-center justify-center'
+        style={{ height }}
+      >
+        <LoadingSpinner size='lg' text='Loading viral highlights...' />
       </div>
     );
   }
@@ -122,7 +125,7 @@ export default function FeaturedCarousel({
       <div className='carousel-header d-flex justify-content-between align-items-center mb-3'>
         <div>
           <h2 className='carousel-title mb-1'>Featured Viral Content</h2>
-          <p className='carousel-subtitle text-muted mb-0'>
+          <p className='carousel-subtitle mb-0 text-muted'>
             The hottest Reddit threads transformed into engaging stories
           </p>
         </div>

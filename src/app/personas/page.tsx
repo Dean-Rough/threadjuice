@@ -1,7 +1,6 @@
 'use client';
 
-import BlogSidebar from '@/components/elements/BlogSidebar';
-import Layout from '@/components/layout/Layout';
+import BlogSidebar from '@/components/ui/BlogSidebar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { writerPersonas } from '@/data/personas';
@@ -9,15 +8,6 @@ import { writerPersonas } from '@/data/personas';
 export default function PersonasPage() {
   return (
     <>
-      <Layout 
-        headerStyle={1}
-        footerStyle={1}
-        breadcrumbCategory='Writers' 
-        breadcrumbPostTitle='Our AI Personas'
-        footerClass=""
-        headTitle="Our AI Personas"
-        logoWhite={false}
-      >
         <section className='blog-details-area pb-100 pt-80'>
           <div className='container'>
             <div className='row justify-content-center'>
@@ -56,12 +46,18 @@ export default function PersonasPage() {
                 <div className='blog-post-wrapper'>
                   <div className='section__title-wrap mb-40'>
                     <div className='section__title'>
-                      <h2 className='section__main-title'>Meet Our AI Writers</h2>
-                      <p>Each story is crafted by one of our unique AI personalities, bringing different perspectives to Reddit's most entertaining threads.</p>
+                      <h2 className='section__main-title'>
+                        Meet Our AI Writers
+                      </h2>
+                      <p>
+                        Each story is crafted by one of our unique AI
+                        personalities, bringing different perspectives to
+                        Reddit's most entertaining threads.
+                      </p>
                     </div>
                   </div>
 
-                  {writerPersonas.map((persona) => (
+                  {writerPersonas.map(persona => (
                     <div key={persona.id} className='latest__post-item'>
                       <div className='latest__post-thumb tgImage__hover'>
                         <Link href={`/personas/${persona.id}`}>
@@ -70,7 +66,7 @@ export default function PersonasPage() {
                             alt={persona.name}
                             width={300}
                             height={200}
-                            className="w-full h-48 object-cover rounded-lg"
+                            className='h-48 w-full rounded-lg object-cover'
                           />
                         </Link>
                       </div>
@@ -95,19 +91,21 @@ export default function PersonasPage() {
                         </div>
                         <div className='latest__post-read-more'>
                           <Link href={`/personas/${persona.id}`}>
-                            View Stories <i className='far fa-long-arrow-right' />
+                            View Stories{' '}
+                            <i className='far fa-long-arrow-right' />
                           </Link>
                         </div>
                       </div>
                     </div>
                   ))}
 
-                  <div className='section-info bg-light rounded p-4 mt-4'>
+                  <div className='section-info bg-light mt-4 rounded p-4'>
                     <h5>How It Works</h5>
                     <p className='mb-0'>
-                      Each Reddit thread gets randomly assigned to one of our AI personas, 
-                      who transform raw Reddit content into engaging satirical stories with 
-                      their unique voice and perspective. No two stories sound the same.
+                      Each Reddit thread gets randomly assigned to one of our AI
+                      personas, who transform raw Reddit content into engaging
+                      satirical stories with their unique voice and perspective.
+                      No two stories sound the same.
                     </p>
                   </div>
                 </div>
@@ -118,7 +116,6 @@ export default function PersonasPage() {
             </div>
           </div>
         </section>
-      </Layout>
     </>
   );
 }

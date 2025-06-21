@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Facebook, 
-  Twitter, 
-  Linkedin, 
-  MessageCircle, 
-  Copy, 
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  MessageCircle,
+  Copy,
   Check,
-  Share2 
+  Share2,
 } from 'lucide-react';
 
 export interface ShareBarProps {
@@ -82,61 +82,66 @@ export function ShareBar({
     },
   ];
 
-  const containerClass = orientation === 'vertical' 
-    ? 'flex flex-col space-y-2' 
-    : 'flex items-center space-x-2';
+  const containerClass =
+    orientation === 'vertical'
+      ? 'flex flex-col space-y-2'
+      : 'flex items-center space-x-2';
 
-  const buttonClass = orientation === 'vertical'
-    ? 'flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors'
-    : 'p-2 rounded-lg transition-colors';
+  const buttonClass =
+    orientation === 'vertical'
+      ? 'flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors'
+      : 'p-2 rounded-lg transition-colors';
 
   return (
-    <div className={`blog-details-share ${containerClass} ${className}`} data-testid="share-bar">
+    <div
+      className={`blog-details-share ${containerClass} ${className}`}
+      data-testid='share-bar'
+    >
       {showLabels && orientation === 'horizontal' && (
-        <h6 className="share-title text-sm font-medium text-gray-700 mr-3">
+        <h6 className='share-title mr-3 text-sm font-medium text-gray-700'>
           Share:
         </h6>
       )}
-      
+
       <ul className={`list-wrap ${containerClass} mb-0`}>
-        {shareLinks.map((link) => {
+        {shareLinks.map(link => {
           const IconComponent = link.icon;
           return (
             <li key={link.name}>
               <a
                 href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                target='_blank'
+                rel='noopener noreferrer'
                 className={`${buttonClass} ${link.color} ${link.bgColor} text-gray-600`}
                 aria-label={`Share on ${link.name}`}
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   window.open(link.url, '_blank', 'width=600,height=400');
                 }}
               >
-                <IconComponent className="w-5 h-5" />
+                <IconComponent className='h-5 w-5' />
                 {showLabels && orientation === 'vertical' && (
-                  <span className="text-sm">{link.name}</span>
+                  <span className='text-sm'>{link.name}</span>
                 )}
               </a>
             </li>
           );
         })}
-        
+
         {showCopyLink && (
           <li>
             <button
               onClick={handleCopyLink}
-              className={`${buttonClass} ${copied ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'}`}
-              aria-label="Copy link"
+              className={`${buttonClass} ${copied ? 'bg-green-50 text-green-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'}`}
+              aria-label='Copy link'
             >
               {copied ? (
-                <Check className="w-5 h-5" />
+                <Check className='h-5 w-5' />
               ) : (
-                <Copy className="w-5 h-5" />
+                <Copy className='h-5 w-5' />
               )}
               {showLabels && orientation === 'vertical' && (
-                <span className="text-sm">
+                <span className='text-sm'>
                   {copied ? 'Copied!' : 'Copy Link'}
                 </span>
               )}

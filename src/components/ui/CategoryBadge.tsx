@@ -1,13 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { 
-  TrendingUp, 
-  Zap, 
-  Flame, 
-  Heart, 
-  Users 
-} from 'lucide-react';
+import { TrendingUp, Zap, Flame, Heart, Users } from 'lucide-react';
 
 export interface CategoryBadgeProps {
   category: 'viral' | 'trending' | 'chaos' | 'wholesome' | 'drama';
@@ -122,7 +116,7 @@ export function CategoryBadge({
       <Link
         href={`/category/${category}`}
         className={baseClasses}
-        data-testid="category-badge"
+        data-testid='category-badge'
       >
         {content}
       </Link>
@@ -130,7 +124,7 @@ export function CategoryBadge({
   }
 
   return (
-    <span className={baseClasses} data-testid="category-badge">
+    <span className={baseClasses} data-testid='category-badge'>
       {content}
     </span>
   );

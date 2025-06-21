@@ -1,0 +1,347 @@
+
+> threadjuice@1.0.0 dev
+> npm run kill-ports && next dev -p 4242
+
+
+> threadjuice@1.0.0 kill-ports
+> lsof -ti:4242 | xargs kill -9 2>/dev/null || true
+
+   ▲ Next.js 15.3.3
+   - Local:        http://localhost:4242
+   - Network:      http://192.168.1.225:4242
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+ ✓ Starting...
+ ✓ Ready in 1246ms
+ ○ Compiling /test-simple ...
+ ✓ Compiled /test-simple in 1545ms (744 modules)
+ GET /test-simple 200 in 1746ms
+ ✓ Compiled in 520ms (322 modules)
+ ✓ Compiled in 326ms (744 modules)
+ ✓ Compiled in 500ms (752 modules)
+ GET /test-simple 200 in 115ms
+ ✓ Compiled in 602ms (752 modules)
+ ✓ Compiled in 988ms (1125 modules)
+ ✓ Compiled in 302ms (752 modules)
+ ✓ Compiled in 760ms (968 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 670ms (999 modules)
+ GET / 200 in 877ms
+ ✓ Compiled in 384ms (994 modules)
+ GET / 200 in 248ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 971ms (1029 modules)
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+ GET /api/posts?featured=true&limit=5 200 in 1215ms
+ GET /api/posts?limit=5&sortBy=views 200 in 1219ms
+ GET /api/posts?limit=12 200 in 1223ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 1217ms
+ GET /api/categories 200 in 1236ms
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+ GET /favicon-32x32.png 404 in 863ms
+ ✓ Compiled /manifest.webmanifest in 285ms (1033 modules)
+ GET /manifest.webmanifest 200 in 452ms
+ GET /favicon-16x16.png 404 in 469ms
+ GET /android-chrome-192x192.png 404 in 57ms
+ GET /android-chrome-192x192.png 404 in 100ms
+ GET /android-chrome-512x512.png 404 in 99ms
+ GET /apple-touch-icon.png 404 in 94ms
+ GET /android-chrome-512x512.png 404 in 98ms
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 829ms (1016 modules)
+ GET /blog/pizza-vs-justice-the-bizarre-courtroom-drama-that-unleashed- 200 in 1193ms
+ ✓ Compiled /manifest.webmanifest in 312ms (1040 modules)
+ GET /manifest.webmanifest 200 in 366ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`slug` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`images`.`id`, `main`.`images`.`post_id`, `main`.`images`.`url`, `main`.`images`.`alt_text`, `main`.`images`.`caption`, `main`.`images`.`license_type`, `main`.`images`.`author`, `main`.`images`.`source_name`, `main`.`images`.`source_url`, `main`.`images`.`width`, `main`.`images`.`height`, `main`.`images`.`file_size`, `main`.`images`.`position`, `main`.`images`.`created_at` FROM `main`.`images` WHERE `main`.`images`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`post_tags`.`post_id`, `main`.`post_tags`.`tag_id` FROM `main`.`post_tags` WHERE `main`.`post_tags`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query UPDATE `main`.`posts` SET `view_count` = ?, `updated_at` = ? WHERE (`main`.`posts`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `title` AS `title`, `slug` AS `slug`, `excerpt` AS `excerpt`, `content` AS `content`, `image_url` AS `image_url`, `category` AS `category`, `author` AS `author`, `persona_id` AS `persona_id`, `status` AS `status`, `view_count` AS `view_count`, `upvote_count` AS `upvote_count`, `comment_count` AS `comment_count`, `share_count` AS `share_count`, `bookmark_count` AS `bookmark_count`, `trending` AS `trending`, `featured` AS `featured`, `reddit_thread_id` AS `reddit_thread_id`, `subreddit` AS `subreddit`, `created_at` AS `created_at`, `updated_at` AS `updated_at`
+ GET /api/posts/pizza-vs-justice-the-bizarre-courtroom-drama-that-unleashed- 200 in 664ms
+ GET / 200 in 40ms
+ ✓ Compiled /api/posts in 85ms (602 modules)
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?featured=true&limit=5 200 in 126ms
+ GET /api/posts?limit=12 200 in 129ms
+ ✓ Compiled in 813ms (1030 modules)
+ GET / 200 in 117ms
+ ✓ Compiled in 583ms (1030 modules)
+ GET / 200 in 75ms
+ ✓ Compiled in 501ms (1030 modules)
+ GET / 200 in 69ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 200 in 120ms
+ ✓ Compiled /api/posts in 244ms (585 modules)
+ ✓ Compiled (598 modules)
+ GET /api/posts?featured=true&limit=5 200 in 493ms
+ GET /api/posts?limit=12 200 in 497ms
+ GET /api/posts?limit=5&sortBy=views 200 in 500ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 504ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+ GET /api/categories 200 in 515ms
+ ✓ Compiled in 347ms (1063 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 200 in 269ms
+ GET /api/categories 200 in 17ms
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?featured=true&limit=5 200 in 49ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?limit=12 200 in 40ms
+ GET /api/posts?limit=5&sortBy=views 200 in 43ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 48ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 533ms (1063 modules)
+ GET / 200 in 417ms
+ GET /api/categories 200 in 14ms
+prisma:query SELECT 1
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?featured=true&limit=5 200 in 43ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+ GET /api/posts?limit=5&sortBy=views 200 in 52ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 57ms
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?limit=12 200 in 62ms
+ ✓ Compiled in 408ms (1063 modules)
+ GET / 200 in 72ms
+ ✓ Compiled in 536ms (1063 modules)
+ GET / 200 in 63ms
+ ✓ Compiled in 275ms (1063 modules)
+ GET / 200 in 39ms
+ ✓ Compiled in 667ms (1030 modules)
+ GET / 200 in 109ms
+ ✓ Compiled in 273ms (1030 modules)
+ GET / 200 in 59ms
+ ✓ Compiled /_not-found in 177ms (585 modules)
+ ✓ Compiled (586 modules)
+ GET /manifest.webmanifest 200 in 522ms
+ GET / 200 in 201ms
+ GET /favicon-32x32.png 404 in 553ms
+ GET /manifest.webmanifest 200 in 7ms
+ GET /android-chrome-192x192.png 404 in 148ms
+ GET /favicon-16x16.png 404 in 107ms
+ GET /favicon-16x16.png 404 in 97ms
+ GET /android-chrome-192x192.png 404 in 56ms
+ GET /android-chrome-192x192.png 404 in 100ms
+ GET /android-chrome-512x512.png 404 in 58ms
+ GET /android-chrome-512x512.png 404 in 96ms
+ GET /apple-touch-icon.png 404 in 57ms
+ GET / 200 in 100ms
+ ✓ Compiled /manifest.webmanifest in 363ms (585 modules)
+ ✓ Compiled (602 modules)
+ GET /manifest.webmanifest 200 in 394ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+ GET /api/posts?featured=true&limit=5 200 in 616ms
+ GET /api/posts?limit=12 200 in 618ms
+ GET /api/posts?limit=5&sortBy=views 200 in 621ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 626ms
+ GET /api/categories 200 in 637ms
+ GET /blog/when-ai-goes-rogue-the-app-that-sent-everyone-to-bermuda 200 in 48ms
+ ✓ Compiled /api/posts/[id] in 100ms (604 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`slug` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`images`.`id`, `main`.`images`.`post_id`, `main`.`images`.`url`, `main`.`images`.`alt_text`, `main`.`images`.`caption`, `main`.`images`.`license_type`, `main`.`images`.`author`, `main`.`images`.`source_name`, `main`.`images`.`source_url`, `main`.`images`.`width`, `main`.`images`.`height`, `main`.`images`.`file_size`, `main`.`images`.`position`, `main`.`images`.`created_at` FROM `main`.`images` WHERE `main`.`images`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`post_tags`.`post_id`, `main`.`post_tags`.`tag_id` FROM `main`.`post_tags` WHERE `main`.`post_tags`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query UPDATE `main`.`posts` SET `view_count` = ?, `updated_at` = ? WHERE (`main`.`posts`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `title` AS `title`, `slug` AS `slug`, `excerpt` AS `excerpt`, `content` AS `content`, `image_url` AS `image_url`, `category` AS `category`, `author` AS `author`, `persona_id` AS `persona_id`, `status` AS `status`, `view_count` AS `view_count`, `upvote_count` AS `upvote_count`, `comment_count` AS `comment_count`, `share_count` AS `share_count`, `bookmark_count` AS `bookmark_count`, `trending` AS `trending`, `featured` AS `featured`, `reddit_thread_id` AS `reddit_thread_id`, `subreddit` AS `subreddit`, `created_at` AS `created_at`, `updated_at` AS `updated_at`
+ GET /api/posts/when-ai-goes-rogue-the-app-that-sent-everyone-to-bermuda 200 in 135ms
+ GET / 200 in 51ms
+ GET /blog/when-your-political-opponent-becomes-your-roommate-the-reali 200 in 29ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`slug` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`images`.`id`, `main`.`images`.`post_id`, `main`.`images`.`url`, `main`.`images`.`alt_text`, `main`.`images`.`caption`, `main`.`images`.`license_type`, `main`.`images`.`author`, `main`.`images`.`source_name`, `main`.`images`.`source_url`, `main`.`images`.`width`, `main`.`images`.`height`, `main`.`images`.`file_size`, `main`.`images`.`position`, `main`.`images`.`created_at` FROM `main`.`images` WHERE `main`.`images`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`post_tags`.`post_id`, `main`.`post_tags`.`tag_id` FROM `main`.`post_tags` WHERE `main`.`post_tags`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query UPDATE `main`.`posts` SET `view_count` = ?, `updated_at` = ? WHERE (`main`.`posts`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `title` AS `title`, `slug` AS `slug`, `excerpt` AS `excerpt`, `content` AS `content`, `image_url` AS `image_url`, `category` AS `category`, `author` AS `author`, `persona_id` AS `persona_id`, `status` AS `status`, `view_count` AS `view_count`, `upvote_count` AS `upvote_count`, `comment_count` AS `comment_count`, `share_count` AS `share_count`, `bookmark_count` AS `bookmark_count`, `trending` AS `trending`, `featured` AS `featured`, `reddit_thread_id` AS `reddit_thread_id`, `subreddit` AS `subreddit`, `created_at` AS `created_at`, `updated_at` AS `updated_at`
+ GET /api/posts/when-your-political-opponent-becomes-your-roommate-the-reali 200 in 38ms
+ GET /manifest.webmanifest 200 in 9ms
+ ✓ Compiled /api/posts in 878ms (1030 modules)
+ ✓ Compiled in 0ms (596 modules)
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+ GET /api/posts?limit=12 200 in 832ms
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET / 200 in 494ms
+ ✓ Compiled in 564ms (1030 modules)
+ GET / 200 in 98ms
+ ✓ Compiled /_not-found in 227ms (568 modules)
+ GET /apple-touch-icon.png 404 in 430ms
+ GET /apple-touch-icon-precomposed.png 404 in 428ms
+ GET /blog/when-your-political-opponent-becomes-your-roommate-the-reali 200 in 277ms
+ GET /favicon-16x16.png 404 in 46ms
+ GET /android-chrome-512x512.png 404 in 208ms
+ GET /android-chrome-192x192.png 404 in 208ms
+ GET /favicon-32x32.png 404 in 208ms
+ GET /apple-touch-icon.png 404 in 209ms
+ GET /apple-touch-icon-precomposed.png 404 in 89ms
+ GET /apple-touch-icon.png 404 in 88ms
+ GET /blog/when-your-political-opponent-becomes-your-roommate-the-reali 200 in 45ms
+ GET /favicon-16x16.png 404 in 45ms
+ GET /android-chrome-512x512.png 404 in 161ms
+ GET /favicon-32x32.png 404 in 162ms
+ GET /android-chrome-192x192.png 404 in 161ms
+ GET /apple-touch-icon.png 404 in 162ms
+ GET /blog/when-your-kid-becomes-the-schools-most-wanted 200 in 17ms
+ ✓ Compiled /api/posts/[id] in 198ms (586 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`slug` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`images`.`id`, `main`.`images`.`post_id`, `main`.`images`.`url`, `main`.`images`.`alt_text`, `main`.`images`.`caption`, `main`.`images`.`license_type`, `main`.`images`.`author`, `main`.`images`.`source_name`, `main`.`images`.`source_url`, `main`.`images`.`width`, `main`.`images`.`height`, `main`.`images`.`file_size`, `main`.`images`.`position`, `main`.`images`.`created_at` FROM `main`.`images` WHERE `main`.`images`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`post_tags`.`post_id`, `main`.`post_tags`.`tag_id` FROM `main`.`post_tags` WHERE `main`.`post_tags`.`post_id` IN (?) LIMIT ? OFFSET ?
+prisma:query UPDATE `main`.`posts` SET `view_count` = ?, `updated_at` = ? WHERE (`main`.`posts`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `title` AS `title`, `slug` AS `slug`, `excerpt` AS `excerpt`, `content` AS `content`, `image_url` AS `image_url`, `category` AS `category`, `author` AS `author`, `persona_id` AS `persona_id`, `status` AS `status`, `view_count` AS `view_count`, `upvote_count` AS `upvote_count`, `comment_count` AS `comment_count`, `share_count` AS `share_count`, `bookmark_count` AS `bookmark_count`, `trending` AS `trending`, `featured` AS `featured`, `reddit_thread_id` AS `reddit_thread_id`, `subreddit` AS `subreddit`, `created_at` AS `created_at`, `updated_at` AS `updated_at`
+ GET /api/posts/when-your-kid-becomes-the-schools-most-wanted 200 in 262ms
+ GET / 200 in 52ms
+ ✓ Compiled /api/posts in 217ms (596 modules)
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/posts?featured=true&limit=5 200 in 264ms
+ ⨯ ./src/app/page.tsx
+Error:   [31mx[0m Expression expected
+    ,-[[36;1;4m/Users/deannewton/Documents/ThreadJuice/src/app/page.tsx[0m:18:1]
+ [2m15[0m |   const sharedPosts = sharedData?.posts || [];
+ [2m16[0m | 
+ [2m17[0m |   return (
+ [2m18[0m |     <>
+    : [35;1m     ^[0m
+ [2m19[0m |       {/* Hero Carousel */}
+ [2m20[0m |       <HeroCarousel />
+    `----
+  [31mx[0m Expected ',', got '< (jsx tag start)'
+    ,-[[36;1;4m/Users/deannewton/Documents/ThreadJuice/src/app/page.tsx[0m:20:1]
+ [2m17[0m |   return (
+ [2m18[0m |     <>
+ [2m19[0m |       {/* Hero Carousel */}
+ [2m20[0m |       <HeroCarousel />
+    : [35;1m      ^[0m
+ [2m21[0m | 
+ [2m22[0m |       {/* Main Layout - Sidebar starts right after hero */}
+ [2m23[0m |       <div className="container mx-auto px-4">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/page.tsx
+ ✓ Compiled in 509ms (1016 modules)
+ GET / 200 in 205ms
+ ✓ Compiled /api/posts in 296ms (585 modules)
+ ✓ Compiled (598 modules)
+ GET /api/posts?featured=true&limit=5 200 in 455ms
+ GET /api/posts?limit=12 200 in 458ms
+ GET /api/posts?limit=5&sortBy=views 200 in 459ms
+ GET /api/posts?limit=5&sortBy=shares 200 in 462ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`posts`.`id` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE (`main`.`posts`.`status` = ? AND `main`.`posts`.`featured` = ?) ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`trending` DESC, `main`.`posts`.`featured` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`share_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`posts`.`id`, `main`.`posts`.`title`, `main`.`posts`.`slug`, `main`.`posts`.`excerpt`, `main`.`posts`.`content`, `main`.`posts`.`image_url`, `main`.`posts`.`category`, `main`.`posts`.`author`, `main`.`posts`.`persona_id`, `main`.`posts`.`status`, `main`.`posts`.`view_count`, `main`.`posts`.`upvote_count`, `main`.`posts`.`comment_count`, `main`.`posts`.`share_count`, `main`.`posts`.`bookmark_count`, `main`.`posts`.`trending`, `main`.`posts`.`featured`, `main`.`posts`.`reddit_thread_id`, `main`.`posts`.`subreddit`, `main`.`posts`.`created_at`, `main`.`posts`.`updated_at` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? ORDER BY `main`.`posts`.`view_count` DESC, `main`.`posts`.`created_at` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`personas`.`id`, `main`.`personas`.`name`, `main`.`personas`.`slug`, `main`.`personas`.`avatar_url`, `main`.`personas`.`tone`, `main`.`personas`.`bio`, `main`.`personas`.`story_count`, `main`.`personas`.`rating`, `main`.`personas`.`created_at` FROM `main`.`personas` WHERE `main`.`personas`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(`main`.`posts`.`id`), `main`.`posts`.`category` FROM `main`.`posts` WHERE `main`.`posts`.`status` = ? GROUP BY `main`.`posts`.`category` ORDER BY COUNT(`main`.`posts`.`id`) DESC LIMIT ? OFFSET ?
+ GET /api/categories 200 in 470ms

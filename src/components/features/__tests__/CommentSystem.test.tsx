@@ -13,33 +13,41 @@ describe('CommentSystem', () => {
   });
 
   it('renders comment system with initial state', () => {
-    render(<CommentSystem postId="test-post" />);
-    
+    render(<CommentSystem postId='test-post' />);
+
     // Component loads with mock data immediately, no loading state
     expect(screen.getByText('Comments (3)')).toBeInTheDocument();
   });
 
   it('displays comments after loading', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('Comments (3)')).toBeInTheDocument();
-      expect(screen.getByText('This is exactly what I expected when AI started taking over moderation. The chaos is real! 🤖')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'This is exactly what I expected when AI started taking over moderation. The chaos is real! 🤖'
+        )
+      ).toBeInTheDocument();
     });
   });
 
   it('renders comment form', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Join the conversation...')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Post Comment' })).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Join the conversation...')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Post Comment' })
+      ).toBeInTheDocument();
     });
   });
 
   it('allows sorting comments', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('Most Popular')).toBeInTheDocument();
@@ -53,10 +61,12 @@ describe('CommentSystem', () => {
 
   it('submits new comment', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Join the conversation...')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Join the conversation...')
+      ).toBeInTheDocument();
     });
 
     const textarea = screen.getByPlaceholderText('Join the conversation...');
@@ -76,7 +86,7 @@ describe('CommentSystem', () => {
   });
 
   it('displays comment metadata correctly', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -86,19 +96,19 @@ describe('CommentSystem', () => {
 
   it('shows like counts and allows liking', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('23')).toBeInTheDocument(); // Like count
     });
 
-    const likeButton = screen.getAllByRole('button').find(btn => 
-      btn.querySelector('svg') && btn.textContent?.includes('23')
-    );
-    
+    const likeButton = screen
+      .getAllByRole('button')
+      .find(btn => btn.querySelector('svg') && btn.textContent?.includes('23'));
+
     if (likeButton) {
       await user.click(likeButton);
-      
+
       await waitFor(() => {
         expect(screen.getByText('22')).toBeInTheDocument(); // Should decrease as it was already liked
       });
@@ -107,7 +117,7 @@ describe('CommentSystem', () => {
 
   it('opens reply form when reply button is clicked', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -117,15 +127,19 @@ describe('CommentSystem', () => {
     await user.click(replyButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)
+      ).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Reply' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Cancel' })
+      ).toBeInTheDocument();
     });
   });
 
   it('submits reply to comment', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -136,11 +150,15 @@ describe('CommentSystem', () => {
     await user.click(replyButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)
+      ).toBeInTheDocument();
     });
 
     // Type reply
-    const replyTextarea = screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../);
+    const replyTextarea = screen.getByPlaceholderText(
+      /Reply to TechEnthusiast2024.../
+    );
     await user.type(replyTextarea, 'This is a test reply');
 
     // Submit reply
@@ -154,7 +172,7 @@ describe('CommentSystem', () => {
 
   it('cancels reply form', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -165,7 +183,9 @@ describe('CommentSystem', () => {
     await user.click(replyButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText(/Reply to TechEnthusiast2024.../)
+      ).toBeInTheDocument();
     });
 
     // Cancel reply
@@ -173,43 +193,69 @@ describe('CommentSystem', () => {
     await user.click(cancelButton);
 
     await waitFor(() => {
-      expect(screen.queryByPlaceholderText(/Reply to TechEnthusiast2024.../)).not.toBeInTheDocument();
+      expect(
+        screen.queryByPlaceholderText(/Reply to TechEnthusiast2024.../)
+      ).not.toBeInTheDocument();
     });
   });
 
   it('displays nested replies correctly', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
-      expect(screen.getByText('Right?! I saw the same thing happen on r/technology last month.')).toBeInTheDocument();
-      expect(screen.getByText('Wait, what happened on r/technology? I missed that drama.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Right?! I saw the same thing happen on r/technology last month.'
+        )
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Wait, what happened on r/technology? I missed that drama.'
+        )
+      ).toBeInTheDocument();
     });
   });
 
   it('collapses and expands comment threads', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
-      expect(screen.getByText('Right?! I saw the same thing happen on r/technology last month.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Right?! I saw the same thing happen on r/technology last month.'
+        )
+      ).toBeInTheDocument();
     });
 
     // Find and click collapse button
-    const collapseButtons = document.querySelectorAll('button[title*="Collapse"]');
+    const collapseButtons = document.querySelectorAll(
+      'button[title*="Collapse"]'
+    );
     if (collapseButtons.length > 0) {
       await user.click(collapseButtons[0]);
 
       await waitFor(() => {
-        expect(screen.queryByText('Right?! I saw the same thing happen on r/technology last month.')).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(
+            'Right?! I saw the same thing happen on r/technology last month.'
+          )
+        ).not.toBeInTheDocument();
       });
 
       // Expand again
-      const expandButtons = document.querySelectorAll('button[title*="Expand"]');
+      const expandButtons = document.querySelectorAll(
+        'button[title*="Expand"]'
+      );
       if (expandButtons.length > 0) {
         await user.click(expandButtons[0]);
 
         await waitFor(() => {
-          expect(screen.getByText('Right?! I saw the same thing happen on r/technology last month.')).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              'Right?! I saw the same thing happen on r/technology last month.'
+            )
+          ).toBeInTheDocument();
         });
       }
     }
@@ -217,10 +263,12 @@ describe('CommentSystem', () => {
 
   it('prevents empty comment submission', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Join the conversation...')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Join the conversation...')
+      ).toBeInTheDocument();
     });
 
     const submitButton = screen.getByRole('button', { name: 'Post Comment' });
@@ -234,7 +282,7 @@ describe('CommentSystem', () => {
 
   it('prevents empty reply submission', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -254,7 +302,8 @@ describe('CommentSystem', () => {
 
   it('shows empty state when no comments', async () => {
     // Mock empty comments
-    jest.spyOn(React, 'useState')
+    jest
+      .spyOn(React, 'useState')
       .mockReturnValueOnce([[], jest.fn()]) // comments
       .mockReturnValueOnce([false, jest.fn()]) // loading
       .mockReturnValueOnce(['', jest.fn()]) // newComment
@@ -262,16 +311,18 @@ describe('CommentSystem', () => {
       .mockReturnValueOnce(['', jest.fn()]) // replyText
       .mockReturnValueOnce(['popular', jest.fn()]); // sortBy
 
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('No comments yet')).toBeInTheDocument();
-      expect(screen.getByText('Be the first to share your thoughts!')).toBeInTheDocument();
+      expect(
+        screen.getByText('Be the first to share your thoughts!')
+      ).toBeInTheDocument();
     });
   });
 
   it('renders report button for each comment', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       const reportButtons = screen.getAllByText('Report');
@@ -281,7 +332,7 @@ describe('CommentSystem', () => {
 
   it('handles comment actions menu', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('TechEnthusiast2024')).toBeInTheDocument();
@@ -289,8 +340,10 @@ describe('CommentSystem', () => {
 
     // Find more options button
     const moreButtons = document.querySelectorAll('button');
-    const moreButton = Array.from(moreButtons).find(btn => 
-      btn.querySelector('svg') && btn.getAttribute('class')?.includes('text-gray-400')
+    const moreButton = Array.from(moreButtons).find(
+      btn =>
+        btn.querySelector('svg') &&
+        btn.getAttribute('class')?.includes('text-gray-400')
     );
 
     if (moreButton) {
@@ -300,7 +353,7 @@ describe('CommentSystem', () => {
   });
 
   it('formats time correctly', async () => {
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       // Check for time ago format
@@ -310,31 +363,31 @@ describe('CommentSystem', () => {
   });
 
   it('applies custom className', () => {
-    render(<CommentSystem postId="test-post" className="custom-class" />);
-    
+    render(<CommentSystem postId='test-post' className='custom-class' />);
+
     const container = document.querySelector('.custom-class');
     expect(container).toBeInTheDocument();
   });
 
   it('handles like state toggle correctly', async () => {
     const user = userEvent.setup();
-    render(<CommentSystem postId="test-post" />);
+    render(<CommentSystem postId='test-post' />);
 
     await waitFor(() => {
       expect(screen.getByText('23')).toBeInTheDocument();
     });
 
     // Find the liked comment (should have filled heart)
-    const likeButton = screen.getAllByRole('button').find(btn => 
-      btn.querySelector('svg') && btn.textContent?.includes('23')
-    );
-    
+    const likeButton = screen
+      .getAllByRole('button')
+      .find(btn => btn.querySelector('svg') && btn.textContent?.includes('23'));
+
     if (likeButton) {
       const heartIcon = likeButton.querySelector('svg');
       expect(heartIcon).toHaveClass('fill-current'); // Should be filled since it's already liked
 
       await user.click(likeButton);
-      
+
       await waitFor(() => {
         expect(screen.getByText('22')).toBeInTheDocument();
       });

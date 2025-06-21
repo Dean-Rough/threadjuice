@@ -140,29 +140,36 @@ threadjuice/
 ## Core Components
 
 ### HeroCarousel
+
 Auto-cycling hero section with background images and navigation dots.
 
 ### TrendingFeed
+
 Main content feed with filtering capabilities and engagement metrics.
 
 ### Filter Pages
+
 Dynamic routing for category and author filtering (`/filter/[type]/[value]`).
 
 ### Blog Detail Pages
+
 Professional article layout with inline images, voting toolbars, and Reddit-style comments.
 
 ### Category Ticker
+
 Continuous scrolling navigation bar with clickable category pills.
 
 ## UI Architecture
 
 ### Design System
+
 - **shadcn/ui**: Modern component library
 - **Tailwind CSS**: Utility-first styling
 - **CSS Variables**: Theme-aware color system
 - **Geist Fonts**: Professional typography stack
 
 ### Theme Configuration
+
 ```css
 :root {
   --background: 240 10% 3.9%;
@@ -174,6 +181,7 @@ Continuous scrolling navigation bar with clickable category pills.
 ```
 
 ### Component Pattern
+
 ```typescript
 // Consistent component structure
 export function ComponentName() {
@@ -190,12 +198,14 @@ export function ComponentName() {
 ## Data Architecture
 
 ### Mock Data System
+
 - Viral content stories with realistic engagement metrics
 - Three writer personas with distinct voices
 - 20+ content categories for filtering
 - Dual image system (curated stock photos + AI generation)
 
 ### Automated Story Generation
+
 - **AI Content Creation**: GPT-4o generates complete viral stories with persona voice
 - **Intelligent Image Selection**: Content analysis matches stock photos to story themes
 - **Alternative AI Images**: DALL-E 3 generation with fallback system
@@ -203,12 +213,14 @@ export function ComponentName() {
 - **Related Stories**: Automatic tag-based content recommendations
 
 ### API Routes
+
 - `GET /api/posts` - Fetch posts with filtering options
 - `GET /api/posts/[id]` - Individual story with related content
 - Dynamic filtering via URL parameters
 - File-based story serving for generated content
 
 ### State Management
+
 - React Query for server state
 - React Context for UI state
 - Local component state for interactions
@@ -216,15 +228,18 @@ export function ComponentName() {
 ## Deployment
 
 ### Production Build
+
 ```bash
 npm run build
 npm run start
 ```
 
 ### Environment Variables
+
 Ensure all required environment variables are configured for production deployment.
 
 ### Performance Considerations
+
 - Image optimization with Next.js Image component
 - Code splitting with dynamic imports
 - CSS optimization with Tailwind purging

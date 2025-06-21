@@ -2,11 +2,17 @@ import OpenAI from 'openai';
 import { env } from './env';
 import { openaiRateLimiter } from './rateLimiter';
 import { generateContentPrompt, getPersonaPrompt } from './prompts';
-import { contentValidator, type ContentValidationResult } from './contentValidator';
-import type { ProcessedRedditPost, ProcessedRedditComment } from '@/types/reddit';
+import {
+  contentValidator,
+  type ContentValidationResult,
+} from './contentValidator';
+import type {
+  ProcessedRedditPost,
+  ProcessedRedditComment,
+} from '@/types/reddit';
 
 /**
- * GPT-4 content summarizer with persona-based prompts
+ * gpt-4o content summarizer with persona-based prompts
  */
 
 export interface SummarizationOptions {
@@ -37,7 +43,7 @@ export interface SummarizationResult {
 
 export class GPTSummariser {
   private openai: OpenAI;
-  private defaultModel = 'gpt-4-turbo-preview';
+  private defaultModel = 'gpt-4o';
 
   constructor() {
     this.openai = new OpenAI({
@@ -81,25 +87,27 @@ export class GPTSummariser {
         score: post.score,
       });
 
-      console.log(`🤖 Generating content with ${persona.name} for "${post.title}"`);
+      // console.log(`🤖 Generating content with ${persona.name} for "${post.title}"`);
 
       // Make OpenAI request with rate limiting
-      const completion = await openaiRateLimiter.executeWithBackoff(async () => {
-        return this.openai.chat.completions.create({
-          model: this.defaultModel,
-          messages: [
-            {
-              role: 'user',
-              content: prompt,
-            },
-          ],
-          temperature: options.temperature || 0.7,
-          max_tokens: options.maxTokens || 2000,
-          top_p: 0.9,
-          frequency_penalty: 0.3,
-          presence_penalty: 0.1,
-        });
-      });
+      const completion = await openaiRateLimiter.executeWithBackoff(
+        async () => {
+          return this.openai.chat.completions.create({
+            model: this.defaultModel,
+            messages: [
+              {
+                role: 'user',
+                content: prompt,
+              },
+            ],
+            temperature: options.temperature || 0.7,
+            max_tokens: options.maxTokens || 2000,
+            top_p: 0.9,
+            frequency_penalty: 0.3,
+            presence_penalty: 0.1,
+          });
+        }
+      );
 
       const rawContent = completion.choices[0]?.message?.content;
       if (!rawContent) {
@@ -107,21 +115,30 @@ export class GPTSummariser {
       }
 
       // Parse and structure the content
-      const structuredContent = this.parseGeneratedContent(rawContent, post.title);
+      const structuredContent = this.parseGeneratedContent(
+        rawContent,
+        post.title
+      );
 
       // Validate content if requested
       let validation: ContentValidationResult | undefined;
       if (options.validateOutput !== false) {
-        validation = contentValidator.validate(structuredContent.content, structuredContent.title);
-        
+        validation = contentValidator.validate(
+          structuredContent.content,
+          structuredContent.title
+        );
+
         if (!validation.isValid) {
-          console.warn(`⚠️ Content validation failed for "${post.title}":`, validation.issues);
+          console.warn(
+            `⚠️ Content validation failed for "${post.title}":`,
+            validation.issues
+          );
         }
       }
 
       const processingTime = Date.now() - startTime;
 
-      console.log(`✅ Generated ${structuredContent.wordCount} words in ${processingTime}ms`);
+      // console.log(`✅ Generated ${structuredContent.wordCount} words in ${processingTime}ms`);
 
       return {
         ...structuredContent,
@@ -134,7 +151,6 @@ export class GPTSummariser {
           temperature: options.temperature || 0.7,
         },
       };
-
     } catch (error) {
       console.error('❌ GPT summarization failed:', error);
       throw error;
@@ -146,7 +162,10 @@ export class GPTSummariser {
    */
   async generateQuiz(
     post: ProcessedRedditPost,
-    options: { questionCount?: number; difficulty?: 'easy' | 'medium' | 'hard' } = {}
+    options: {
+      questionCount?: number;
+      difficulty?: 'easy' | 'medium' | 'hard';
+    } = {}
   ): Promise<{
     title: string;
     description: string;
@@ -180,14 +199,16 @@ Difficulty level: ${difficulty}
 Make it fun but informative!`;
 
     try {
-      const completion = await openaiRateLimiter.executeWithBackoff(async () => {
-        return this.openai.chat.completions.create({
-          model: this.defaultModel,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.8,
-          max_tokens: 1500,
-        });
-      });
+      const completion = await openaiRateLimiter.executeWithBackoff(
+        async () => {
+          return this.openai.chat.completions.create({
+            model: this.defaultModel,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.8,
+            max_tokens: 1500,
+          });
+        }
+      );
 
       const rawContent = completion.choices[0]?.message?.content;
       if (!rawContent) {
@@ -204,7 +225,10 @@ Make it fun but informative!`;
   /**
    * Parse generated content into structured format
    */
-  private parseGeneratedContent(content: string, originalTitle: string): {
+  private parseGeneratedContent(
+    content: string,
+    originalTitle: string
+  ): {
     title: string;
     content: string;
     excerpt: string;
@@ -225,18 +249,23 @@ Make it fun but informative!`;
 
     // Generate excerpt (first paragraph or first 200 characters)
     const firstParagraph = mainContent.split('\n\n')[0];
-    const excerpt = firstParagraph.length > 200 
-      ? firstParagraph.substring(0, 197) + '...'
-      : firstParagraph;
+    const excerpt =
+      firstParagraph.length > 200
+        ? firstParagraph.substring(0, 197) + '...'
+        : firstParagraph;
 
     // Generate tags based on content analysis
     const tags = this.extractTags(mainContent, title);
 
     // Generate SEO optimized title and description
-    const seoTitle = title.length <= 60 ? title : title.substring(0, 57) + '...';
-    const seoDescription = excerpt.length <= 160 ? excerpt : excerpt.substring(0, 157) + '...';
+    const seoTitle =
+      title.length <= 60 ? title : title.substring(0, 57) + '...';
+    const seoDescription =
+      excerpt.length <= 160 ? excerpt : excerpt.substring(0, 157) + '...';
 
-    const wordCount = mainContent.split(/\s+/).filter(word => word.length > 0).length;
+    const wordCount = mainContent
+      .split(/\s+/)
+      .filter(word => word.length > 0).length;
 
     return {
       title,
@@ -258,11 +287,39 @@ Make it fun but informative!`;
 
     // Predefined tag categories
     const tagCategories = {
-      platforms: ['reddit', 'tiktok', 'instagram', 'twitter', 'facebook', 'youtube'],
-      relationships: ['relationship', 'dating', 'marriage', 'family', 'friendship', 'roommate'],
-      work: ['work', 'job', 'office', 'boss', 'colleague', 'career', 'workplace'],
+      platforms: [
+        'reddit',
+        'tiktok',
+        'instagram',
+        'twitter',
+        'facebook',
+        'youtube',
+      ],
+      relationships: [
+        'relationship',
+        'dating',
+        'marriage',
+        'family',
+        'friendship',
+        'roommate',
+      ],
+      work: [
+        'work',
+        'job',
+        'office',
+        'boss',
+        'colleague',
+        'career',
+        'workplace',
+      ],
       drama: ['drama', 'conflict', 'argument', 'fight', 'confrontation'],
-      emotions: ['wholesome', 'heartwarming', 'frustrating', 'hilarious', 'shocking'],
+      emotions: [
+        'wholesome',
+        'heartwarming',
+        'frustrating',
+        'hilarious',
+        'shocking',
+      ],
       topics: ['aita', 'tifu', 'confession', 'advice', 'story', 'update'],
     };
 
@@ -293,23 +350,26 @@ Make it fun but informative!`;
     const { concurrency = 3, delayBetween = 1000 } = batchOptions;
     const results: SummarizationResult[] = [];
 
-    console.log(`🔄 Batch processing ${posts.length} posts with concurrency ${concurrency}`);
+    // console.log(`🔄 Batch processing ${posts.length} posts with concurrency ${concurrency}`);
 
     // Process in batches to respect rate limits
     for (let i = 0; i < posts.length; i += concurrency) {
       const batch = posts.slice(i, i + concurrency);
-      
+
       const batchPromises = batch.map(({ post, comments, options }) =>
         this.summarizePost(post, comments, options)
       );
 
       const batchResults = await Promise.allSettled(batchPromises);
-      
+
       batchResults.forEach((result, index) => {
         if (result.status === 'fulfilled') {
           results.push(result.value);
         } else {
-          console.error(`❌ Failed to process post ${i + index}:`, result.reason);
+          console.error(
+            `❌ Failed to process post ${i + index}:`,
+            result.reason
+          );
         }
       });
 
@@ -319,7 +379,7 @@ Make it fun but informative!`;
       }
     }
 
-    console.log(`✅ Batch processing complete: ${results.length}/${posts.length} successful`);
+    // console.log(`✅ Batch processing complete: ${results.length}/${posts.length} successful`);
     return results;
   }
 

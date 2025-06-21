@@ -27,12 +27,14 @@ async function handleAnalyticsEvent(request: NextRequest) {
       timestamp: eventData.timestamp || Date.now(),
       serverTimestamp: Date.now(),
       userAgent: request.headers.get('user-agent'),
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+      ip:
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip'),
       environment: process.env.NODE_ENV,
     };
 
     // Log event for debugging (in production, send to analytics service)
-    console.log('Analytics Event:', enrichedEvent);
+    // console.log('Analytics Event:', enrichedEvent);
 
     // In a real implementation, you would:
     // 1. Send to your analytics service (e.g., Mixpanel, Amplitude)
@@ -48,16 +50,13 @@ async function handleAnalyticsEvent(request: NextRequest) {
     // Store in your own analytics database
     await storeAnalyticsEvent(enrichedEvent);
 
-    return NextResponse.json(
-      { success: true },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: 'Validation failed', 
-          details: error.errors 
+        {
+          error: 'Validation failed',
+          details: error.errors,
         },
         { status: 400 }
       );
@@ -135,11 +134,10 @@ async function storeAnalyticsEvent(event: any) {
       environment: event.environment,
     });
     */
-    
-    console.log('Analytics event stored (placeholder):', {
-      event: event.event,
-      timestamp: new Date(event.timestamp),
-    });
+    // console.log('Analytics event stored (placeholder):', {
+    //   event: event.event,
+    //   timestamp: new Date(event.timestamp),
+    // });
   } catch (error) {
     console.error('Failed to store analytics event:', error);
   }

@@ -58,7 +58,7 @@ export class RedditScraper {
       this.config.accessToken = tokenData.access_token;
       this.config.tokenExpiresAt = Date.now() + (tokenData.expires_in * 1000);
       
-      console.log('✅ Reddit authentication successful');
+      // console.log('✅ Reddit authentication successful');
     } catch (error) {
       console.error('❌ Reddit authentication failed:', error);
       throw error;
@@ -76,7 +76,7 @@ export class RedditScraper {
 
     // Refresh token if it expires in the next 5 minutes
     if (Date.now() > (this.config.tokenExpiresAt - 5 * 60 * 1000)) {
-      console.log('🔄 Refreshing Reddit access token...');
+      // console.log('🔄 Refreshing Reddit access token...');
       await this.authenticate();
     }
   }
@@ -120,7 +120,7 @@ export class RedditScraper {
       endpoint += `&after=${after}`;
     }
 
-    console.log(`📡 Fetching ${sort} posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
+    // console.log(`📡 Fetching ${sort} posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
 
     const response: RedditResponse<RedditListing> = await this.makeRequest(endpoint);
     
@@ -129,7 +129,7 @@ export class RedditScraper {
       .filter(post => post.score >= minScore)
       .map(post => this.processRedditPost(post));
 
-    console.log(`✅ Fetched ${posts.length} posts from r/${subreddit}`);
+    // console.log(`✅ Fetched ${posts.length} posts from r/${subreddit}`);
     return posts;
   }
 
@@ -141,7 +141,7 @@ export class RedditScraper {
     
     const endpoint = `/comments/${postId}?sort=${sort}&limit=${limit}&depth=${depth}`;
     
-    console.log(`💬 Fetching comments for post ${postId} (limit: ${limit}, depth: ${depth})`);
+    // console.log(`💬 Fetching comments for post ${postId} (limit: ${limit}, depth: ${depth})`);
 
     const response: [RedditResponse<RedditListing>, RedditResponse<RedditListing>] = await this.makeRequest(endpoint);
     
@@ -152,7 +152,7 @@ export class RedditScraper {
       .filter(comment => comment.body && comment.body !== '[deleted]' && comment.body !== '[removed]')
       .map(comment => this.processRedditComment(comment));
 
-    console.log(`✅ Fetched ${comments.length} comments for post ${postId}`);
+    // console.log(`✅ Fetched ${comments.length} comments for post ${postId}`);
     return comments;
   }
 
@@ -161,7 +161,7 @@ export class RedditScraper {
    */
   async getSubredditInfo(subreddit: string): Promise<any> {
     const endpoint = `/r/${subreddit}/about`;
-    console.log(`ℹ️ Fetching info for r/${subreddit}`);
+    // console.log(`ℹ️ Fetching info for r/${subreddit}`);
     
     const response: RedditResponse<any> = await this.makeRequest(endpoint);
     return response.data;
@@ -183,7 +183,7 @@ export class RedditScraper {
       endpoint += `&t=${time}`;
     }
 
-    console.log(`🔍 Searching for "${query}" (limit: ${limit})`);
+    // console.log(`🔍 Searching for "${query}" (limit: ${limit})`);
 
     const response: RedditResponse<RedditListing> = await this.makeRequest(endpoint);
     
@@ -191,7 +191,7 @@ export class RedditScraper {
       .map(child => child.data as RedditPost)
       .map(post => this.processRedditPost(post));
 
-    console.log(`✅ Found ${posts.length} posts for query "${query}"`);
+    // console.log(`✅ Found ${posts.length} posts for query "${query}"`);
     return posts;
   }
 

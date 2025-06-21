@@ -66,33 +66,29 @@ export function TrendingBadge({
   const displayText = text || config.defaultText;
 
   // Animation classes
-  const animationClasses = animated ? {
-    fire: 'animate-pulse',
-    lightning: 'animate-bounce',
-    star: 'animate-pulse',
-    trending: 'animate-pulse',
-  }[variant] : '';
+  const animationClasses = animated
+    ? {
+        fire: 'animate-pulse',
+        lightning: 'animate-bounce',
+        star: 'animate-pulse',
+        trending: 'animate-pulse',
+      }[variant]
+    : '';
 
   return (
     <div
-      className={`
-        inline-flex items-center font-bold rounded-full shadow-lg
-        ${sizes.container} ${sizes.gap} ${config.colors} ${animationClasses}
-        ${className}
-      `.trim()}
-      data-testid="trending-badge"
+      className={`inline-flex items-center rounded-full font-bold shadow-lg ${sizes.container} ${sizes.gap} ${config.colors} ${animationClasses} ${className} `.trim()}
+      data-testid='trending-badge'
     >
-      <IconComponent 
-        className={`${sizes.icon} ${animated ? 'animate-pulse' : ''}`} 
+      <IconComponent
+        className={`${sizes.icon} ${animated ? 'animate-pulse' : ''}`}
       />
-      <span className="tracking-wide">
-        {displayText}
-      </span>
-      
+      <span className='tracking-wide'>{displayText}</span>
+
       {/* Sparkle effect for enhanced visual appeal */}
       {animated && (
-        <div className="absolute -top-1 -right-1">
-          <div className="w-2 h-2 bg-white rounded-full animate-ping opacity-75" />
+        <div className='absolute -right-1 -top-1'>
+          <div className='h-2 w-2 animate-ping rounded-full bg-white opacity-75' />
         </div>
       )}
     </div>

@@ -7,22 +7,21 @@ import { PersonaBadge, type PersonaBadgeProps } from '../PersonaBadge';
 
 // Mock Next.js components
 jest.mock('next/link', () => {
-  return ({ children, href, ...props }: any) => (
+  const MockLink = ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
     </a>
   );
+  MockLink.displayName = 'MockLink';
+  return MockLink;
 });
 
 jest.mock('next/image', () => {
-  return ({ src, alt, onError, ...props }: any) => (
-    <img 
-      src={src} 
-      alt={alt} 
-      onError={onError}
-      {...props} 
-    />
+  const MockImage = ({ src, alt, onError, ...props }: any) => (
+    <img src={src} alt={alt} onError={onError} {...props} />
   );
+  MockImage.displayName = 'MockImage';
+  return MockImage;
 });
 
 describe('PersonaBadge', () => {
@@ -69,7 +68,9 @@ describe('PersonaBadge', () => {
     render(<PersonaBadge author={authorWithoutAvatar} />);
 
     expect(screen.queryByAltText('The Snarky Sage')).not.toBeInTheDocument();
-    expect(screen.getByTestId('persona-badge')).toContainHTML('bg-gradient-to-br');
+    expect(screen.getByTestId('persona-badge')).toContainHTML(
+      'bg-gradient-to-br'
+    );
   });
 
   it('handles avatar error gracefully', () => {
@@ -96,28 +97,28 @@ describe('PersonaBadge', () => {
   });
 
   it('applies small size classes correctly', () => {
-    render(<PersonaBadge {...defaultProps} size="sm" />);
+    render(<PersonaBadge {...defaultProps} size='sm' />);
 
     const badge = screen.getByTestId('persona-badge');
     expect(badge).toContainHTML('text-sm');
   });
 
   it('applies medium size classes correctly (default)', () => {
-    render(<PersonaBadge {...defaultProps} size="md" />);
+    render(<PersonaBadge {...defaultProps} size='md' />);
 
     const badge = screen.getByTestId('persona-badge');
     expect(badge).toContainHTML('text-base');
   });
 
   it('applies large size classes correctly', () => {
-    render(<PersonaBadge {...defaultProps} size="lg" />);
+    render(<PersonaBadge {...defaultProps} size='lg' />);
 
     const badge = screen.getByTestId('persona-badge');
     expect(badge).toContainHTML('text-lg');
   });
 
   it('applies custom className when provided', () => {
-    render(<PersonaBadge {...defaultProps} className="custom-class" />);
+    render(<PersonaBadge {...defaultProps} className='custom-class' />);
 
     const badge = screen.getByTestId('persona-badge');
     expect(badge).toHaveClass('custom-class');
@@ -135,7 +136,9 @@ describe('PersonaBadge', () => {
     render(<PersonaBadge author={authorWithoutAvatar} />);
 
     const badge = screen.getByTestId('persona-badge');
-    expect(badge).toContainHTML('bg-gradient-to-br from-blue-400 to-purple-500');
+    expect(badge).toContainHTML(
+      'bg-gradient-to-br from-blue-400 to-purple-500'
+    );
   });
 
   it('handles long author names with truncation', () => {
@@ -145,7 +148,9 @@ describe('PersonaBadge', () => {
     };
     render(<PersonaBadge author={authorWithLongName} />);
 
-    const authorElement = screen.getByText('The Really Long Author Name That Should Be Truncated');
+    const authorElement = screen.getByText(
+      'The Really Long Author Name That Should Be Truncated'
+    );
     expect(authorElement).toHaveClass('truncate');
   });
 
@@ -156,22 +161,24 @@ describe('PersonaBadge', () => {
     };
     render(<PersonaBadge author={authorWithLongTone} />);
 
-    const toneElement = screen.getByText('A very long tone description that should be truncated to prevent layout issues');
+    const toneElement = screen.getByText(
+      'A very long tone description that should be truncated to prevent layout issues'
+    );
     expect(toneElement).toHaveClass('truncate');
   });
 
   it('uses correct image dimensions for different sizes', () => {
-    const { rerender } = render(<PersonaBadge {...defaultProps} size="sm" />);
+    const { rerender } = render(<PersonaBadge {...defaultProps} size='sm' />);
     let avatar = screen.getByAltText('The Snarky Sage');
     expect(avatar).toHaveAttribute('width', '24');
     expect(avatar).toHaveAttribute('height', '24');
 
-    rerender(<PersonaBadge {...defaultProps} size="md" />);
+    rerender(<PersonaBadge {...defaultProps} size='md' />);
     avatar = screen.getByAltText('The Snarky Sage');
     expect(avatar).toHaveAttribute('width', '32');
     expect(avatar).toHaveAttribute('height', '32');
 
-    rerender(<PersonaBadge {...defaultProps} size="lg" />);
+    rerender(<PersonaBadge {...defaultProps} size='lg' />);
     avatar = screen.getByAltText('The Snarky Sage');
     expect(avatar).toHaveAttribute('width', '40');
     expect(avatar).toHaveAttribute('height', '40');

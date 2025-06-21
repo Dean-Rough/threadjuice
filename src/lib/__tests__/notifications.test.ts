@@ -2,12 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { 
-  notificationService, 
-  formatNotificationTime, 
-  getNotificationIcon, 
+import {
+  notificationService,
+  formatNotificationTime,
+  getNotificationIcon,
   getNotificationColor,
-  type Notification 
+  type Notification,
 } from '../notifications';
 
 // Mock localStorage
@@ -18,20 +18,20 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+  value: localStorageMock,
 });
 
 // Mock Notification API
 const mockNotification = jest.fn();
 Object.defineProperty(window, 'Notification', {
   value: mockNotification,
-  configurable: true
+  configurable: true,
 });
 
 // Mock permission
 Object.defineProperty(mockNotification, 'permission', {
   value: 'granted',
-  writable: true
+  writable: true,
 });
 
 mockNotification.requestPermission = jest.fn().mockResolvedValue('granted');
@@ -42,6 +42,13 @@ describe('NotificationService', () => {
     localStorageMock.getItem.mockReturnValue(null);
     // Clear the service's internal state
     notificationService.clearAll();
+    // Suppress console.log during tests
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    // Restore console.log after each test
+    jest.restoreAllMocks();
   });
 
   it('initializes with empty notifications when no stored data', () => {
@@ -54,7 +61,7 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'New Comment',
       message: 'Someone commented on your post',
-      userId: 'user-1'
+      userId: 'user-1',
     };
 
     await notificationService.createNotification(notification);
@@ -63,7 +70,7 @@ describe('NotificationService', () => {
     expect(notifications.length).toBe(1);
     expect(notifications[0]).toMatchObject({
       ...notification,
-      read: false
+      read: false,
     });
     expect(notifications[0]).toHaveProperty('id');
     expect(notifications[0]).toHaveProperty('createdAt');
@@ -74,7 +81,7 @@ describe('NotificationService', () => {
       type: 'like' as const,
       title: 'New Like',
       message: 'Someone liked your post',
-      userId: 'user-1'
+      userId: 'user-1',
     };
 
     await notificationService.createNotification(notification);
@@ -92,14 +99,14 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Comment 1',
       message: 'Message 1',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     await notificationService.createNotification({
       type: 'like' as const,
       title: 'Like 1',
       message: 'Message 2',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     notificationService.markAllAsRead();
@@ -113,7 +120,7 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Test',
       message: 'Test message',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     const notifications = notificationService.getNotifications();
@@ -130,14 +137,14 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Test 1',
       message: 'Message 1',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     await notificationService.createNotification({
       type: 'like' as const,
       title: 'Test 2',
       message: 'Message 2',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     notificationService.clearAll();
@@ -151,14 +158,14 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Test 1',
       message: 'Message 1',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     await notificationService.createNotification({
       type: 'like' as const,
       title: 'Test 2',
       message: 'Message 2',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     expect(notificationService.getUnreadCount()).toBe(2);
@@ -169,8 +176,8 @@ describe('NotificationService', () => {
     expect(notificationService.getUnreadCount()).toBe(1);
   });
 
-  it('subscribes to notification updates', (done) => {
-    const callback = jest.fn((notifications) => {
+  it('subscribes to notification updates', done => {
+    const callback = jest.fn(notifications => {
       if (callback.mock.calls.length === 1) {
         // First call should have existing notifications
         expect(Array.isArray(notifications)).toBe(true);
@@ -188,7 +195,7 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Test',
       message: 'Test message',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     // Clean up
@@ -199,7 +206,7 @@ describe('NotificationService', () => {
     const newPreferences = {
       comments: false,
       likes: true,
-      email: true
+      email: true,
     };
 
     notificationService.updatePreferences(newPreferences);
@@ -218,7 +225,7 @@ describe('NotificationService', () => {
       type: 'comment' as const,
       title: 'Test Comment',
       message: 'This should not be created',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     const notifications = notificationService.getNotifications();
@@ -234,16 +241,18 @@ describe('NotificationService', () => {
         message: 'Test message',
         userId: 'user-1',
         createdAt: '2024-06-15T10:00:00Z',
-        read: false
-      }
+        read: false,
+      },
     ];
 
     localStorageMock.getItem.mockReturnValue(JSON.stringify(mockNotifications));
 
     // Create a new service instance to test loading
     const testService = new (notificationService.constructor as any)();
-    
-    expect(localStorageMock.getItem).toHaveBeenCalledWith('threadjuice_notifications');
+
+    expect(localStorageMock.getItem).toHaveBeenCalledWith(
+      'threadjuice_notifications'
+    );
   });
 
   it('saves preferences to localStorage', () => {
@@ -257,7 +266,12 @@ describe('NotificationService', () => {
   });
 
   it('creates notifications with correct metadata', async () => {
-    await notificationService.notifyComment('post-1', 'Test Post', 'John Doe', 'comment-1');
+    await notificationService.notifyComment(
+      'post-1',
+      'Test Post',
+      'John Doe',
+      'comment-1'
+    );
 
     const notifications = notificationService.getNotifications();
     const notification = notifications[0];
@@ -269,13 +283,18 @@ describe('NotificationService', () => {
       metadata: {
         postId: 'post-1',
         postTitle: 'Test Post',
-        commentId: 'comment-1'
-      }
+        commentId: 'comment-1',
+      },
     });
   });
 
   it('creates like notifications', async () => {
-    await notificationService.notifyLike('post', 'post-1', 'Jane Doe', 'Test Post');
+    await notificationService.notifyLike(
+      'post',
+      'post-1',
+      'Jane Doe',
+      'Test Post'
+    );
 
     const notifications = notificationService.getNotifications();
     const notification = notifications[0];
@@ -283,12 +302,17 @@ describe('NotificationService', () => {
     expect(notification).toMatchObject({
       type: 'like',
       title: 'New Like',
-      message: 'Jane Doe liked your post on "Test Post"'
+      message: 'Jane Doe liked your post on "Test Post"',
     });
   });
 
   it('creates reply notifications', async () => {
-    await notificationService.notifyReply('comment-1', 'post-1', 'Bob Smith', 'Test Post');
+    await notificationService.notifyReply(
+      'comment-1',
+      'post-1',
+      'Bob Smith',
+      'Test Post'
+    );
 
     const notifications = notificationService.getNotifications();
     const notification = notifications[0];
@@ -296,7 +320,7 @@ describe('NotificationService', () => {
     expect(notification).toMatchObject({
       type: 'reply',
       title: 'New Reply',
-      message: 'Bob Smith replied to your comment on "Test Post"'
+      message: 'Bob Smith replied to your comment on "Test Post"',
     });
   });
 
@@ -309,12 +333,17 @@ describe('NotificationService', () => {
     expect(notification).toMatchObject({
       type: 'trending',
       title: 'Trending Alert',
-      message: 'Your post "Viral Post" is trending! 🔥'
+      message: 'Your post "Viral Post" is trending! 🔥',
     });
   });
 
   it('creates mention notifications', async () => {
-    await notificationService.notifyMention('post-1', 'Test Post', 'Alice Cooper', 'comment-1');
+    await notificationService.notifyMention(
+      'post-1',
+      'Test Post',
+      'Alice Cooper',
+      'comment-1'
+    );
 
     const notifications = notificationService.getNotifications();
     const notification = notifications[0];
@@ -322,25 +351,25 @@ describe('NotificationService', () => {
     expect(notification).toMatchObject({
       type: 'mention',
       title: 'You were mentioned',
-      message: 'Alice Cooper mentioned you in "Test Post"'
+      message: 'Alice Cooper mentioned you in "Test Post"',
     });
   });
 
   it('requests browser notification permission', async () => {
     const result = await notificationService.requestPermission();
-    
+
     expect(mockNotification.requestPermission).toHaveBeenCalled();
     expect(result).toBe(true);
   });
 
   it('shows browser notification when enabled', async () => {
     notificationService.updatePreferences({ push: true });
-    
+
     await notificationService.createNotification({
       type: 'comment' as const,
       title: 'Test Notification',
       message: 'Test message',
-      userId: 'user-1'
+      userId: 'user-1',
     });
 
     expect(mockNotification).toHaveBeenCalledWith('Test Notification', {
@@ -349,8 +378,8 @@ describe('NotificationService', () => {
       badge: '/icon-192x192.png',
       tag: expect.any(String),
       data: {
-        url: undefined
-      }
+        url: undefined,
+      },
     });
   });
 
@@ -361,7 +390,7 @@ describe('NotificationService', () => {
         type: 'comment' as const,
         title: `Test ${i}`,
         message: `Message ${i}`,
-        userId: 'user-1'
+        userId: 'user-1',
       });
     }
 
@@ -376,7 +405,7 @@ describe('NotificationService', () => {
         type: 'comment' as const,
         title: `Test ${i}`,
         message: `Message ${i}`,
-        userId: 'user-1'
+        userId: 'user-1',
       });
     }
 
@@ -394,25 +423,33 @@ describe('NotificationService', () => {
 describe('Notification Helper Functions', () => {
   it('formats notification time correctly', () => {
     const now = new Date();
-    
+
     // Just now
     const justNow = new Date(now.getTime() - 30 * 1000).toISOString();
     expect(formatNotificationTime(justNow)).toBe('just now');
 
     // Minutes ago
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
+    const fiveMinutesAgo = new Date(
+      now.getTime() - 5 * 60 * 1000
+    ).toISOString();
     expect(formatNotificationTime(fiveMinutesAgo)).toBe('5m ago');
 
     // Hours ago
-    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString();
+    const twoHoursAgo = new Date(
+      now.getTime() - 2 * 60 * 60 * 1000
+    ).toISOString();
     expect(formatNotificationTime(twoHoursAgo)).toBe('2h ago');
 
     // Days ago
-    const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    const threeDaysAgo = new Date(
+      now.getTime() - 3 * 24 * 60 * 60 * 1000
+    ).toISOString();
     expect(formatNotificationTime(threeDaysAgo)).toBe('3d ago');
 
     // Weeks ago (should show date)
-    const twoWeeksAgo = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString();
+    const twoWeeksAgo = new Date(
+      now.getTime() - 15 * 24 * 60 * 60 * 1000
+    ).toISOString();
     expect(formatNotificationTime(twoWeeksAgo)).toMatch(/\d+\/\d+\/\d+/);
   });
 

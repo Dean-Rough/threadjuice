@@ -1,99 +1,85 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { ingestionService } from '@/lib/ingestionService';
-import { redditIngestionSchema, validateRequestBody } from '@/lib/validations';
+import { z } from 'zod';
+import {
+  contentIngestionService,
+  IngestionConfig,
+} from '@/lib/contentIngestionService';
 
-/**
- * POST /api/ingest/reddit - Start Reddit content ingestion
- */
+const IngestionRequestSchema = z.object({
+  subreddits: z.array(z.string()).optional(),
+  limit_per_subreddit: z.number().min(1).max(10).optional(),
+  min_viral_score: z.number().min(1).max(10).optional(),
+  max_age_hours: z.number().min(1).max(168).optional(), // Max 1 week
+  auto_publish: z.boolean().optional(),
+});
+
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication (optional - could allow anonymous ingestion)
-    const { userId } = await auth();
-    
-    // Parse and validate request body
     const body = await request.json();
-    const validation = validateRequestBody(redditIngestionSchema, body);
 
-    if (!validation.success) {
+    // Validate request body
+    const validationResult = IngestionRequestSchema.safeParse(body);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid request body', message: validation.error },
+        {
+          error: 'VALIDATION_ERROR',
+          message: 'Invalid request data',
+          details: validationResult.error.format(),
+        },
         { status: 400 }
       );
     }
 
-    const ingestionRequest = validation.data;
+    const config: IngestionConfig = validationResult.data;
 
-    // Add user ID to the request if authenticated
-    const requestWithUser = {
-      ...ingestionRequest,
-      userId: userId || undefined,
-    };
-
-    console.log(`📥 Ingestion request for r/${ingestionRequest.subreddit} from ${userId || 'anonymous'}`);
-
-    // Start ingestion process
-    const jobId = await ingestionService.startIngestion(requestWithUser);
+    // Start ingestion job
+    const job = await contentIngestionService.startIngestionJob(config);
 
     return NextResponse.json({
       success: true,
-      data: {
-        jobId,
-        message: `Ingestion started for r/${ingestionRequest.subreddit}`,
-        estimatedPosts: ingestionRequest.limit || 25,
-      },
-      timestamp: new Date().toISOString(),
-    }, { status: 202 }); // 202 Accepted for async operation
-
+      job_id: job.id,
+      status: job.status,
+      message: 'Content ingestion started',
+      check_status_url: `/api/ingest/status/${job.id}`,
+    });
   } catch (error) {
-    console.error('Ingestion API Error:', error);
-    
-    // Handle specific error types
-    if (error instanceof Error) {
-      if (error.message.includes('rate limit')) {
-        return NextResponse.json(
-          { error: 'Rate limit exceeded', message: 'Please try again later' },
-          { status: 429 }
-        );
-      }
-      
-      if (error.message.includes('authentication')) {
-        return NextResponse.json(
-          { error: 'Authentication failed', message: 'Reddit API authentication failed' },
-          { status: 502 }
-        );
-      }
-    }
-
+    console.error('Content ingestion API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', message: 'An unexpected error occurred during ingestion' },
+      {
+        error: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to start content ingestion',
+        request_id: crypto.randomUUID(),
+      },
       { status: 500 }
     );
   }
 }
 
-/**
- * GET /api/ingest/reddit - Get ingestion status and statistics
- */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // Get ingestion status
-    const status = await ingestionService.getIngestionStatus();
+    // Get all recent jobs
+    const jobs = contentIngestionService.getAllJobs();
 
     return NextResponse.json({
-      success: true,
-      data: {
-        queue: status.queue,
-        recentJobs: status.recentJobs,
-        isHealthy: status.queue.failed < status.queue.total * 0.1, // Less than 10% failure rate
-      },
-      timestamp: new Date().toISOString(),
+      jobs: jobs.map(job => ({
+        id: job.id,
+        status: job.status,
+        posts_processed: job.posts_processed,
+        posts_created: job.posts_created,
+        started_at: job.started_at,
+        completed_at: job.completed_at,
+        error_message: job.error_message,
+      })),
     });
-
   } catch (error) {
-    console.error('Ingestion status API Error:', error);
+    console.error('Jobs listing API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', message: 'Failed to get ingestion status' },
+      {
+        error: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch jobs',
+        request_id: crypto.randomUUID(),
+      },
       { status: 500 }
     );
   }

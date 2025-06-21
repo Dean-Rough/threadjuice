@@ -6,7 +6,9 @@ import { z } from 'zod';
 const UpdateQuizSchema = z.object({
   title: z.string().min(3).max(200).optional(),
   description: z.string().max(1000).optional(),
-  category: z.enum(['viral', 'trending', 'chaos', 'wholesome', 'drama']).optional(),
+  category: z
+    .enum(['viral', 'trending', 'chaos', 'wholesome', 'drama'])
+    .optional(),
   difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
   timeLimit: z.number().min(30).max(1800).optional(),
   questions: z.array(z.any()).min(3).max(20).optional(),
@@ -39,7 +41,8 @@ let quizzes: Quiz[] = [
   {
     id: 'quiz-1',
     title: 'Reddit Drama Knowledge Test',
-    description: 'Test your knowledge of infamous Reddit drama and controversies',
+    description:
+      'Test your knowledge of infamous Reddit drama and controversies',
     category: 'drama',
     difficulty: 'medium',
     timeLimit: 300,
@@ -47,10 +50,17 @@ let quizzes: Quiz[] = [
       {
         id: 'q1',
         type: 'multiple-choice',
-        question: 'Which subreddit was infamous for the "Boston Bomber" incident?',
-        options: ['/r/news', '/r/FindBostonBombers', '/r/worldnews', '/r/Boston'],
+        question:
+          'Which subreddit was infamous for the "Boston Bomber" incident?',
+        options: [
+          '/r/news',
+          '/r/FindBostonBombers',
+          '/r/worldnews',
+          '/r/Boston',
+        ],
         correctAnswer: '/r/FindBostonBombers',
-        explanation: 'Reddit users incorrectly identified the Boston Marathon bomber, leading to harassment of innocent people.',
+        explanation:
+          'Reddit users incorrectly identified the Boston Marathon bomber, leading to harassment of innocent people.',
         points: 2,
       },
     ],
@@ -75,10 +85,7 @@ export async function GET(
     const quiz = quizzes.find(q => q.id === id);
 
     if (!quiz) {
-      return NextResponse.json(
-        { error: 'Quiz not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
     }
 
     return NextResponse.json(quiz);
@@ -97,7 +104,7 @@ export async function PUT(
 ) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -109,10 +116,7 @@ export async function PUT(
     const quiz = quizzes.find(q => q.id === id);
 
     if (!quiz) {
-      return NextResponse.json(
-        { error: 'Quiz not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
     }
 
     // Check if user owns the quiz
@@ -159,7 +163,7 @@ export async function DELETE(
 ) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -171,10 +175,7 @@ export async function DELETE(
     const quiz = quizzes.find(q => q.id === id);
 
     if (!quiz) {
-      return NextResponse.json(
-        { error: 'Quiz not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
     }
 
     // Check if user owns the quiz

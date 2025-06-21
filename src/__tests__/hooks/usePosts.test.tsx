@@ -4,7 +4,12 @@
 
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { usePosts, useFeaturedPosts, useTrendingPosts, usePostsByCategory } from '@/hooks/usePosts';
+import {
+  usePosts,
+  useFeaturedPosts,
+  useTrendingPosts,
+  usePostsByCategory,
+} from '@/hooks/usePosts';
 import { postService } from '@/services/postService';
 import { ReactNode } from 'react';
 
@@ -22,11 +27,9 @@ const createWrapper = () => {
   });
 
   const TestWrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-  
+
   return TestWrapper;
 };
 
@@ -66,7 +69,9 @@ describe('usePosts hooks', () => {
       });
 
       expect(result.current.data).toEqual(mockResponse);
-      expect(mockPostService.getPostsWithCache).toHaveBeenCalledWith({ limit: 10 });
+      expect(mockPostService.getPostsWithCache).toHaveBeenCalledWith({
+        limit: 10,
+      });
     });
 
     it('should handle loading state', () => {
@@ -213,7 +218,10 @@ describe('usePosts hooks', () => {
       });
 
       expect(result.current.data).toEqual(mockPosts);
-      expect(mockPostService.getPostsByCategory).toHaveBeenCalledWith('tech', 6);
+      expect(mockPostService.getPostsByCategory).toHaveBeenCalledWith(
+        'tech',
+        6
+      );
     });
 
     it('should not fetch when category is empty', () => {
@@ -233,7 +241,10 @@ describe('usePosts hooks', () => {
       });
 
       await waitFor(() => {
-        expect(mockPostService.getPostsByCategory).toHaveBeenCalledWith('gaming', 12);
+        expect(mockPostService.getPostsByCategory).toHaveBeenCalledWith(
+          'gaming',
+          12
+        );
       });
     });
   });

@@ -101,7 +101,7 @@ export default function PersonaDetailPage({ params }: PersonaDetailPageProps) {
             <div className='sample-content'>
               <h5>Sample Content by {persona.name}</h5>
               <div className='sample-box border-start border-primary p-3'>
-                <p className='fst-italic text-muted mb-2'>
+                <p className='fst-italic mb-2 text-muted'>
                   &quot;Coming soon: See how {persona.name} transforms Reddit
                   threads into viral content...&quot;
                 </p>

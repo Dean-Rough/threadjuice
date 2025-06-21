@@ -21,7 +21,7 @@ describe('LoadingSpinner', () => {
   });
 
   it('displays custom text when provided', () => {
-    render(<LoadingSpinner text="Loading posts..." />);
+    render(<LoadingSpinner text='Loading posts...' />);
 
     // Should have visible text and aria-label
     const allText = screen.getAllByText('Loading posts...');
@@ -30,28 +30,28 @@ describe('LoadingSpinner', () => {
   });
 
   it('applies small size classes', () => {
-    render(<LoadingSpinner size="sm" />);
+    render(<LoadingSpinner size='sm' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toHaveClass('gap-2');
   });
 
   it('applies medium size classes (default)', () => {
-    render(<LoadingSpinner size="md" />);
+    render(<LoadingSpinner size='md' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toHaveClass('gap-3');
   });
 
   it('applies large size classes', () => {
-    render(<LoadingSpinner size="lg" />);
+    render(<LoadingSpinner size='lg' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toHaveClass('gap-4');
   });
 
   it('applies extra large size classes', () => {
-    render(<LoadingSpinner size="xl" />);
+    render(<LoadingSpinner size='xl' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toHaveClass('gap-4');
@@ -65,49 +65,49 @@ describe('LoadingSpinner', () => {
   });
 
   it('applies secondary color when specified', () => {
-    render(<LoadingSpinner color="secondary" />);
+    render(<LoadingSpinner color='secondary' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('text-secondary');
   });
 
   it('applies gray color when specified', () => {
-    render(<LoadingSpinner color="gray" />);
+    render(<LoadingSpinner color='gray' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('text-gray-500');
   });
 
   it('renders dots variant correctly', () => {
-    render(<LoadingSpinner variant="dots" />);
+    render(<LoadingSpinner variant='dots' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('animate-bounce');
   });
 
   it('renders pulse variant correctly', () => {
-    render(<LoadingSpinner variant="pulse" />);
+    render(<LoadingSpinner variant='pulse' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('animate-pulse');
   });
 
   it('renders bounce variant correctly', () => {
-    render(<LoadingSpinner variant="bounce" />);
+    render(<LoadingSpinner variant='bounce' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('animate-bounce');
   });
 
   it('renders fade variant correctly', () => {
-    render(<LoadingSpinner variant="fade" />);
+    render(<LoadingSpinner variant='fade' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('animate-pulse');
   });
 
   it('renders default variant with spinning animation', () => {
-    render(<LoadingSpinner variant="default" />);
+    render(<LoadingSpinner variant='default' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toContainHTML('animate-spin');
@@ -117,7 +117,13 @@ describe('LoadingSpinner', () => {
     render(<LoadingSpinner fullScreen={true} />);
 
     const spinner = screen.getByTestId('loading-spinner');
-    expect(spinner).toHaveClass('fixed', 'inset-0', 'bg-white', 'bg-opacity-75', 'z-50');
+    expect(spinner).toHaveClass(
+      'fixed',
+      'inset-0',
+      'bg-white',
+      'bg-opacity-75',
+      'z-50'
+    );
   });
 
   it('does not display in fullscreen mode by default', () => {
@@ -128,14 +134,14 @@ describe('LoadingSpinner', () => {
   });
 
   it('applies custom className', () => {
-    render(<LoadingSpinner className="custom-class" />);
+    render(<LoadingSpinner className='custom-class' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toHaveClass('custom-class');
   });
 
   it('shows text with correct size styling', () => {
-    render(<LoadingSpinner text="Loading..." size="lg" />);
+    render(<LoadingSpinner text='Loading...' size='lg' />);
 
     const allText = screen.getAllByText('Loading...');
     const visibleText = allText.find(el => !el.classList.contains('sr-only'));
@@ -143,7 +149,7 @@ describe('LoadingSpinner', () => {
   });
 
   it('has proper accessibility attributes', () => {
-    render(<LoadingSpinner text="Custom loading text" />);
+    render(<LoadingSpinner text='Custom loading text' />);
 
     const spinner = screen.getByRole('status');
     expect(spinner).toHaveAttribute('aria-label', 'Custom loading text');
@@ -172,7 +178,7 @@ describe('LoadingSpinner', () => {
   });
 
   it('creates three dots for dots variant', () => {
-    render(<LoadingSpinner variant="dots" />);
+    render(<LoadingSpinner variant='dots' />);
 
     const spinner = screen.getByTestId('loading-spinner');
     // Should contain multiple bouncing elements

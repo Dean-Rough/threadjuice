@@ -6,10 +6,14 @@ import { generateHealthCheck, withMonitoring } from '@/lib/monitoring';
  */
 async function healthHandler() {
   const healthCheck = await generateHealthCheck();
-  
-  const status = healthCheck.status === 'healthy' ? 200 : 
-                healthCheck.status === 'degraded' ? 200 : 503;
-  
+
+  const status =
+    healthCheck.status === 'healthy'
+      ? 200
+      : healthCheck.status === 'degraded'
+        ? 200
+        : 503;
+
   return NextResponse.json(healthCheck, { status });
 }
 
@@ -19,12 +23,15 @@ export const GET = withMonitoring(healthHandler, {
 });
 
 // Support HEAD requests for simple health probes
-export const HEAD = withMonitoring(async () => {
-  const healthCheck = await generateHealthCheck();
-  const status = healthCheck.status === 'healthy' ? 200 : 503;
-  
-  return new NextResponse(null, { status });
-}, {
-  name: 'health_check_head',
-  timeout: 2000,
-});
+export const HEAD = withMonitoring(
+  async () => {
+    const healthCheck = await generateHealthCheck();
+    const status = healthCheck.status === 'healthy' ? 200 : 503;
+
+    return new NextResponse(null, { status });
+  },
+  {
+    name: 'health_check_head',
+    timeout: 2000,
+  }
+);

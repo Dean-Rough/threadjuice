@@ -34,29 +34,31 @@ HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue({
   stroke: jest.fn(),
 });
 
-HTMLCanvasElement.prototype.toDataURL = jest.fn().mockReturnValue('data:image/png;base64,test');
+HTMLCanvasElement.prototype.toDataURL = jest
+  .fn()
+  .mockReturnValue('data:image/png;base64,test');
 
 describe('SocialShare', () => {
   const defaultProps = {
     title: 'Test Post Title',
     url: '/test-post',
     excerpt: 'This is a test excerpt for the post',
-    author: 'Test Author'
+    author: 'Test Author',
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock window.location.origin by deleting and recreating
     (global as any).window = Object.create(window);
     (global as any).window.location = {
-      origin: 'https://threadjuice.com'
+      origin: 'https://threadjuice.com',
     };
   });
 
   it('renders share button', () => {
     render(<SocialShare {...defaultProps} />);
-    
+
     expect(screen.getByRole('button', { name: /share/i })).toBeInTheDocument();
   });
 
@@ -87,7 +89,9 @@ describe('SocialShare', () => {
     });
 
     // Close button has X icon but no accessible name
-    const closeButton = document.querySelector('button .lucide-x')?.closest('button');
+    const closeButton = document
+      .querySelector('button .lucide-x')
+      ?.closest('button');
     if (closeButton) {
       await user.click(closeButton);
     }
@@ -106,14 +110,23 @@ describe('SocialShare', () => {
 
     await waitFor(() => {
       const twitterLink = screen.getByText('Twitter').closest('a');
-      expect(twitterLink).toHaveAttribute('href', expect.stringContaining('twitter.com/intent/tweet'));
+      expect(twitterLink).toHaveAttribute(
+        'href',
+        expect.stringContaining('twitter.com/intent/tweet')
+      );
       expect(twitterLink).toHaveAttribute('target', '_blank');
 
       const facebookLink = screen.getByText('Facebook').closest('a');
-      expect(facebookLink).toHaveAttribute('href', expect.stringContaining('facebook.com/sharer'));
-      
+      expect(facebookLink).toHaveAttribute(
+        'href',
+        expect.stringContaining('facebook.com/sharer')
+      );
+
       const linkedinLink = screen.getByText('LinkedIn').closest('a');
-      expect(linkedinLink).toHaveAttribute('href', expect.stringContaining('linkedin.com/sharing'));
+      expect(linkedinLink).toHaveAttribute(
+        'href',
+        expect.stringContaining('linkedin.com/sharing')
+      );
     });
   });
 
@@ -125,7 +138,9 @@ describe('SocialShare', () => {
     await user.click(shareButton);
 
     await waitFor(() => {
-      const linkInput = screen.getByDisplayValue('https://threadjuice.com/test-post');
+      const linkInput = screen.getByDisplayValue(
+        'https://threadjuice.com/test-post'
+      );
       expect(linkInput).toBeInTheDocument();
       expect(linkInput).toHaveAttribute('readonly');
     });
@@ -145,8 +160,10 @@ describe('SocialShare', () => {
     const copyButton = screen.getByText('Copy');
     await user.click(copyButton);
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://threadjuice.com/test-post');
-    
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      'https://threadjuice.com/test-post'
+    );
+
     await waitFor(() => {
       expect(screen.getByText('Copied!')).toBeInTheDocument();
     });
@@ -202,14 +219,14 @@ describe('SocialShare', () => {
 
   it('downloads generated image', async () => {
     const user = userEvent.setup();
-    
+
     // Mock document.createElement for download link
     const mockLink = {
       click: jest.fn(),
       download: '',
-      href: ''
+      href: '',
     };
-    jest.spyOn(document, 'createElement').mockImplementation((tagName) => {
+    jest.spyOn(document, 'createElement').mockImplementation(tagName => {
       if (tagName === 'a') {
         return mockLink as any;
       }
@@ -237,13 +254,13 @@ describe('SocialShare', () => {
 
   it('creates story format images', async () => {
     const user = userEvent.setup();
-    
+
     const mockLink = {
       click: jest.fn(),
       download: '',
-      href: ''
+      href: '',
     };
-    jest.spyOn(document, 'createElement').mockImplementation((tagName) => {
+    jest.spyOn(document, 'createElement').mockImplementation(tagName => {
       if (tagName === 'a') {
         return mockLink as any;
       }
@@ -263,7 +280,9 @@ describe('SocialShare', () => {
             addColorStop: jest.fn(),
           }),
         });
-        canvas.toDataURL = jest.fn().mockReturnValue('data:image/png;base64,story');
+        canvas.toDataURL = jest
+          .fn()
+          .mockReturnValue('data:image/png;base64,story');
         return canvas;
       }
       return document.createElement(tagName);
@@ -297,7 +316,10 @@ describe('SocialShare', () => {
 
     await waitFor(() => {
       const redditLink = screen.getByText('Reddit').closest('a');
-      expect(redditLink).toHaveAttribute('href', expect.stringContaining('reddit.com/submit'));
+      expect(redditLink).toHaveAttribute(
+        'href',
+        expect.stringContaining('reddit.com/submit')
+      );
     });
   });
 
@@ -310,7 +332,10 @@ describe('SocialShare', () => {
 
     await waitFor(() => {
       const emailLink = screen.getByText('Email').closest('a');
-      expect(emailLink).toHaveAttribute('href', expect.stringContaining('mailto:'));
+      expect(emailLink).toHaveAttribute(
+        'href',
+        expect.stringContaining('mailto:')
+      );
     });
   });
 
@@ -319,7 +344,7 @@ describe('SocialShare', () => {
     render(
       <div>
         <SocialShare {...defaultProps} />
-        <div data-testid="outside">Outside element</div>
+        <div data-testid='outside'>Outside element</div>
       </div>
     );
 
@@ -339,8 +364,8 @@ describe('SocialShare', () => {
   });
 
   it('applies custom className', () => {
-    render(<SocialShare {...defaultProps} className="custom-class" />);
-    
+    render(<SocialShare {...defaultProps} className='custom-class' />);
+
     const container = document.querySelector('.custom-class');
     expect(container).toBeInTheDocument();
   });
@@ -352,7 +377,7 @@ describe('SocialShare', () => {
       url: '/custom-url',
       excerpt: 'Custom excerpt',
       author: 'Custom Author',
-      featuredImage: '/custom-image.jpg'
+      featuredImage: '/custom-image.jpg',
     };
 
     render(<SocialShare {...customProps} />);
@@ -361,18 +386,22 @@ describe('SocialShare', () => {
     await user.click(shareButton);
 
     await waitFor(() => {
-      expect(screen.getByDisplayValue('https://threadjuice.com/custom-url')).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue('https://threadjuice.com/custom-url')
+      ).toBeInTheDocument();
     });
 
     const twitterLink = screen.getByText('Twitter').closest('a');
-    expect(twitterLink?.getAttribute('href')).toContain(encodeURIComponent('Custom Title'));
+    expect(twitterLink?.getAttribute('href')).toContain(
+      encodeURIComponent('Custom Title')
+    );
   });
 
   it('handles missing optional props', async () => {
     const user = userEvent.setup();
     const minimalProps = {
       title: 'Minimal Title',
-      url: '/minimal-url'
+      url: '/minimal-url',
     };
 
     render(<SocialShare {...minimalProps} />);
@@ -412,7 +441,7 @@ describe('SocialShare', () => {
     await user.click(showButton);
 
     const generateButton = screen.getByText('Generate');
-    
+
     // Mock a slow generation process
     const mockContext = {
       fillStyle: '',
@@ -432,11 +461,13 @@ describe('SocialShare', () => {
       arc: jest.fn(),
       stroke: jest.fn(),
     };
-    
-    HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue(mockContext);
-    
+
+    HTMLCanvasElement.prototype.getContext = jest
+      .fn()
+      .mockReturnValue(mockContext);
+
     await user.click(generateButton);
-    
+
     // Button should exist and have been clicked
     expect(generateButton).toBeInTheDocument();
   });

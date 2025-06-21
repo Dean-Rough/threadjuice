@@ -3,12 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  getPersonaById,
-  getRandomPersona,
-  WriterPersona,
-} from '@/data/personas';
-import data from '@/util/blogData';
-import {
   Eye,
   MessageCircle,
   Share2,
@@ -21,6 +15,9 @@ import {
   ExternalLink,
   Calendar,
   TrendingUp,
+  Play,
+  HelpCircle,
+  Quote,
 } from 'lucide-react';
 
 interface PostDetailProps {
@@ -29,25 +26,71 @@ interface PostDetailProps {
   showRelated?: boolean;
 }
 
-interface PostData {
-  id: number;
-  title: string;
-  img: string;
-  group: string;
-  trending: boolean;
-  category: string;
-  author: string;
-  date: string;
-  persona: WriterPersona;
-  engagement: {
-    views: string;
-    comments: number;
-    shares: number;
-    likes: number;
-  };
+interface ContentSection {
+  type:
+    | 'image'
+    | 'describe-1'
+    | 'describe-2'
+    | 'describe-3'
+    | 'describe-4'
+    | 'describe-5'
+    | 'comments-1'
+    | 'comments-2'
+    | 'discussion'
+    | 'outro'
+    | 'quiz'
+    | 'quotes';
+  title?: string;
   content: string;
+  metadata?: {
+    comments?: Array<{
+      author: string;
+      content: string;
+      score: number;
+      replies?: number;
+    }>;
+    quiz_data?: {
+      question: string;
+      options: string[];
+      correct_answer: number;
+      explanation: string;
+    };
+    image_prompt?: string;
+    discussion_participants?: string[];
+    attribution?: string;
+    context?: string;
+  };
+}
+
+interface PostData {
+  id: string;
+  title: string;
+  slug: string;
   excerpt: string;
-  tags: string[];
+  category: string;
+  status: string;
+  trending: boolean;
+  featured: boolean;
+  author: string;
+  createdAt: string;
+  updatedAt: string;
+  persona?: {
+    id: string;
+    name: string;
+    bio: string;
+    avatar: string;
+    tone: string;
+  };
+  content: {
+    sections: ContentSection[];
+    story_flow?: string;
+  };
+  imageUrl?: string;
+  viewCount: number;
+  upvoteCount: number;
+  commentCount: number;
+  shareCount: number;
+  bookmarkCount: number;
   redditSource?: {
     subreddit: string;
     originalPost: string;
@@ -68,58 +111,58 @@ export default function PostDetail({
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    // Simulate loading post data
-    const postData = data.find(p => p.id === parseInt(postId));
-    if (postData) {
-      const enhancedPost: PostData = {
-        ...postData,
-        persona: getRandomPersona(),
-        engagement: {
-          views: `${Math.floor(Math.random() * 100) + 10}.${Math.floor(Math.random() * 9)}k`,
-          comments: Math.floor(Math.random() * 500) + 100,
-          shares: Math.floor(Math.random() * 200) + 50,
-          likes: Math.floor(Math.random() * 1000) + 200,
-        },
-        content: generateSampleContent(postData.title),
-        excerpt: `${postData.title.slice(0, 120)}...`,
-        tags: generateTags(postData.category),
-        redditSource: {
-          subreddit: getSubredditForCategory(postData.category),
-          originalPost:
-            'r/' +
-            getSubredditForCategory(postData.category) +
-            '/comments/abc123',
-          threadUrl: `https://reddit.com/r/${getSubredditForCategory(postData.category)}/comments/abc123`,
-        },
-        readingTime: Math.floor(Math.random() * 8) + 3,
-      };
+    async function fetchPost() {
+      try {
+        const response = await fetch(`/api/posts/${postId}`);
+        if (!response.ok) {
+          throw new Error('Post not found');
+        }
 
-      setPost(enhancedPost);
+        const postData = await response.json();
 
-      // Get related posts
-      if (showRelated) {
-        const related = data
-          .filter(p => p.id !== parseInt(postId) && p.category === postData.category)
-          .slice(0, 4)
-          .map(p => ({
-            ...p,
-            persona: getRandomPersona(),
-            engagement: {
-              views: `${Math.floor(Math.random() * 50) + 5}.${Math.floor(Math.random() * 9)}k`,
-              comments: Math.floor(Math.random() * 200) + 30,
-              shares: Math.floor(Math.random() * 100) + 15,
-              likes: Math.floor(Math.random() * 500) + 50,
-            },
-            content: '',
-            excerpt: `${p.title.slice(0, 100)}...`,
-            tags: generateTags(p.category),
-            readingTime: Math.floor(Math.random() * 6) + 2,
-          }));
-        setRelatedPosts(related);
+        // Calculate reading time based on content
+        const wordCount = postData.content.sections
+          .map((section: ContentSection) => section.content.split(' ').length)
+          .reduce((total: number, count: number) => total + count, 0);
+        const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+
+        const enhancedPost: PostData = {
+          ...postData,
+          readingTime,
+          redditSource: {
+            subreddit: 'AskReddit', // Default for now
+            originalPost: 'Original Reddit Thread',
+            threadUrl: 'https://reddit.com',
+          },
+        };
+
+        setPost(enhancedPost);
+
+        // Get related posts from same category
+        if (showRelated) {
+          const relatedResponse = await fetch(
+            `/api/posts?category=${postData.category}&limit=4`
+          );
+          if (relatedResponse.ok) {
+            const relatedData = await relatedResponse.json();
+            const related = relatedData.posts
+              .filter((p: any) => p.id !== postId)
+              .slice(0, 4)
+              .map((p: any) => ({
+                ...p,
+                readingTime: Math.max(1, Math.ceil(Math.random() * 6) + 2),
+              }));
+            setRelatedPosts(related);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
-    setTimeout(() => setIsLoading(false), 800);
+    fetchPost();
   }, [postId, showRelated]);
 
   const handleShare = () => {
@@ -132,6 +175,162 @@ export default function PostDetail({
     } else {
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
+    }
+  };
+
+  /**
+   * Render different section types
+   */
+  const renderSection = (section: ContentSection) => {
+    switch (section.type) {
+      case 'image':
+        return (
+          <div className='image-section text-center'>
+            {post?.imageUrl && (
+              <img
+                src={post.imageUrl}
+                alt={section.metadata?.image_prompt || post.title}
+                className='img-fluid mb-3 rounded'
+                style={{
+                  width: '100%',
+                  maxHeight: '400px',
+                  objectFit: 'cover',
+                }}
+              />
+            )}
+            <p className='image-caption text-muted'>{section.content}</p>
+          </div>
+        );
+
+      case 'describe-1':
+      case 'describe-2':
+      case 'describe-3':
+      case 'describe-4':
+      case 'describe-5':
+        return (
+          <div className='description-section'>
+            <div className='description-content'>
+              {section.content.split('\\n').map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  {idx < section.content.split('\\n').length - 1 && <br />}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'comments-1':
+      case 'comments-2':
+        return (
+          <div className='comments-section'>
+            <div className='comments-intro mb-3'>
+              <p>{section.content}</p>
+            </div>
+            {section.metadata?.comments && (
+              <div className='reddit-comments'>
+                {section.metadata.comments.map((comment, idx) => (
+                  <div key={idx} className='reddit-comment card mb-3'>
+                    <div className='card-body'>
+                      <div className='d-flex justify-content-between align-items-start mb-2'>
+                        <div className='comment-author d-flex align-items-center'>
+                          <User size={16} className='me-2 text-primary' />
+                          <strong>u/{comment.author}</strong>
+                        </div>
+                        <div className='comment-score badge bg-success'>
+                          {formatNumber(comment.score)} points
+                        </div>
+                      </div>
+                      <p className='comment-content mb-2'>{comment.content}</p>
+                      {comment.replies && (
+                        <small className='text-muted'>
+                          <MessageCircle size={12} className='me-1' />
+                          {comment.replies} replies
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+
+      case 'discussion':
+        return (
+          <div className='discussion-section bg-light rounded p-4'>
+            <div className='discussion-header d-flex align-items-center mb-3'>
+              <Play size={20} className='me-2 text-primary' />
+              <h4 className='mb-0'>ThreadJuice Discussion</h4>
+            </div>
+            <div className='discussion-content'>
+              {section.content.split('\\n').map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  {idx < section.content.split('\\n').length - 1 && <br />}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'outro':
+        return (
+          <div className='outro-section border-top pt-4'>
+            <div className='outro-content'>
+              {section.content.split('\\n').map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  {idx < section.content.split('\\n').length - 1 && <br />}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'quiz':
+        return (
+          <div className='quiz-section rounded bg-primary bg-opacity-10 p-4'>
+            <div className='quiz-header d-flex align-items-center mb-3'>
+              <HelpCircle size={20} className='me-2 text-primary' />
+              <h4 className='mb-0'>Quick Quiz</h4>
+            </div>
+            {section.metadata?.quiz_data ? (
+              <QuizComponent quiz={section.metadata.quiz_data} />
+            ) : (
+              <p>{section.content}</p>
+            )}
+          </div>
+        );
+
+      case 'quotes':
+        return (
+          <div className='quote-section my-5 text-center'>
+            <Quote size={32} className='mx-auto mb-3 text-orange-500' />
+            <blockquote className='mb-3 text-2xl font-extrabold leading-tight text-foreground md:text-3xl'>
+              "{section.content}"
+            </blockquote>
+            {section.metadata?.attribution && (
+              <div className='quote-attribution text-muted-foreground'>
+                <span className='font-medium'>
+                  — {section.metadata.attribution}
+                </span>
+                {section.metadata.context && (
+                  <span className='mt-1 block text-sm'>
+                    {section.metadata.context}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        );
+
+      default:
+        return (
+          <div className='default-section'>
+            <p>{section.content}</p>
+          </div>
+        );
     }
   };
 
@@ -204,7 +403,9 @@ export default function PostDetail({
                     </Link>
                   </li>
                   <li className='breadcrumb-item active'>
-                    {post.title.slice(0, 50)}...
+                    {post.title.length > 50
+                      ? `${post.title.substring(0, 50)}...`
+                      : post.title}
                   </li>
                 </ol>
               </nav>
@@ -240,8 +441,10 @@ export default function PostDetail({
                   <div className='d-flex align-items-center'>
                     <div className='author-avatar me-3'>
                       <img
-                        src={post.persona.avatar}
-                        alt={post.persona.name}
+                        src={
+                          post.persona?.avatar || '/assets/img/blog/blog01.jpg'
+                        }
+                        alt={post.persona?.name || post.author}
                         className='rounded-circle'
                         style={{
                           width: '48px',
@@ -256,13 +459,11 @@ export default function PostDetail({
                     </div>
                     <div>
                       <h6 className='author-name mb-0'>
-                        <Link href={`/personas/${post.persona.id}`}>
-                          {post.persona.name}
-                        </Link>
+                        {post.persona?.name || post.author}
                       </h6>
                       <small className='text-muted'>
                         <Calendar size={12} className='me-1' />
-                        {post.date}
+                        {new Date(post.createdAt).toLocaleDateString()}
                       </small>
                     </div>
                   </div>
@@ -271,29 +472,19 @@ export default function PostDetail({
                   <div className='engagement-stats d-flex align-items-center gap-3'>
                     <span className='stat-item'>
                       <Eye size={16} className='me-1' />
-                      {post.engagement.views}
+                      {formatNumber(post.viewCount)}
                     </span>
                     <span className='stat-item'>
                       <MessageCircle size={16} className='me-1' />
-                      {post.engagement.comments}
+                      {formatNumber(post.commentCount)}
                     </span>
                     <span className='stat-item'>
                       <Share2 size={16} className='me-1' />
-                      {post.engagement.shares}
+                      {formatNumber(post.shareCount)}
                     </span>
                   </div>
                 </div>
               </header>
-
-              {/* Featured Image */}
-              <div className='post-featured-image mb-4'>
-                <img
-                  src={`/assets/img/${post.group}/${post.img}`}
-                  alt={post.title}
-                  className='img-fluid rounded'
-                  style={{ width: '100%', height: '400px', objectFit: 'cover' }}
-                />
-              </div>
 
               {/* Reddit Source Attribution */}
               {post.redditSource && (
@@ -314,25 +505,19 @@ export default function PostDetail({
                 </div>
               )}
 
-              {/* Post Content */}
+              {/* Post Content - Flexible Sections */}
               <div className='post-content'>
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              </div>
-
-              {/* Tags */}
-              <div className='post-tags mb-4 mt-4'>
-                <h6>Tags:</h6>
-                <div className='tags-list'>
-                  {post.tags.map((tag, index) => (
-                    <Link
-                      key={index}
-                      href={`/tag/${tag.toLowerCase()}`}
-                      className='tag-badge mb-2 me-2'
-                    >
-                      {tag}
-                    </Link>
-                  ))}
-                </div>
+                {post.content.sections.map((section, index) => (
+                  <div
+                    key={index}
+                    className={`content-section section-${section.type} mb-4`}
+                  >
+                    {section.title && (
+                      <h3 className='section-title mb-3'>{section.title}</h3>
+                    )}
+                    {renderSection(section)}
+                  </div>
+                ))}
               </div>
 
               {/* Action Buttons */}
@@ -347,7 +532,7 @@ export default function PostDetail({
                       className='me-1'
                       fill={isLiked ? 'currentColor' : 'none'}
                     />
-                    {post.engagement.likes + (isLiked ? 1 : 0)}
+                    {formatNumber(post.upvoteCount) + (isLiked ? 1 : 0)}
                   </button>
                   <button
                     className={`btn me-2 ${isBookmarked ? 'btn-warning' : 'btn-outline-warning'}`}
@@ -372,7 +557,7 @@ export default function PostDetail({
                 <div className='final-stats text-muted'>
                   <small>
                     <Eye size={14} className='me-1' />
-                    {post.engagement.views} views
+                    {formatNumber(post.viewCount)} views
                   </small>
                 </div>
               </div>
@@ -391,8 +576,10 @@ export default function PostDetail({
                   </div>
                   <div className='author-card text-center'>
                     <img
-                      src={post.persona.avatar}
-                      alt={post.persona.name}
+                      src={
+                        post.persona?.avatar || '/assets/img/blog/blog01.jpg'
+                      }
+                      alt={post.persona?.name || post.author}
                       className='author-avatar-large rounded-circle mx-auto mb-3'
                       style={{
                         width: '80px',
@@ -404,10 +591,12 @@ export default function PostDetail({
                         target.src = '/assets/img/blog/blog01.jpg';
                       }}
                     />
-                    <h6>{post.persona.name}</h6>
-                    <p className='text-muted small'>{post.persona.bio}</p>
+                    <h6>{post.persona?.name || post.author}</h6>
+                    <p className='small text-muted'>
+                      {post.persona?.bio || 'ThreadJuice Writer'}
+                    </p>
                     <Link
-                      href={`/personas/${post.persona.id}`}
+                      href={`/personas`}
                       className='btn btn-outline-primary btn-sm'
                     >
                       View Profile
@@ -420,26 +609,18 @@ export default function PostDetail({
                   <div className='sidebar-widget related-posts mb-4'>
                     <h5 className='widget-title mb-3'>Related Stories</h5>
                     <div className='related-posts-list'>
-                      {relatedPosts.map(relatedPost => (
+                      {relatedPosts.map((relatedPost: any) => (
                         <div
                           key={relatedPost.id}
                           className='related-post-item border-bottom mb-3 pb-3'
                         >
                           <div className='row g-2'>
-                            <div className='col-4'>
-                              <Link href={`/posts/${relatedPost.id}`}>
-                                <img
-                                  src={`/assets/img/${relatedPost.group}/${relatedPost.img}`}
-                                  alt={relatedPost.title}
-                                  className='img-fluid rounded'
-                                  style={{ height: '60px', objectFit: 'cover' }}
-                                />
-                              </Link>
-                            </div>
                             <div className='col-8'>
                               <h6 className='related-post-title'>
-                                <Link href={`/posts/${relatedPost.id}`}>
-                                  {relatedPost.title.slice(0, 60)}...
+                                <Link href={`/posts/${relatedPost.slug}`}>
+                                  {relatedPost.title.length > 60
+                                    ? `${relatedPost.title.substring(0, 60)}...`
+                                    : relatedPost.title}
                                 </Link>
                               </h6>
                               <small className='text-muted'>
@@ -457,7 +638,7 @@ export default function PostDetail({
                 {/* Newsletter Signup */}
                 <div className='sidebar-widget newsletter-widget'>
                   <h5 className='widget-title mb-3'>Stay Updated</h5>
-                  <p className='text-muted small mb-3'>
+                  <p className='small mb-3 text-muted'>
                     Get the latest viral content delivered to your inbox.
                   </p>
                   <form className='newsletter-form'>
@@ -485,63 +666,72 @@ export default function PostDetail({
   );
 }
 
+// Quiz Component
+function QuizComponent({
+  quiz,
+}: {
+  quiz: {
+    question: string;
+    options: string[];
+    correct_answer: number;
+    explanation: string;
+  };
+}) {
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
+
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswer(index);
+    setShowResult(true);
+  };
+
+  return (
+    <div className='quiz-widget'>
+      <h5 className='quiz-question mb-3'>{quiz.question}</h5>
+      <div className='quiz-options'>
+        {quiz.options.map((option, index) => (
+          <button
+            key={index}
+            className={`btn w-100 mb-2 text-start ${
+              showResult
+                ? index === quiz.correct_answer
+                  ? 'btn-success'
+                  : selectedAnswer === index
+                    ? 'btn-danger'
+                    : 'btn-outline-secondary'
+                : 'btn-outline-primary'
+            }`}
+            onClick={() => !showResult && handleAnswerSelect(index)}
+            disabled={showResult}
+          >
+            {String.fromCharCode(65 + index)}. {option}
+          </button>
+        ))}
+      </div>
+      {showResult && (
+        <div className='quiz-result mt-3'>
+          <div
+            className={`alert ${selectedAnswer === quiz.correct_answer ? 'alert-success' : 'alert-warning'}`}
+          >
+            <strong>
+              {selectedAnswer === quiz.correct_answer
+                ? '🎉 Correct!'
+                : '❌ Not quite right.'}
+            </strong>
+            <p className='mb-0 mt-2'>{quiz.explanation}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Helper functions
-function generateSampleContent(title: string): string {
-  return `
-    <p>This viral Reddit thread started as a simple question but quickly spiraled into something much more fascinating. What began as casual conversation evolved into a masterclass in internet culture, human psychology, and the art of storytelling.</p>
-    
-    <p>The original poster had no idea their innocent question would unleash a torrent of responses, each more surprising than the last. From heartwarming personal anecdotes to absolutely unhinged takes on reality, this thread has it all.</p>
-    
-    <h3>The Plot Thickens</h3>
-    <p>About halfway through the comments, someone dropped a bombshell that completely changed the direction of the conversation. What started as lighthearted banter suddenly became a deep dive into topics nobody saw coming.</p>
-    
-    <blockquote class="blockquote">
-      <p>"This is exactly why I love Reddit. You come for the memes, stay for the existential crises, and leave questioning everything you thought you knew about humanity."</p>
-      <footer class="blockquote-footer">Top comment with 15.7k upvotes</footer>
-    </blockquote>
-    
-    <h3>The Internet's Collective Wisdom</h3>
-    <p>As the thread continued to gain traction, experts from various fields began chiming in. Marine biologists, NASA engineers, professional comedians, and that one person who somehow always knows exactly the right thing to say at exactly the right moment.</p>
-    
-    <p>The beauty of this particular thread lies not just in its content, but in how it demonstrates the internet's unique ability to bring together disparate voices and create something greater than the sum of its parts.</p>
-    
-    <h3>Why This Matters</h3>
-    <p>In an era of increasing digital division, threads like this remind us of the internet's original promise: to connect people, share knowledge, and occasionally stumble upon profound truths in the most unexpected places.</p>
-    
-    <p>This is the magic of viral content at its finest - not manufactured outrage or artificial engagement, but genuine human connection that resonates across demographics and geography.</p>
-  `;
-}
-
-function generateTags(category: string): string[] {
-  const tagMap: { [key: string]: string[] } = {
-    gaming: ['Gaming', 'Reddit', 'Viral', 'Community', 'Discussion'],
-    tech: ['Technology', 'Innovation', 'Reddit', 'Viral', 'Science'],
-    movie: ['Entertainment', 'Movies', 'Pop Culture', 'Reddit', 'Viral'],
-    sports: ['Sports', 'Competition', 'Reddit', 'Community', 'Viral'],
-    music: ['Music', 'Culture', 'Reddit', 'Viral', 'Entertainment'],
-    food: ['Food', 'Cooking', 'Reddit', 'Lifestyle', 'Viral'],
-    travel: ['Travel', 'Adventure', 'Reddit', 'Stories', 'Viral'],
-    lifestyle: ['Lifestyle', 'Personal', 'Reddit', 'Stories', 'Viral'],
-    news: ['News', 'Current Events', 'Reddit', 'Discussion', 'Viral'],
-    science: ['Science', 'Research', 'Reddit', 'Education', 'Viral'],
-  };
-
-  return tagMap[category.toLowerCase()] || ['Reddit', 'Viral', 'Discussion'];
-}
-
-function getSubredditForCategory(category: string): string {
-  const subredditMap: { [key: string]: string } = {
-    gaming: 'gaming',
-    tech: 'technology',
-    movie: 'movies',
-    sports: 'sports',
-    music: 'music',
-    food: 'food',
-    travel: 'travel',
-    lifestyle: 'LifeProTips',
-    news: 'news',
-    science: 'science',
-  };
-
-  return subredditMap[category.toLowerCase()] || 'AskReddit';
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'k';
+  }
+  return num.toString();
 }

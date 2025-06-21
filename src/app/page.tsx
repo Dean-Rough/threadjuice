@@ -69,7 +69,7 @@ export default function HomePage() {
                               {post.title}
                             </p>
                             <p className='font-mono text-xs text-muted-foreground'>
-                              {post.view_count.toLocaleString()} views
+                              {post.viewCount?.toLocaleString() || 0} views
                             </p>
                           </div>
                         </Link>
@@ -111,7 +111,7 @@ export default function HomePage() {
                               {post.title}
                             </p>
                             <p className='font-mono text-xs text-muted-foreground'>
-                              {post.share_count.toLocaleString()} shares
+                              {post.shareCount?.toLocaleString() || 0} shares
                             </p>
                           </div>
                         </Link>

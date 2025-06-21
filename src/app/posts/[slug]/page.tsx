@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ThreadJuiceLayout from '@/components/layout/ThreadJuiceLayout';
 import PostDetail from '@/components/features/PostDetail';
-import { mockPosts } from '@/data/mockPosts';
+import { prisma } from '@/lib/prisma';
 
 interface PostPageProps {
   params: Promise<{
@@ -15,7 +14,11 @@ export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = mockPosts.find(p => p.slug === slug);
+
+  const post = await prisma.post.findUnique({
+    where: { slug },
+    include: { persona: true },
+  });
 
   if (!post) {
     return {
@@ -31,14 +34,24 @@ export async function generateMetadata({
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const post = mockPosts.find(p => p.slug === slug);
+
+  const post = await prisma.post.findUnique({
+    where: { slug },
+    include: {
+      persona: true,
+      images: true,
+      postTags: {
+        include: { tag: true },
+      },
+    },
+  });
 
   if (!post) {
     notFound();
   }
 
   return (
-    <ThreadJuiceLayout>
+    <>
       {/* Breadcrumb Navigation */}
       <section
         className='breadcrumb-area pb-20 pt-20'
@@ -83,6 +96,6 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </div>
       </section>
-    </ThreadJuiceLayout>
+    </>
   );
 }

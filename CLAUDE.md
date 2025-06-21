@@ -2,112 +2,186 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Plase see /Users/deannewton/Documents/ThreadJuice/.claude/settings.json
-
 ## Project Overview
 
-ThreadJuice is a Reddit-to-viral content engine that transforms trending Reddit threads into multimodal stories with custom avatars, quizzes, and automated short-form videos. The platform aggregates Reddit content and enhances it for virality across social media platforms.
+ThreadJuice is a modern viral content aggregator that curates and presents engaging Reddit-style stories with professional design and interactive features. Built with Next.js 15 and shadcn/ui for a polished user experience.
+
+## Current Implementation Status
+
+**✅ COMPLETED: Full UI Transformation**
+
+- Complete shadcn/ui integration with dark mode theming
+- Professional Geist fonts with extrabold headings (800 weight)
+- ThreadJuice branding with white SVG logos and orange accents
+- Hero carousel with auto-cycling background images
+- Category ticker with clickable navigation
+- Dual voting toolbars with engagement metrics
+- Dynamic filter pages for categories and authors
+- Responsive design optimized for all devices
 
 ## Architecture & Tech Stack
 
-**UPDATED**: Now built on Sarsa Next.js template foundation
+**Current Implementation**:
 
-- **Frontend**: Next.js 15 + **Sarsa Template** + Bootstrap 5 + Tailwind CSS  
-- **Template**: Sarsa Next.js (magazine/news template with 8+ layouts)
-- **UI Framework**: Bootstrap 5 (from Sarsa) + Tailwind CSS (existing)
-- **Animations**: WOW.js, Swiper, React Fast Marquee, Isotope Layout (from Sarsa)
-- **Styling**: Sarsa CSS + Custom ThreadJuice branding
-- **Backend**: Node.js with Reddit API integration + OpenAI GPT
-- **Database**: PostgreSQL (recommended) or MongoDB  
-- **External APIs**: Reddit API, OpenAI GPT, Wikimedia Commons, Flickr, Unsplash/Pexels, ElevenLabs (voice), video generation APIs (Invideo/Argil)
-- **Hosting**: Vercel or Render
-- **Media Processing**: html2canvas/puppeteer for comment screenshots, FFmpeg for video processing
+- **Frontend**: Next.js 15 with App Router + TypeScript
+- **UI Framework**: shadcn/ui + Tailwind CSS
+- **Icons**: Lucide React (replacing all emoji usage)
+- **Fonts**: Geist Sans + Geist Mono with CSS variables
+- **State Management**: React Query (@tanstack/react-query) + React Context
+- **Styling**: CSS variables for theming + Tailwind utilities
+- **Components**: Card-based design with consistent patterns
+- **Database**: PostgreSQL (schema defined, ready for implementation)
+- **Future APIs**: Reddit API, OpenAI GPT, Unsplash (structured for integration)
 
 ## Core System Components
 
-### Content Pipeline
+### UI Components (Implemented)
 
-1. **Reddit Scraper** - Ingests trending threads from high-virality subreddits
-2. **GPT Processor** - Transforms raw Reddit content into structured narratives
-3. **Comment Screenshot Renderer** - Converts Reddit comments to styled image cards
-4. **Writer Persona System** - Assigns content to fictional avatars with distinct voices
-5. **Event Aggregator** - Groups related threads under single event IDs
-6. **Quiz Generator** - Creates interactive content tied to story themes
-7. **Video Pipeline** - Generates TikTok/Reels format vertical videos with AI voiceover
+1. **HeroCarousel** - Auto-cycling hero section with background images and navigation dots
+2. **TrendingFeed** - Main content feed with grid layout and engagement metrics
+3. **CategoryTicker** - Continuous scrolling navigation with clickable category pills
+4. **VotingToolbar** - Dual engagement toolbars (ArrowUp, MessageCircle, Bookmark, Share2)
+5. **FilterPages** - Dynamic routing for category and author filtering
+6. **BlogDetail** - Professional article layout with inline images and sidebar
+
+### Data Architecture (Ready for Backend)
+
+1. **Post Service** - Data fetching with React Query integration
+2. **Filter System** - Dynamic URL routing with proper slug handling
+3. **Mock Data** - Viral content stories with realistic engagement metrics
+4. **Persona System** - Three distinct writer voices with avatars
+5. **Category System** - 20+ content categories for filtering
+6. **Image Integration** - Unsplash images with proper attribution
 
 ### Writer Personas
 
-- **The Snarky Sage** - sarcastic and deadpan tone
-- **The Down-to-Earth Buddy** - chill and friendly voice
-- **The Dry Cynic** - bitterly hilarious, chaos-loving perspective
+- **The Snarky Sage** - Sarcastic and deadpan with brutal honesty
+- **The Down-to-Earth Buddy** - Chill and friendly with relatable insights
+- **The Dry Cynic** - Bitterly hilarious with chaos-loving perspective
 
-Each persona has associated avatar imagery and consistent voice characteristics.
+Each persona has distinct voice characteristics and avatar styling.
 
 ## Content Structure
 
-All posts follow this format:
+All posts follow this professional format:
 
-- Catchy headline with emoji prefixes
-- Avatar byline (writer persona)
-- Hook intro paragraph
-- Themed comment clusters
-- Reddit comment screenshots
-- Creative Commons images with proper attribution
-- Optional interactive quiz
-- Share buttons with UTM tracking
-- Related post links
+- **Hero Section**: Auto-cycling carousel with large typography
+- **Article Layout**: 3/4 content + 1/4 image description and tags
+- **Engagement Elements**: Dual voting toolbars with real-time counters
+- **Comments**: Reddit-style comment sections with upvote counts
+- **Related Content**: Curated story recommendations
+- **Attribution**: Proper image licensing and source credits
 
-## Legal & Attribution Requirements
+## Current File Structure
 
-**Critical**: All images must use Creative Commons or properly licensed sources:
+```
+threadjuice/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── blog/[slug]/       # Dynamic article pages
+│   │   ├── filter/[type]/[value]/ # Category/author filter pages
+│   │   ├── personas/          # Writer personas page
+│   │   └── api/               # API routes (ready for backend)
+│   ├── components/            # React components
+│   │   ├── ui/               # shadcn/ui base components
+│   │   ├── features/         # Feature-specific components
+│   │   ├── HeroCarousel.tsx  # Main hero carousel
+│   │   └── TrendingFeed.tsx  # Content feed component
+│   ├── hooks/                # Custom React hooks
+│   │   └── usePosts.ts       # Data fetching with React Query
+│   ├── lib/                  # Utility functions
+│   │   └── utils.ts          # shadcn/ui utilities
+│   ├── providers/            # React providers
+│   │   └── QueryProvider.tsx # React Query setup
+│   ├── services/             # Data services
+│   │   └── postService.ts    # API communication layer
+│   ├── constants/            # App constants
+│   │   └── categories.ts     # Category definitions
+│   └── contexts/             # React contexts
+│       └── UIContext.tsx     # UI state management
+├── docs/                     # Comprehensive documentation
+│   ├── README.md            # Project overview
+│   ├── DB_SCHEMA.md         # Database schema
+│   ├── API_ROUTES.md        # API specifications
+│   ├── COMPONENTS.md        # Component architecture
+│   └── DEPLOYMENT.md        # Deployment guide
+└── public/assets/           # Static assets and branding
+```
 
-- Wikimedia Commons via MediaWiki API
-- Flickr API with license filtering
-- Unsplash/Pexels for generic imagery
-- Store metadata: `image_url`, `license_type`, `author`, `credit_text`, `source_link`
-- Display attribution in footer or inline
+## UI Architecture
 
-## Development Phases
+### Design System
 
-**UPDATED APPROACH**: Template-first development using Sarsa foundation
+- **Component Library**: shadcn/ui with dark mode support
+- **Styling**: Tailwind CSS with CSS variables for theming
+- **Typography**: Geist fonts with extrabold headings (800 weight)
+- **Colors**: Dark theme with orange accents (#f97316)
+- **Icons**: Lucide React with consistent sizing and theming
 
-**Phase 0 (Foundation)**: Sarsa template integration + App Router compatibility + ThreadJuice branding ✅  
-**Phase 1 (MVP)**: Reddit scraper + GPT content + Sarsa UI adaptation + persona system + legal image support
-**Phase 2**: Quiz system + comment screenshots + video generation beta + event aggregation  
-**Phase 3**: Full video pipeline + user onboarding + A/B testing + monetization
+### Key Features Implemented
 
-## Sarsa Template Integration
+- **Dark Mode**: Complete theming system with CSS variables
+- **Responsive Design**: Mobile-optimized layouts with touch interactions
+- **Interactive Elements**: Hover animations and engagement feedback
+- **Navigation**: Category ticker and dynamic filter routing
+- **Content Management**: Professional article layouts with sidebar widgets
 
-**Key Implementation Strategy**:
-- Use ACTUAL Sarsa template pages instead of recreating components
-- Copy Sarsa page files directly to App Router structure  
-- Add "use client" directives for React hooks compatibility
-- Update router imports (useRouter → usePathname for App Router)
-- Replace Sarsa branding with ThreadJuice SVG logos
-- Adapt content themes while keeping Sarsa layouts intact
+## Development Approach
 
-**Template Pages Integrated**:
-- Homepage: `sarsa/pages/index-6.js` → `app/page.tsx`
-- Blog List: `sarsa/pages/blog.js` → `app/blog/page.tsx`  
-- Blog Detail: `sarsa/pages/blog/[id].js` → `app/blog/[slug]/page.tsx`
-- Personas: Custom page using Sarsa layout patterns
+### Current State (Production Ready UI)
 
-**CSS and Dependencies**:
-- Full Sarsa CSS chain imported via `globals.css`
-- All Sarsa animation libraries (WOW.js, Swiper, Isotope) installed
-- Bootstrap 5 + Tailwind CSS coexistence maintained
+- All UI components implemented and tested
+- Mock data system providing realistic content
+- Responsive design working across all device sizes
+- Filter system with proper URL routing
+- Professional branding and visual design
 
-## Key Integration Points
+### Next Phase (Backend Integration)
 
-- Reddit API for thread ingestion
-- OpenAI GPT for content transformation and quiz generation
-- Media APIs for legal image sourcing
-- Video generation APIs for TikTok/Reels content
-- Social platform APIs for automated sharing
+- Database schema implementation (PostgreSQL)
+- API routes for content management
+- User authentication system
+- Real content ingestion pipeline
+- Analytics and engagement tracking
 
-## SEO Requirements
+## Integration Points (Ready for Implementation)
 
-- Structured JSON-LD schema per post
-- Auto-generated share images with persona + comment snippets
-- Backlinks to original Reddit sources
-- UTM-tagged share buttons for all platforms
+1. **Database**: PostgreSQL schema defined in `docs/DB_SCHEMA.md`
+2. **API Routes**: Specifications in `docs/API_ROUTES.md`
+3. **Content Pipeline**: Reddit API + OpenAI integration points defined
+4. **User System**: Authentication and interaction tracking ready
+5. **Analytics**: Event tracking and engagement metrics prepared
+
+## SEO & Performance
+
+- **Next.js 15**: App Router with React Server Components
+- **Image Optimization**: Next.js Image component with lazy loading
+- **Bundle Analysis**: Code splitting and optimization
+- **SEO Ready**: Meta tags, structured data, and social sharing
+- **Performance**: Core Web Vitals optimized
+
+## Development Commands
+
+```bash
+# Development
+npm run dev         # Start development server
+npm run build       # Production build
+npm run lint        # Code quality check
+
+# Testing
+npm run test        # Jest unit tests
+npm run test:e2e    # Playwright E2E tests
+tsc --noEmit &&
+next build &&
+next start
+
+# Database (when implemented)
+npm run db:setup    # Initialize database
+npm run db:migrate  # Run migrations
+npm run db:seed     # Seed with data
+```
+
+This project is now ready for backend implementation while maintaining a polished, production-ready frontend experience.
+
+## NO MOCK OR SIMULATED DATA ANYWHERE
+**HARD RULE**: Never use mock, simulated, dummy, or placeholder data. All content must be real, production-ready material. No "simulate", "mock", or "fake" prefixes in data generation. Generate actual viral content stories with authentic scenarios based on real internet phenomena.

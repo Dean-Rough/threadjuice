@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import ThreadJuiceLayout from '@/components/layout/ThreadJuiceLayout';
 import TrendingFeed from '@/components/features/TrendingFeed';
 import { getPostsByCategory, getAllCategories } from '@/data/mockPosts';
 
@@ -71,7 +70,7 @@ export default async function CategoryPage({
   });
 
   return (
-    <ThreadJuiceLayout headerStyle={2}>
+    <>
       {/* Category Header - Sarsa Layout 2 */}
       <section
         className='category-header-area pb-40 pt-60'
@@ -102,16 +101,16 @@ export default async function CategoryPage({
             <div className='col-lg-8'>
               <div className='category-header-content'>
                 <h1 className='category-title mb-15'>{categoryName} Stories</h1>
-                <p className='category-description text-muted mb-20'>
+                <p className='category-description mb-20 text-muted'>
                   Viral Reddit threads in {categoryName.toLowerCase()}{' '}
                   transformed into engaging stories by our AI writing personas.
                   Stay updated with the latest discussions and trending topics.
                 </p>
                 <div className='category-stats'>
-                  <span className='badge bg-primary me-3'>
+                  <span className='badge me-3 bg-primary'>
                     {posts.length} {posts.length === 1 ? 'Story' : 'Stories'}
                   </span>
-                  <span className='text-muted small'>
+                  <span className='small text-muted'>
                     Updated daily with fresh Reddit content
                   </span>
                 </div>
@@ -295,7 +294,7 @@ export default async function CategoryPage({
                       >
                         <span>{cat.name}</span>
                         <span
-                          className={`badge ${cat.slug === category ? 'text-primary bg-white' : 'bg-light'}`}
+                          className={`badge ${cat.slug === category ? 'bg-white text-primary' : 'bg-light'}`}
                         >
                           {cat.count}
                         </span>
@@ -336,7 +335,7 @@ export default async function CategoryPage({
                                     : post.title}
                                 </a>
                               </h6>
-                              <div className='trending-meta text-muted small'>
+                              <div className='trending-meta small text-muted'>
                                 <span>
                                   {post.redditMetrics.upvotes.toLocaleString()}{' '}
                                   upvotes
@@ -387,6 +386,6 @@ export default async function CategoryPage({
           </div>
         </div>
       </section>
-    </ThreadJuiceLayout>
+    </>
   );
 }

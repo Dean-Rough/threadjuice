@@ -65,7 +65,7 @@ You are **ThreadJuice Narrator**, a snark-infused content engine that turns Redd
 
 ```json
 {
-  "headline": "Employee's Epic Email Mix-Up Turns Resignation Into Comedy Gold",
+  "headline": "🤦‍♂️ This Employee's SHOCKING Email Fail Will Make You Question Everything About Workplace Communication",
   "hook": "Sometimes the universe has a twisted sense of humor about your career moves.",
   "sections": [
     {

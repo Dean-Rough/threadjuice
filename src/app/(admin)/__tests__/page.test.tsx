@@ -23,7 +23,11 @@ describe('AdminDashboard', () => {
     render(<AdminDashboard />);
 
     expect(screen.getByText('Admin Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('Welcome back! Here\'s what\'s happening with your content.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Welcome back! Here's what's happening with your content."
+      )
+    ).toBeInTheDocument();
   });
 
   it('displays stats cards with data', async () => {
@@ -76,9 +80,15 @@ describe('AdminDashboard', () => {
     render(<AdminDashboard />);
 
     expect(screen.getByText('Recent Activity')).toBeInTheDocument();
-    expect(screen.getByText('New viral post about AI trends')).toBeInTheDocument();
-    expect(screen.getByText('Quiz "Are you a tech guru?" completed')).toBeInTheDocument();
-    expect(screen.getByText('New comment on "Reddit Drama Explained"')).toBeInTheDocument();
+    expect(
+      screen.getByText('New viral post about AI trends')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Quiz "Are you a tech guru?" completed')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('New comment on "Reddit Drama Explained"')
+    ).toBeInTheDocument();
   });
 
   it('displays activity timestamps', () => {
@@ -106,9 +116,14 @@ describe('AdminDashboard', () => {
     });
 
     // Check that progress bar exists and has width styling
-    const progressBar = document.querySelector('.bg-green-500.h-2.rounded-full');
+    const progressBar = document.querySelector(
+      '.bg-green-500.h-2.rounded-full'
+    );
     expect(progressBar).toBeInTheDocument();
-    expect(progressBar).toHaveAttribute('style', expect.stringContaining('width'));
+    expect(progressBar).toHaveAttribute(
+      'style',
+      expect.stringContaining('width')
+    );
   });
 
   it('displays performance metrics', async () => {
@@ -132,17 +147,21 @@ describe('AdminDashboard', () => {
     render(<AdminDashboard />);
 
     // Check for responsive grid classes in stats section
-    const statsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+    const statsGrid = document.querySelector(
+      '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+    );
     expect(statsGrid).toBeInTheDocument();
 
     // Check for responsive grid classes in quick actions
-    const actionsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+    const actionsGrid = document.querySelector(
+      '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+    );
     expect(actionsGrid).toBeInTheDocument();
   });
 
   it('loads stats on component mount', async () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     render(<AdminDashboard />);
 
     // Stats should be loaded and displayed
@@ -154,8 +173,10 @@ describe('AdminDashboard', () => {
   });
 
   it('handles stats loading error gracefully', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     // Mock the loadDashboardStats to simulate an error
     render(<AdminDashboard />);
 

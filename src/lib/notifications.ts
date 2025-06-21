@@ -145,7 +145,10 @@ class NotificationService {
     }
 
     // In real app, also send to server for persistence across devices
-    console.log('Created notification:', newNotification);
+    // Development logging only - remove in production
+    if (process.env.NODE_ENV === 'development') {
+      // console.log('Created notification:', newNotification);
+    }
   }
 
   // Show browser notification

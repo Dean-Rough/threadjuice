@@ -296,7 +296,7 @@ export function logEvent(
   
   if (ENVIRONMENT === 'production') {
     // Send to external logging service
-    console.log(JSON.stringify(logData));
+    // console.log(JSON.stringify(logData));
   } else {
     // Pretty print in development
     console[level](message, metadata);

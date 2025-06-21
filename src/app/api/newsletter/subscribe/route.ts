@@ -6,10 +6,12 @@ import { withMonitoring } from '@/lib/monitoring';
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
   firstName: z.string().optional(),
-  preferences: z.object({
-    frequency: z.enum(['daily', 'weekly', 'instant']).default('daily'),
-    categories: z.array(z.string()).default([]),
-  }).optional(),
+  preferences: z
+    .object({
+      frequency: z.enum(['daily', 'weekly', 'instant']).default('daily'),
+      categories: z.array(z.string()).default([]),
+    })
+    .optional(),
 });
 
 /**
@@ -33,10 +35,7 @@ async function handleSubscribe(request: NextRequest) {
     const result = await emailService.subscribeToNewsletter(email, preferences);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.message }, { status: 500 });
     }
 
     // Track successful subscription
@@ -48,18 +47,18 @@ async function handleSubscribe(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: result.message 
+      {
+        success: true,
+        message: result.message,
       },
       { status: 201 }
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: 'Validation failed', 
-          details: error.errors 
+        {
+          error: 'Validation failed',
+          details: error.errors,
         },
         { status: 400 }
       );

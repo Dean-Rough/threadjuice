@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jobQueue } from '@/lib/jobQueue';
+import { contentIngestionService } from '@/lib/contentIngestionService';
 
 /**
- * GET /api/ingest/status/[jobId] - Get status of a specific ingestion job
+ * GET /api/ingest/status/[jobId] - Get status of a specific content ingestion job
  */
 export async function GET(
   request: NextRequest,
@@ -13,61 +13,69 @@ export async function GET(
 
     if (!jobId) {
       return NextResponse.json(
-        { error: 'Missing job ID', message: 'Job ID is required' },
+        {
+          error: 'INVALID_REQUEST',
+          message: 'Job ID is required',
+        },
         { status: 400 }
       );
     }
 
-    // Get job status from queue
-    const job = jobQueue.getJob(jobId);
+    // Get job status
+    const job = contentIngestionService.getJobStatus(jobId);
 
     if (!job) {
       return NextResponse.json(
-        { error: 'Job not found', message: `Job ${jobId} not found` },
+        {
+          error: 'JOB_NOT_FOUND',
+          message: `Job with ID ${jobId} not found`,
+        },
         { status: 404 }
       );
     }
 
-    // Get related jobs (for batch operations)
-    const allJobs = jobQueue.getAllJobs();
-    const relatedJobs = allJobs.filter(j => 
-      j.id.includes('post-generation') // Assuming post generation jobs are related
-    );
+    // Calculate progress percentage
+    const progress =
+      job.status === 'completed'
+        ? 100
+        : job.status === 'failed'
+          ? 0
+          : job.status === 'running'
+            ? Math.min((job.posts_processed / 10) * 100, 95)
+            : 0;
 
-    // Calculate progress if this is a batch job
-    let progress = 0;
-    if (job.status === 'completed') {
-      progress = 100;
-    } else if (job.status === 'processing') {
-      // Estimate progress based on related jobs
-      const completed = relatedJobs.filter(j => j.status === 'completed').length;
-      const total = relatedJobs.length;
-      progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-    }
+    // Estimate remaining time for running jobs
+    const estimatedTimeRemaining =
+      job.status === 'running'
+        ? `${Math.max(10 - job.posts_processed, 0) * 30} seconds`
+        : null;
 
     return NextResponse.json({
       success: true,
-      data: {
-        jobId: job.id,
-        status: job.status,
-        progress,
-        error: job.error,
-        relatedJobs: {
-          total: relatedJobs.length,
-          completed: relatedJobs.filter(j => j.status === 'completed').length,
-          failed: relatedJobs.filter(j => j.status === 'failed').length,
-          processing: relatedJobs.filter(j => j.status === 'processing').length,
-          pending: relatedJobs.filter(j => j.status === 'pending').length,
-        },
-        message: getStatusMessage(job.status, progress),
+      job_id: job.id,
+      status: job.status,
+      subreddit: job.subreddit,
+      posts_processed: job.posts_processed,
+      posts_created: job.posts_created,
+      started_at: job.started_at,
+      completed_at: job.completed_at,
+      error_message: job.error_message,
+      logs: job.logs.slice(-10), // Return last 10 log entries
+      progress: {
+        percentage: progress,
+        estimated_time_remaining: estimatedTimeRemaining,
+        status_message: getStatusMessage(job.status, progress),
       },
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Job status API Error:', error);
+    console.error('Job status API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', message: 'Failed to get job status' },
+      {
+        error: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch job status',
+        request_id: crypto.randomUUID(),
+      },
       { status: 500 }
     );
   }
@@ -79,13 +87,13 @@ export async function GET(
 function getStatusMessage(status: string, progress: number): string {
   switch (status) {
     case 'pending':
-      return 'Job is queued and waiting to be processed';
-    case 'processing':
-      return `Job is currently being processed (${progress}% complete)`;
+      return 'Content ingestion job is queued and waiting to start';
+    case 'running':
+      return `Fetching Reddit content and transforming with GPT (${progress}% complete)`;
     case 'completed':
-      return 'Job completed successfully';
+      return 'Content ingestion completed successfully - new posts are live!';
     case 'failed':
-      return 'Job failed to complete';
+      return 'Content ingestion failed - check logs for details';
     default:
       return 'Unknown job status';
   }

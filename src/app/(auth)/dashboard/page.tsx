@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
-import ThreadJuiceLayout from '@/components/layout/ThreadJuiceLayout';
+;
 import {
   BarChart3,
   FileText,
@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
   if (!isLoaded) {
     return (
-      <ThreadJuiceLayout headerStyle={4}>
+      <>
         <div className='container py-5'>
           <div className='text-center'>
             <div className='spinner-border' role='status'>
@@ -36,7 +36,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </ThreadJuiceLayout>
+      </>
     );
   }
 
@@ -67,7 +67,7 @@ export default function DashboardPage() {
   const topPosts = posts.sort((a, b) => b.views - a.views).slice(0, 5);
 
   return (
-    <ThreadJuiceLayout headerStyle={4}>
+    <>
       {/* Dashboard Header - Sarsa Layout 4 */}
       <section
         className='dashboard-header-area pb-30 pt-40'
@@ -80,7 +80,7 @@ export default function DashboardPage() {
                 <h1 className='dashboard-title mb-10'>
                   Welcome back, {user?.firstName || 'Admin'}
                 </h1>
-                <p className='dashboard-subtitle text-muted mb-0'>
+                <p className='dashboard-subtitle mb-0 text-muted'>
                   Manage your viral Reddit content and track performance metrics
                 </p>
               </div>
@@ -150,12 +150,12 @@ export default function DashboardPage() {
                 <div className='col-lg-3 col-sm-6 mb-30'>
                   <div className='stats-card rounded border bg-white p-4'>
                     <div className='d-flex align-items-center'>
-                      <div className='stats-icon bg-primary me-3 rounded bg-opacity-10 p-3'>
+                      <div className='stats-icon me-3 rounded bg-primary bg-opacity-10 p-3'>
                         <FileText size={24} className='text-primary' />
                       </div>
                       <div className='stats-content'>
                         <h3 className='stats-number mb-0'>{totalPosts}</h3>
-                        <p className='stats-label text-muted mb-0'>
+                        <p className='stats-label mb-0 text-muted'>
                           Total Posts
                         </p>
                       </div>
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                         <h3 className='stats-number mb-0'>
                           {totalViews.toLocaleString()}
                         </h3>
-                        <p className='stats-label text-muted mb-0'>
+                        <p className='stats-label mb-0 text-muted'>
                           Total Views
                         </p>
                       </div>
@@ -189,7 +189,7 @@ export default function DashboardPage() {
                         <h3 className='stats-number mb-0'>
                           {totalEngagement.toLocaleString()}
                         </h3>
-                        <p className='stats-label text-muted mb-0'>
+                        <p className='stats-label mb-0 text-muted'>
                           Total Upvotes
                         </p>
                       </div>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                         <h3 className='stats-number mb-0'>
                           {avgEngagementRate}%
                         </h3>
-                        <p className='stats-label text-muted mb-0'>
+                        <p className='stats-label mb-0 text-muted'>
                           Avg Engagement
                         </p>
                       </div>
@@ -520,7 +520,7 @@ export default function DashboardPage() {
                             </div>
                           </div>
                         </div>
-                        <p className='persona-bio text-muted small mb-20'>
+                        <p className='persona-bio small mb-20 text-muted'>
                           {persona.bio}
                         </p>
                         <div className='persona-actions'>
@@ -547,7 +547,7 @@ export default function DashboardPage() {
               <div className='row'>
                 <div className='col-12'>
                   <div className='analytics-placeholder rounded border bg-white p-5 text-center'>
-                    <BarChart3 size={64} className='text-muted mb-20' />
+                    <BarChart3 size={64} className='mb-20 text-muted' />
                     <h4>Analytics Dashboard</h4>
                     <p className='text-muted'>
                       Detailed analytics and reporting features will be
@@ -561,6 +561,6 @@ export default function DashboardPage() {
           )}
         </div>
       </section>
-    </ThreadJuiceLayout>
+    </>
   );
 }

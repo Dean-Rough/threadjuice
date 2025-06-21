@@ -20,10 +20,7 @@ async function handleUnsubscribe(request: NextRequest) {
     const result = await emailService.unsubscribeFromNewsletter(email);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.message }, { status: 500 });
     }
 
     // Track unsubscription
@@ -32,18 +29,18 @@ async function handleUnsubscribe(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: result.message 
+      {
+        success: true,
+        message: result.message,
       },
       { status: 200 }
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: 'Validation failed', 
-          details: error.errors 
+        {
+          error: 'Validation failed',
+          details: error.errors,
         },
         { status: 400 }
       );

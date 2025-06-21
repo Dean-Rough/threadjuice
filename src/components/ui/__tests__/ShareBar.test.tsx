@@ -2,7 +2,13 @@
  * @jest-environment jsdom
  */
 
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  cleanup,
+} from '@testing-library/react';
 import { ShareBar, type ShareBarProps } from '../ShareBar';
 
 describe('ShareBar', () => {
@@ -61,12 +67,16 @@ describe('ShareBar', () => {
     fireEvent.click(copyButton);
 
     await waitFor(() => {
-      expect(mockWriteText).toHaveBeenCalledWith('https://example.com/test-post');
+      expect(mockWriteText).toHaveBeenCalledWith(
+        'https://example.com/test-post'
+      );
     });
   });
 
   it('shows success state after copying', async () => {
-    render(<ShareBar {...defaultProps} orientation="vertical" showLabels={true} />);
+    render(
+      <ShareBar {...defaultProps} orientation='vertical' showLabels={true} />
+    );
 
     const copyButton = screen.getByLabelText('Copy link');
     fireEvent.click(copyButton);
@@ -76,24 +86,25 @@ describe('ShareBar', () => {
     });
   });
 
-
   it('applies horizontal orientation by default', () => {
     render(<ShareBar {...defaultProps} />);
-    
+
     const shareBar = screen.getByTestId('share-bar');
     expect(shareBar).toHaveClass('flex', 'items-center', 'space-x-2');
   });
 
   it('applies vertical orientation when specified', () => {
-    render(<ShareBar {...defaultProps} orientation="vertical" />);
-    
+    render(<ShareBar {...defaultProps} orientation='vertical' />);
+
     const shareBar = screen.getByTestId('share-bar');
     expect(shareBar).toHaveClass('flex', 'flex-col', 'space-y-2');
   });
 
   it('shows labels when showLabels and vertical orientation', () => {
-    render(<ShareBar {...defaultProps} orientation="vertical" showLabels={true} />);
-    
+    render(
+      <ShareBar {...defaultProps} orientation='vertical' showLabels={true} />
+    );
+
     expect(screen.getByText('Facebook')).toBeInTheDocument();
     expect(screen.getByText('Twitter')).toBeInTheDocument();
     expect(screen.getByText('LinkedIn')).toBeInTheDocument();
@@ -102,8 +113,10 @@ describe('ShareBar', () => {
   });
 
   it('shows share title for horizontal orientation with labels', () => {
-    render(<ShareBar {...defaultProps} orientation="horizontal" showLabels={true} />);
-    
+    render(
+      <ShareBar {...defaultProps} orientation='horizontal' showLabels={true} />
+    );
+
     expect(screen.getByText('Share:')).toBeInTheDocument();
   });
 
@@ -164,8 +177,8 @@ describe('ShareBar', () => {
   });
 
   it('applies custom className', () => {
-    render(<ShareBar {...defaultProps} className="custom-class" />);
-    
+    render(<ShareBar {...defaultProps} className='custom-class' />);
+
     const shareBar = screen.getByTestId('share-bar');
     expect(shareBar).toHaveClass('custom-class');
   });
@@ -179,7 +192,7 @@ describe('ShareBar', () => {
     const facebookLink = screen.getByLabelText('Share on Facebook');
     const clickEvent = new MouseEvent('click', { bubbles: true });
     const preventDefaultSpy = jest.spyOn(clickEvent, 'preventDefault');
-    
+
     fireEvent(facebookLink, clickEvent);
 
     expect(preventDefaultSpy).toHaveBeenCalled();

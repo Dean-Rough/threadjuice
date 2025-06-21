@@ -49,7 +49,7 @@ describe('SEO Utilities', () => {
   describe('generateArticleStructuredData', () => {
     it('should generate valid Article structured data', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('Article');
       expect(result.headline).toBe(mockPost.title);
@@ -61,7 +61,7 @@ describe('SEO Utilities', () => {
 
     it('should include author information', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result.author).toEqual({
         '@type': 'Person',
         name: mockPost.persona.name,
@@ -72,7 +72,7 @@ describe('SEO Utilities', () => {
 
     it('should include publisher information', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result.publisher).toEqual({
         '@type': 'Organization',
         name: 'ThreadJuice',
@@ -87,7 +87,7 @@ describe('SEO Utilities', () => {
 
     it('should include Reddit source attribution', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result.isBasedOn).toEqual({
         '@type': 'CreativeWork',
         name: `Reddit Thread: ${mockPost.redditMetrics.originalTitle}`,
@@ -101,7 +101,7 @@ describe('SEO Utilities', () => {
 
     it('should include article metadata', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result.articleSection).toBe(mockPost.category);
       expect(result.keywords).toBe(mockPost.tags.join(', '));
       expect(result.wordCount).toBe(mockPost.content.length);
@@ -111,7 +111,7 @@ describe('SEO Utilities', () => {
 
     it('should include mentions for tags', () => {
       const result = generateArticleStructuredData(mockPost as any);
-      
+
       expect(result.mentions).toHaveLength(mockPost.tags.length);
       expect(result.mentions[0]).toEqual({
         '@type': 'Thing',
@@ -122,9 +122,9 @@ describe('SEO Utilities', () => {
     it('should handle missing updatedAt by using publishedAt', () => {
       const postWithoutUpdate = { ...mockPost };
       delete (postWithoutUpdate as any).updatedAt;
-      
+
       const result = generateArticleStructuredData(postWithoutUpdate as any);
-      
+
       expect(result.dateModified).toBe(mockPost.publishedAt);
     });
   });
@@ -132,18 +132,20 @@ describe('SEO Utilities', () => {
   describe('generatePersonaStructuredData', () => {
     it('should generate valid Person structured data', () => {
       const result = generatePersonaStructuredData(mockPersona as any);
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('Person');
       expect(result.name).toBe(mockPersona.name);
       expect(result.description).toBe(mockPersona.bio);
       expect(result.image).toBe(mockPersona.avatar);
-      expect(result.url).toBe(`https://threadjuice.com/personas/${mockPersona.id}`);
+      expect(result.url).toBe(
+        `https://threadjuice.com/personas/${mockPersona.id}`
+      );
     });
 
     it('should include job and organization information', () => {
       const result = generatePersonaStructuredData(mockPersona as any);
-      
+
       expect(result.jobTitle).toBe('AI Content Writer');
       expect(result.worksFor).toEqual({
         '@type': 'Organization',
@@ -154,7 +156,7 @@ describe('SEO Utilities', () => {
 
     it('should include knowledge areas', () => {
       const result = generatePersonaStructuredData(mockPersona as any);
-      
+
       expect(result.knowsAbout).toEqual([
         mockPersona.specialty,
         'Content Writing',
@@ -170,9 +172,9 @@ describe('SEO Utilities', () => {
         { name: 'Blog', url: 'https://example.com/blog' },
         { name: 'Article', url: 'https://example.com/blog/article' },
       ];
-      
+
       const result = generateBreadcrumbStructuredData(breadcrumbs);
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('BreadcrumbList');
       expect(result.itemListElement).toHaveLength(3);
@@ -183,16 +185,16 @@ describe('SEO Utilities', () => {
         { name: 'Home', url: 'https://example.com' },
         { name: 'Blog', url: 'https://example.com/blog' },
       ];
-      
+
       const result = generateBreadcrumbStructuredData(breadcrumbs);
-      
+
       expect(result.itemListElement[0]).toEqual({
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
         item: 'https://example.com',
       });
-      
+
       expect(result.itemListElement[1]).toEqual({
         '@type': 'ListItem',
         position: 2,
@@ -203,7 +205,7 @@ describe('SEO Utilities', () => {
 
     it('should handle empty breadcrumbs', () => {
       const result = generateBreadcrumbStructuredData([]);
-      
+
       expect(result.itemListElement).toHaveLength(0);
     });
   });
@@ -211,7 +213,7 @@ describe('SEO Utilities', () => {
   describe('generateWebsiteStructuredData', () => {
     it('should generate valid WebSite structured data', () => {
       const result = generateWebsiteStructuredData();
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('WebSite');
       expect(result.name).toBe('ThreadJuice');
@@ -220,7 +222,7 @@ describe('SEO Utilities', () => {
 
     it('should include search action', () => {
       const result = generateWebsiteStructuredData();
-      
+
       expect(result.potentialAction).toEqual({
         '@type': 'SearchAction',
         target: {
@@ -233,7 +235,7 @@ describe('SEO Utilities', () => {
 
     it('should include organization information', () => {
       const result = generateWebsiteStructuredData();
-      
+
       expect(result.publisher).toEqual({
         '@type': 'Organization',
         name: 'ThreadJuice',
@@ -255,7 +257,7 @@ describe('SEO Utilities', () => {
   describe('generateOrganizationStructuredData', () => {
     it('should generate valid Organization structured data', () => {
       const result = generateOrganizationStructuredData();
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('Organization');
       expect(result.name).toBe('ThreadJuice');
@@ -264,7 +266,7 @@ describe('SEO Utilities', () => {
 
     it('should include contact information', () => {
       const result = generateOrganizationStructuredData();
-      
+
       expect(result.contactPoint).toEqual({
         '@type': 'ContactPoint',
         contactType: 'customer service',
@@ -274,35 +276,41 @@ describe('SEO Utilities', () => {
 
     it('should include business information', () => {
       const result = generateOrganizationStructuredData();
-      
+
       expect(result.foundingDate).toBe('2024');
       expect(result.category).toBe('Technology');
       expect(result.industry).toBe('Content Technology');
-      expect(result.keywords).toBe('Reddit, AI, Content Generation, Viral Content, Social Media');
+      expect(result.keywords).toBe(
+        'Reddit, AI, Content Generation, Viral Content, Social Media'
+      );
     });
   });
 
   describe('generateFAQStructuredData', () => {
     it('should generate valid FAQPage structured data', () => {
       const faqs = [
-        { question: 'What is ThreadJuice?', answer: 'ThreadJuice is an AI-powered content platform.' },
-        { question: 'How does it work?', answer: 'It transforms Reddit content into engaging stories.' },
+        {
+          question: 'What is ThreadJuice?',
+          answer: 'ThreadJuice is an AI-powered content platform.',
+        },
+        {
+          question: 'How does it work?',
+          answer: 'It transforms Reddit content into engaging stories.',
+        },
       ];
-      
+
       const result = generateFAQStructuredData(faqs);
-      
+
       expect(result['@context']).toBe('https://schema.org');
       expect(result['@type']).toBe('FAQPage');
       expect(result.mainEntity).toHaveLength(2);
     });
 
     it('should format FAQ items correctly', () => {
-      const faqs = [
-        { question: 'Test question?', answer: 'Test answer.' },
-      ];
-      
+      const faqs = [{ question: 'Test question?', answer: 'Test answer.' }];
+
       const result = generateFAQStructuredData(faqs);
-      
+
       expect(result.mainEntity[0]).toEqual({
         '@type': 'Question',
         name: 'Test question?',
@@ -315,7 +323,7 @@ describe('SEO Utilities', () => {
 
     it('should handle empty FAQ list', () => {
       const result = generateFAQStructuredData([]);
-      
+
       expect(result.mainEntity).toHaveLength(0);
     });
   });
@@ -324,7 +332,7 @@ describe('SEO Utilities', () => {
     it('should inject structured data as JSON-LD script', () => {
       const data = { '@type': 'Article', name: 'Test' };
       const result = injectStructuredData(data);
-      
+
       expect(result).toContain('<script type="application/ld+json">');
       expect(result).toContain('"@type": "Article"');
       expect(result).toContain('"name": "Test"');
@@ -334,7 +342,7 @@ describe('SEO Utilities', () => {
     it('should format JSON with proper indentation', () => {
       const data = { nested: { property: 'value' } };
       const result = injectStructuredData(data);
-      
+
       expect(result).toContain('  "nested": {\n    "property": "value"\n  }');
     });
   });
@@ -342,19 +350,19 @@ describe('SEO Utilities', () => {
   describe('generateCanonicalUrl', () => {
     it('should generate canonical URL with base domain', () => {
       const result = generateCanonicalUrl('/blog/test-article');
-      
+
       expect(result).toBe('https://threadjuice.com/blog/test-article');
     });
 
     it('should handle root path', () => {
       const result = generateCanonicalUrl('/');
-      
+
       expect(result).toBe('https://threadjuice.com/');
     });
 
     it('should handle paths without leading slash', () => {
       const result = generateCanonicalUrl('blog/article');
-      
+
       expect(result).toBe('https://threadjuice.comblog/article');
     });
   });
@@ -362,7 +370,7 @@ describe('SEO Utilities', () => {
   describe('generateAlternateLanguages', () => {
     it('should generate alternate language URLs', () => {
       const result = generateAlternateLanguages('/blog/article');
-      
+
       expect(result).toEqual({
         'en-US': 'https://threadjuice.com/blog/article',
         'x-default': 'https://threadjuice.com/blog/article',
@@ -371,7 +379,7 @@ describe('SEO Utilities', () => {
 
     it('should handle root path', () => {
       const result = generateAlternateLanguages('/');
-      
+
       expect(result).toEqual({
         'en-US': 'https://threadjuice.com/',
         'x-default': 'https://threadjuice.com/',
@@ -390,7 +398,7 @@ describe('SEO Utilities', () => {
           originalAuthor: undefined,
         },
       };
-      
+
       expect(() => {
         generateArticleStructuredData(postWithUndefined as any);
       }).not.toThrow();
@@ -403,9 +411,9 @@ describe('SEO Utilities', () => {
         excerpt: '',
         content: '',
       };
-      
+
       const result = generateArticleStructuredData(postWithEmpty as any);
-      
+
       expect(result.headline).toBe('');
       expect(result.description).toBe('');
       expect(result.wordCount).toBe(0);
@@ -417,14 +425,16 @@ describe('SEO Utilities', () => {
         title: 'Test "Quotes" & <Tags>',
         content: 'Content with "quotes" & <html> tags',
       };
-      
+
       const result = generateArticleStructuredData(postWithSpecialChars as any);
       const injected = injectStructuredData(result);
-      
+
       expect(injected).toContain('Test \\"Quotes\\" & <Tags>');
       // Should not crash when parsing
       expect(() => {
-        const scriptContent = injected.match(/<script[^>]*>(.*?)<\/script>/s)?.[1];
+        const scriptContent = injected.match(
+          /<script[^>]*>(.*?)<\/script>/s
+        )?.[1];
         if (scriptContent) {
           JSON.parse(scriptContent);
         }

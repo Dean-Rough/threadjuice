@@ -1,797 +1,764 @@
-# Component Breakdown
+# Component Architecture
 
-## TypeScript Interfaces
+## Overview
+
+ThreadJuice uses a modern component architecture built with Next.js 15, TypeScript, and shadcn/ui. The system emphasizes reusability, type safety, and professional design patterns.
+
+## Core TypeScript Interfaces
+
+### Data Models
 
 ```typescript
-// Core data types
+// Core post interface
 interface Post {
   id: string;
   title: string;
   slug: string;
-  hook: string;
-  content: ContentBlock[];
-  personaId: number;
-  status: 'draft' | 'published' | 'archived';
-  eventId?: string;
-  redditThreadId?: string;
-  subreddit?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ContentBlock {
-  type: 'paragraph' | 'comment_cluster' | 'image' | 'quiz';
-  content: string;
-  metadata?: Record<string, any>;
-}
-
-interface Comment {
-  id: string;
-  postId: string;
+  excerpt?: string;
+  content: {
+    sections: Array<{
+      type: 'paragraph' | 'heading' | 'quote' | 'image';
+      content: string;
+      metadata?: any;
+    }>;
+  };
+  image_url?: string;
+  category: string;
   author: string;
-  body: string;
-  score: number;
-  sentiment: { compound: number; pos: number; neg: number };
-  redditCommentId?: string;
+  persona?: Persona;
+  view_count: number;
+  upvote_count: number;
+  comment_count: number;
+  share_count: number;
+  bookmark_count: number;
+  trending: boolean;
+  featured: boolean;
+  reddit_source?: {
+    thread_id: string;
+    subreddit: string;
+    original_url: string;
+  };
+  tags?: string[];
+  created_at: string;
+  updated_at: string;
 }
 
+// Writer persona interface
 interface Persona {
   id: number;
   name: string;
-  avatarUrl: string;
+  slug: string;
+  bio: string;
+  avatar_url: string;
   tone: string;
+  story_count: number;
+  rating: number;
+  created_at: string;
 }
 
-interface Quiz {
-  id: string;
-  postId: string;
-  title: string;
-  questions: QuizQuestion[];
-}
-
-interface QuizQuestion {
-  question: string;
-  options: string[];
-  correct: number;
-  explanation?: string;
-}
-
-// Sarsa Template Interfaces
-interface LayoutProps {
-  headerStyle?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  footerStyle?: 1 | 2 | 3;
-  children: React.ReactNode;
-  breadcrumbCategory?: string;
-  breadcrumbPostTitle?: string;
-  footerClass?: string;
-  headTitle?: string;
-  logoWhite?: boolean;
-}
-
-interface SwiperConfig {
-  slidesPerView: number;
-  spaceBetween: number;
-  autoplay?: boolean;
-  navigation?: boolean;
-  pagination?: boolean;
-  breakpoints?: Record<number, { slidesPerView: number; spaceBetween: number }>;
-}
-
-interface IsotopeFilter {
-  category: string;
-  label: string;
-  count?: number;
-}
-```
-
-## Sarsa Layout Components
-
-### Main Layout System
-
-```typescript
-// components/layout/Layout.tsx - Main layout controller
-interface LayoutProps {
-  headerStyle?: number;
-  footerStyle?: number;
-  children: React.ReactNode;
-  breadcrumbCategory?: string;
-  breadcrumbPostTitle?: string;
-  footerClass?: string;
-  headTitle?: string;
-  logoWhite?: boolean;
-}
-export function Layout({
-  headerStyle,
-  footerStyle,
-  children,
-  breadcrumbCategory,
-  breadcrumbPostTitle,
-  footerClass,
-  headTitle,
-  logoWhite,
-}: LayoutProps);
-
-// components/layout/Header/Header1.tsx - Main news layout
-interface HeaderProps {
-  handleMobileMenuOpen: () => void;
-  handleMobileMenuClose: () => void;
-  scroll: boolean;
-  langToggle: boolean;
-  handleLangToggle: () => void;
-  handleSidebarOpen: () => void;
-  handleSidebarClose: () => void;
-}
-export function Header1(props: HeaderProps);
-
-// components/layout/Footer/Footer1.tsx - Standard footer
-export function Footer1();
-
-// components/layout/Breadcrumb.tsx - Navigation breadcrumbs
-interface BreadcrumbProps {
-  breadcrumbCategory: string;
-  breadcrumbPostTitle?: string;
-}
-export function Breadcrumb({
-  breadcrumbCategory,
-  breadcrumbPostTitle,
-}: BreadcrumbProps);
-
-// components/layout/PageHead.tsx - SEO and meta tags
-interface PageHeadProps {
-  headTitle?: string;
-}
-export function PageHead({ headTitle }: PageHeadProps);
-```
-
-### Header Variations
-
-```typescript
-// components/layout/Header/Header2.tsx - Magazine style
-export function Header2(props: HeaderProps);
-
-// components/layout/Header/Header3.tsx - Minimal layout
-export function Header3(props: HeaderProps);
-
-// components/layout/Header/Header4.tsx - Tech-focused
-export function Header4(props: HeaderProps);
-
-// components/layout/Header/Header5.tsx - Social media style
-export function Header5(props: HeaderProps);
-
-// components/layout/Header/Header6.tsx - Fashion/lifestyle
-export function Header6(props: HeaderProps);
-
-// components/layout/Header/Header7.tsx - Adventure/travel
-export function Header7(props: HeaderProps);
-```
-
-## Sarsa-Enhanced UI Components
-
-### Core UI Components (Sarsa-styled)
-
-```typescript
-// components/ui/PostCard.tsx - News-style post cards
-interface PostCardProps {
-  post: Post & { persona: Persona };
-  compact?: boolean;
-  variant?: 'default' | 'featured' | 'minimal' | 'grid';
-  showCategory?: boolean;
-  showAuthor?: boolean;
-  showDate?: boolean;
-  onShare?: (postId: string) => void;
-}
-export function PostCard({
-  post,
-  compact = false,
-  variant = 'default',
-  showCategory = true,
-  showAuthor = true,
-  showDate = true,
-  onShare,
-}: PostCardProps);
-
-// components/ui/PersonaBadge.tsx - Author badges with Sarsa styling
-interface PersonaBadgeProps {
-  persona: Persona;
-  size?: 'sm' | 'md' | 'lg';
-  showName?: boolean;
-  variant?: 'default' | 'minimal' | 'detailed';
-}
-export function PersonaBadge({
-  persona,
-  size = 'md',
-  showName = true,
-  variant = 'default',
-}: PersonaBadgeProps);
-
-// components/ui/ShareBar.tsx - Social sharing with Sarsa button styles
-interface ShareBarProps {
-  url: string;
-  title: string;
-  image?: string;
-  className?: string;
-  variant?: 'horizontal' | 'vertical' | 'floating';
-  platforms?: ('facebook' | 'twitter' | 'linkedin' | 'reddit' | 'whatsapp')[];
-}
-export function ShareBar({
-  url,
-  title,
-  image,
-  className,
-  variant = 'horizontal',
-  platforms = ['facebook', 'twitter', 'linkedin', 'reddit'],
-}: ShareBarProps);
-
-// components/ui/CategoryBadge.tsx - Content category tags
-interface CategoryBadgeProps {
-  category: string;
-  variant?: 'default' | 'outlined' | 'minimal';
-  size?: 'sm' | 'md' | 'lg';
-  clickable?: boolean;
-  onClick?: () => void;
-}
-export function CategoryBadge({
-  category,
-  variant = 'default',
-  size = 'md',
-  clickable = false,
-  onClick,
-}: CategoryBadgeProps);
-
-// components/ui/TrendingBadge.tsx - Viral content indicators
-interface TrendingBadgeProps {
-  score: number;
-  variant?: 'fire' | 'trending' | 'hot' | 'viral';
-  animated?: boolean;
-}
-export function TrendingBadge({
-  score,
-  variant = 'trending',
-  animated = true,
-}: TrendingBadgeProps);
-
-// components/ui/LoadingSpinner.tsx - Animated loading with WOW.js
-interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'spinner' | 'dots' | 'pulse' | 'skeleton';
-  text?: string;
-}
-export function LoadingSpinner({
-  size = 'md',
-  variant = 'spinner',
-  text,
-}: LoadingSpinnerProps);
-```
-
-## Sarsa Animation Components
-
-### Animation Wrappers
-
-```typescript
-// components/elements/WowAnimation.tsx - WOW.js wrapper
-interface WowAnimationProps {
-  children: React.ReactNode;
-  animation?:
-    | 'fadeIn'
-    | 'slideInUp'
-    | 'slideInLeft'
-    | 'slideInRight'
-    | 'zoomIn';
-  delay?: number;
-  duration?: number;
-  offset?: number;
-}
-export function WowAnimation({
-  children,
-  animation = 'fadeIn',
-  delay = 0,
-  duration = 1000,
-  offset = 100,
-}: WowAnimationProps);
-
-// components/elements/TypewriterText.tsx - Typewriter effect
-interface TypewriterTextProps {
-  strings: string[];
-  typeSpeed?: number;
-  backSpeed?: number;
-  loop?: boolean;
-  className?: string;
-}
-export function TypewriterText({
-  strings,
-  typeSpeed = 50,
-  backSpeed = 30,
-  loop = true,
-  className,
-}: TypewriterTextProps);
-
-// components/elements/BackToTop.tsx - Scroll to top button
-export function BackToTop();
-```
-
-## Sarsa Slider Components
-
-### Carousel and Slider Components
-
-```typescript
-// components/slider/FeaturedCarousel.tsx - Hero section carousel
-interface FeaturedCarouselProps {
-  posts: (Post & { persona: Persona })[];
-  autoplay?: boolean;
-  showNavigation?: boolean;
-  showPagination?: boolean;
-  height?: string;
-}
-export function FeaturedCarousel({
-  posts,
-  autoplay = true,
-  showNavigation = true,
-  showPagination = true,
-  height = '500px',
-}: FeaturedCarouselProps);
-
-// components/slider/PostSlider.tsx - Post carousel
-interface PostSliderProps {
-  posts: (Post & { persona: Persona })[];
-  slidesPerView?: number;
-  spaceBetween?: number;
-  breakpoints?: Record<number, { slidesPerView: number; spaceBetween: number }>;
-  navigation?: boolean;
-  pagination?: boolean;
-}
-export function PostSlider({
-  posts,
-  slidesPerView = 3,
-  spaceBetween = 30,
-  breakpoints,
-  navigation = true,
-  pagination = false,
-}: PostSliderProps);
-
-// components/slider/TrendingMarquee.tsx - Scrolling trending topics
-interface TrendingMarqueeProps {
-  topics: string[];
-  speed?: number;
-  direction?: 'left' | 'right';
-  pauseOnHover?: boolean;
-  gradient?: boolean;
-}
-export function TrendingMarquee({
-  topics,
-  speed = 50,
-  direction = 'left',
-  pauseOnHover = true,
-  gradient = true,
-}: TrendingMarqueeProps);
-```
-
-## Enhanced Feature Components
-
-### Advanced Feature Components (Sarsa-enhanced)
-
-```typescript
-// components/features/TrendingFeed.tsx - Magazine-style post feed
-interface TrendingFeedProps {
-  limit?: number;
-  filter?: { status?: string; persona?: string; category?: string };
-  layout?: 'grid' | 'list' | 'masonry' | 'magazine';
-  showFilters?: boolean;
-  showLoadMore?: boolean;
-  infiniteScroll?: boolean;
-}
-export function TrendingFeed({
-  limit = 20,
-  filter,
-  layout = 'magazine',
-  showFilters = true,
-  showLoadMore = false,
-  infiniteScroll = true,
-}: TrendingFeedProps);
-
-// components/features/CategoryFilter.tsx - Isotope-powered filtering
-interface CategoryFilterProps {
-  categories: IsotopeFilter[];
-  activeCategory: string;
-  onCategoryChange: (category: string) => void;
-  layout?: 'horizontal' | 'vertical' | 'dropdown';
-  showCounts?: boolean;
-}
-export function CategoryFilter({
-  categories,
-  activeCategory,
-  onCategoryChange,
-  layout = 'horizontal',
-  showCounts = true,
-}: CategoryFilterProps);
-
-// components/features/Quiz.tsx - Interactive quiz with Sarsa styling
-interface QuizProps {
-  quiz: Quiz;
-  onComplete: (answers: number[], score: number) => void;
-  variant?: 'default' | 'card' | 'fullscreen';
-  showProgress?: boolean;
-  allowReview?: boolean;
-}
-export function Quiz({
-  quiz,
-  onComplete,
-  variant = 'default',
-  showProgress = true,
-  allowReview = false,
-}: QuizProps);
-
-// components/features/PostDetail.tsx - Article layout with sidebar
-interface PostDetailProps {
-  post: Post & { persona: Persona; comments?: Comment[] };
-  showSidebar?: boolean;
-  showComments?: boolean;
-  showRelated?: boolean;
-  layout?: 'default' | 'minimal' | 'magazine';
-}
-export function PostDetail({
-  post,
-  showSidebar = true,
-  showComments = true,
-  showRelated = true,
-  layout = 'default',
-}: PostDetailProps);
-
-// components/features/CommentScreenshot.tsx - Reddit-style comment display
-interface CommentScreenshotProps {
-  comment: Comment;
-  theme?: 'light' | 'dark' | 'reddit';
-  showScore?: boolean;
-  showReplies?: boolean;
-  className?: string;
-}
-export function CommentScreenshot({
-  comment,
-  theme = 'light',
-  showScore = true,
-  showReplies = false,
-  className,
-}: CommentScreenshotProps);
-```
-
-## Sidebar Components
-
-### Sidebar Widgets (Sarsa-styled)
-
-```typescript
-// components/sidebar/PopularPosts.tsx - Popular posts widget
-interface PopularPostsProps {
-  posts: (Post & { persona: Persona })[];
-  limit?: number;
-  timeframe?: 'day' | 'week' | 'month' | 'all';
-  variant?: 'default' | 'minimal' | 'numbered';
-}
-export function PopularPosts({
-  posts,
-  limit = 5,
-  timeframe = 'week',
-  variant = 'default',
-}: PopularPostsProps);
-
-// components/sidebar/CategoryList.tsx - Category navigation
-interface CategoryListProps {
-  categories: { name: string; count: number; slug: string }[];
-  activeCategory?: string;
-  showCounts?: boolean;
-  variant?: 'default' | 'minimal' | 'badges';
-}
-export function CategoryList({
-  categories,
-  activeCategory,
-  showCounts = true,
-  variant = 'default',
-}: CategoryListProps);
-
-// components/sidebar/NewsletterSignup.tsx - Email subscription widget
-interface NewsletterSignupProps {
-  title?: string;
+// Category interface
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
   description?: string;
-  variant?: 'default' | 'minimal' | 'card';
-  onSubscribe: (email: string) => Promise<void>;
+  post_count: number;
+  color: string;
 }
-export function NewsletterSignup({
-  title = 'Stay Updated',
-  description = 'Get the latest viral content delivered to your inbox',
-  variant = 'default',
-  onSubscribe,
-}: NewsletterSignupProps);
 
-// components/sidebar/SocialFollow.tsx - Social media links
-interface SocialFollowProps {
-  platforms: { name: string; url: string; icon: string; followers?: string }[];
-  variant?: 'default' | 'minimal' | 'detailed';
-  showFollowers?: boolean;
+// Comment interface
+interface Comment {
+  id: string;
+  post_id: string;
+  parent_id?: string;
+  user_id?: string;
+  author_name: string;
+  content: string;
+  upvote_count: number;
+  downvote_count: number;
+  is_reddit_excerpt: boolean;
+  reddit_score?: number;
+  created_at: string;
+  replies?: Comment[];
 }
-export function SocialFollow({
-  platforms,
-  variant = 'default',
-  showFollowers = false,
-}: SocialFollowProps);
+
+// User interaction interface
+interface UserInteraction {
+  id: string;
+  user_id?: string;
+  post_id: string;
+  interaction_type: 'upvote' | 'downvote' | 'bookmark' | 'share' | 'view';
+  metadata?: {
+    share_platform?: 'twitter' | 'facebook' | 'reddit' | 'copy';
+    user_agent?: string;
+    referrer?: string;
+  };
+  created_at: string;
+}
 ```
 
-## Custom Hooks (Sarsa-enhanced)
+## Core UI Components (shadcn/ui)
 
-### Animation and Interaction Hooks
+### Base Components
 
 ```typescript
-// hooks/useIsotope.ts - Grid filtering hook
-interface UseIsotopeOptions {
-  itemSelector: string;
-  layoutMode?: 'masonry' | 'fitRows' | 'cellsByRow';
-  sortBy?: string;
-  sortAscending?: boolean;
+// components/ui/card.tsx - Base card component
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
 }
-export function useIsotope(
-  containerRef: RefObject<HTMLElement>,
-  options: UseIsotopeOptions
-);
+export function Card({ className, ...props }: CardProps);
+export function CardHeader({ className, ...props }: CardProps);
+export function CardContent({ className, ...props }: CardProps);
+export function CardTitle({ className, ...props }: CardProps);
 
-// hooks/useSwiper.ts - Carousel management hook
-interface UseSwiperOptions extends SwiperConfig {
-  onSlideChange?: (swiper: any) => void;
-  onReachEnd?: () => void;
+// components/ui/badge.tsx - Status and category badges
+interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
 }
-export function useSwiper(options: UseSwiperOptions);
+export function Badge({ className, variant = 'default', ...props }: BadgeProps);
 
-// hooks/useWowAnimation.ts - WOW.js integration hook
-export function useWowAnimation();
-
-// hooks/useInfiniteScroll.ts - Pagination with animations
-interface UseInfiniteScrollOptions {
-  hasNextPage: boolean;
-  fetchNextPage: () => void;
-  threshold?: number;
-  rootMargin?: string;
+// components/ui/button.tsx - Interactive buttons
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 }
-export function useInfiniteScroll(options: UseInfiniteScrollOptions);
+export function Button({
+  className,
+  variant = 'default',
+  size = 'default',
+  ...props
+}: ButtonProps);
 
-// hooks/useMarquee.ts - Scrolling text management
-interface UseMarqueeOptions {
-  speed?: number;
-  direction?: 'left' | 'right';
-  pauseOnHover?: boolean;
+// components/ui/avatar.tsx - User and persona avatars
+interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
 }
-export function useMarquee(options: UseMarqueeOptions);
+export function Avatar({ className, ...props }: AvatarProps);
+export function AvatarImage({
+  className,
+  ...props
+}: React.ImgHTMLAttributes<HTMLImageElement>);
+export function AvatarFallback({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>);
+
+// components/ui/skeleton.tsx - Loading placeholders
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+export function Skeleton({ className, ...props }: SkeletonProps);
 ```
 
-## Page Components (Sarsa Layouts)
+## Main Feature Components
+
+### HeroCarousel Component
 
 ```typescript
-// app/page.tsx - Homepage with featured carousel
-export default function HomePage() {
+// components/HeroCarousel.tsx - Auto-cycling hero section
+interface HeroCarouselProps {
+  posts?: Post[];
+  autoplay?: boolean;
+  interval?: number;
+  showDots?: boolean;
+  className?: string;
+}
+
+export function HeroCarousel({
+  posts = [],
+  autoplay = true,
+  interval = 5000,
+  showDots = true,
+  className,
+}: HeroCarouselProps) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-cycling logic
+  useEffect(() => {
+    if (!autoplay || posts.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % posts.length);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [autoplay, interval, posts.length]);
+
   return (
-    <Layout headerStyle={1} footerStyle={1}>
-      <FeaturedCarousel posts={featuredPosts} />
-      <TrendingMarquee topics={trendingTopics} />
-      <TrendingFeed layout="magazine" limit={12} />
-    </Layout>
+    <section className={cn("relative h-[600px] overflow-hidden", className)}>
+      {/* Background slides */}
+      {/* Navigation dots */}
+      {/* Content overlay */}
+    </section>
   );
 }
+```
 
-// app/posts/[slug]/page.tsx - Article layout
-interface PostPageProps {
+### TrendingFeed Component
+
+```typescript
+// components/TrendingFeed.tsx - Main content feed
+interface TrendingFeedProps {
+  initialPosts?: Post[];
+  category?: string;
+  author?: string;
+  trending?: boolean;
+  featured?: boolean;
+  limit?: number;
+  layout?: 'grid' | 'list' | 'masonry';
+  showLoadMore?: boolean;
+  className?: string;
+}
+
+export function TrendingFeed({
+  initialPosts = [],
+  category,
+  author,
+  trending,
+  featured,
+  limit = 12,
+  layout = 'grid',
+  showLoadMore = true,
+  className,
+}: TrendingFeedProps) {
+  const { data: postsResponse, isLoading, error } = usePosts({
+    category,
+    author,
+    trending,
+    featured,
+    limit,
+  });
+
+  // Grid layout implementation
+  // Loading states
+  // Error handling
+
+  return (
+    <div className={cn("space-y-6", className)}>
+      {/* Filter stats */}
+      {/* Posts grid */}
+      {/* Load more button */}
+    </div>
+  );
+}
+```
+
+### Filter Pages
+
+```typescript
+// app/filter/[type]/[value]/page.tsx - Dynamic filter pages
+interface FilterPageProps {
+  params: {
+    type: 'category' | 'author';
+    value: string;
+  };
+}
+
+export default function FilterPage({ params }: FilterPageProps) {
+  const { type, value } = params;
+
+  // Convert URL slug to display format
+  const displayValue = value.replace(/-/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  const filterTitle = type === 'category'
+    ? `${displayValue} Stories`
+    : `Stories by ${displayValue}`;
+
+  return (
+    <QueryProvider>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        {/* Filter hero section */}
+        {/* Main content with TrendingFeed */}
+        {/* Sidebar */}
+        {/* Footer */}
+      </div>
+    </QueryProvider>
+  );
+}
+```
+
+### Blog Detail Component
+
+```typescript
+// app/blog/[slug]/page.tsx - Article detail page
+interface BlogPostProps {
   params: { slug: string };
 }
-export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
-  return (
-    <Layout
-      headerStyle={3}
-      footerStyle={1}
-      breadcrumbCategory={post.category}
-      breadcrumbPostTitle={post.title}
-    >
-      <PostDetail post={post} layout="magazine" />
-    </Layout>
-  );
-}
 
-// app/category/[category]/page.tsx - Category archive
-interface CategoryPageProps {
-  params: { category: string };
-}
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  const posts = await getPostsByCategory(params.category);
-  return (
-    <Layout headerStyle={2} footerStyle={1}>
-      <CategoryFilter categories={categories} activeCategory={params.category} />
-      <TrendingFeed filter={{ category: params.category }} layout="grid" />
-    </Layout>
-  );
-}
+export default function BlogPost({ params }: BlogPostProps) {
+  const { slug } = params;
 
-// app/(auth)/dashboard/page.tsx - Admin dashboard
-export default function DashboardPage() {
-  const { userId } = auth();
+  // Mock post data (would come from API/database)
+  const post = {
+    title: "Article Title",
+    category: "viral",
+    author: "The Snarky Sage",
+    date: "2 hours ago",
+    image: "/assets/img/lifestyle/life_style01.jpg",
+    content: `/* Article content */`
+  };
+
   return (
-    <Layout headerStyle={4} footerStyle={2}>
-      <UserDashboard userId={userId} />
-    </Layout>
+    <QueryProvider>
+      <div className="min-h-screen bg-background">
+        {/* Header with category ticker */}
+
+        {/* Main content layout */}
+        <main className="container mx-auto px-4 py-8">
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Article content (3/4 width) */}
+            <div className="lg:col-span-3">
+              {/* Image and description */}
+              {/* Headline and author */}
+              {/* Voting toolbar */}
+              {/* Article content */}
+              {/* Second voting toolbar */}
+            </div>
+
+            {/* Sidebar (1/4 width) */}
+            <div className="lg:col-span-1">
+              {/* Top 5 widget */}
+              {/* Top Shared widget */}
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+      </div>
+    </QueryProvider>
   );
 }
 ```
 
-## Backend Services (Enhanced)
+## Interactive Components
+
+### Voting Toolbar
 
 ```typescript
-// lib/database.ts - Supabase client with caching
-import { createClient } from '@supabase/supabase-js';
+// components/ui/VotingToolbar.tsx - Engagement toolbar
+interface VotingToolbarProps {
+  postId: string;
+  stats: {
+    upvote_count: number;
+    comment_count: number;
+    bookmark_count: number;
+    share_count: number;
+  };
+  variant?: 'full' | 'compact';
+  showLabel?: boolean;
+  className?: string;
+}
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
-);
+export function VotingToolbar({
+  postId,
+  stats,
+  variant = 'full',
+  showLabel = false,
+  className,
+}: VotingToolbarProps) {
+  const handleInteraction = async (type: string) => {
+    // Record interaction via API
+    try {
+      await fetch('/api/interactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          post_id: postId,
+          interaction_type: type,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to record interaction:', error);
+    }
+  };
 
-export async function getPosts(params: {
+  return (
+    <div className={cn("flex items-center gap-6", className)}>
+      {/* Upvote button */}
+      <button
+        onClick={() => handleInteraction('upvote')}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-orange-500/10 transition-colors group"
+      >
+        <ArrowUp className="h-5 w-5 text-muted-foreground group-hover:text-orange-500" />
+        <span className="text-sm font-mono text-muted-foreground group-hover:text-orange-500">
+          {stats.upvote_count}
+        </span>
+      </button>
+
+      {/* Comment button */}
+      {/* Bookmark button */}
+      {/* Share button */}
+    </div>
+  );
+}
+```
+
+### Category Ticker
+
+```typescript
+// components/ui/CategoryTicker.tsx - Scrolling category navigation
+interface CategoryTickerProps {
+  categories: string[];
+  speed?: number;
+  className?: string;
+}
+
+export function CategoryTicker({
+  categories,
+  speed = 40,
+  className,
+}: CategoryTickerProps) {
+  return (
+    <div className={cn("bg-orange-500 py-3 overflow-hidden", className)}>
+      <div className="animate-scroll-left flex items-center space-x-4 whitespace-nowrap">
+        {categories.map((category, index) => (
+          <Link
+            key={index}
+            href={`/filter/category/${category.toLowerCase().replace(/ /g, '-')}`}
+            className="bg-black text-white px-4 py-2 rounded-full text-sm font-extrabold whitespace-nowrap hover:bg-gray-800 transition-colors"
+          >
+            {category}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Data Management Components
+
+### Post Service
+
+```typescript
+// services/postService.ts - Data fetching service
+interface PostFilters {
+  category?: string;
+  author?: string;
+  trending?: boolean;
+  featured?: boolean;
+  search?: string;
   page?: number;
   limit?: number;
-  status?: string;
-  category?: string;
-  sortBy?: 'created_at' | 'updated_at' | 'views' | 'shares';
-  sortOrder?: 'asc' | 'desc';
-}) {
-  let query = supabase
-    .from('posts')
-    .select('*, persona:personas(*)')
-    .eq('status', params.status || 'published');
-
-  if (params.category) {
-    query = query.eq('category', params.category);
-  }
-
-  query = query
-    .order(params.sortBy || 'created_at', {
-      ascending: params.sortOrder === 'asc',
-    })
-    .range(
-      ((params.page || 1) - 1) * (params.limit || 20),
-      (params.page || 1) * (params.limit || 20) - 1
-    );
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-  return data;
 }
 
-// lib/redditScraper.ts - Enhanced Reddit API client
-interface RedditConfig {
-  clientId: string;
-  clientSecret: string;
-  userAgent: string;
-  rateLimitDelay?: number;
-}
+export class PostService {
+  static async getPosts(filters: PostFilters = {}) {
+    const params = new URLSearchParams();
 
-export class RedditScraper {
-  private accessToken?: string;
-  private rateLimiter: RateLimiter;
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined) {
+        params.append(key, String(value));
+      }
+    });
 
-  constructor(private config: RedditConfig) {
-    this.rateLimiter = new RateLimiter(config.rateLimitDelay || 1000);
+    const response = await fetch(`/api/posts?${params}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+
+    return response.json();
   }
 
-  async authenticate(): Promise<void> {
-    // OAuth2 flow implementation with error handling
+  static async getPostBySlug(slug: string) {
+    const response = await fetch(`/api/posts/${slug}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch post');
+    }
+
+    return response.json();
   }
 
-  async getHotPosts(subreddit: string, limit = 25): Promise<RedditPost[]> {
-    // API call with rate limiting and retry logic
+  static async getCategories() {
+    const response = await fetch('/api/categories');
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+
+    return response.json();
   }
 
-  async getComments(threadId: string): Promise<RedditComment[]> {
-    // Fetch thread comments with pagination
-  }
+  static async getAuthors() {
+    const response = await fetch('/api/authors');
+    if (!response.ok) {
+      throw new Error('Failed to fetch authors');
+    }
 
-  async searchPosts(query: string, subreddit?: string): Promise<RedditPost[]> {
-    // Search functionality
-  }
-}
-
-// lib/gptSummariser.ts - Enhanced OpenAI integration
-import OpenAI from 'openai';
-
-export class GPTSummariser {
-  private openai: OpenAI;
-
-  constructor(apiKey: string) {
-    this.openai = new OpenAI({ apiKey });
-  }
-
-  async summarizeThread(
-    thread: RedditPost,
-    comments: RedditComment[],
-    persona: Persona
-  ): Promise<ContentBlock[]> {
-    // Enhanced summarization with persona-specific prompts
-  }
-
-  async generateQuiz(content: string): Promise<QuizQuestion[]> {
-    // Generate quiz questions from content
-  }
-
-  async generateSocialCopy(post: Post): Promise<{
-    twitter: string;
-    facebook: string;
-    linkedin: string;
-  }> {
-    // Generate platform-specific social media copy
-  }
-}
-
-// lib/imageGenerator.ts - Social media image generation
-export class ImageGenerator {
-  async generatePostImage(post: Post): Promise<string> {
-    // Generate custom social media images
-  }
-
-  async generateQuizResultImage(
-    quiz: Quiz,
-    score: number,
-    userName: string
-  ): Promise<string> {
-    // Generate shareable quiz result images
+    return response.json();
   }
 }
 ```
 
-## Styling Integration
-
-### SCSS and Tailwind Integration
+### React Query Integration
 
 ```typescript
-// styles/sarsa-integration.scss - Sarsa styles integration
-@import 'sarsa/main';
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+// hooks/usePosts.ts - Data fetching hook
+import { useQuery } from '@tanstack/react-query';
+import { PostService } from '@/services/postService';
 
-// Custom component styles that blend Sarsa with Tailwind
-.post-card-sarsa {
-  @apply bg-white rounded-lg shadow-md overflow-hidden;
-  // Sarsa-specific styling
+interface UsePostsOptions {
+  category?: string;
+  author?: string;
+  trending?: boolean;
+  featured?: boolean;
+  search?: string;
+  page?: number;
+  limit?: number;
 }
 
-.trending-badge-animated {
-  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
-  // Animation from Sarsa WOW.js integration
+export function usePosts(options: UsePostsOptions = {}) {
+  return useQuery({
+    queryKey: ['posts', options],
+    queryFn: () => PostService.getPosts(options),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+  });
 }
 
-// tailwind.config.js additions for Sarsa integration
+export function usePost(slug: string) {
+  return useQuery({
+    queryKey: ['post', slug],
+    queryFn: () => PostService.getPostBySlug(slug),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
+}
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: PostService.getCategories,
+    staleTime: 30 * 60 * 1000, // 30 minutes
+  });
+}
+
+export function useAuthors() {
+  return useQuery({
+    queryKey: ['authors'],
+    queryFn: PostService.getAuthors,
+    staleTime: 30 * 60 * 1000, // 30 minutes
+  });
+}
+```
+
+## Layout and Provider Components
+
+### Query Provider
+
+```typescript
+// providers/QueryProvider.tsx - React Query setup
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useState } from 'react';
+
+export function QueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 minute
+            cacheTime: 5 * 60 * 1000, // 5 minutes
+            retry: 3,
+            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+### UI Context Provider
+
+```typescript
+// contexts/UIContext.tsx - UI state management
+'use client';
+
+import { createContext, useContext, useState, ReactNode } from 'react';
+
+interface UIContextType {
+  mobileMenuOpen: boolean;
+  sidebarOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+  setSidebarOpen: (open: boolean) => void;
+}
+
+const UIContext = createContext<UIContextType | undefined>(undefined);
+
+export function UIProvider({ children }: { children: ReactNode }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <UIContext.Provider
+      value={{
+        mobileMenuOpen,
+        sidebarOpen,
+        setMobileMenuOpen,
+        setSidebarOpen,
+      }}
+    >
+      {children}
+    </UIContext.Provider>
+  );
+}
+
+export function useUI() {
+  const context = useContext(UIContext);
+  if (context === undefined) {
+    throw new Error('useUI must be used within a UIProvider');
+  }
+  return context;
+}
+```
+
+## Styling and Theme Configuration
+
+### Tailwind Configuration
+
+```javascript
+// tailwind.config.js - Theme configuration
 module.exports = {
+  darkMode: ['class'],
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
-      fontFamily: {
-        'sarsa': ['Arimo', 'sans-serif'], // Sarsa template font
-      },
       colors: {
-        'sarsa-primary': '#your-primary-color',
-        'sarsa-secondary': '#your-secondary-color',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
       },
-      animation: {
-        'marquee': 'marquee 25s linear infinite',
-        'marquee2': 'marquee2 25s linear infinite',
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
       },
       keyframes: {
-        marquee: {
+        'scroll-left': {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-100%)' },
         },
-        marquee2: {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0%)' },
-        },
+      },
+      animation: {
+        'scroll-left': 'scroll-left 40s linear infinite',
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
+};
+```
+
+### CSS Variables
+
+```css
+/* app/globals.css - Theme variables */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --radius: 0.5rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-extrabold;
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
 }
 ```
+
+This component architecture provides a solid foundation for ThreadJuice's viral content platform, emphasizing reusability, type safety, and modern React patterns with shadcn/ui integration.

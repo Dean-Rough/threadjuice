@@ -161,7 +161,9 @@ describe('QuizAnalytics', () => {
     await user.click(screen.getByText('Questions'));
 
     expect(screen.getByText('What is 2+2?')).toBeInTheDocument();
-    expect(screen.getByText('True or false: The sky is blue.')).toBeInTheDocument();
+    expect(
+      screen.getByText('True or false: The sky is blue.')
+    ).toBeInTheDocument();
     expect(screen.getByText('70.0% correct')).toBeInTheDocument();
     expect(screen.getByText('85.0% correct')).toBeInTheDocument();
   });
@@ -223,7 +225,9 @@ describe('QuizAnalytics', () => {
 
     await user.click(screen.getByText('Attempts'));
 
-    expect(screen.getByText('No attempts in the selected time range.')).toBeInTheDocument();
+    expect(
+      screen.getByText('No attempts in the selected time range.')
+    ).toBeInTheDocument();
   });
 
   it('shows username fallback when username is not provided', async () => {
@@ -272,24 +276,26 @@ describe('QuizAnalytics', () => {
   it('formats dates correctly', () => {
     render(<QuizAnalytics {...defaultProps} />);
 
-    const todayFormatted = today.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
+    const todayFormatted = today.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
     });
     expect(screen.getByText(`Created ${todayFormatted}`)).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
-    render(<QuizAnalytics {...defaultProps} className="custom-analytics" />);
+    render(<QuizAnalytics {...defaultProps} className='custom-analytics' />);
 
-    const analyticsContainer = screen.getByText('Quiz Analytics').closest('.quiz-analytics');
+    const analyticsContainer = screen
+      .getByText('Quiz Analytics')
+      .closest('.quiz-analytics');
     expect(analyticsContainer).toHaveClass('custom-analytics');
   });
 
   it('handles time range filtering correctly', () => {
     // Test that the component would filter data based on time range
     // Since the filtering is done via useMemo, we're testing the rendered result
-    render(<QuizAnalytics {...defaultProps} timeRange="7d" />);
+    render(<QuizAnalytics {...defaultProps} timeRange='7d' />);
 
     // The component should still render with filtered data
     expect(screen.getByText('Quiz Analytics')).toBeInTheDocument();
@@ -332,7 +338,7 @@ describe('QuizAnalytics', () => {
 
     const timeRangeSelect = screen.getByDisplayValue('All time');
     expect(timeRangeSelect).toBeInTheDocument();
-    
+
     // Should not crash when changing selection without callback
     fireEvent.change(timeRangeSelect, { target: { value: '7d' } });
   });
@@ -342,7 +348,7 @@ describe('QuizAnalytics', () => {
     render(<QuizAnalytics {...defaultProps} onRefresh={undefined} />);
 
     const refreshButton = screen.getByTitle('Refresh data');
-    
+
     // Should not crash when clicking without callback
     await user.click(refreshButton);
   });
@@ -366,7 +372,13 @@ describe('QuizAnalytics', () => {
       attempts: manyAttempts,
     };
 
-    render(<QuizAnalytics {...defaultProps} data={dataWithManyAttempts} timeRange="all" />);
+    render(
+      <QuizAnalytics
+        {...defaultProps}
+        data={dataWithManyAttempts}
+        timeRange='all'
+      />
+    );
 
     await user.click(screen.getByText('Attempts'));
 

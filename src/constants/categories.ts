@@ -144,7 +144,9 @@ export const getCategoryEmoji = (categoryId: string): string => {
   return category?.emoji || '📰';
 };
 
-export const getCategoryIcon = (categoryId: string): React.ComponentType<any> => {
+export const getCategoryIcon = (
+  categoryId: string
+): React.ComponentType<any> => {
   const category = getCategoryById(categoryId);
   return category?.icon || Radio;
 };
@@ -160,10 +162,12 @@ export const getCategoryColor = (categoryId: string): string => {
 };
 
 // Get categories for display (excluding 'all' for filter lists)
-export const getDisplayCategories = (includeAll = true): readonly Category[] => {
+export const getDisplayCategories = (
+  includeAll = true
+): readonly Category[] => {
   return includeAll ? CATEGORIES : CATEGORIES.slice(1);
 };
 
 // Type exports
-export type CategoryId = typeof CATEGORIES[number]['id'];
-export type CategoryColor = typeof CATEGORIES[number]['color'];
+export type CategoryId = (typeof CATEGORIES)[number]['id'];
+export type CategoryColor = (typeof CATEGORIES)[number]['color'];

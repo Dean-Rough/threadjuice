@@ -39,31 +39,34 @@ class EmailService {
    * Subscribe user to newsletter
    */
   async subscribeToNewsletter(
-    email: string, 
+    email: string,
     preferences?: Partial<NewsletterSubscriber['preferences']>
   ): Promise<{ success: boolean; message: string }> {
     try {
       if (!this.apiKey) {
         // Development mode: Just log the subscription
-        console.log('Newsletter subscription (dev mode):', { email, preferences });
-        return { 
-          success: true, 
-          message: 'Subscribed successfully (development mode)' 
+        // console.log('Newsletter subscription (dev mode):', { email, preferences });
+        return {
+          success: true,
+          message: 'Subscribed successfully (development mode)',
         };
       }
 
       // Add to Resend audience
-      const response = await fetch(`${RESEND_API_URL}/audiences/${NEWSLETTER_LIST_ID}/contacts`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          unsubscribed: false,
-        }),
-      });
+      const response = await fetch(
+        `${RESEND_API_URL}/audiences/${NEWSLETTER_LIST_ID}/contacts`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            unsubscribed: false,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const error = await response.text();
@@ -76,15 +79,15 @@ class EmailService {
       // Store subscription in database (you would implement this)
       await this.storeSubscription(email, preferences);
 
-      return { 
-        success: true, 
-        message: 'Successfully subscribed to newsletter' 
+      return {
+        success: true,
+        message: 'Successfully subscribed to newsletter',
       };
     } catch (error) {
       console.error('Newsletter subscription failed:', error);
-      return { 
-        success: false, 
-        message: 'Failed to subscribe. Please try again.' 
+      return {
+        success: false,
+        message: 'Failed to subscribe. Please try again.',
       };
     }
   }
@@ -92,22 +95,27 @@ class EmailService {
   /**
    * Unsubscribe user from newsletter
    */
-  async unsubscribeFromNewsletter(email: string): Promise<{ success: boolean; message: string }> {
+  async unsubscribeFromNewsletter(
+    email: string
+  ): Promise<{ success: boolean; message: string }> {
     try {
       if (!this.apiKey) {
-        console.log('Newsletter unsubscription (dev mode):', { email });
-        return { 
-          success: true, 
-          message: 'Unsubscribed successfully (development mode)' 
+        // console.log('Newsletter unsubscription (dev mode):', { email });
+        return {
+          success: true,
+          message: 'Unsubscribed successfully (development mode)',
         };
       }
 
-      const response = await fetch(`${RESEND_API_URL}/audiences/${NEWSLETTER_LIST_ID}/contacts/${email}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-      });
+      const response = await fetch(
+        `${RESEND_API_URL}/audiences/${NEWSLETTER_LIST_ID}/contacts/${email}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to unsubscribe from Resend');
@@ -116,15 +124,15 @@ class EmailService {
       // Update subscription status in database
       await this.updateSubscriptionStatus(email, false);
 
-      return { 
-        success: true, 
-        message: 'Successfully unsubscribed from newsletter' 
+      return {
+        success: true,
+        message: 'Successfully unsubscribed from newsletter',
       };
     } catch (error) {
       console.error('Newsletter unsubscription failed:', error);
-      return { 
-        success: false, 
-        message: 'Failed to unsubscribe. Please try again.' 
+      return {
+        success: false,
+        message: 'Failed to unsubscribe. Please try again.',
       };
     }
   }
@@ -134,7 +142,7 @@ class EmailService {
    */
   private async sendWelcomeEmail(email: string): Promise<void> {
     const template = this.getWelcomeEmailTemplate();
-    
+
     await this.sendEmail({
       to: email,
       subject: template.subject,
@@ -155,14 +163,14 @@ class EmailService {
   }): Promise<{ success: boolean; messageId?: string }> {
     try {
       if (!this.apiKey) {
-        console.log('Email send (dev mode):', options);
+        // console.log('Email send (dev mode):', options);
         return { success: true, messageId: 'dev-mode-id' };
       }
 
       const response = await fetch(`${RESEND_API_URL}/emails`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -190,7 +198,9 @@ class EmailService {
   /**
    * Send newsletter to all subscribers
    */
-  async sendNewsletter(template: EmailTemplate): Promise<{ success: boolean; sent: number }> {
+  async sendNewsletter(
+    template: EmailTemplate
+  ): Promise<{ success: boolean; sent: number }> {
     try {
       const subscribers = await this.getActiveSubscribers();
       let sentCount = 0;
@@ -309,30 +319,39 @@ Unsubscribe: {{unsubscribe_url}} | Visit: ${env.NEXT_PUBLIC_APP_URL}
   /**
    * Personalize email template with subscriber data
    */
-  private personalizeTemplate(html: string, subscriber: NewsletterSubscriber): string {
+  private personalizeTemplate(
+    html: string,
+    subscriber: NewsletterSubscriber
+  ): string {
     return html
       .replace(/{{email}}/g, subscriber.email)
       .replace(/{{firstName}}/g, subscriber.firstName || 'Reader')
-      .replace(/{{unsubscribe_url}}/g, `${env.NEXT_PUBLIC_APP_URL}/unsubscribe?email=${encodeURIComponent(subscriber.email)}`);
+      .replace(
+        /{{unsubscribe_url}}/g,
+        `${env.NEXT_PUBLIC_APP_URL}/unsubscribe?email=${encodeURIComponent(subscriber.email)}`
+      );
   }
 
   /**
    * Store subscription in database (placeholder)
    */
   private async storeSubscription(
-    email: string, 
+    email: string,
     preferences?: Partial<NewsletterSubscriber['preferences']>
   ): Promise<void> {
     // In a real implementation, you would store this in your database
-    console.log('Storing subscription:', { email, preferences });
+    // console.log('Storing subscription:', { email, preferences });
   }
 
   /**
    * Update subscription status in database (placeholder)
    */
-  private async updateSubscriptionStatus(email: string, isActive: boolean): Promise<void> {
+  private async updateSubscriptionStatus(
+    email: string,
+    isActive: boolean
+  ): Promise<void> {
     // In a real implementation, you would update the database
-    console.log('Updating subscription status:', { email, isActive });
+    // console.log('Updating subscription status:', { email, isActive });
   }
 
   /**
@@ -348,7 +367,7 @@ Unsubscribe: {{unsubscribe_url}} | Visit: ${env.NEXT_PUBLIC_APP_URL}
    */
   createDailyDigestTemplate(posts: any[]): EmailTemplate {
     const topPosts = posts.slice(0, 5);
-    
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -374,7 +393,9 @@ Unsubscribe: {{unsubscribe_url}} | Visit: ${env.NEXT_PUBLIC_APP_URL}
             <p style="color: #666;">The best stories from Reddit, curated and crafted by AI</p>
           </div>
           
-          ${topPosts.map(post => `
+          ${topPosts
+            .map(
+              post => `
             <div class="post">
               <h2 class="post-title">${post.title}</h2>
               <div class="post-meta">
@@ -387,7 +408,9 @@ Unsubscribe: {{unsubscribe_url}} | Visit: ${env.NEXT_PUBLIC_APP_URL}
                 Read Full Story →
               </a>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
           
           <div style="text-align: center; margin: 30px 0;">
             <a href="${env.NEXT_PUBLIC_APP_URL}/blog" style="background: #ea580c; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">
@@ -410,14 +433,18 @@ Unsubscribe: {{unsubscribe_url}} | Visit: ${env.NEXT_PUBLIC_APP_URL}
       text: `
 Your Daily ThreadJuice - ${new Date().toLocaleDateString()}
 
-${topPosts.map(post => `
+${topPosts
+  .map(
+    post => `
 ${post.title}
 By ${post.persona?.name || 'ThreadJuice Writer'} • ${new Date(post.created_at).toLocaleDateString()}
 
 ${post.excerpt || post.content?.substring(0, 200) + '...'}
 
 Read more: ${env.NEXT_PUBLIC_APP_URL}/posts/${post.slug}
-`).join('\n---\n')}
+`
+  )
+  .join('\n---\n')}
 
 Read more stories: ${env.NEXT_PUBLIC_APP_URL}/blog
 

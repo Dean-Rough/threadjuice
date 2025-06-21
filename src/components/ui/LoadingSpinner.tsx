@@ -46,7 +46,11 @@ export function LoadingSpinner({
     gray: 'text-gray-500',
   };
 
-  const { spinner: spinnerSize, text: textSize, container: containerGap } = sizeConfig[size];
+  const {
+    spinner: spinnerSize,
+    text: textSize,
+    container: containerGap,
+  } = sizeConfig[size];
   const colorClass = colorConfig[color];
 
   // Spinner variants
@@ -57,10 +61,10 @@ export function LoadingSpinner({
       case 'dots':
         return (
           <div className={`flex space-x-1 ${containerGap}`}>
-            {[0, 1, 2].map((i) => (
+            {[0, 1, 2].map(i => (
               <div
                 key={i}
-                className={`${spinnerSize} ${colorClass.replace('text-', 'bg-')} rounded-full animate-bounce`}
+                className={`${spinnerSize} ${colorClass.replace('text-', 'bg-')} animate-bounce rounded-full`}
                 style={{ animationDelay: `${i * 0.1}s` }}
               />
             ))}
@@ -70,32 +74,37 @@ export function LoadingSpinner({
       case 'pulse':
         return (
           <div className={`${baseClass} animate-pulse`}>
-            <Zap className="w-full h-full" />
+            <Zap className='h-full w-full' />
           </div>
         );
 
       case 'bounce':
         return (
           <div className={`${baseClass} animate-bounce`}>
-            <RefreshCw className="w-full h-full" />
+            <RefreshCw className='h-full w-full' />
           </div>
         );
 
       case 'fade':
         return (
           <div className={`${baseClass} animate-pulse`}>
-            <div className={`w-full h-full ${colorClass.replace('text-', 'bg-')} rounded-full`} />
+            <div
+              className={`h-full w-full ${colorClass.replace('text-', 'bg-')} rounded-full`}
+            />
           </div>
         );
 
       default:
         return (
-          <Loader2 className={`${baseClass} animate-spin`} />
+          <div 
+            className={`${baseClass} animate-spin border-2 border-transparent border-t-current rounded-full`}
+            data-testid="default-spinner"
+          />
         );
     }
   };
 
-  const containerClass = fullScreen 
+  const containerClass = fullScreen
     ? 'fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50'
     : `flex items-center justify-center ${containerGap}`;
 
@@ -103,28 +112,24 @@ export function LoadingSpinner({
     <div
       ref={spinnerRef}
       className={`${containerClass} ${getAnimationClass()} ${className}`}
-      data-testid="loading-spinner"
-      role="status"
+      data-testid='loading-spinner'
+      role='status'
       aria-label={text || 'Loading'}
     >
       {renderSpinner()}
-      
+
       {text && (
-        <span className={`${textSize} ${colorClass} font-medium`}>
-          {text}
-        </span>
+        <span className={`${textSize} ${colorClass} font-medium`}>{text}</span>
       )}
-      
+
       {/* Screen reader text */}
-      <span className="sr-only">
-        {text || 'Loading content...'}
-      </span>
-      
+      <span className='sr-only'>{text || 'Loading content...'}</span>
+
       <style jsx>{`
         .animate-fade-in {
           animation: fadeIn 0.3s ease-in-out;
         }
-        
+
         @keyframes fadeIn {
           from {
             opacity: 0;

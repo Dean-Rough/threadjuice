@@ -21,4 +21,4 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   return data as Post;
 }
 
-export default supabase; 
+export default supabase;

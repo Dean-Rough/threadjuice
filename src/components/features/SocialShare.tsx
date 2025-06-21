@@ -1,19 +1,19 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { 
-  Share2, 
-  Twitter, 
-  Facebook, 
-  Linkedin, 
-  Copy, 
-  Download, 
+import {
+  Share2,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Copy,
+  Download,
   MessageCircle,
   Mail,
   Link as LinkIcon,
   Instagram,
   Camera,
-  X
+  X,
 } from 'lucide-react';
 
 interface SocialShareProps {
@@ -41,7 +41,7 @@ export default function SocialShare({
   author = '',
   authorAvatar = '',
   featuredImage = '',
-  className = ''
+  className = '',
 }: SocialShareProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showCustomImage, setShowCustomImage] = useState(false);
@@ -50,7 +50,8 @@ export default function SocialShare({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const shareText = excerpt || title;
-  const shareUrl = typeof window !== 'undefined' ? window.location.origin + url : url;
+  const shareUrl =
+    typeof window !== 'undefined' ? window.location.origin + url : url;
 
   const platforms: SharePlatform[] = [
     {
@@ -58,36 +59,36 @@ export default function SocialShare({
       icon: Twitter,
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}&via=ThreadJuice`,
       color: 'text-blue-400',
-      bgColor: 'bg-blue-50 hover:bg-blue-100'
+      bgColor: 'bg-blue-50 hover:bg-blue-100',
     },
     {
       name: 'Facebook',
       icon: Facebook,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50 hover:bg-blue-100'
+      bgColor: 'bg-blue-50 hover:bg-blue-100',
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
       color: 'text-blue-700',
-      bgColor: 'bg-blue-50 hover:bg-blue-100'
+      bgColor: 'bg-blue-50 hover:bg-blue-100',
     },
     {
       name: 'Reddit',
       icon: MessageCircle,
       url: `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}`,
       color: 'text-orange-600',
-      bgColor: 'bg-orange-50 hover:bg-orange-100'
+      bgColor: 'bg-orange-50 hover:bg-orange-100',
     },
     {
       name: 'Email',
       icon: Mail,
       url: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`,
       color: 'text-gray-600',
-      bgColor: 'bg-gray-50 hover:bg-gray-100'
-    }
+      bgColor: 'bg-gray-50 hover:bg-gray-100',
+    },
   ];
 
   const copyToClipboard = async () => {
@@ -104,7 +105,7 @@ export default function SocialShare({
     if (!canvasRef.current) return;
 
     setGeneratingImage(true);
-    
+
     try {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
@@ -115,7 +116,12 @@ export default function SocialShare({
       canvas.height = 630;
 
       // Create gradient background
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      const gradient = ctx.createLinearGradient(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
       gradient.addColorStop(0, '#f97316'); // Orange
       gradient.addColorStop(1, '#ea580c'); // Darker orange
       ctx.fillStyle = gradient;
@@ -128,7 +134,8 @@ export default function SocialShare({
         ctx.fillRect(
           Math.random() * canvas.width,
           Math.random() * canvas.height,
-          2, 2
+          2,
+          2
         );
       }
       ctx.globalAlpha = 1;
@@ -142,7 +149,7 @@ export default function SocialShare({
       // Add main title
       ctx.font = 'bold 56px Arial, sans-serif';
       ctx.fillStyle = '#ffffff';
-      
+
       // Word wrap for title
       const words = title.split(' ');
       const maxWidth = canvas.width - 120;
@@ -154,7 +161,7 @@ export default function SocialShare({
         const testLine = line + words[n] + ' ';
         const metrics = ctx.measureText(testLine);
         const testWidth = metrics.width;
-        
+
         if (testWidth > maxWidth && n > 0) {
           ctx.fillText(line, 60, y);
           line = words[n] + ' ';
@@ -188,7 +195,6 @@ export default function SocialShare({
       ctx.beginPath();
       ctx.arc(canvas.width - 200, 150, 15, 0, 2 * Math.PI);
       ctx.stroke();
-
     } catch (error) {
       console.error('Failed to generate image:', error);
     } finally {
@@ -198,9 +204,12 @@ export default function SocialShare({
 
   const downloadImage = () => {
     if (!canvasRef.current) return;
-    
+
     const link = document.createElement('a');
-    link.download = `threadjuice-${title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30)}.png`;
+    link.download = `threadjuice-${title
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-')
+      .slice(0, 30)}.png`;
     link.href = canvasRef.current.toDataURL();
     link.click();
   };
@@ -242,7 +251,7 @@ export default function SocialShare({
         const testLine = line + words[n] + ' ';
         const metrics = ctx.measureText(testLine);
         const testWidth = metrics.width;
-        
+
         if (testWidth > maxWidth && n > 0) {
           ctx.fillText(line, canvas.width / 2, y);
           line = words[n] + ' ';
@@ -262,10 +271,12 @@ export default function SocialShare({
 
       // Download the story image
       const link = document.createElement('a');
-      link.download = `threadjuice-story-${title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 20)}.png`;
+      link.download = `threadjuice-story-${title
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .slice(0, 20)}.png`;
       link.href = canvas.toDataURL();
       link.click();
-
     } catch (error) {
       console.error('Failed to create story image:', error);
     }
@@ -276,59 +287,63 @@ export default function SocialShare({
       <div className={`relative ${className}`}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+          className='flex items-center space-x-2 rounded-lg bg-orange-600 px-4 py-2 text-white transition-colors hover:bg-orange-700'
         >
-          <Share2 className="w-4 h-4" />
+          <Share2 className='h-4 w-4' />
           <span>Share</span>
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50">
+          <div className='absolute left-0 top-full z-50 mt-2 w-80 rounded-lg border border-gray-200 bg-white p-4 shadow-xl'>
             {/* Close button */}
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Share this post</h3>
+            <div className='mb-4 flex items-center justify-between'>
+              <h3 className='text-lg font-semibold text-gray-900'>
+                Share this post
+              </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className='text-gray-400 hover:text-gray-600'
               >
-                <X className="w-5 h-5" />
+                <X className='h-5 w-5' />
               </button>
             </div>
 
             {/* Social platforms */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {platforms.map((platform) => {
+            <div className='mb-4 grid grid-cols-2 gap-2'>
+              {platforms.map(platform => {
                 const Icon = platform.icon;
                 return (
                   <a
                     key={platform.name}
                     href={platform.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center space-x-2 p-3 rounded-lg ${platform.bgColor} transition-colors`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className={`flex items-center space-x-2 rounded-lg p-3 ${platform.bgColor} transition-colors`}
                   >
-                    <Icon className={`w-5 h-5 ${platform.color}`} />
-                    <span className="text-sm font-medium text-gray-700">{platform.name}</span>
+                    <Icon className={`h-5 w-5 ${platform.color}`} />
+                    <span className='text-sm font-medium text-gray-700'>
+                      {platform.name}
+                    </span>
                   </a>
                 );
               })}
             </div>
 
             {/* Copy link */}
-            <div className="mb-4">
-              <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
-                <LinkIcon className="w-5 h-5 text-gray-400" />
+            <div className='mb-4'>
+              <div className='flex items-center space-x-2 rounded-lg bg-gray-50 p-3'>
+                <LinkIcon className='h-5 w-5 text-gray-400' />
                 <input
-                  type="text"
+                  type='text'
                   value={shareUrl}
                   readOnly
-                  className="flex-1 bg-transparent text-sm text-gray-600 focus:outline-none"
+                  className='flex-1 bg-transparent text-sm text-gray-600 focus:outline-none'
                 />
                 <button
                   onClick={copyToClipboard}
-                  className={`px-3 py-1 text-sm rounded ${
-                    copied 
-                      ? 'bg-green-100 text-green-700' 
+                  className={`rounded px-3 py-1 text-sm ${
+                    copied
+                      ? 'bg-green-100 text-green-700'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
@@ -338,61 +353,63 @@ export default function SocialShare({
             </div>
 
             {/* Custom graphics */}
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-gray-900">Custom Graphics</h4>
+            <div className='border-t border-gray-200 pt-4'>
+              <div className='mb-3 flex items-center justify-between'>
+                <h4 className='text-sm font-medium text-gray-900'>
+                  Custom Graphics
+                </h4>
                 <button
                   onClick={() => setShowCustomImage(!showCustomImage)}
-                  className="text-sm text-orange-600 hover:text-orange-700"
+                  className='text-sm text-orange-600 hover:text-orange-700'
                 >
                   {showCustomImage ? 'Hide' : 'Show'}
                 </button>
               </div>
 
               {showCustomImage && (
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-2">
+                <div className='space-y-3'>
+                  <div className='grid grid-cols-2 gap-2'>
                     <button
                       onClick={generateCustomImage}
                       disabled={generatingImage}
-                      className="flex items-center justify-center space-x-1 p-2 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 disabled:opacity-50"
+                      className='flex items-center justify-center space-x-1 rounded bg-blue-50 p-2 text-blue-700 hover:bg-blue-100 disabled:opacity-50'
                     >
-                      <Camera className="w-4 h-4" />
-                      <span className="text-xs">Generate</span>
+                      <Camera className='h-4 w-4' />
+                      <span className='text-xs'>Generate</span>
                     </button>
-                    
+
                     <button
                       onClick={downloadImage}
-                      className="flex items-center justify-center space-x-1 p-2 bg-green-50 text-green-700 rounded hover:bg-green-100"
+                      className='flex items-center justify-center space-x-1 rounded bg-green-50 p-2 text-green-700 hover:bg-green-100'
                     >
-                      <Download className="w-4 h-4" />
-                      <span className="text-xs">Download</span>
+                      <Download className='h-4 w-4' />
+                      <span className='text-xs'>Download</span>
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className='grid grid-cols-2 gap-2'>
                     <button
                       onClick={() => shareToStory('instagram')}
-                      className="flex items-center justify-center space-x-1 p-2 bg-purple-50 text-purple-700 rounded hover:bg-purple-100"
+                      className='flex items-center justify-center space-x-1 rounded bg-purple-50 p-2 text-purple-700 hover:bg-purple-100'
                     >
-                      <Instagram className="w-4 h-4" />
-                      <span className="text-xs">IG Story</span>
+                      <Instagram className='h-4 w-4' />
+                      <span className='text-xs'>IG Story</span>
                     </button>
 
                     <button
                       onClick={() => shareToStory('snapchat')}
-                      className="flex items-center justify-center space-x-1 p-2 bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100"
+                      className='flex items-center justify-center space-x-1 rounded bg-yellow-50 p-2 text-yellow-700 hover:bg-yellow-100'
                     >
-                      <Camera className="w-4 h-4" />
-                      <span className="text-xs">Snap Story</span>
+                      <Camera className='h-4 w-4' />
+                      <span className='text-xs'>Snap Story</span>
                     </button>
                   </div>
 
                   {/* Preview canvas */}
-                  <div className="mt-3">
+                  <div className='mt-3'>
                     <canvas
                       ref={canvasRef}
-                      className="w-full h-32 object-cover rounded border border-gray-200"
+                      className='h-32 w-full rounded border border-gray-200 object-cover'
                       style={{ display: 'block' }}
                     />
                   </div>
@@ -405,10 +422,7 @@ export default function SocialShare({
 
       {/* Overlay to close dropdown when clicking outside */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className='fixed inset-0 z-40' onClick={() => setIsOpen(false)} />
       )}
     </>
   );
