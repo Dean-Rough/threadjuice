@@ -41,34 +41,19 @@ export class StoryIngestionService {
   static async migrateAllStories(): Promise<{ success: number; errors: string[] }> {
     const results = { success: 0, errors: [] as string[] };
     
-    // Get all story files
-    const storyFiles = [
-      'first-story-sister-fake-influencer-lifestyle-exposed.json',
-      'new-story-boss-birthday-presentation-revenge.json',
-      'test-short-story.json',
-      'auto-generated-swiping-right-on-sweet-revenge-karma-strikes-back.json',
-      'auto-generated-thanksgiving-exposes-instagram-lies.json',
-      'auto-generated-office-tyrant-meets-his-match.json',
-      'auto-generated-tinder-date-revenge-master-manipulator.json',
-      'auto-generated-instagram-lies-cousin-exposed.json',
-      'auto-generated-cousins-fake-instagram-life-exposed.json',
-      'auto-generated-tinder-trap-outsmarted-cheating-ex.json',
-      'auto-generated-entitled-customer-demands-impossible.json',
-      'auto-generated-unraveling-cousins-perfect-life.json',
-      'auto-generated-when-the-polka-blared-all-night.json',
-      'auto-generated-noisy-neighbor-meditation-guru.json',
-      'auto-generated-toxic-boss-career-downfall.json'
-    ];
+    // Get all story files dynamically
+    const files = fs.readdirSync(process.cwd());
+    const storyFiles = files.filter(f => 
+      (f.includes('auto-generated-') || f.includes('generated-') || f.includes('story-')) 
+      && f.endsWith('.json')
+    );
 
     for (const filename of storyFiles) {
       try {
         const filePath = path.join(process.cwd(), filename);
-        
-        if (fs.existsSync(filePath)) {
-          const storyData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as StoryData;
-          await this.ingestStory(storyData, true); // auto-approve = true
-          results.success++;
-        }
+        const storyData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as StoryData;
+        await this.ingestStory(storyData, true); // auto-approve = true
+        results.success++;
       } catch (error) {
         console.error(`Error migrating ${filename}:`, error);
         results.errors.push(`${filename}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -155,6 +140,38 @@ export class StoryIngestionService {
 
     // console.log(`Story ${storyData.slug} ingested successfully`);
     return post.id;
+  }
+
+  /**
+   * Generate bulk stories using the unified generator
+   */
+  static async generateBulkStories(count: number): Promise<{ success: number; errors: string[] }> {
+    const results = { success: 0, errors: [] as string[] };
+    
+    try {
+      // Use the unified story generator via child process
+      const { execSync } = await import('child_process');
+      const output = execSync(
+        `node scripts/content/generate-story-unified.js bulk ${count}`,
+        { encoding: 'utf8', cwd: process.cwd() }
+      );
+      
+      // Parse results from output
+      const generatedMatch = output.match(/Generated (\d+) stories/);
+      if (generatedMatch) {
+        results.success = parseInt(generatedMatch[1]);
+      }
+      
+      const failedMatch = output.match(/Failed: (\d+)/);
+      if (failedMatch && parseInt(failedMatch[1]) > 0) {
+        results.errors.push(`${failedMatch[1]} stories failed to generate`);
+      }
+    } catch (error) {
+      console.error('Bulk generation failed:', error);
+      results.errors.push(error instanceof Error ? error.message : 'Unknown error');
+    }
+    
+    return results;
   }
 
   /**

@@ -24,7 +24,6 @@
     "db:reset": "prisma migrate reset --force && npm run db:seed",
     "db:setup": "prisma generate && prisma migrate deploy",
     "db:studio": "prisma studio",
-    "content:generate": "node generate-full-automated-story.js",
     "content:batch": "node scripts/content/batch-import.js",
     "content:import": "node scripts/content/batch-import.js --existing-only",
     "maintenance:cleanup": "node scripts/maintenance/cleanup-development.js",
@@ -32,7 +31,10 @@
     "production:setup": "npm run maintenance:cleanup && npm run content:import && npm run content:generate",
     "production:clean": "npm run maintenance:cleanup --dry-run",
     "maintenance:optimize": "node scripts/maintenance/optimize-images.js",
-    "deploy:build": "next build && next export"
+    "deploy:build": "next build && next export",
+    "story:generate": "node scripts/content/generate-story-unified.js",
+    "story:bulk": "node scripts/content/generate-story-unified.js bulk",
+    "story:help": "node scripts/content/generate-story-unified.js help"
   },
   "keywords": [
     "reddit",

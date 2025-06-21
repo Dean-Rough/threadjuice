@@ -175,6 +175,11 @@ tsc --noEmit &&
 next build &&
 next start
 
+# Story Generation (Unified System)
+npm run story:generate      # Generate single story
+npm run story:bulk 5        # Generate multiple stories
+npm run story:help          # Show all options
+
 # Database (when implemented)
 npm run db:setup    # Initialize database
 npm run db:migrate  # Run migrations
@@ -182,6 +187,22 @@ npm run db:seed     # Seed with data
 ```
 
 This project is now ready for backend implementation while maintaining a polished, production-ready frontend experience.
+
+## Story Generation System
+
+**Unified Script**: All story generation is handled by `scripts/content/generate-story-unified.js`
+- Single source of truth for all story generation
+- Consistent 12-section structure with The Terry's commentary
+- Smart stock image selection based on content analysis
+- Direct Supabase integration
+- See `docs/STORY_GENERATION.md` for detailed documentation
+
+**Key Features**:
+- AI-powered content generation with GPT-4o
+- Intelligent image matching from curated library
+- Three distinct writer personas
+- 10+ story categories
+- Automatic database import
 
 ## NO MOCK OR SIMULATED DATA ANYWHERE
 **HARD RULE**: Never use mock, simulated, dummy, or placeholder data. All content must be real, production-ready material. No "simulate", "mock", or "fake" prefixes in data generation. Generate actual viral content stories with authentic scenarios based on real internet phenomena.

@@ -876,7 +876,7 @@ _Latest updates reflecting post-launch content automation and template refinemen
 #### Story Generation Script
 
 ```bash
-# Current implementation in generate-full-automated-story.js
+# Current implementation in scripts/content/generate-story-unified.js
 - GPT-4o content generation with persona prompts
 - Intelligent stock photo selection (analyzeAndSelectImage)
 - Modular story structure with quotes and comments

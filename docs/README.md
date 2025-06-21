@@ -99,7 +99,7 @@ npm run test:e2e     # Playwright E2E tests
 npm run test:e2e:ui  # Playwright with UI mode
 
 # Story Generation
-node generate-full-automated-story.js  # Generate new viral story with stock images
+node scripts/content/generate-story-unified.js  # Generate new viral story with stock images
 # Edit script to use generateFullStory(true) for AI-generated images
 ```
 
