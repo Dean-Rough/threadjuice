@@ -145,7 +145,7 @@ export default function GifReaction({
         {/* GIF Title/Credit */}
         <div className="mt-2 text-center">
           <p className="text-xs text-muted-foreground">
-            via GIPHY
+            via Klipy
           </p>
         </div>
       </div>

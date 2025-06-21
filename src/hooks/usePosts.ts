@@ -31,8 +31,10 @@ export const usePosts = (filters: PostFilters = {}) => {
   return useQuery({
     queryKey: postKeys.list(filters),
     queryFn: () => postService.getPosts(filters),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    staleTime: 0, // Force fresh data
+    gcTime: 0, // No caching
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
 };
 

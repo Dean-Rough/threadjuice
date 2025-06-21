@@ -83,10 +83,18 @@ class PostService {
     if (filters.page) params.set('page', filters.page.toString());
     if (filters.limit) params.set('limit', filters.limit.toString());
     if (filters.search) params.set('search', filters.search);
+    
+    // Add cache buster
+    params.set('_t', Date.now().toString());
 
     const url = `${this.baseUrl}?${params.toString()}`;
     
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);

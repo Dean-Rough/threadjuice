@@ -37,12 +37,15 @@ class TwitterApiClient {
   private baseUrl = 'https://api.twitter.com/2';
   
   constructor() {
+    // Import env dynamically to avoid circular dependency
+    const { env } = require('./env');
+    
     this.config = {
-      bearerToken: process.env.TWITTER_BEARER_TOKEN || '',
-      apiKey: process.env.TWITTER_API_KEY || '',
-      apiSecret: process.env.TWITTER_API_SECRET || '',
-      accessToken: process.env.TWITTER_ACCESS_TOKEN || '',
-      accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || '',
+      bearerToken: env.TWITTER_BEARER_TOKEN || '',
+      apiKey: env.TWITTER_API_KEY || '',
+      apiSecret: env.TWITTER_API_SECRET || '',
+      accessToken: env.TWITTER_ACCESS_TOKEN || '',
+      accessTokenSecret: env.TWITTER_ACCESS_TOKEN_SECRET || '',
       dramaEnabled: process.env.TWITTER_DRAMA_ENABLED === 'true',
       maxStoriesPerDay: parseInt(process.env.TWITTER_DRAMA_MAX_STORIES_PER_DAY || '3'),
       minEngagement: parseInt(process.env.TWITTER_DRAMA_MIN_ENGAGEMENT || '100'),

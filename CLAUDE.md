@@ -161,7 +161,6 @@ threadjuice/
 - **Performance**: Core Web Vitals optimized
 
 ## Development Commands
-
 ```bash
 # Development
 npm run dev         # Start development server
@@ -173,7 +172,7 @@ npm run test        # Jest unit tests
 npm run test:e2e    # Playwright E2E tests
 tsc --noEmit &&
 next build &&
-next start
+next start 
 
 # Story Generation (Unified System)
 npm run story:generate      # Generate single story

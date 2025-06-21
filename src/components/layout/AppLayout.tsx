@@ -3,6 +3,7 @@
 import { Header } from './Header';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { HeaderAd } from '@/components/ads';
+import { CacheClearer } from '@/components/CacheClearer';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <QueryProvider>
+      <CacheClearer />
       <div className='min-h-screen bg-background'>
         <Header />
 

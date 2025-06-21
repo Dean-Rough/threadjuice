@@ -1,0 +1,14 @@
+[
+  {
+    "id": "img1",
+    "description": "Kitchen cooking scene",
+    "urls": {
+      "regular": "https://example.com/kitchen.jpg",
+      "small": "https://example.com/kitchen-small.jpg"
+    },
+    "user": {
+      "name": "Test Photographer",
+      "username": "testphoto"
+    }
+  }
+]

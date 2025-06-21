@@ -31,11 +31,11 @@ export class KlipyService {
   private customerId = 'threadjuice-user-001'; // Static customer ID for our app
 
   constructor() {
-    // Use Klipy API key as app_key
-    this.appKey = 'cjTwm3m20e036krKRkSF8Ak87g6lUagPIxsdRWE5LMfpOxRdqstlrWIkjMDKO8Mx';
+    // Use environment variable for Klipy API key
+    this.appKey = process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY || '';
     
     if (!this.appKey) {
-      console.warn('Klipy API key not found. GIF reactions will not work.');
+      console.warn('Klipy API key not found in environment variables. GIF reactions will be disabled.');
       return;
     }
   }

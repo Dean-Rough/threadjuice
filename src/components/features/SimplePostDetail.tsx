@@ -23,17 +23,224 @@ import TwitterQuote from '@/components/ui/TwitterQuote';
 import TwitterConversation from '@/components/ui/TwitterConversation';
 import AnimatedSpeechBubble from '@/components/ui/AnimatedSpeechBubble';
 import { renderContentWithLinks } from '@/lib/contentLinkParser';
+import HoverLink from '@/components/ui/HoverLink';
 import { contentQualityChecker, ContentQualityMetrics } from '@/lib/contentQualityChecker';
 import { sentimentAnalyzer, EmotionalAnalysis } from '@/lib/sentimentAnalyzer';
 import { metaphorExtractor, MetaphorInsight } from '@/lib/metaphorExtractor';
 import { giphyService, GifResult } from '@/lib/klipyService';
 import GifReaction from '@/components/ui/GifReaction';
+import { renderAdditionalSections } from './renderSections';
+import { usePostsByCategory } from '@/hooks/usePosts';
 
 interface PostDetailProps {
   postId: string;
   showSidebar?: boolean;
   showRelated?: boolean;
 }
+
+// Define all categories for automatic linking
+const CATEGORIES = [
+  'AITA', 'revenge', 'funny', 'news', 'relationships', 'work stories',
+  'malicious compliance', 'tiktok fails', 'roommate drama', 'food fails',
+  'politics', 'sports', 'technology', 'celebrity', 'business', 'workplace',
+  'education', 'travel', 'food', 'parenting', 'social', 'health',
+  'environment', 'gaming', 'legal', 'housing', 'money'
+];
+
+// Helper function to render content with automatic category links
+const renderContentWithAutoLinks = (content: string, post: any) => {
+  // Pattern to match "Originally posted by [username] on [platform]"
+  const sourcePattern = /Originally posted by ([\w@\/\-_]+) on (\w+)/gi;
+  
+  // Pattern for categories (case insensitive)
+  const categoryPattern = new RegExp(`\\b(${CATEGORIES.join('|')})\\b`, 'gi');
+  
+  // Pattern for Reddit usernames
+  const redditUserPattern = /\bu\/[\w\-_]+\b/g;
+  
+  // Pattern for Twitter handles
+  const twitterHandlePattern = /@[\w]+\b/g;
+  
+  // Pattern for subreddits
+  const subredditPattern = /\br\/[\w]+\b/g;
+  
+  let processedContent = content;
+  const replacements: Array<{start: number, end: number, element: React.ReactNode}> = [];
+  
+  // Process source links
+  let match;
+  while ((match = sourcePattern.exec(content)) !== null) {
+    const username = match[1];
+    const platform = match[2];
+    
+    replacements.push({
+      start: match.index,
+      end: match.index + match[0].length,
+      element: (
+        <span key={`source-${match.index}`}>
+          Originally posted by{' '}
+          <HoverLink
+            href={post.sourceUrl || '#'}
+            external={true}
+            className="text-orange-500 hover:text-orange-600 underline"
+          >
+            {username}
+          </HoverLink>
+          {' on '}
+          <HoverLink
+            href={post.sourceUrl || '#'}
+            external={true}
+            className="text-orange-500 hover:text-orange-600 underline"
+          >
+            {platform}
+          </HoverLink>
+        </span>
+      )
+    });
+  }
+  
+  // Process category links
+  while ((match = categoryPattern.exec(content)) !== null) {
+    const category = match[1];
+    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+    
+    // Skip if this overlaps with a source link
+    const overlaps = replacements.some(r => 
+      (match.index >= r.start && match.index < r.end) ||
+      (match.index + match[0].length > r.start && match.index + match[0].length <= r.end)
+    );
+    
+    if (!overlaps) {
+      replacements.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        element: (
+          <Link
+            key={`category-${match.index}`}
+            href={`/filter/category/${categorySlug}`}
+            className="text-orange-500 hover:text-orange-600"
+          >
+            {match[0]}
+          </Link>
+        )
+      });
+    }
+  }
+  
+  // Process Reddit usernames
+  while ((match = redditUserPattern.exec(content)) !== null) {
+    const username = match[0];
+    
+    // Skip if this overlaps with existing replacements
+    const overlaps = replacements.some(r => 
+      (match.index >= r.start && match.index < r.end) ||
+      (match.index + match[0].length > r.start && match.index + match[0].length <= r.end)
+    );
+    
+    if (!overlaps) {
+      replacements.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        element: (
+          <HoverLink
+            key={`reddit-${match.index}`}
+            href={`https://reddit.com/${username}`}
+            external={true}
+            className="text-blue-500 hover:text-blue-600"
+          >
+            {username}
+          </HoverLink>
+        )
+      });
+    }
+  }
+  
+  // Process Twitter handles
+  while ((match = twitterHandlePattern.exec(content)) !== null) {
+    const handle = match[0];
+    
+    // Skip if this overlaps with existing replacements
+    const overlaps = replacements.some(r => 
+      (match.index >= r.start && match.index < r.end) ||
+      (match.index + match[0].length > r.start && match.index + match[0].length <= r.end)
+    );
+    
+    if (!overlaps) {
+      replacements.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        element: (
+          <HoverLink
+            key={`twitter-${match.index}`}
+            href={`https://twitter.com/${handle.substring(1)}`}
+            external={true}
+            className="text-blue-400 hover:text-blue-500"
+          >
+            {handle}
+          </HoverLink>
+        )
+      });
+    }
+  }
+  
+  // Process subreddits
+  while ((match = subredditPattern.exec(content)) !== null) {
+    const subreddit = match[0];
+    
+    // Skip if this overlaps with existing replacements
+    const overlaps = replacements.some(r => 
+      (match.index >= r.start && match.index < r.end) ||
+      (match.index + match[0].length > r.start && match.index + match[0].length <= r.end)
+    );
+    
+    if (!overlaps) {
+      replacements.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        element: (
+          <HoverLink
+            key={`subreddit-${match.index}`}
+            href={`https://reddit.com/${subreddit}`}
+            external={true}
+            className="text-orange-500 hover:text-orange-600"
+          >
+            {subreddit}
+          </HoverLink>
+        )
+      });
+    }
+  }
+  
+  // Sort replacements by start position (reverse order for easier processing)
+  replacements.sort((a, b) => b.start - a.start);
+  
+  // Build the final content with replacements
+  const parts = [];
+  let lastEnd = content.length;
+  
+  for (const replacement of replacements) {
+    if (replacement.end < lastEnd) {
+      // Add text after this replacement
+      const textAfter = content.substring(replacement.end, lastEnd);
+      if (textAfter) {
+        parts.unshift(renderContentWithLinks(textAfter));
+      }
+    }
+    
+    // Add the replacement
+    parts.unshift(replacement.element);
+    
+    lastEnd = replacement.start;
+  }
+  
+  // Add any remaining text at the beginning
+  if (lastEnd > 0) {
+    const textBefore = content.substring(0, lastEnd);
+    parts.unshift(renderContentWithLinks(textBefore));
+  }
+  
+  return parts.length > 0 ? <>{parts}</> : renderContentWithLinks(content);
+};
 
 export default function SimplePostDetail({
   postId,
@@ -50,6 +257,13 @@ export default function SimplePostDetail({
   const [emotionalAnalysis, setEmotionalAnalysis] = useState<EmotionalAnalysis[]>([]);
   const [metaphorInsight, setMetaphorInsight] = useState<MetaphorInsight | null>(null);
   const [showTerrysBubble, setShowTerrysBubble] = useState(false);
+
+  // Helper function to format view/comment counts
+  const formatCount = (count: number): string => {
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+    return count.toString();
+  };
 
   // Function to determine what content to insert between paragraphs
   const getInsertionContent = (paragraphIndex: number, emotion?: EmotionalAnalysis) => {
@@ -76,7 +290,7 @@ export default function SimplePostDetail({
       return (
         <blockquote className="border-l-4 border-orange-500 pl-6 py-4 my-6 bg-muted/30 rounded-r-lg">
           <p className="text-xl font-medium text-foreground italic leading-relaxed">
-            "{pullQuotes[paragraphIndex % pullQuotes.length]}"
+            {pullQuotes[paragraphIndex % pullQuotes.length]}
           </p>
         </blockquote>
       );
@@ -127,7 +341,13 @@ export default function SimplePostDetail({
   useEffect(() => {
     async function fetchPost() {
       try {
-        const response = await fetch(`/api/posts/${postId}`);
+        const response = await fetch(`/api/posts/${postId}?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
         if (!response.ok) {
           throw new Error('Post not found');
         }
@@ -222,10 +442,9 @@ export default function SimplePostDetail({
           }
         }
 
-        // Fetch related stories after getting the post
-        if (postData.tags && postData.tags.length > 0) {
-          await fetchRelatedStories(postData.tags, postData.id);
-        }
+        // Fetch related stories based on category and tags
+        console.log('📚 Fetching related stories for category:', postData.category, 'tags:', postData.tags);
+        await fetchRelatedStories(postData.category, postData.tags || [], postData.id);
       } catch (err) {
         console.error('Error fetching post:', err);
       } finally {
@@ -233,32 +452,55 @@ export default function SimplePostDetail({
       }
     }
 
-    async function fetchRelatedStories(tags: string[], currentPostId: string) {
+    async function fetchRelatedStories(category: string, tags: string[], currentPostId: string) {
       try {
-        const response = await fetch('/api/posts');
+        const response = await fetch(`/api/posts?t=${Date.now()}`, {
+          cache: 'no-store'
+        });
         if (response.ok) {
           const allPosts = await response.json();
 
-          // Filter posts that share tags with current post
+          // Filter posts that share category or tags with current post
           const related = allPosts.posts
             .filter((p: any) => p.id !== currentPostId) // Exclude current post
             .filter(
               (p: any) =>
-                p.tags && p.tags.some((tag: string) => tags.includes(tag))
-            ) // Share at least one tag
+                // Same category
+                p.category === category ||
+                // Or share at least one tag
+                (p.tags && tags.length > 0 && p.tags.some((tag: string) => tags.includes(tag)))
+            )
             .sort((a: any, b: any) => {
-              // Sort by number of shared tags, then by viral score
-              const aSharedTags = a.tags.filter((tag: string) =>
-                tags.includes(tag)
-              ).length;
-              const bSharedTags = b.tags.filter((tag: string) =>
-                tags.includes(tag)
-              ).length;
+              // Prioritize same category
+              const aSameCategory = a.category === category ? 1 : 0;
+              const bSameCategory = b.category === category ? 1 : 0;
+              if (aSameCategory !== bSameCategory) return bSameCategory - aSameCategory;
+              
+              // Then sort by number of shared tags
+              const aSharedTags = tags.length > 0 && a.tags ? 
+                a.tags.filter((tag: string) => tags.includes(tag)).length : 0;
+              const bSharedTags = tags.length > 0 && b.tags ? 
+                b.tags.filter((tag: string) => tags.includes(tag)).length : 0;
               if (aSharedTags !== bSharedTags) return bSharedTags - aSharedTags;
-              return (b.viral_score || 0) - (a.viral_score || 0);
+              
+              // Finally by trending score
+              return (b.trending_score || b.viral_score || 0) - (a.trending_score || a.viral_score || 0);
             })
             .slice(0, 3); // Take top 3
 
+          console.log('📖 Found', related.length, 'related stories');
+          
+          // If we didn't find enough related stories, get some popular ones
+          if (related.length < 3) {
+            const popular = allPosts.posts
+              .filter((p: any) => p.id !== currentPostId && !related.find((r: any) => r.id === p.id))
+              .sort((a: any, b: any) => (b.trending_score || b.viral_score || 0) - (a.trending_score || a.viral_score || 0))
+              .slice(0, 3 - related.length);
+            
+            related.push(...popular);
+            console.log('📖 Added', popular.length, 'popular stories to fill');
+          }
+          
           setRelatedStories(related);
         }
       } catch (err) {
@@ -438,15 +680,18 @@ export default function SimplePostDetail({
     totalSections: number
   ): boolean => {
     // Insert GIFs for high-intensity emotions
-    if (emotion.intensity >= 0.7) return true;
+    if (emotion.intensity >= 0.6) return true;
     
-    // Insert at peak moments (around 60-80% through the story)
+    // Insert at peak moments (around 40-80% through the story)
     const storyProgress = sectionIndex / totalSections;
-    if (storyProgress >= 0.6 && storyProgress <= 0.8 && emotion.intensity >= 0.5) return true;
+    if (storyProgress >= 0.4 && storyProgress <= 0.8 && emotion.intensity >= 0.4) return true;
     
     // Insert for specific high-impact emotions
-    const highImpactEmotions = ['peak_chaos', 'escalating_drama', 'pure_entertainment'];
+    const highImpactEmotions = ['peak_chaos', 'escalating_drama', 'pure_entertainment', 'twist', 'climax'];
     if (highImpactEmotions.includes(emotion.emotion)) return true;
+    
+    // Always insert at least one GIF if we're past the middle
+    if (storyProgress >= 0.5 && Math.random() < 0.3) return true;
     
     return false;
   };
@@ -499,18 +744,33 @@ export default function SimplePostDetail({
   };
 
   const renderSection = (section: any, index: number) => {
+    // Check additional section types first
+    const additionalSection = renderAdditionalSections(section, index, post);
+    if (additionalSection) return additionalSection;
+    
     switch (section.type) {
       case 'image':
         return (
-          <div key={index} className='image-section mb-8 text-center'>
-            {post.imageUrl && (
+          <div key={index} className='image-section my-12'>
+            <div className='overflow-hidden rounded-lg border border-border'>
               <img
-                src={post.imageUrl}
-                alt={section.metadata?.image_prompt || post.title}
-                className='mb-3 max-h-96 w-full rounded-lg object-cover'
+                src={section.metadata?.imageUrl || `/assets/img/lifestyle/life_style0${(index % 9) + 1}.jpg`}
+                alt={section.content}
+                className='h-auto w-full object-cover'
+                style={{ maxHeight: '400px' }}
+                onError={(e) => {
+                  e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
+                }}
               />
-            )}
-            <p className='text-sm italic text-muted-foreground'>
+              {section.metadata?.caption && (
+                <div className='bg-muted/50 p-4'>
+                  <p className='text-sm font-medium text-foreground'>
+                    {section.metadata.caption}
+                  </p>
+                </div>
+              )}
+            </div>
+            <p className='mt-2 text-sm italic text-muted-foreground text-center'>
               {section.content}
             </p>
           </div>
@@ -610,7 +870,7 @@ export default function SimplePostDetail({
                         section.enhanced ? 'text-xl' : 'text-lg'
                       }`}
                     >
-                      {renderContentWithLinks(paragraph)}
+                      {renderContentWithAutoLinks(paragraph, post)}
                     </p>
                   ];
 
@@ -651,22 +911,66 @@ export default function SimplePostDetail({
               {section.content}
             </p>
             {section.metadata?.comments && (
-              <TwitterConversation
-                title="The Twitter Thread"
-                conversation={section.metadata.comments.map((comment: any, index: number) => ({
-                  id: `comment-${index}`,
-                  author: comment.author,
-                  handle: comment.author.toLowerCase().replace(/\s+/g, ''),
-                  content: comment.content,
-                  timestamp: '2h',
-                  likes: comment.score || 0,
-                  retweets: Math.floor((comment.score || 0) * 0.3),
-                  replies: comment.replies || 0,
-                  verified: false,
-                  isOP: index === 0
-                }))}
-                className="max-w-none"
-              />
+              section.metadata.platform === 'twitter' ? (
+                <TwitterConversation
+                  title="The Twitter Thread"
+                  conversation={section.metadata.comments.map((comment: any, index: number) => ({
+                    id: `comment-${index}`,
+                    author: comment.author,
+                    handle: comment.author.toLowerCase().replace(/\s+/g, ''),
+                    content: comment.content,
+                    timestamp: '2h',
+                    likes: comment.likes || comment.score || 0,
+                    retweets: comment.retweets || Math.floor((comment.score || 0) * 0.3),
+                    replies: comment.replies || 0,
+                    verified: false,
+                    isOP: index === 0
+                  }))}
+                  className="max-w-none"
+                />
+              ) : (
+                <div className="reddit-comments space-y-4">
+                  {section.metadata.comments.map((comment: any, index: number) => (
+                    <div key={index} className="bg-muted/50 rounded-lg p-4 border-l-4 border-orange-500">
+                      <div className="flex items-start gap-3">
+                        <div className="flex flex-col items-center">
+                          <button className="text-muted-foreground hover:text-orange-500 transition-colors">
+                            <ChevronUp className="h-5 w-5" />
+                          </button>
+                          <span className="text-sm font-bold text-orange-500">
+                            {comment.upvotes || comment.score || Math.floor(Math.random() * 5000) + 100}
+                          </span>
+                          <button className="text-muted-foreground hover:text-blue-500 transition-colors">
+                            <ChevronDown className="h-5 w-5" />
+                          </button>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-semibold text-sm text-foreground">
+                              {comment.author}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              • {Math.floor(Math.random() * 12) + 1}h ago
+                            </span>
+                          </div>
+                          <p className="text-foreground">{comment.content}</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <button className="text-sm text-muted-foreground hover:text-foreground">
+                              Reply
+                            </button>
+                            <button className="text-sm text-muted-foreground hover:text-foreground">
+                              Share
+                            </button>
+                            <button className="text-sm text-muted-foreground hover:text-foreground">
+                              Award
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
             )}
           </div>
         );
@@ -722,11 +1026,21 @@ export default function SimplePostDetail({
           <div key={index} className='quotes-section mb-8'>
             <div className='py-8'>
               <blockquote className='text-3xl font-extrabold leading-tight text-foreground md:text-4xl lg:text-5xl'>
-                "{section.content}"
+                {section.content}
               </blockquote>
               {section.metadata?.attribution && (
                 <cite className='mt-4 block text-xl font-semibold text-orange-500'>
-                  — {section.metadata.attribution}
+                  — {section.metadata.userUrl ? (
+                    <HoverLink
+                      href={section.metadata.userUrl}
+                      external={true}
+                      className="text-orange-500 hover:text-orange-600 underline"
+                    >
+                      {section.metadata.attribution}
+                    </HoverLink>
+                  ) : (
+                    section.metadata.attribution
+                  )}
                 </cite>
               )}
               {section.metadata?.context && (
@@ -969,6 +1283,20 @@ export default function SimplePostDetail({
             <article className='max-w-none'>
               {/* Post Header */}
               <header className='mb-8'>
+                {/* Featured Image */}
+                {post.imageUrl && (
+                  <div className='mb-8 overflow-hidden rounded-xl'>
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      className='h-[400px] w-full object-cover'
+                      onError={(e) => {
+                        e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
+                      }}
+                    />
+                  </div>
+                )}
+                
                 <h1 className='mb-4 text-4xl font-extrabold leading-tight text-foreground md:text-5xl'>
                   {post.title}
                 </h1>
@@ -1188,6 +1516,77 @@ export default function SimplePostDetail({
                         </Link>
                       ))}
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* More Stories Like This Section */}
+              {console.log('🔍 Rendering related stories:', showRelated, relatedStories.length)}
+              {showRelated && relatedStories.length > 0 && (
+                <div className='more-stories-section mt-16 pt-12 border-t border-border'>
+                  <h2 className='mb-8 text-3xl font-extrabold text-foreground'>
+                    More Stories Like This
+                  </h2>
+                  <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                    {relatedStories.map((story) => (
+                      <Link
+                        key={story.id}
+                        href={`/blog/${story.slug}`}
+                        className='group block'
+                      >
+                        <article className='h-full rounded-lg border border-border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-orange-500/50'>
+                          {/* Featured Image */}
+                          <div className='relative h-48 overflow-hidden bg-muted'>
+                            {story.imageUrl ? (
+                              <img
+                                src={story.imageUrl}
+                                alt={story.title}
+                                className='h-full w-full object-cover transition-transform group-hover:scale-105'
+                                onError={(e) => {
+                                  e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
+                                }}
+                              />
+                            ) : (
+                              <div className='flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200'>
+                                <span className='text-4xl'>📰</span>
+                              </div>
+                            )}
+                            {story.trending_score > 80 && (
+                              <div className='absolute top-3 left-3 rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white'>
+                                🔥 TRENDING
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Card Content */}
+                          <div className='p-5'>
+                            <h3 className='mb-3 text-lg font-bold text-foreground line-clamp-2 group-hover:text-orange-600 transition-colors'>
+                              {story.title}
+                            </h3>
+                            <p className='mb-4 text-sm text-muted-foreground line-clamp-2'>
+                              {story.hook || story.excerpt}
+                            </p>
+
+                            {/* Meta Info */}
+                            <div className='flex items-center justify-between text-xs text-muted-foreground'>
+                              <div className='flex items-center gap-3'>
+                                <span className='flex items-center gap-1'>
+                                  <Eye className='h-3 w-3' />
+                                  {formatCount(story.view_count || 0)}
+                                </span>
+                                <span className='flex items-center gap-1'>
+                                  <MessageCircle className='h-3 w-3' />
+                                  {formatCount(story.comment_count || 0)}
+                                </span>
+                              </div>
+                              <span className='text-orange-600 font-medium'>
+                                Read More →
+                              </span>
+                            </div>
+                          </div>
+                        </article>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}

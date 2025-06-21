@@ -1,0 +1,44 @@
+{
+  "primaryImage": {
+    "id": "sdcc2024",
+    "description": "Crowded Comic-Con convention floor with cosplayers",
+    "urls": {
+      "regular": "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe",
+      "small": "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400"
+    },
+    "user": {
+      "name": "Bearded Texan",
+      "username": "thebeardedtexan"
+    }
+  },
+  "additionalImages": [
+    {
+      "id": "wedding1",
+      "description": "Outdoor wedding ceremony setup",
+      "urls": {
+        "regular": "https://images.unsplash.com/photo-1519225421980-715cb0215aed",
+        "small": "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400"
+      }
+    }
+  ],
+  "reactionGifs": [
+    {
+      "id": "tough-choice",
+      "title": "Sweating superhero choosing between two buttons",
+      "images": {
+        "fixed_height": {
+          "url": "https://media.giphy.com/media/3o7aCRloybJlXpNjSU/giphy.gif"
+        }
+      }
+    },
+    {
+      "id": "aragorn-crown",
+      "title": "Aragorn \"My friends you bow to no one\" scene",
+      "images": {
+        "fixed_height": {
+          "url": "https://media.giphy.com/media/3oFzlZzyoQqOOmWIj6/giphy.gif"
+        }
+      }
+    }
+  ]
+}

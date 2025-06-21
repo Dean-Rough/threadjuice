@@ -55,7 +55,7 @@ export default function TrendingFeed({
 
   // Add personas and engagement data to posts if not present
   const postsWithMetadata = posts.map(post => {
-    const postIdHash = post.id.slice(-6); // Use last 6 chars of UUID for seeding
+    const postIdHash = String(post.id).slice(-6); // Use last 6 chars of UUID for seeding
     const seed = parseInt(postIdHash, 16) || 12345;
 
     return {
@@ -162,7 +162,7 @@ export default function TrendingFeed({
                 <div className='featured-post-thumb'>
                   <Link href={`/posts/${filteredPosts[0].id}`}>
                     <Image
-                      src={`/assets/img/${filteredPosts[0].group}/${filteredPosts[0].img}`}
+                      src={filteredPosts[0].imageUrl || '/assets/img/lifestyle/life_style01.jpg'}
                       alt={filteredPosts[0].title}
                       width={800}
                       height={400}
@@ -249,7 +249,7 @@ export default function TrendingFeed({
                       <div className='post-thumb relative'>
                         <Link href={`/posts/${post.id}`}>
                           <Image
-                            src={`/assets/img/${post.group}/${post.img}`}
+                            src={post.imageUrl || '/assets/img/lifestyle/life_style01.jpg'}
                             alt={post.title}
                             width={320}
                             height={192}
@@ -310,63 +310,67 @@ export default function TrendingFeed({
                   </div>
                 ) : (
                   // Vertical layout for grid/masonry view
-                  <div className='h-full overflow-hidden rounded-lg bg-white shadow-sm'>
-                    <div className='post-thumb relative'>
-                      <Link href={`/posts/${post.id}`}>
-                        <Image
-                          src={`/assets/img/${post.group}/${post.img}`}
-                          alt={post.title}
-                          width={400}
-                          height={192}
-                          className='h-48 w-full object-cover'
-                        />
-                      </Link>
+                  <div 
+                    className='h-full overflow-hidden rounded-lg shadow-sm relative'
+                    style={{
+                      backgroundImage: `url(${post.imageUrl || '/assets/img/lifestyle/life_style01.jpg'})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+                    {/* Dark overlay for readability */}
+                    <div className='absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 rounded-lg' />
+                    
+                    {/* Content */}
+                    <div className='relative h-full flex flex-col'>
                       {post.trending && (
-                        <div className='trending-badge absolute right-2 top-2'>
+                        <div className='trending-badge absolute right-2 top-2 z-10'>
                           <span className='rounded bg-yellow-500 px-2 py-1 text-sm font-medium text-black'>
                             🔥 TRENDING
                           </span>
                         </div>
                       )}
-                      <div className='post-overlay absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2'>
-                        <span className='category text-sm font-medium text-white'>
+                      
+                      <div className='flex-1 flex flex-col justify-end p-4'>
+                        <div className='category mb-2'>
                           <Link
                             href={`/category/${post.category.toLowerCase()}`}
-                            className='hover:text-orange-300'
+                            className='text-orange-400 hover:text-orange-300 text-sm font-medium'
                           >
                             {getCategoryEmoji(post.category)} {post.category}
                           </Link>
-                        </span>
-                      </div>
-                    </div>
-                    <div className='post-content flex flex-1 flex-col p-4'>
-                      <div className='meta-info mb-2'>
-                        <span className='author text-sm text-gray-500'>
-                          By{' '}
-                          <Link
-                            href={`/personas/${post.persona.id}`}
-                            className='text-blue-600 hover:text-blue-700'
-                          >
-                            {post.persona.name}
-                          </Link>
-                        </span>
-                      </div>
-                      <h5 className='post-title flex-grow font-semibold text-gray-900 hover:text-orange-600'>
-                        <Link href={`/posts/${post.id}`}>{post.title}</Link>
-                      </h5>
-                      <div className='engagement-stats mt-4 flex space-x-4 text-sm text-gray-500'>
-                        <span className='flex items-center'>
-                          <Eye size={14} className='mr-1' />
-                          {post.engagement.views}
-                        </span>
-                        <span className='flex items-center'>
-                          <MessageCircle size={14} className='mr-1' />
-                          {post.engagement.comments}
-                        </span>
-                        <span className='flex items-center'>
-                          <Share2 size={14} className='mr-1' />
-                          {post.engagement.shares}
-                        </span>
+                        </div>
+                        
+                        <h5 className='post-title mb-2 font-bold text-white hover:text-orange-300'>
+                          <Link href={`/posts/${post.id}`}>{post.title}</Link>
+                        </h5>
+                        
+                        <div className='meta-info mb-3'>
+                          <span className='author text-sm text-gray-300'>
+                            By{' '}
+                            <Link
+                              href={`/personas/${post.persona.id}`}
+                              className='text-orange-400 hover:text-orange-300'
+                            >
+                              {post.persona.name}
+                            </Link>
+                          </span>
+                        </div>
+                        
+                        <div className='engagement-stats flex space-x-4 text-sm text-gray-300'>
+                          <span className='flex items-center'>
+                            <Eye size={14} className='mr-1' />
+                            {post.engagement.views}
+                          </span>
+                          <span className='flex items-center'>
+                            <MessageCircle size={14} className='mr-1' />
+                            {post.engagement.comments}
+                          </span>
+                          <span className='flex items-center'>
+                            <Share2 size={14} className='mr-1' />
+                            {post.engagement.shares}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

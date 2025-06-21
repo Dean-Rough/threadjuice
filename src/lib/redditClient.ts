@@ -339,9 +339,12 @@ export const VIRAL_SUBREDDITS = [
   'facepalm'
 ] as const
 
+// Import env at the bottom to avoid circular dependencies
+import { env } from './env'
+
 // Create singleton instance
 export const redditClient = new RedditClient({
-  userAgent: process.env.REDDIT_USER_AGENT || 'ThreadJuice/1.0',
-  clientId: process.env.REDDIT_CLIENT_ID,
-  clientSecret: process.env.REDDIT_CLIENT_SECRET,
+  userAgent: env.REDDIT_USER_AGENT || 'ThreadJuice/1.0',
+  clientId: env.REDDIT_CLIENT_ID,
+  clientSecret: env.REDDIT_CLIENT_SECRET,
 })

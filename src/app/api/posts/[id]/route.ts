@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import supabase from '@/lib/database';
+import { normalizeContent } from '@/lib/contentAdapter';
 
 export async function GET(
   request: NextRequest,
@@ -64,17 +65,23 @@ export async function GET(
       status: data.status,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      content: typeof data.content === 'string' ? JSON.parse(data.content) : data.content,
+      content: normalizeContent(data.content),
       persona: {
         name: data.personas?.name || 'The Terry',
         avatar: data.personas?.avatar_url || '/assets/img/personas/the-terry.svg',
         bio: data.personas?.tone || 'Acerbic wit and social commentary'
       },
-      readingTime: Math.ceil(((typeof data.content === 'string' ? JSON.parse(data.content) : data.content)?.sections?.length || 8) * 0.5),
+      readingTime: Math.ceil((Array.isArray(data.content) ? data.content.length : 8) * 0.5),
       tags: ['viral', data.category.toLowerCase().replace(/\s+/g, '-')]
     };
     
-    return NextResponse.json(transformedPost);
+    return NextResponse.json(transformedPost, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
     
   } catch (error) {
     console.error('Error fetching post:', error);

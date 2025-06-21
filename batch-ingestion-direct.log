@@ -1,0 +1,31 @@
+🚀 Starting batch ingestion of 10 stories from mixed sources...
+
+🔍 Checking API configurations...
+  - OpenAI: ❌ Not configured
+  - Reddit: ❌ Not configured
+  - Twitter: ❌ Not configured
+  - Pexels: ❌ Not configured
+
+⚠️  Skipping Reddit - API not configured
+⚠️  Skipping AI generation - OpenAI API not configured
+
+🎭 Checking for Twitter drama...
+❌ Twitter drama detection error: ReferenceError: require is not defined in ES module scope, you can use import instead
+    at new TwitterApiClient (/Users/deannewton/Documents/ThreadJuice/src/lib/twitterApiClient.ts:41:21)
+    at <anonymous> (/Users/deannewton/Documents/ThreadJuice/src/lib/twitterApiClient.ts:341:33)
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async batchIngestStories (/Users/deannewton/Documents/ThreadJuice/scripts/batch-ingest-stories-direct.ts:174:43)
+
+📊 Batch Ingestion Summary
+══════════════════════════════════════════════════
+Total stories processed: 0
+Success rate: 0/1
+
+Breakdown by source:
+  - Twitter Drama: 0 success, 1 failed
+
+✅ Successfully created stories:
+
+❌ Errors encountered:
+  - [Twitter Drama] require is not defined in ES module scope, you can use import instead

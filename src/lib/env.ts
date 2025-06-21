@@ -40,7 +40,15 @@ const envSchema = z.object({
 
   // External Media APIs (Optional)
   UNSPLASH_ACCESS_KEY: z.string().optional(),
+  PEXELS_API_KEY: z.string().optional(),
   WIKIMEDIA_USER_AGENT: z.string().default('ThreadJuice/1.0'),
+  
+  // Twitter API (Optional)
+  TWITTER_BEARER_TOKEN: z.string().optional(),
+  TWITTER_API_KEY: z.string().optional(),
+  TWITTER_API_SECRET: z.string().optional(),
+  TWITTER_ACCESS_TOKEN: z.string().optional(),
+  TWITTER_ACCESS_TOKEN_SECRET: z.string().optional(),
 
   // Rate Limiting & Moderation (Optional)
   RATE_LIMIT_ENABLED: z

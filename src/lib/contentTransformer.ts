@@ -122,12 +122,15 @@ export class ContentTransformer {
   private openai: OpenAI;
 
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
+    // Import env dynamically to avoid circular dependency
+    const { env } = require('./env');
+    
+    if (!env.OPENAI_API_KEY) {
       throw new Error('OPENAI_API_KEY environment variable is required');
     }
 
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: env.OPENAI_API_KEY,
     });
   }
 

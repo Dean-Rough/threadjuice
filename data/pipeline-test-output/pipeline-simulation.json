@@ -1,0 +1,56 @@
+{
+  "stage1_source": {
+    "type": "reddit",
+    "post": {
+      "id": "test123",
+      "title": "AITA for telling my roommate their cooking smells terrible?",
+      "score": 1234,
+      "comments": 567
+    }
+  },
+  "stage2_analysis": {
+    "sentiment": {
+      "score": -0.2,
+      "comparative": -0.05
+    },
+    "entities": [
+      "roommate",
+      "cooking",
+      "apartment"
+    ],
+    "keywords": [
+      "cooking",
+      "smell",
+      "roommate",
+      "culturally insensitive"
+    ]
+  },
+  "stage3_generation": {
+    "persona": "the-terry",
+    "story": {
+      "title": "When Your Roommate Turns the Kitchen Into a Chemical Weapons Lab",
+      "introduction": "Right, so we've got ourselves a proper domestic nightmare here...",
+      "sections": [
+        {
+          "heading": "The Nose Knows",
+          "content": "Look, The Terry's all for culinary exploration, but when your flatmate's cooking experiments start violating the Geneva Convention..."
+        }
+      ]
+    }
+  },
+  "stage4_enrichment": {
+    "images": [
+      "kitchen-disaster.jpg",
+      "angry-roommate.jpg"
+    ],
+    "gifs": [
+      "disgusted-reaction.gif",
+      "cooking-fail.gif"
+    ]
+  },
+  "stage5_output": {
+    "format": "threadjuice",
+    "saved": true,
+    "id": "story-12345"
+  }
+}

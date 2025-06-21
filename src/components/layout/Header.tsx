@@ -22,9 +22,9 @@ export function Header() {
               <Image
                 src='/assets/img/logo/Logotype-White.svg'
                 alt='ThreadJuice'
-                width={120}
-                height={48}
-                className='h-12'
+                width={156}
+                height={62}
+                className='h-16'
                 priority
               />
             </Link>

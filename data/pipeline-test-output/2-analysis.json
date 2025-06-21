@@ -1,0 +1,53 @@
+{
+  "sentiment": {
+    "score": -0.3,
+    "comparative": -0.05,
+    "positive": [
+      "important",
+      "joy",
+      "glorious"
+    ],
+    "negative": [
+      "lost",
+      "selfish",
+      "threatening",
+      "childish"
+    ]
+  },
+  "entities": [
+    {
+      "text": "sister",
+      "type": "PERSON",
+      "salience": 0.9
+    },
+    {
+      "text": "Comic-Con",
+      "type": "EVENT",
+      "salience": 0.85
+    },
+    {
+      "text": "San Diego",
+      "type": "LOCATION",
+      "salience": 0.3
+    },
+    {
+      "text": "Fellowship of the Ring",
+      "type": "WORK_OF_ART",
+      "salience": 0.4
+    }
+  ],
+  "keywords": [
+    "wedding",
+    "Comic-Con",
+    "family",
+    "conflict",
+    "priorities",
+    "hobby"
+  ],
+  "metaphors": [
+    {
+      "phrase": "Christmas, New Year's, and birthday rolled into one",
+      "type": "hyperbole"
+    }
+  ]
+}

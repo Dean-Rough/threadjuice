@@ -75,8 +75,11 @@ export class ImageService {
   }
 
   constructor() {
-    this.unsplashAccessKey = process.env.UNSPLASH_ACCESS_KEY
-    this.pexelsApiKey = process.env.PEXELS_API_KEY
+    // Import env dynamically to avoid circular dependency
+    const { env } = require('./env');
+    
+    this.unsplashAccessKey = env.UNSPLASH_ACCESS_KEY
+    this.pexelsApiKey = env.PEXELS_API_KEY
   }
 
   /**
@@ -179,15 +182,17 @@ export class ImageService {
    */
   async searchPexelsImages(keywords: string[]): Promise<ImageResult[]> {
     if (!this.pexelsApiKey) {
-      // console.log('Pexels API key not available, skipping Pexels search')
+      console.log('❌ Pexels API key not available')
       return []
     }
 
     // Try multiple search strategies
     const searchStrategies = this.generateSearchStrategies(keywords)
+    console.log(`🔄 Trying ${searchStrategies.length} search strategies`)
     
     for (const strategy of searchStrategies) {
       try {
+        console.log(`  → Searching Pexels for: "${strategy}"`)
         const response = await fetch(
           `https://api.pexels.com/v1/search?query=${encodeURIComponent(strategy)}&per_page=5&orientation=landscape`,
           {
@@ -198,14 +203,14 @@ export class ImageService {
         )
 
         if (!response.ok) {
-          // console.log(`Pexels API error ${response.status} for query: ${strategy}`)
+          console.log(`  ❌ Pexels API error ${response.status}`)
           continue
         }
 
         const data = await response.json()
         
         if (data.photos && data.photos.length > 0) {
-          // console.log(`Pexels success with strategy: "${strategy}" (${data.photos.length} results)`)
+          console.log(`  ✅ Found ${data.photos.length} results!`)
           return data.photos.map((photo: any) => ({
             url: photo.src.large,
             alt_text: photo.alt || `Photo by ${photo.photographer}`,
@@ -217,13 +222,14 @@ export class ImageService {
             height: photo.height,
           }))
         } else {
-          // console.log(`No results for Pexels query: "${strategy}"`)
+          console.log(`  ⚠️  No results`)
         }
       } catch (error) {
-        console.error(`Pexels search failed for "${strategy}":`, error)
+        console.error(`  ❌ Pexels search failed:`, error)
       }
     }
     
+    console.log(`❌ All Pexels strategies exhausted`)
     return []
   }
 
@@ -352,17 +358,17 @@ export class ImageService {
       // Analyze content to determine routing strategy
       const analysis = intelligentImageRouter.analyzeContent(title, content, category)
       
-      // console.log(`Image routing analysis:`, {
-      //   hasKnownEntities: analysis.hasKnownEntities,
-      //   entities: analysis.entities,
-      //   setting: analysis.setting,
-      //   mood: analysis.mood,
-      //   shouldUseWikipedia: analysis.shouldUseWikipedia
-      // })
+      console.log(`🔍 Image routing analysis:`, {
+        hasKnownEntities: analysis.hasKnownEntities,
+        entities: analysis.entities.slice(0, 3),
+        setting: analysis.setting,
+        mood: analysis.mood,
+        shouldUseWikipedia: analysis.shouldUseWikipedia
+      })
 
       // Route 1: Known entities -> Wikipedia/Wikimedia
       if (analysis.shouldUseWikipedia && analysis.entities.length > 0) {
-        // console.log(`Routing to Wikipedia for entities: ${analysis.entities.join(', ')}`)
+        console.log(`📚 Routing to Wikipedia for entities: ${analysis.entities.join(', ')}`)
         
         // Try Wikipedia first for main entities
         for (const entity of analysis.entities.slice(0, 2)) {
@@ -379,39 +385,35 @@ export class ImageService {
         }
       }
 
-      // Route 2: Stock images with intelligent keywords
-      // console.log(`Routing to stock images for general content`)
+      // Route 2: Pexels stock images with intelligent keywords
+      console.log(`📸 Routing to Pexels for general content`)
       
       // Generate smart search prompt
       const stockPrompt = intelligentImageRouter.generateStockImagePrompt(title, content, category)
       const stockKeywords = stockPrompt.split(' ').filter(k => k.length > 0)
       
-      // console.log(`Stock image keywords: ${stockKeywords.join(', ')}`)
+      console.log(`🔎 Pexels search keywords: ${stockKeywords.join(', ')}`)
       
       // Try Pexels with intelligent keywords
       if (stockKeywords.length > 0) {
         const pexelsImages = await this.searchPexelsImages(stockKeywords)
         if (pexelsImages.length > 0) {
+          console.log(`✅ Found ${pexelsImages.length} Pexels images`)
           return pexelsImages[0]
         }
       }
       
-      // Try Unsplash with intelligent keywords
-      if (stockKeywords.length > 0) {
-        const unsplashImages = await this.searchUnsplashImages(stockKeywords)
-        if (unsplashImages.length > 0) {
-          return unsplashImages[0]
-        }
-      }
-      
       // Fallback to basic category keywords
+      console.log(`⚠️  No results with smart keywords, trying basic category search`)
       const basicKeywords = this.generateImageKeywords(title, category, analysis.visualConcepts)
       const pexelsBasic = await this.searchPexelsImages(basicKeywords)
       if (pexelsBasic.length > 0) {
+        console.log(`✅ Found ${pexelsBasic.length} Pexels images with basic keywords`)
         return pexelsBasic[0]
       }
 
       // Final fallback
+      console.log(`❌ No Pexels results, using fallback image`)
       return this.getFallbackImage(category)
     } catch (error) {
       console.error('Intelligent image search failed:', error)

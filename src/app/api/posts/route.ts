@@ -146,6 +146,7 @@ export async function GET(request: NextRequest) {
       // Apply pagination
       const from = (page - 1) * limit;
       const to = from + limit - 1;
+      console.log(`📄 Pagination: from=${from}, to=${to}, page=${page}, limit=${limit}`);
       query = query.range(from, to);
 
       const { data, error, count } = await query;
@@ -156,6 +157,7 @@ export async function GET(request: NextRequest) {
       }
 
       console.log('✅ Successfully fetched from Supabase:', data?.length || 0, 'posts');
+      console.log('First 3 post titles:', data?.slice(0, 3).map(p => p.title));
       
       // Transform Supabase data to match expected format
       posts = data?.map(post => ({
@@ -283,6 +285,12 @@ export async function GET(request: NextRequest) {
         hasPrev,
         source: usedSupabase ? 'supabase' : 'filesystem',
       },
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
     });
 
   } catch (error) {

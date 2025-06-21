@@ -14,27 +14,10 @@
      ✓ optimizeCss
 
  ✓ Starting...
- ✓ Ready in 1174ms
- ○ Compiling /api/ingest/reddit ...
- ✓ Compiled /api/ingest/reddit in 716ms (480 modules)
-[Ingestion job_1750373293144_153dmfifm] Starting content ingestion...
-[Ingestion job_1750373293144_153dmfifm] Targeting 1 subreddits: AmItheAsshole
-[Ingestion job_1750373293144_153dmfifm] Fetching posts from r/AmItheAsshole...
- POST /api/ingest/reddit 200 in 879ms
-Reddit: OAuth authentication successful
-[Ingestion job_1750373293144_153dmfifm] Found 2 viral posts in r/AmItheAsshole
- ✓ Compiled /api/ingest/status/[jobId] in 201ms (482 modules)
-Error: Route "/api/ingest/status/[jobId]" used `params.jobId`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-    at GET (src/app/api/ingest/status/[jobId]/route.ts:12:12)
-  10 | ) {
-  11 |   try {
-> 12 |     const { jobId } = params
-     |            ^
-  13 |
-  14 |     if (!jobId) {
-  15 |       return NextResponse.json(
- GET /api/ingest/status/job_1750373293144_153dmfifm 404 in 597ms
- ✓ Compiled in 66ms (203 modules)
- GET /api/ingest/status/job_1750373293144_153dmfifm 404 in 52ms
- GET /api/ingest/reddit 200 in 8ms
-[?25h
+ ✓ Ready in 1182ms
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 2.1s (1068 modules)
+ ✓ Compiled in 303ms (485 modules)
+ GET /blog/how-a-rogue-spreadsheet-brought-an-entire-investment-firm-to 200 in 2659ms
+ ✓ Compiled in 335ms (485 modules)
+ ✓ Compiled in 287ms (485 modules)
