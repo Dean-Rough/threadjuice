@@ -71,7 +71,7 @@ export default function CategoryFilter({
       },
       animated ? 300 : 0
     );
-  }, [activeFilter, searchTerm, items]);
+  }, [activeFilter, searchTerm, items, onFilter, animated]);
 
   useEffect(() => {
     applyFilters();

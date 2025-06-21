@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   MessageSquare,
   Reply,
@@ -45,11 +45,37 @@ export default function CommentSystem({
 
   useEffect(() => {
     loadComments();
-  }, [postId, sortBy]);
+  }, [postId, sortBy, loadComments]);
 
-  const loadComments = async () => {
+  const sortComments = useCallback((comments: Comment[]): Comment[] => {
+    const sorted = [...comments];
+
+    switch (sortBy) {
+      case 'newest':
+        return sorted.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case 'oldest':
+        return sorted.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case 'popular':
+      default:
+        return sorted.sort((a, b) => b.likes - a.likes);
+    }
+  }, [sortBy]);
+
+  const loadComments = useCallback(async () => {
     try {
       setLoading(true);
+      
+      // eslint-disable-next-line no-unused-vars
+      const _postId = postId; // Used in real API call
+      // eslint-disable-next-line no-unused-vars  
+      const _sortBy = sortBy; // Used in real API call
+      
       // Mock data - in real app, fetch from API
       const mockComments: Comment[] = [
         {
@@ -137,27 +163,7 @@ export default function CommentSystem({
     } finally {
       setLoading(false);
     }
-  };
-
-  const sortComments = (comments: Comment[]): Comment[] => {
-    const sorted = [...comments];
-
-    switch (sortBy) {
-      case 'newest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      case 'oldest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      case 'popular':
-      default:
-        return sorted.sort((a, b) => b.likes - a.likes);
-    }
-  };
+  }, [postId, sortBy, sortComments]);
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();

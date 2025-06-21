@@ -3,7 +3,7 @@
  * Uses social drama aggregator to find real drama and convert to ThreadJuice story
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { socialDramaAggregator } from '@/lib/socialDramaAggregator';
 import { twitterToStoryConverter } from '@/lib/twitterToStoryConverter';
 

@@ -2,7 +2,7 @@
  * Production monitoring and error tracking setup
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 
 // Environment configuration
 const ENVIRONMENT = process.env.NODE_ENV || 'development';

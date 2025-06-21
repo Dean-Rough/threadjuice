@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 
 interface HoverLinkProps {
@@ -137,14 +138,12 @@ export default function HoverLink({
         >
           {previewData.image && (
             <div className="w-full h-32 bg-slate-100 dark:bg-slate-700 rounded-md mb-3 overflow-hidden">
-              <img 
+              <Image 
                 src={previewData.image} 
                 alt={previewData.title}
+                width={320}
+                height={128}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
               />
             </div>
           )}

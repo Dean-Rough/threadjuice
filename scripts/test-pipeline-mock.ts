@@ -10,7 +10,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Mock environment for testing
-process.env.NODE_ENV = 'test';
+// Set NODE_ENV before any imports that might depend on it
+if (!process.env.NODE_ENV) {
+  (process.env as any).NODE_ENV = 'test';
+}
 process.env.OPENAI_API_KEY = 'mock-key';
 process.env.REDDIT_CLIENT_ID = 'mock-client';
 process.env.REDDIT_CLIENT_SECRET = 'mock-secret';

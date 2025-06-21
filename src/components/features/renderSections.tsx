@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { MessageCircle, ExternalLink, Share2 } from 'lucide-react';
 import TwitterConversation from '@/components/ui/TwitterConversation';
 import { renderContentWithLinks } from '@/lib/contentLinkParser';
@@ -116,11 +117,14 @@ export function renderAdditionalSections(section: any, index: number, post: any)
       return (
         <div key={index} className='reaction-gif-section my-8 text-center'>
           <div className='inline-block'>
-            <img
+            <Image
               src={section.metadata?.gifUrl || 'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'}
               alt={section.content}
+              width={400}
+              height={300}
               className='rounded-lg shadow-lg max-w-full'
               style={{ maxHeight: '300px' }}
+              unoptimized={true}
             />
             <p className='mt-3 text-sm font-medium text-muted-foreground italic'>
               {section.content}

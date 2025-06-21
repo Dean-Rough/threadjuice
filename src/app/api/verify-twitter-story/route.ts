@@ -3,7 +3,7 @@
  * Shows that our story generation and feed integration is working
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 
 export async function GET(request: NextRequest) {
   try {

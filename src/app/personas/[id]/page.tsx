@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { getPersonaById } from '@/data/personas';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -56,9 +57,11 @@ export default function PersonaDetailPage({ params }: PersonaDetailPageProps) {
           <div className='persona-detail-card rounded border p-5'>
             <div className='persona-header d-flex align-items-center mb-4'>
               <div className='persona-avatar me-4'>
-                <img
+                <Image
                   src={persona.avatar}
                   alt={persona.name}
+                  width={100}
+                  height={100}
                   className='rounded-circle'
                   style={{
                     width: '100px',

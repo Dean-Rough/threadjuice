@@ -128,7 +128,7 @@ export default function UserProfile({
         {
           id: '5',
           type: 'share',
-          postTitle: &quot;Elon Musk&apos;s Latest Twitter Antics Explained&quot;,
+          postTitle: "Elon Musk's Latest Twitter Antics Explained",
           postSlug: 'elon-musk-twitter-antics',
           timestamp: '2024-06-15T10:30:00Z',
         },

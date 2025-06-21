@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 import { generateHealthCheck, withMonitoring } from '@/lib/monitoring';
 
 /**

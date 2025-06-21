@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { StoryIngestionService } from '@/lib/storyIngestion';
 
 export async function POST(request: NextRequest) {

@@ -1,0 +1,487 @@
+
+> threadjuice@1.0.0 lint
+> next lint
+
+
+./src/__tests__/features/ImageOptimization.test.tsx
+16:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/(admin)/media/page.tsx
+346:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+449:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+578:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/(admin)/page.tsx
+112:29  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+112:36  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/(auth)/dashboard/page.tsx
+238:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+395:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+489:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/api/generate-twitter-story/route.ts
+14:5  Warning: Unexpected console statement.  no-console
+15:5  Warning: Unexpected console statement.  no-console
+18:5  Warning: Unexpected console statement.  no-console
+21:5  Warning: Unexpected console statement.  no-console
+25:7  Warning: Unexpected console statement.  no-console
+45:5  Warning: Unexpected console statement.  no-console
+74:5  Warning: Unexpected console statement.  no-console
+75:5  Warning: Unexpected console statement.  no-console
+76:5  Warning: Unexpected console statement.  no-console
+98:7  Warning: Unexpected console statement.  no-console
+
+./src/app/api/posts/[id]/route.ts
+12:5  Warning: Unexpected console statement.  no-console
+40:7  Warning: Unexpected console statement.  no-console
+47:5  Warning: Unexpected console statement.  no-console
+
+./src/app/api/posts/route-mock.ts
+414:9  Warning: 'filteredPosts' is never reassigned. Use 'const' instead.  prefer-const
+
+./src/app/api/posts/route.ts
+85:7  Warning: Unexpected console statement.  no-console
+149:7  Warning: Unexpected console statement.  no-console
+155:9  Warning: Unexpected console statement.  no-console
+159:7  Warning: Unexpected console statement.  no-console
+160:7  Warning: Unexpected console statement.  no-console
+193:7  Warning: Unexpected console statement.  no-console
+194:7  Warning: Unexpected console statement.  no-console
+200:11  Warning: 'filteredPosts' is never reassigned. Use 'const' instead.  prefer-const
+
+./src/app/api/test-nitter/route.ts
+15:5  Warning: Unexpected console statement.  no-console
+18:5  Warning: Unexpected console statement.  no-console
+22:5  Warning: Unexpected console statement.  no-console
+26:5  Warning: Unexpected console statement.  no-console
+30:5  Warning: Unexpected console statement.  no-console
+36:7  Warning: Unexpected console statement.  no-console
+42:5  Warning: Unexpected console statement.  no-console
+123:5  Warning: Unexpected console statement.  no-console
+
+./src/app/api/test-twitter-drama/route.ts
+12:5  Warning: Unexpected console statement.  no-console
+16:5  Warning: Unexpected console statement.  no-console
+20:5  Warning: Unexpected console statement.  no-console
+24:5  Warning: Unexpected console statement.  no-console
+
+./src/app/api/twitter-drama/route.ts
+14:5  Warning: Unexpected console statement.  no-console
+56:5  Warning: Unexpected console statement.  no-console
+64:5  Warning: Unexpected console statement.  no-console
+78:5  Warning: Unexpected console statement.  no-console
+82:5  Warning: Unexpected console statement.  no-console
+
+./src/app/blog/page.tsx
+77:61  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+161:56  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+167:33  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/filter/[type]/[value]/page.tsx
+39:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+44:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+51:28  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+175:26  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+259:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+266:19  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+266:31  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/app/help/page.tsx
+336:18  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+336:34  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/landing/page.tsx
+310:19  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+310:39  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+331:42  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/page.tsx
+42:24  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/personas/[id]/page.tsx
+59:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/personas/page.tsx
+55:31  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/test-story/page.tsx
+78:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+83:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+90:26  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+111:28  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+111:59  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/CacheClearer.tsx
+24:5  Warning: Unexpected console statement.  no-console
+
+./src/components/ads/AdSenseUnit.tsx
+74:34  Warning: The ref value 'adRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'adRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/features/CategoryFilter.tsx
+74:6  Warning: React Hook useCallback has missing dependencies: 'animated' and 'onFilter'. Either include them or remove the dependency array. If 'onFilter' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+253:27  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+253:40  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/features/CommentModal.tsx
+62:6  Warning: React Hook useEffect has a missing dependency: 'loadComments'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/features/CommentSystem.tsx
+48:6  Warning: React Hook useEffect has a missing dependency: 'loadComments'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/features/FeaturedCarousel.tsx
+193:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+242:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+341:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/features/NotificationCenter.tsx
+228:24  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/features/PostDetail.tsx
+190:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+311:15  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+311:33  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+377:32  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+377:53  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+443:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+578:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/features/Quiz.tsx
+63:6  Warning: React Hook useEffect has a missing dependency: 'generateQuiz'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+76:6  Warning: React Hook useEffect has a missing dependency: 'handleNextQuestion'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/features/QuizBuilder.tsx
+409:40  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+409:53  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/features/SimplePostDetail.tsx
+67:7  Warning: 'processedContent' is never reassigned. Use 'const' instead.  prefer-const
+358:9  Warning: Unexpected console statement.  no-console
+384:11  Warning: Unexpected console statement.  no-console
+402:11  Warning: Unexpected console statement.  no-console
+411:13  Warning: Unexpected console statement.  no-console
+413:13  Warning: Unexpected console statement.  no-console
+416:13  Warning: Unexpected console statement.  no-console
+421:13  Warning: Unexpected console statement.  no-console
+428:13  Warning: Unexpected console statement.  no-console
+432:13  Warning: Unexpected console statement.  no-console
+434:15  Warning: Unexpected console statement.  no-console
+438:13  Warning: Unexpected console statement.  no-console
+446:9  Warning: Unexpected console statement.  no-console
+491:11  Warning: Unexpected console statement.  no-console
+501:13  Warning: Unexpected console statement.  no-console
+512:6  Warning: React Hook useEffect has a missing dependency: 'enhanceStoryWithGifs'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+623:9  Warning: 'emotionIndex' is never reassigned. Use 'const' instead.  prefer-const
+634:9  Warning: Unexpected console statement.  no-console
+644:13  Warning: Unexpected console statement.  no-console
+663:13  Warning: Unexpected console statement.  no-console
+669:9  Warning: Unexpected console statement.  no-console
+756:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+782:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+805:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+1113:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+1119:22  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+1139:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+1180:23  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+1180:53  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+1289:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+1353:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+1405:18  Warning: Unexpected console statement.  no-console
+1408:22  Warning: Unexpected console statement.  no-console
+1454:32  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+1524:16  Warning: Unexpected console statement.  no-console
+1541:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/features/UserOnboarding.tsx
+75:47  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+116:12  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+228:32  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+379:47  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+477:14  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/features/UserProfile.tsx
+301:23  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+301:42  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+691:25  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+691:44  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/features/__tests__/TrendingFeed.test.tsx
+32:5  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/features/renderSections.tsx
+119:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/layout/AppLayout.tsx
+32:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+39:19  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+39:31  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/layout/Header.tsx
+32:24  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/slider/Basic.js
+54:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/HeaderInstagram.js
+51:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+58:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+65:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+72:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+79:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+86:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/InstagramSidebarSlider.js
+49:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+54:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+59:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+64:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/InteriroSlider.js
+63:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/NftSlider.js
+67:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/PopularSlider.js
+62:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/PopularSlider2.js
+63:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/TechnologySlider.js
+34:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/TrendingSlider.js
+63:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/TrendingSlider.tsx
+71:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/slider/VerticalSider.js
+23:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+29:55  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+37:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/AnimatedSpeechBubble.tsx
+54:6  Warning: React Hook useEffect has a missing dependency: 'handleDismiss'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+113:22  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/ui/GifReaction.tsx
+119:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+128:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/HoverLink.tsx
+140:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/__tests__/PersonaBadge.test.tsx
+21:5  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/__tests__/PostCard.test.tsx
+21:5  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/elements/AdventureIsotope.js
+41:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+54:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+67:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+80:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+93:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+106:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+119:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+132:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+145:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+158:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+171:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+184:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/elements/BlogSidebar.js
+12:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+42:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+54:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+66:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+78:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+90:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+109:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/elements/MinimalIsotope.js
+38:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/hooks/useIsotope.ts
+130:6  Warning: React Hook useEffect has a missing dependency: 'defaultOptions'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/hooks/useSwiper.ts
+210:6  Warning: React Hook useEffect has a missing dependency: 'defaultOptions'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/lib/contentLinkParser.tsx
+96:7  Warning: 'remainingContent' is never reassigned. Use 'const' instead.  prefer-const
+
+./src/lib/imageService.ts
+185:7  Warning: Unexpected console statement.  no-console
+191:5  Warning: Unexpected console statement.  no-console
+195:9  Warning: Unexpected console statement.  no-console
+206:11  Warning: Unexpected console statement.  no-console
+213:11  Warning: Unexpected console statement.  no-console
+225:11  Warning: Unexpected console statement.  no-console
+232:5  Warning: Unexpected console statement.  no-console
+361:7  Warning: Unexpected console statement.  no-console
+371:9  Warning: Unexpected console statement.  no-console
+389:7  Warning: Unexpected console statement.  no-console
+395:7  Warning: Unexpected console statement.  no-console
+401:11  Warning: Unexpected console statement.  no-console
+407:7  Warning: Unexpected console statement.  no-console
+411:9  Warning: Unexpected console statement.  no-console
+416:7  Warning: Unexpected console statement.  no-console
+
+./src/lib/klipyService.ts
+79:9  Warning: Unexpected console statement.  no-console
+92:13  Warning: Unexpected console statement.  no-console
+99:9  Warning: Unexpected console statement.  no-console
+
+./src/lib/monitoring.ts
+120:7  Warning: Unexpected console statement.  no-console
+302:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/nitterScraper.ts
+42:5  Warning: Unexpected console statement.  no-console
+47:9  Warning: Unexpected console statement.  no-console
+52:11  Warning: Unexpected console statement.  no-console
+57:9  Warning: Unexpected console statement.  no-console
+110:9  Warning: Unexpected console statement.  no-console
+330:9  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/core/Pipeline.ts
+174:7  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/core/PipelineOrchestrator.ts
+52:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/core/PipelineStage.ts
+67:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/index.ts
+112:3  Warning: Unexpected console statement.  no-console
+128:3  Warning: Unexpected console statement.  no-console
+129:3  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/ExamplePipelines.ts
+231:5  Warning: Unexpected console statement.  no-console
+232:5  Warning: Unexpected console statement.  no-console
+233:5  Warning: Unexpected console statement.  no-console
+234:5  Warning: Unexpected console statement.  no-console
+235:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/KlipyAdapter.ts
+47:5  Warning: Unexpected console statement.  no-console
+60:11  Warning: Unexpected console statement.  no-console
+127:5  Warning: Unexpected console statement.  no-console
+201:7  Warning: Unexpected console statement.  no-console
+273:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/OpenAIAdapter.ts
+73:7  Warning: Unexpected console statement.  no-console
+132:7  Warning: Unexpected console statement.  no-console
+159:7  Warning: Unexpected console statement.  no-console
+282:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/PexelsAdapter.ts
+42:7  Warning: Unexpected console statement.  no-console
+47:7  Warning: Unexpected console statement.  no-console
+87:5  Warning: Unexpected console statement.  no-console
+100:13  Warning: Unexpected console statement.  no-console
+104:11  Warning: Unexpected console statement.  no-console
+143:9  Warning: Unexpected console statement.  no-console
+293:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/RedditAdapter.ts
+54:7  Warning: Unexpected console statement.  no-console
+88:7  Warning: Unexpected console statement.  no-console
+108:7  Warning: Unexpected console statement.  no-console
+124:7  Warning: Unexpected console statement.  no-console
+176:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/TwitterAdapter.ts
+72:7  Warning: Unexpected console statement.  no-console
+82:9  Warning: Unexpected console statement.  no-console
+86:7  Warning: Unexpected console statement.  no-console
+
+./src/lib/pipeline/integrations/index.ts
+57:3  Warning: Unexpected console statement.  no-console
+60:5  Warning: Unexpected console statement.  no-console
+67:7  Warning: Unexpected console statement.  no-console
+
+./src/lib/socialDramaAggregator.ts
+37:5  Warning: Unexpected console statement.  no-console
+69:5  Warning: Unexpected console statement.  no-console
+85:7  Warning: Unexpected console statement.  no-console
+103:7  Warning: Unexpected console statement.  no-console
+115:7  Warning: Unexpected console statement.  no-console
+133:7  Warning: Unexpected console statement.  no-console
+138:7  Warning: Unexpected console statement.  no-console
+150:7  Warning: Unexpected console statement.  no-console
+165:5  Warning: Unexpected console statement.  no-console
+179:7  Warning: Unexpected console statement.  no-console
+193:7  Warning: Unexpected console statement.  no-console
+275:9  Warning: Unexpected console statement.  no-console
+278:7  Warning: Unexpected console statement.  no-console
+286:9  Warning: Unexpected console statement.  no-console
+288:9  Warning: Unexpected console statement.  no-console
+
+./src/lib/storyRewriter.ts
+36:5  Warning: Unexpected console statement.  no-console
+37:5  Warning: Unexpected console statement.  no-console
+38:5  Warning: Unexpected console statement.  no-console
+42:9  Warning: Unexpected console statement.  no-console
+50:11  Warning: Unexpected console statement.  no-console
+54:9  Warning: Unexpected console statement.  no-console
+56:11  Warning: Unexpected console statement.  no-console
+71:9  Warning: Unexpected console statement.  no-console
+81:11  Warning: Unexpected console statement.  no-console
+91:11  Warning: Unexpected console statement.  no-console
+141:5  Warning: Unexpected console statement.  no-console
+179:5  Warning: Unexpected console statement.  no-console
+183:9  Warning: 'hasEmotionalHook' is never reassigned. Use 'const' instead.  prefer-const
+222:5  Warning: Unexpected console statement.  no-console
+302:5  Warning: Unexpected console statement.  no-console
+332:5  Warning: Unexpected console statement.  no-console
+
+./src/lib/twitterApiClient.ts
+119:7  Warning: Unexpected console statement.  no-console
+128:7  Warning: Unexpected console statement.  no-console
+205:7  Warning: Unexpected console statement.  no-console
+
+./src/slider/Basic.js
+50:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/HeaderInstagram.js
+47:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+54:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+61:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+68:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+75:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+82:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/InstagramSidebarSlider.js
+45:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+50:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+55:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+60:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/InteriroSlider.js
+59:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/NftSlider.js
+63:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/PopularSlider.js
+58:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/PopularSlider2.js
+58:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/TechnologySlider.js
+30:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/slider/VerticalSider.js
+20:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+34:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

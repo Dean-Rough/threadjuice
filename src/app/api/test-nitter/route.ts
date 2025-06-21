@@ -3,7 +3,7 @@
  * Demonstrates the new social drama aggregator in action
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { socialDramaAggregator } from '@/lib/socialDramaAggregator';
 import { nitterScraper } from '@/lib/nitterScraper';
 import { twitterToStoryConverter } from '@/lib/twitterToStoryConverter';

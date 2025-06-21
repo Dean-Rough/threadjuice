@@ -26,41 +26,6 @@ jest.mock('next/image', () => {
   };
 });
 
-// Mock data
-jest.mock('@/util/blogData', () => [
-  {
-    id: 1,
-    title: 'Test Post 1',
-    img: 'test1.jpg',
-    group: 'tech',
-    trending: true,
-    category: 'Technology',
-    author: 'Test Author',
-    date: '2024-01-01',
-  },
-  {
-    id: 2,
-    title: 'Test Post 2',
-    img: 'test2.jpg',
-    group: 'gaming',
-    trending: false,
-    category: 'Gaming',
-    author: 'Test Author',
-    date: '2024-01-02',
-  },
-]);
-
-// Mock personas
-jest.mock('@/data/personas', () => ({
-  getRandomPersona: () => ({
-    id: 'test-persona',
-    name: 'Test Persona',
-    bio: 'Test bio',
-    avatar: 'test-avatar.jpg',
-    style: 'Test style',
-  }),
-}));
-
 // Mock React Query hooks
 jest.mock('@/hooks/usePosts', () => ({
   usePosts: jest.fn(() => ({
@@ -69,22 +34,26 @@ jest.mock('@/hooks/usePosts', () => ({
         {
           id: 1,
           title: 'Test Post 1',
-          img: 'test1.jpg',
+          image_url: '/assets/img/tech/test1.jpg',
           group: 'tech',
           trending: true,
           category: 'Technology',
           author: 'Test Author',
-          date: '2024-01-01',
+          created_at: '2024-01-01T00:00:00Z',
+          comment_count: 42,
+          share_count: 13,
         },
         {
           id: 2,
           title: 'Test Post 2',
-          img: 'test2.jpg',
+          image_url: '/assets/img/gaming/test2.jpg',
           group: 'gaming',
           trending: false,
           category: 'Gaming',
           author: 'Test Author',
-          date: '2024-01-02',
+          created_at: '2024-01-02T00:00:00Z',
+          comment_count: 25,
+          share_count: 8,
         },
       ],
       total: 2,
@@ -98,6 +67,17 @@ jest.mock('@/hooks/usePosts', () => ({
     isLoading: false,
     error: null,
   })),
+}));
+
+// Mock personas
+jest.mock('@/data/personas', () => ({
+  getRandomPersona: () => ({
+    id: 'test-persona',
+    name: 'Test Persona',
+    bio: 'Test bio',
+    avatar: 'test-avatar.jpg',
+    style: 'Test style',
+  }),
 }));
 
 // Test wrapper with QueryClient
@@ -121,13 +101,13 @@ describe('Image Optimization in TrendingFeed', () => {
       </TestWrapper>
     );
 
-    const images = screen.getAllByTestId('optimized-image');
+    const featuredImages = screen.getAllByTestId('optimized-image');
 
     // Should have at least one image for featured post
-    expect(images.length).toBeGreaterThan(0);
+    expect(featuredImages.length).toBeGreaterThan(0);
 
     // Featured image should have priority
-    const featuredImage = images.find(
+    const featuredImage = featuredImages.find(
       img => img.getAttribute('data-priority') === 'true'
     );
     expect(featuredImage).toBeTruthy();
@@ -139,36 +119,29 @@ describe('Image Optimization in TrendingFeed', () => {
     expect(featuredImage).toHaveAttribute('alt', 'Test Post 1');
   });
 
-  it('should use next/image for grid layout images', () => {
+  it('should use background images for grid layout (not next/image)', () => {
     render(
       <TestWrapper>
         <TrendingFeed layout='grid' postsPerPage={2} />
       </TestWrapper>
     );
 
-    const images = screen.getAllByTestId('optimized-image');
+    // Grid layout uses background images, not <img> tags
+    const backgroundImageDivs = screen.getAllByRole('article');
+    expect(backgroundImageDivs.length).toBeGreaterThan(0);
 
-    // Should have images for grid posts
-    expect(images.length).toBeGreaterThan(0);
-
-    // Check grid image dimensions
-    const gridImages = images.filter(
-      img =>
-        img.getAttribute('width') === '400' &&
-        img.getAttribute('height') === '192'
-    );
-    expect(gridImages.length).toBeGreaterThan(0);
-
-    // Verify image sources
-    gridImages.forEach(img => {
-      expect(img.getAttribute('src')).toMatch(
-        /^\/assets\/img\/[a-z]+\/test[0-9]+\.jpg$/
-      );
-    });
+    // Check that the first post has the correct background image
+    const firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+    expect(firstPostCard).toBeTruthy();
+    expect(firstPostCard).toHaveStyle('background-image: url("/assets/img/tech/test1.jpg")');
   });
 
   it('should use next/image for list layout images', () => {
-    render(<TrendingFeed layout='list' postsPerPage={2} />);
+    render(
+      <TestWrapper>
+        <TrendingFeed layout='list' postsPerPage={2} />
+      </TestWrapper>
+    );
 
     const images = screen.getAllByTestId('optimized-image');
 
@@ -189,8 +162,12 @@ describe('Image Optimization in TrendingFeed', () => {
     });
   });
 
-  it('should have proper alt text for accessibility', () => {
-    render(<TrendingFeed postsPerPage={2} />);
+  it('should have proper alt text for next/image components', () => {
+    render(
+      <TestWrapper>
+        <TrendingFeed layout='list' postsPerPage={2} />
+      </TestWrapper>
+    );
 
     const images = screen.getAllByTestId('optimized-image');
 
@@ -202,19 +179,27 @@ describe('Image Optimization in TrendingFeed', () => {
     });
   });
 
-  it('should use correct image paths', () => {
-    render(<TrendingFeed postsPerPage={2} />);
+  it('should use correct image paths for next/image components', () => {
+    render(
+      <TestWrapper>
+        <TrendingFeed layout='list' postsPerPage={2} />
+      </TestWrapper>
+    );
 
     const images = screen.getAllByTestId('optimized-image');
 
     images.forEach(img => {
       const src = img.getAttribute('src');
-      expect(src).toMatch(/^\/assets\/img\/[a-z]+\/[a-z0-9]+\.jpg$/);
+      expect(src).toMatch(/^\/assets\/img\/(tech|gaming)\/test[0-9]+\.jpg$/);
     });
   });
 
   it('should handle images without featured flag', () => {
-    render(<TrendingFeed featured={false} postsPerPage={2} />);
+    render(
+      <TestWrapper>
+        <TrendingFeed featured={false} layout='list' postsPerPage={2} />
+      </TestWrapper>
+    );
 
     const images = screen.getAllByTestId('optimized-image');
 
@@ -225,8 +210,12 @@ describe('Image Optimization in TrendingFeed', () => {
     expect(priorityImages.length).toBe(0);
   });
 
-  it('should maintain image aspect ratios with object-cover', () => {
-    render(<TrendingFeed postsPerPage={2} />);
+  it('should maintain image aspect ratios with object-cover for next/image', () => {
+    render(
+      <TestWrapper>
+        <TrendingFeed layout='list' postsPerPage={2} />
+      </TestWrapper>
+    );
 
     const images = screen.getAllByTestId('optimized-image');
 
@@ -236,27 +225,55 @@ describe('Image Optimization in TrendingFeed', () => {
   });
 
   it('should use appropriate image sizes for different layouts', () => {
-    // Test grid layout
+    // Test list layout
     const { rerender } = render(
-      <TrendingFeed layout='grid' postsPerPage={1} />
+      <TestWrapper>
+        <TrendingFeed layout='list' postsPerPage={1} />
+      </TestWrapper>
     );
     let images = screen.getAllByTestId('optimized-image');
-    expect(images[0]).toHaveAttribute('width', '400');
-    expect(images[0]).toHaveAttribute('height', '192');
-
-    // Test list layout
-    rerender(<TrendingFeed layout='list' postsPerPage={1} />);
-    images = screen.getAllByTestId('optimized-image');
     expect(images[0]).toHaveAttribute('width', '320');
     expect(images[0]).toHaveAttribute('height', '192');
 
     // Test featured layout
-    rerender(<TrendingFeed featured={true} postsPerPage={1} />);
+    rerender(
+      <TestWrapper>
+        <TrendingFeed featured={true} postsPerPage={1} />
+      </TestWrapper>
+    );
     images = screen.getAllByTestId('optimized-image');
     const featuredImage = images.find(
       img => img.getAttribute('data-priority') === 'true'
     );
     expect(featuredImage).toHaveAttribute('width', '800');
     expect(featuredImage).toHaveAttribute('height', '400');
+  });
+
+  it('should use background images for grid and masonry layouts', () => {
+    const { rerender } = render(
+      <TestWrapper>
+        <TrendingFeed layout='grid' postsPerPage={2} />
+      </TestWrapper>
+    );
+
+    // Check grid layout uses background images
+    let backgroundImageDivs = screen.getAllByRole('article');
+    expect(backgroundImageDivs.length).toBeGreaterThan(0);
+    
+    let firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+    expect(firstPostCard).toBeTruthy();
+
+    // Test masonry layout
+    rerender(
+      <TestWrapper>
+        <TrendingFeed layout='masonry' postsPerPage={2} />
+      </TestWrapper>
+    );
+
+    backgroundImageDivs = screen.getAllByRole('article');
+    expect(backgroundImageDivs.length).toBeGreaterThan(0);
+    
+    firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+    expect(firstPostCard).toBeTruthy();
   });
 });

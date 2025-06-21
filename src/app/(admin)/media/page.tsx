@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import {
   Upload,
   Search,
@@ -343,9 +344,11 @@ export default function MediaManagementPage() {
                     {/* File preview */}
                     <div className='flex aspect-square items-center justify-center bg-gray-100'>
                       {file.type === 'image' ? (
-                        <img
+                        <Image
                           src={file.url}
                           alt={file.alt || file.name}
+                          width={200}
+                          height={200}
                           className='h-full w-full object-cover'
                         />
                       ) : (
@@ -446,9 +449,11 @@ export default function MediaManagementPage() {
                         <td className='p-3'>
                           <div className='flex items-center space-x-3'>
                             {file.type === 'image' ? (
-                              <img
+                              <Image
                                 src={file.url}
                                 alt={file.alt || file.name}
+                                width={40}
+                                height={40}
                                 className='h-10 w-10 rounded object-cover'
                               />
                             ) : (
@@ -575,9 +580,11 @@ export default function MediaManagementPage() {
                 {/* Preview */}
                 <div>
                   {selectedFile.type === 'image' ? (
-                    <img
+                    <Image
                       src={selectedFile.url}
                       alt={selectedFile.alt || selectedFile.name}
+                      width={600}
+                      height={400}
                       className='w-full rounded-lg'
                     />
                   ) : (

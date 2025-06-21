@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { TrendingFeed } from '@/components/TrendingFeed';
@@ -36,14 +37,18 @@ export default function FilterPage() {
             <div className='flex items-center justify-between'>
               <div className='flex items-center space-x-4'>
                 <Link href='/' className='flex items-center space-x-2'>
-                  <img
+                  <Image
                     src='/assets/img/logo/Icon.svg'
                     alt='ThreadJuice Icon'
+                    width={64}
+                    height={64}
                     className='h-16 w-16'
                   />
-                  <img
+                  <Image
                     src='/assets/img/logo/Logotype-White.svg'
                     alt='ThreadJuice'
+                    width={200}
+                    height={48}
                     className='h-12'
                   />
                 </Link>
@@ -176,7 +181,7 @@ export default function FilterPage() {
                   </h3>
                   <div className='space-y-4'>
                     {[
-                      &quot;Restaurant charged me $50 for &apos;emotional labor&apos;&quot;,
+                      "Restaurant charged me $50 for 'emotional labor'",
                       'Neighbor steals packages, gets glitter bombed',
                       'Working from Disneyland instead of home',
                       'Roommate replaced furniture with cardboard',
@@ -206,15 +211,15 @@ export default function FilterPage() {
                     {[
                       {
                         title:
-                          &quot;My landlord installed a doorbell that plays &apos;Baby Shark&apos;&quot;,
+                          "My landlord installed a doorbell that plays 'Baby Shark'",
                         shares: '3.2k',
                       },
                       {
-                        title: &quot;I accidentally became the town&apos;s food critic&quot;,
+                        title: "I accidentally became the town's food critic",
                         shares: '2.8k',
                       },
                       {
-                        title: &quot;My dating app match was my therapist&apos;s patient&quot;,
+                        title: "My dating app match was my therapist's patient",
                         shares: '2.1k',
                       },
                       {
@@ -256,14 +261,16 @@ export default function FilterPage() {
             <div className='grid grid-cols-4 gap-8'>
               {/* Logo & Description - 25% */}
               <div>
-                <img
+                <Image
                   src='/assets/img/logo/Logotype-White.svg'
                   alt='ThreadJuice'
+                  width={200}
+                  height={40}
                   className='mb-4 h-10'
                 />
                 <p className='text-sm text-muted-foreground'>
                   Your daily dose of internet chaos, wholesome moments, and
-                  &quot;wait, what?&quot; stories. We find the stuff that makes you stop
+                  "wait, what?" stories. We find the stuff that makes you stop
                   scrolling and actually read the comments.
                 </p>
               </div>

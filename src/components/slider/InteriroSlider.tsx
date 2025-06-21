@@ -2,6 +2,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import data from '@/util/blogData';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -60,10 +61,12 @@ export default function InteriroSlider() {
               </div>
               <div className='col-xl-7 col-lg-6'>
                 <div className='slider__img-wrap'>
-                  <img
+                  <Image
                     src={`/assets/img/${item.group}/${item.img}`}
                     className='main-img'
-                    alt='img'
+                    alt={item.title || 'Slider image'}
+                    width={600}
+                    height={400}
                   />
                 </div>
               </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Header } from './Header';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { HeaderAd } from '@/components/ads';
@@ -29,9 +30,11 @@ export function AppLayout({ children }: AppLayoutProps) {
             <div className='grid grid-cols-4 gap-8'>
               {/* Logo & Description - 25% */}
               <div>
-                <img
+                <Image
                   src='/assets/img/logo/Logotype-White.svg'
                   alt='ThreadJuice'
+                  width={200}
+                  height={40}
                   className='mb-4 h-10'
                 />
                 <p className='text-sm text-muted-foreground'>

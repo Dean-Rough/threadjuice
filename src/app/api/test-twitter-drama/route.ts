@@ -3,7 +3,7 @@
  * Demonstrates the complete pipeline from Twitter data to ThreadJuice stories
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { twitterDramaDetector } from '@/lib/twitterDramaDetector';
 import { twitterToStoryConverter } from '@/lib/twitterToStoryConverter';
 

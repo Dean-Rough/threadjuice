@@ -3,7 +3,7 @@
  */
 
 import { GET, POST } from '../route';
-import { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server.js';
 import { auth } from '@clerk/nextjs/server';
 
 // Mock Clerk auth

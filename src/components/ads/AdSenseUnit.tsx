@@ -65,13 +65,14 @@ export default function AdSenseUnit({
       }
     );
 
-    if (adRef.current) {
-      observer.observe(adRef.current);
+    const currentRef = adRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (adRef.current) {
-        observer.unobserve(adRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [lazy]);

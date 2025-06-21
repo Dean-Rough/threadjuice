@@ -15,7 +15,7 @@ test.describe('Critical User Flows', () => {
       await expect(page.locator('nav')).toBeVisible();
       
       // Check for logo/branding
-      await expect(page.locator('img[alt*="ThreadJuice"], img[alt*="logo"]')).toBeVisible();
+      await expect(page.locator('img[alt*="ThreadJuice"], img[alt*="logo"]').first()).toBeVisible();
       
       // Check for main content area
       await expect(page.locator('main, .trending-feed, .featured-content')).toBeVisible();

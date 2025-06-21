@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { auth } from '@clerk/nextjs/server';
 import { z } from 'zod';
 import { withMonitoring } from '@/lib/monitoring';

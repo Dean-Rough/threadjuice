@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import data from '@/util/blogData';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getRandomPersona } from '@/data/personas';
 
 // Import Swiper styles
@@ -68,9 +69,12 @@ export default function TrendingSlider({ showItem = 4 }: TrendingSiderProps) {
                   <i className='fal fa-heart' />
                 </Link>
                 <Link href={`/posts/${item.id}`}>
-                  <img
+                  <Image
                     src={`/assets/img/${item.group}/${item.img}`}
                     alt={item.title}
+                    width={400}
+                    height={250}
+                    className="w-full h-auto object-cover"
                   />
                 </Link>
               </div>

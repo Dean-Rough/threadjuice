@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import fs from 'fs';
 import path from 'path';
 // import { prisma } from '@/lib/prisma';

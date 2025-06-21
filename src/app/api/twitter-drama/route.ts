@@ -3,7 +3,7 @@
  * Fetches live Twitter data and converts high-drama tweets to ThreadJuice stories
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { twitterApiClient } from '@/lib/twitterApiClient';
 import { twitterDramaDetector } from '@/lib/twitterDramaDetector';
 import { twitterToStoryConverter } from '@/lib/twitterToStoryConverter';

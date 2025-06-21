@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 export default function TestStoryPage() {
@@ -75,14 +76,18 @@ export default function TestStoryPage() {
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
               <Link href='/' className='flex items-center space-x-2'>
-                <img
+                <Image
                   src='/assets/img/logo/Icon.svg'
                   alt='ThreadJuice Icon'
+                  width={64}
+                  height={64}
                   className='h-16 w-16'
                 />
-                <img
+                <Image
                   src='/assets/img/logo/Logotype-White.svg'
                   alt='ThreadJuice'
+                  width={120}
+                  height={48}
                   className='h-12'
                 />
               </Link>

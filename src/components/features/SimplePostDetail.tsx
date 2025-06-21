@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Eye,
   MessageCircle,
@@ -64,7 +65,7 @@ const renderContentWithAutoLinks = (content: string, post: any) => {
   // Pattern for subreddits
   const subredditPattern = /\br\/[\w]+\b/g;
   
-  let processedContent = content;
+  const processedContent = content;
   const replacements: Array<{start: number, end: number, element: React.ReactNode}> = [];
   
   // Process source links
@@ -492,7 +493,7 @@ export default function SimplePostDetail({
     }
 
     fetchPost();
-  }, [postId]);
+  }, [postId, enhanceStoryWithGifs]);
 
   // Adaptive section function
   const adaptSectionsForQuality = (sections: any[], quality: ContentQualityMetrics): any[] => {
@@ -598,12 +599,12 @@ export default function SimplePostDetail({
   };
 
   // Enhance story with contextual GIF reactions
-  const enhanceStoryWithGifs = async (
+  const enhanceStoryWithGifs = useCallback(async (
     sections: any[],
     emotions: EmotionalAnalysis[]
   ): Promise<any[]> => {
     const enhancedSections: any[] = [];
-    let emotionIndex = 0;
+    const emotionIndex = 0;
 
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
@@ -654,7 +655,7 @@ export default function SimplePostDetail({
     }
 
     return enhancedSections;
-  };
+  }, []);
 
   // Determine if we should insert a GIF reaction at this point
   const shouldInsertGifReaction = (
@@ -736,14 +737,13 @@ export default function SimplePostDetail({
         return (
           <div key={index} className='image-section my-12'>
             <div className='overflow-hidden rounded-lg border border-border'>
-              <img
+              <Image
                 src={section.metadata?.imageUrl || `/assets/img/lifestyle/life_style0${(index % 9) + 1}.jpg`}
                 alt={section.content}
+                width={800}
+                height={400}
                 className='h-auto w-full object-cover'
                 style={{ maxHeight: '400px' }}
-                onError={(e) => {
-                  e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
-                }}
               />
               {section.metadata?.caption && (
                 <div className='bg-muted/50 p-4'>
@@ -762,9 +762,11 @@ export default function SimplePostDetail({
       case 'hero_image':
         return (
           <div key={index} className='hero-image-section mb-8'>
-            <img
+            <Image
               src={section.metadata?.imageUrl || `/assets/img/blog/blog${Math.floor(Math.random() * 15) + 1}.jpg`}
               alt={section.content || post.title}
+              width={800}
+              height={400}
               className='mb-3 h-[400px] w-full rounded-lg object-cover'
             />
             {section.content && (
@@ -785,15 +787,13 @@ export default function SimplePostDetail({
             )}
             <div className='overflow-hidden rounded-lg border border-border bg-card'>
               {section.metadata?.imageUrl ? (
-                <img
+                <Image
                   src={section.metadata.imageUrl}
                   alt={section.content}
+                  width={800}
+                  height={400}
                   className='w-full object-cover'
                   style={{ maxHeight: '400px' }}
-                  onError={(e) => {
-                    // Embedded image failed to load
-                    e.currentTarget.src = '/assets/img/blog/blog01.jpg'; // Fallback
-                  }}
                 />
               ) : (
                 <div className='h-64 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center'>
@@ -1093,9 +1093,11 @@ export default function SimplePostDetail({
         return (
           <div key={index} className='terry-corner-section my-12 rounded-lg border-2 border-orange-500 bg-orange-500/10 p-6'>
             <div className='mb-4 flex items-center gap-3'>
-              <img
+              <Image
                 src={section.metadata?.imageUrl || '/assets/img/personas/the-terry.svg'}
                 alt="The Terry"
+                width={48}
+                height={48}
                 className='h-12 w-12 rounded-full'
               />
               <h3 className='text-xl font-extrabold text-foreground'>
@@ -1119,14 +1121,12 @@ export default function SimplePostDetail({
             <div className='overflow-hidden rounded-lg border border-border bg-card'>
               <div className='relative aspect-video bg-black'>
                 {section.metadata?.thumbnail ? (
-                  <img
+                  <Image
                     src={section.metadata.thumbnail}
                     alt={section.title || 'Video thumbnail'}
+                    width={800}
+                    height={450}
                     className='h-full w-full object-cover'
-                    onError={(e) => {
-                      // Image failed to load
-                      e.currentTarget.style.display = 'none';
-                    }}
                   />
                 ) : (
                   <div className='h-full w-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center'>
@@ -1269,13 +1269,12 @@ export default function SimplePostDetail({
                 {/* Featured Image */}
                 {post.imageUrl && (
                   <div className='mb-8 overflow-hidden rounded-xl'>
-                    <img
+                    <Image
                       src={post.imageUrl}
                       alt={post.title}
+                      width={800}
+                      height={400}
                       className='h-[400px] w-full object-cover'
-                      onError={(e) => {
-                        e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
-                      }}
                     />
                   </div>
                 )}
@@ -1333,15 +1332,12 @@ export default function SimplePostDetail({
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-4'>
                       <div className='rounded-full bg-white/20 p-3'>
-                        <img
+                        <Image
                           src='/assets/img/reddit-icon.svg'
                           alt='Reddit'
+                          width={24}
+                          height={24}
                           className='h-6 w-6'
-                          onError={e => {
-                            const target = e.target as HTMLImageElement;
-                            target.src =
-                              'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyUzYuNDggMjIgMTIgMjIgMjIgMTcuNTIgMjIgMTJTMTcuNTIgMiAxMiAyWk0xNy41NiAxMy40NEMxNy41NiAxNC4xOCAxNi45NyAxNC43NyAxNi4yMyAxNC43N0MxNS40OSAxNC43NyAxNC45IDE0LjE4IDE0LjkgMTMuNDRDMTQuOSAxMi43IDE1LjQ5IDEyLjExIDE2LjIzIDEyLjExQzE2Ljk3IDEyLjExIDE3LjU2IDEyLjcgMTcuNTYgMTMuNDRaTTkuMSAxMy40NEM5LjEgMTQuMTggOC41MSAxNC43NyA3Ljc3IDE0Ljc3QzcuMDMgMTQuNzcgNi40NCAxNC4xOCA2LjQ0IDEzLjQ0QzYuNDQgMTIuNyA3LjAzIDEyLjExIDcuNzcgMTIuMTFDOC41MSAxMi4xMSA5LjEgMTIuNyA5LjEgMTMuNDRaTTEyIDE4LjMzQzEwLjIyIDE4LjMzIDguNjkgMTYuOCA4LjY5IDE1LjAySDkuOTNDOS45MyAxNi4xMyAxMC44OCAxNy4wOCAxMiAxNy4wOEMxMy4xMiAxNy4wOCAxNC4wNyAxNi4xMyAxNC4wNyAxNS4wMkgxNS4zMUMxNS4zMSAxNi44IDEzLjc4IDE4LjMzIDEyIDE4LjMzWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+';
-                          }}
                         />
                       </div>
                       <div>
@@ -1521,13 +1517,12 @@ export default function SimplePostDetail({
                           {/* Featured Image */}
                           <div className='relative h-48 overflow-hidden bg-muted'>
                             {story.imageUrl ? (
-                              <img
+                              <Image
                                 src={story.imageUrl}
                                 alt={story.title}
+                                width={400}
+                                height={192}
                                 className='h-full w-full object-cover transition-transform group-hover:scale-105'
-                                onError={(e) => {
-                                  e.currentTarget.src = '/assets/img/lifestyle/life_style01.jpg';
-                                }}
                               />
                             ) : (
                               <div className='flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200'>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import { X } from 'lucide-react';
 import JuiceboxCharacter from './JuiceboxCharacter';
@@ -51,14 +51,14 @@ export default function AnimatedSpeechBubble({
 
       return () => clearTimeout(hideTimer);
     }
-  }, [autoHide, hideDelay, isVisible, isDismissed]);
+  }, [autoHide, hideDelay, isVisible, isDismissed, handleDismiss]);
 
-  const handleDismiss = () => {
+  const handleDismiss = useCallback(() => {
     setIsDismissed(true);
     setIsVisible(false);
     setIsAnimating(false);
     onDismiss?.();
-  };
+  }, [onDismiss]);
 
   if (isDismissed || !isVisible) return null;
 

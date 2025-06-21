@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
-;
+import Image from 'next/image';
 import {
   BarChart3,
   FileText,
@@ -235,12 +235,12 @@ export default function DashboardPage() {
                           className='post-item d-flex align-items-center border-bottom py-3'
                         >
                           <div className='post-image me-3'>
-                            <img
+                            <Image
                               src={post.featuredImage}
                               alt={post.title}
-                              className='rounded'
                               width={60}
                               height={60}
+                              className='rounded'
                               style={{ objectFit: 'cover' }}
                             />
                           </div>
@@ -392,12 +392,12 @@ export default function DashboardPage() {
                         <tr key={post.id}>
                           <td>
                             <div className='d-flex align-items-center'>
-                              <img
+                              <Image
                                 src={post.featuredImage}
                                 alt={post.title}
-                                className='me-3 rounded'
                                 width={40}
                                 height={40}
+                                className='me-3 rounded'
                                 style={{ objectFit: 'cover' }}
                               />
                               <div>
@@ -486,12 +486,12 @@ export default function DashboardPage() {
                     <div key={persona.id} className='col-lg-4 col-md-6 mb-30'>
                       <div className='persona-card h-100 rounded border bg-white p-4'>
                         <div className='persona-header mb-20 text-center'>
-                          <img
+                          <Image
                             src={persona.avatar}
                             alt={persona.name}
-                            className='rounded-circle mb-15'
                             width={80}
                             height={80}
+                            className='rounded-circle mb-15'
                           />
                           <h5 className='persona-name mb-5'>{persona.name}</h5>
                           <span className='badge bg-primary'>

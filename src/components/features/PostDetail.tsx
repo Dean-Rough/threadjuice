@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Eye,
   MessageCircle,
@@ -187,9 +188,11 @@ export default function PostDetail({
         return (
           <div className='image-section text-center'>
             {post?.imageUrl && (
-              <img
+              <Image
                 src={post.imageUrl}
                 alt={section.metadata?.image_prompt || post.title}
+                width={800}
+                height={400}
                 className='img-fluid mb-3 rounded'
                 style={{
                   width: '100%',
@@ -440,11 +443,13 @@ export default function PostDetail({
                 <div className='author-info d-flex align-items-center justify-content-between mb-4'>
                   <div className='d-flex align-items-center'>
                     <div className='author-avatar me-3'>
-                      <img
+                      <Image
                         src={
                           post.persona?.avatar || '/assets/img/blog/blog01.jpg'
                         }
                         alt={post.persona?.name || post.author}
+                        width={48}
+                        height={48}
                         className='rounded-circle'
                         style={{
                           width: '48px',
@@ -575,11 +580,13 @@ export default function PostDetail({
                     <h5 className='mb-0'>About the Author</h5>
                   </div>
                   <div className='author-card text-center'>
-                    <img
+                    <Image
                       src={
                         post.persona?.avatar || '/assets/img/blog/blog01.jpg'
                       }
                       alt={post.persona?.name || post.author}
+                      width={80}
+                      height={80}
                       className='author-avatar-large rounded-circle mx-auto mb-3'
                       style={{
                         width: '80px',

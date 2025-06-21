@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
@@ -411,7 +411,7 @@ export async function GET(request: NextRequest) {
     const allPosts = [...generatedStories, ...mockPosts];
 
     // Filter posts based on query parameters
-    let filteredPosts = allPosts.filter(post => {
+    const filteredPosts = allPosts.filter(post => {
       // Status filter (all posts are published, generated stories don't have status field)
       if (post.status && post.status !== 'published') return false;
       

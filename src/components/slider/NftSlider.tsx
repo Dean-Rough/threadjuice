@@ -1,7 +1,12 @@
+'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import data from '@/util/blogData';
 import Link from 'next/link';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import Image from 'next/image';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export default function NftSlider() {
   return (
@@ -60,10 +65,12 @@ export default function NftSlider() {
               </div>
               <div className='col-lg-6'>
                 <div className='slider__img-wrap'>
-                  <img
+                  <Image
                     src={`/assets/img/${item.group}/${item.img}`}
                     className='main-img'
-                    alt='img'
+                    alt={item.title || 'NFT slider image'}
+                    width={600}
+                    height={400}
                   />
                 </div>
               </div>

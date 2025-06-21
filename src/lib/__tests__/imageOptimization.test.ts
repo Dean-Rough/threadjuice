@@ -52,9 +52,35 @@ const mockLink = {
   },
 };
 
-(global as any).window = {
-  location: { origin: 'https://test.com' },
-  URL: global.URL,
+// Only mock window properties if they don't exist
+if (!(global as any).window) {
+  (global as any).window = {};
+}
+
+(global as any).window.location = { origin: 'https://test.com' };
+
+// Mock URL constructor for this specific test  
+const MockURL = class {
+  public searchParams: { set: (key: string, value: string) => void };
+  public href: string;
+  
+  constructor(url: string, base?: string) {
+    // Simple URL construction without recursion
+    this.href = url.startsWith('http') ? url : (base || 'https://test.com') + url;
+    this.searchParams = {
+      set: (key: string, value: string) => {
+        // Simple query param handling
+        const separator = this.href.includes('?') ? '&' : '?';
+        this.href = this.href + separator + key + '=' + value;
+      }
+    };
+  }
+  
+  toString() {
+    return this.href;
+  }
+  
+  static createObjectURL = jest.fn(() => 'blob:mock-url');
 };
 
 Object.defineProperty(global, 'Image', {
@@ -62,11 +88,14 @@ Object.defineProperty(global, 'Image', {
   configurable: true,
 });
 
-Object.defineProperty(global, 'URL', {
-  value: {
-    createObjectURL: jest.fn(() => 'blob:mock-url'),
-  },
-  configurable: true,
+// Temporarily override URL for this test file
+const originalURL = global.URL;
+beforeAll(() => {
+  global.URL = MockURL as any;
+});
+
+afterAll(() => {
+  global.URL = originalURL;
 });
 
 describe('Image Optimization', () => {

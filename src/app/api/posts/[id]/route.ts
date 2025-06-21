@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import supabase from '@/lib/database';
 import { normalizeContent } from '@/lib/contentAdapter';
 

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { z } from 'zod';
 import supabase from '@/lib/database';
 import fs from 'fs';
@@ -195,7 +195,7 @@ export async function GET(request: NextRequest) {
       const generatedStories = loadGeneratedStories();
       
       // Filter and process like before
-      let filteredPosts = generatedStories.filter(post => {
+      const filteredPosts = generatedStories.filter(post => {
         if (post.status && post.status !== 'published') return false;
         if (category && post.category !== category) return false;
         if (author) {

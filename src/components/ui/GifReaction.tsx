@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 export interface GifReactionProps {
@@ -116,24 +117,27 @@ export default function GifReaction({
             <>
               {/* Preview image for faster loading */}
               {preview && !imageLoaded && (
-                <img
+                <Image
                   src={preview}
                   alt={title}
-                  className="absolute inset-0 w-full h-full object-cover blur-sm"
+                  fill
+                  className="object-cover blur-sm"
                   style={{ filter: 'blur(4px)' }}
                 />
               )}
               
               {/* Main GIF */}
-              <img
+              <Image
                 src={url}
                 alt={title}
-                className={`w-full h-full object-cover transition-opacity duration-300 ${
+                fill
+                className={`object-cover transition-opacity duration-300 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
                 loading={lazy ? 'lazy' : 'eager'}
+                unoptimized={true}
               />
             </>
           )}

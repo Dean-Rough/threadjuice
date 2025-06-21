@@ -9,7 +9,7 @@ import {
   CacheMonitor,
   cacheMonitor,
 } from '../cache';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 
 // Mock Next.js response
 jest.mock('next/server', () => ({

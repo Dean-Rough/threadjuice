@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server.js';
 import { z } from 'zod';
 import { emailService, validateEmail } from '@/lib/email';
 import { withMonitoring } from '@/lib/monitoring';

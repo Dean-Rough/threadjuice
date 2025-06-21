@@ -78,7 +78,7 @@ export default function LandingPage() {
     },
     {
       quote:
-        &quot;The AI writers are surprisingly engaging. It&apos;s like having a curated news feed with personality.&quot;,
+        "The AI writers are surprisingly engaging. It's like having a curated news feed with personality.",
       author: 'Mike R.',
       role: 'Marketing Manager',
     },

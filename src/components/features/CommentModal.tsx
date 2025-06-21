@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   X,
   MessageSquare,
@@ -59,14 +59,39 @@ export default function CommentModal({
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, postId, sortBy]);
+  }, [isOpen, postId, sortBy, loadComments]);
 
-  const loadComments = async () => {
+  const sortComments = useCallback((comments: Comment[]): Comment[] => {
+    const sorted = [...comments];
+
+    switch (sortBy) {
+      case 'newest':
+        return sorted.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case 'oldest':
+        return sorted.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case 'popular':
+      default:
+        return sorted.sort((a, b) => b.likes - a.likes);
+    }
+  }, [sortBy]);
+
+  const loadComments = useCallback(async () => {
     try {
       setLoading(true);
       // TODO: Replace with actual API call
       // const response = await fetch(`/api/posts/${postId}/comments?sort=${sortBy}`);
       // const data = await response.json();
+      
+      // eslint-disable-next-line no-unused-vars
+      const _postId = postId; // Used in real API call
+      // eslint-disable-next-line no-unused-vars  
+      const _sortBy = sortBy; // Used in real API call
 
       // Mock data for now - replace with real API
       const mockComments: Comment[] = [
@@ -116,27 +141,7 @@ export default function CommentModal({
     } finally {
       setLoading(false);
     }
-  };
-
-  const sortComments = (comments: Comment[]): Comment[] => {
-    const sorted = [...comments];
-
-    switch (sortBy) {
-      case 'newest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      case 'oldest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      case 'popular':
-      default:
-        return sorted.sort((a, b) => b.likes - a.likes);
-    }
-  };
+  }, [postId, sortBy, sortComments]);
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();

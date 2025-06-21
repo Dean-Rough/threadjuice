@@ -1,9 +1,12 @@
+'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import data from '@/util/blogData';
-import Link from 'next/link';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import Image from 'next/image';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
-export default function PopularSlider2() {
+export default function Basic() {
   return (
     <>
       <Swiper
@@ -47,30 +50,19 @@ export default function PopularSlider2() {
         }}
         className='swiper-wrapper'
       >
-        {data.slice(101, 105).map((item, i) => (
-          <SwiperSlide key={i}>
-            <div className='trending__post'>
-              <div className='trending__post-thumb tgImage__hover'>
-                <Link href='/blog' className='tags'>
-                  {item.category}
-                </Link>
-                <Link href={`/blog/${item.id}`} className='image'>
-                  <img
-                    src={`/assets/img/${item.group}/${item.img}`}
-                    alt='img'
-                  />
-                </Link>
-              </div>
-              <div className='trending__post-content'>
-                <h3 className='post--count'>01</h3>
-                <h4 className='title tgcommon__hover'>
-                  <Link href={`/blog/${item.id}`}>{item.title}</Link>
-                </h4>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
+        <SwiperSlide className='swiper-slide'>
+          <div className='item'>
+            <Image 
+              src='/assets/images/gallery-06.jpeg' 
+              alt='Gallery' 
+              width={400}
+              height={300}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        </SwiperSlide>
       </Swiper>
+      <div className='swiper-pagination block-gallery-pagination' />
     </>
   );
 }

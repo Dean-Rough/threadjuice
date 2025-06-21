@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import {
@@ -60,7 +60,7 @@ export default function Quiz({
     if (autoGenerate) {
       generateQuiz();
     }
-  }, [category, autoGenerate]);
+  }, [category, autoGenerate, generateQuiz]);
 
   // Timer effect
   useEffect(() => {
@@ -73,9 +73,9 @@ export default function Quiz({
       handleNextQuestion();
     }
     return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+  }, [timerActive, timeLeft, handleNextQuestion]);
 
-  const generateQuiz = () => {
+  const generateQuiz = useCallback(() => {
     setIsLoading(true);
 
     // Simulate quiz generation with category-specific questions
@@ -88,7 +88,7 @@ export default function Quiz({
       setQuestions(generatedQuestions);
       setIsLoading(false);
     }, 1000);
-  };
+  }, [category]);
 
   const startQuiz = () => {
     setQuizStarted(true);
@@ -105,19 +105,7 @@ export default function Quiz({
     setSelectedAnswers(newAnswers);
   };
 
-  const handleNextQuestion = () => {
-    setTimerActive(false);
-
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setTimeLeft(30);
-      setTimeout(() => setTimerActive(true), 500);
-    } else {
-      finishQuiz();
-    }
-  };
-
-  const finishQuiz = () => {
+  const finishQuiz = useCallback(() => {
     setTimerActive(false);
 
     // Calculate results
@@ -128,7 +116,19 @@ export default function Quiz({
     const quizResult = calculateResult(score, questions.length);
     setResult(quizResult);
     setShowResults(true);
-  };
+  }, [selectedAnswers, questions]);
+
+  const handleNextQuestion = useCallback(() => {
+    setTimerActive(false);
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setTimeLeft(30);
+      setTimeout(() => setTimerActive(true), 500);
+    } else {
+      finishQuiz();
+    }
+  }, [currentQuestion, questions.length, finishQuiz]);
 
   const resetQuiz = () => {
     setQuizStarted(false);

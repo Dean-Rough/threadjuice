@@ -11,10 +11,13 @@ import * as path from 'path';
 // Load .env.local file explicitly
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { prisma } from '../src/lib/prisma';
+// Set NODE_ENV before importing prisma to ensure proper environment
+if (!process.env.NODE_ENV) {
+  // Use type assertion to bypass readonly restriction only when necessary
+  (process.env as any).NODE_ENV = 'development';
+}
 
-// Direct import to bypass env validation for scripts
-process.env.NODE_ENV = 'development';
+import { prisma } from '../src/lib/prisma';
 
 interface IngestionResult {
   source: string;

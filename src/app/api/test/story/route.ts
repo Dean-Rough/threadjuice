@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 import { contentTransformer } from '@/lib/contentTransformer';
 
 // Mock Reddit post for testing story generation

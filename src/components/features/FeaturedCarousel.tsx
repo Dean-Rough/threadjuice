@@ -10,6 +10,7 @@ import {
   Thumbs,
 } from 'swiper/modules';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getRandomPersona, WriterPersona } from '@/data/personas';
 import data from '@/util/blogData';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -190,9 +191,10 @@ export default function FeaturedCarousel({
               <div className='featured-slide position-relative'>
                 {/* Background Image */}
                 <div className='slide-bg'>
-                  <img
+                  <Image
                     src={`/assets/img/${post.group}/${post.img}`}
                     alt={post.title}
+                    fill
                     className='slide-image'
                   />
                   <div className='slide-overlay'></div>
@@ -239,14 +241,12 @@ export default function FeaturedCarousel({
                           {/* Author & Engagement */}
                           <div className='slide-footer d-flex align-items-center justify-content-between'>
                             <div className='author-info d-flex align-items-center'>
-                              <img
+                              <Image
                                 src={post.persona.avatar}
                                 alt={post.persona.name}
+                                width={48}
+                                height={48}
                                 className='author-avatar me-3'
-                                onError={e => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.src = '/assets/img/blog/blog01.jpg';
-                                }}
                               />
                               <div>
                                 <h6 className='author-name mb-0'>
@@ -338,9 +338,11 @@ export default function FeaturedCarousel({
             {featuredPosts.map(post => (
               <SwiperSlide key={`thumb-${post.id}`}>
                 <div className='thumb-slide'>
-                  <img
+                  <Image
                     src={`/assets/img/${post.group}/${post.img}`}
                     alt={post.title}
+                    width={120}
+                    height={80}
                     className='thumb-image'
                   />
                   <div className='thumb-overlay'>

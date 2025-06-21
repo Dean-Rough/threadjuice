@@ -2,6 +2,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import data from '@/util/blogData';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -31,9 +32,12 @@ export default function TechnologySlider() {
             <div className='tgslider__item'>
               <div className='tgslider__thumb tgImage__hover'>
                 <Link href={`/blog/${item.id}`}>
-                  <img
+                  <Image
                     src={`/assets/img/${item.group}/${item.img}`}
-                    alt='img'
+                    alt={item.title || 'Technology post image'}
+                    width={800}
+                    height={500}
+                    className="w-full h-auto object-cover"
                   />
                 </Link>
               </div>

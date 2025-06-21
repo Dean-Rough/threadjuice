@@ -1,13 +1,15 @@
 'use client';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import data from '@/util/blogData';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 
-export default function PopularSlider() {
+export default function PopularSlider2() {
   return (
     <>
       <Swiper
@@ -51,36 +53,25 @@ export default function PopularSlider() {
         }}
         className='swiper-wrapper'
       >
-        {data.slice(34, 39).map((item, i) => (
+        {data.slice(101, 105).map((item, i) => (
           <SwiperSlide key={i}>
             <div className='trending__post'>
               <div className='trending__post-thumb tgImage__hover'>
-                <Link href='#' className='addWish'>
-                  <i className='fal fa-heart' />
+                <Link href='/blog' className='tags'>
+                  {item.category}
                 </Link>
-                <Link href={`/blog/${item.id}`}>
-                  <img
+                <Link href={`/blog/${item.id}`} className='image'>
+                  <Image
                     src={`/assets/img/${item.group}/${item.img}`}
-                    alt='img'
+                    alt={item.title || 'Popular post image'}
+                    width={300}
+                    height={200}
+                    className="w-full h-auto object-cover"
                   />
                 </Link>
-                {item.trending && (
-                  <span className='is_trend'>
-                    <i className='fas fa-bolt' />
-                  </span>
-                )}
               </div>
               <div className='trending__post-content'>
-                <ul className='tgbanner__content-meta list-wrap'>
-                  <li className='category'>
-                    <Link href='/blog'>Gaming</Link>
-                  </li>
-                  <li>
-                    <span className='by'>By</span>{' '}
-                    <Link href='/blog'>miranda h.</Link>
-                  </li>
-                  <li>nov 21, 2022</li>
-                </ul>
+                <h3 className='post--count'>0{i + 1}</h3>
                 <h4 className='title tgcommon__hover'>
                   <Link href={`/blog/${item.id}`}>{item.title}</Link>
                 </h4>
