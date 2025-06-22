@@ -836,12 +836,26 @@ export async function generateStory(options = {}) {
     // Select images (hero + inline)
     const { heroImage, inlineImage } = await selectImagesForStory(storyData);
     
-    // Generate comments with context
-    const comments = generateComments(storyData.contentSource, {
-      category: storyData.category,
-      title: storyData.title,
-      trending: true
-    });
+    // Generate real comments from Reddit/Twitter
+    let comments;
+    try {
+      const { generateRealComments } = await import('./real-comment-generator.js');
+      comments = await generateRealComments(storyData.contentSource, {
+        category: storyData.category,
+        title: storyData.title,
+        query: storyData.title, // Use title as search query
+        trending: true
+      });
+      console.log(`💬 Generated ${comments.length} real comments from ${storyData.contentSource}`);
+    } catch (error) {
+      console.log('⚠️  Real comment generation failed, using templates:', error.message);
+      // Fallback to template comments
+      comments = generateComments(storyData.contentSource, {
+        category: storyData.category,
+        title: storyData.title,
+        trending: true
+      });
+    }
     
     // Build complete story
     const story = {
