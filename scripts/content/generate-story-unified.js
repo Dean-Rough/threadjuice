@@ -548,17 +548,101 @@ async function selectImagesForStory(story) {
 /**
  * Generate Reddit-style comments
  */
-function generateComments(platform = 'reddit') {
-  const redditComments = [
-    'This is the kind of justice we need more of! Absolutely brilliant move.',
-    'Play stupid games, win stupid prizes. Perfect example right here.',
-    'The audacity of some people never ceases to amaze me.',
-    'Honestly, the way you handled this? Legendary.',
-    'NTA. Your spreadsheet, your rules.',
-    'I would have done the exact same thing. Well played, OP.',
-    'This belongs in r/ProRevenge for sure',
-    'Edit: Thanks for the gold, kind stranger!'
-  ];
+function generateComments(platform = 'reddit', storyContext = {}) {
+  // Generate context-aware comments based on story category and content
+  const { category = 'general', title = '', trending = false } = storyContext;
+  
+  const redditCommentTemplates = {
+    general: [
+      'This is the kind of content I come to Reddit for. Pure gold.',
+      'OP delivered. What a wild ride from start to finish.',
+      'I was not prepared for that plot twist. Absolutely unhinged.',
+      'The fact that this actually happened... I can\'t even.',
+      'This needs to be higher up. Everyone needs to read this.',
+      'I\'ve been on Reddit for years and this is top tier content.',
+      'Someone give this person an award. This is incredible.',
+      'This is why I sort by new. Hidden gems like this.'
+    ],
+    celebrity: [
+      'Celebrity PR teams are working overtime after this one.',
+      'The way they thought they could control the narrative... hilarious.',
+      'This is going to be in every tabloid by tomorrow.',
+      'Their publicist just quit after reading this, guaranteed.',
+      'The damage control attempts made it SO much worse.',
+      'I give it 24 hours before the apology video drops.',
+      'Their Instagram comments are already a warzone.',
+      'This is what happens when you surround yourself with yes-people.'
+    ],
+    workplace: [
+      'HR is definitely browsing LinkedIn right now.',
+      'This is exactly why I record every meeting.',
+      'Your boss sounds like every nightmare manager rolled into one.',
+      'I would have rage quit on the spot. You have more patience than me.',
+      'Please tell me you have this documented. This is lawsuit material.',
+      'The fact that they thought this was acceptable... mind-blowing.',
+      'Update your resume immediately. This place is toxic.',
+      'Name and shame. People need to know about companies like this.'
+    ],
+    relationships: [
+      'This is why communication is important, people.',
+      'Red flags everywhere. You dodged a bullet, OP.',
+      'The audacity of thinking this was okay... I\'m speechless.',
+      'My therapist would have a field day with this story.',
+      'This belongs in the relationship hall of fame for what NOT to do.',
+      'I need an update. Did they ever realize how wrong they were?',
+      'The mental gymnastics here deserve an Olympic medal.',
+      'Run. Don\'t walk. RUN.'
+    ],
+    food: [
+      'Gordon Ramsay would have a stroke reading this.',
+      'This is a crime against food and humanity.',
+      'I\'ve worked in restaurants for 10 years. This is sadly common.',
+      'The health inspector needs to see this immediately.',
+      'My Italian grandmother is rolling in her grave.',
+      'This is why I have trust issues with restaurants.',
+      'The fact that they served this to people... jail.',
+      'I would have called the police. This is assault.'
+    ],
+    legal: [
+      'Lawyer here. This is absolutely grounds for action.',
+      'The judge\'s face must have been priceless.',
+      'This is why you always get everything in writing.',
+      'Their lawyer probably wanted to crawl under the desk.',
+      'I\'ve seen some wild cases but this takes the cake.',
+      'The fact that this made it to court... amazing.',
+      'Discovery is going to be VERY interesting.',
+      'Please tell me you have a good lawyer. You\'re going to need one.'
+    ],
+    technology: [
+      'This is why we can\'t have nice things.',
+      'Someone\'s getting fired from the dev team.',
+      'The fact that this passed QA... how?',
+      'I\'m sending this to my entire engineering team as a cautionary tale.',
+      'This is what happens when you ignore the documentation.',
+      'The GitHub issues for this must be spectacular.',
+      'Production is not a testing environment, people!',
+      'This is why I have trust issues with auto-updates.'
+    ],
+    sports: [
+      'ESPN is frantically trying to get the rights to this story.',
+      'This is worse than any scandal I\'ve seen in 20 years of following sports.',
+      'The locker room is never going to be the same.',
+      'Their career is over. No coming back from this.',
+      'The fact that teammates knew and said nothing...',
+      'This makes other sports scandals look tame.',
+      'The press conference after this is going to be must-watch TV.',
+      'Fantasy league in shambles right now.'
+    ]
+  };
+  
+  // Get base comments for the category
+  const categoryComments = redditCommentTemplates[category] || redditCommentTemplates.general;
+  
+  // Mix in some general comments
+  const generalComments = redditCommentTemplates.general;
+  
+  // Create a pool of comments
+  const commentPool = [...categoryComments.slice(0, 5), ...generalComments.slice(0, 3)];
 
   const tiktokComments = [
     'WAIT WHAT?! I need part 47 immediately 😭',
@@ -588,7 +672,7 @@ function generateComments(platform = 'reddit') {
   } else if (platform === 'tiktok') {
     comments = tiktokComments;
   } else {
-    comments = redditComments;
+    comments = commentPool;
   }
   
   // Randomly select 4-6 comments
@@ -752,8 +836,12 @@ export async function generateStory(options = {}) {
     // Select images (hero + inline)
     const { heroImage, inlineImage } = await selectImagesForStory(storyData);
     
-    // Generate comments
-    const comments = generateComments(storyData.contentSource);
+    // Generate comments with context
+    const comments = generateComments(storyData.contentSource, {
+      category: storyData.category,
+      title: storyData.title,
+      trending: true
+    });
     
     // Build complete story
     const story = {
@@ -902,7 +990,20 @@ async function main() {
         const count = parseInt(args[1]) || 5;
         console.log(`🚀 Generating ${count} stories...`);
         
-        const { stories, errors } = await generateBulkStories(count);
+        const stories = [];
+        const errors = [];
+        
+        for (let i = 0; i < count; i++) {
+          try {
+            console.log(`\n📝 Generating story ${i + 1}/${count}...`);
+            const story = await generateStoryWithMedia();
+            stories.push(story);
+            console.log(`✅ Generated: "${story.title}"`);
+          } catch (error) {
+            console.error(`❌ Failed to generate story ${i + 1}:`, error.message);
+            errors.push(error.message);
+          }
+        }
         
         // Save all to database
         for (const story of stories) {
