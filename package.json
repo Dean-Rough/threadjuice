@@ -38,7 +38,15 @@
     "deploy:build": "next build && next export",
     "story:generate": "node scripts/content/generate-story-unified.js",
     "story:bulk": "node scripts/content/generate-story-unified.js bulk",
-    "story:help": "node scripts/content/generate-story-unified.js help"
+    "story:help": "node scripts/content/generate-story-unified.js help",
+    "discover:reddit": "node scripts/discovery/reddit-viral-discovery.js",
+    "discover:twitter": "node scripts/discovery/twitter-viral-discovery.js",
+    "discover": "node scripts/discovery/viral-content-orchestrator.js",
+    "scrape:reddit": "node scripts/scraping/scrape-reddit-story.js",
+    "scrape:twitter": "node scripts/scraping/scrape-twitter-story.js",
+    "apify:reddit": "node scripts/apify/apify-reddit-scraper.js",
+    "apify:twitter": "node scripts/apify/apify-twitter-scraper.js",
+    "apify:test": "node scripts/apify/apify-reddit-scraper.js test && node scripts/apify/apify-twitter-scraper.js test"
   },
   "keywords": [
     "reddit",
@@ -59,6 +67,7 @@
     "@supabase/supabase-js": "^2.31.0",
     "@tanstack/react-query": "^4.39.2",
     "@tanstack/react-query-devtools": "^5.80.7",
+    "apify-client": "^2.12.5",
     "cheerio": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -79,6 +88,7 @@
     "swiper": "^10.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
+    "twitter-api-v2": "^1.23.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {

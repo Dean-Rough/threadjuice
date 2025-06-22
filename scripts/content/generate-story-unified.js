@@ -14,6 +14,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { ApifyClient } from 'apify-client';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -226,6 +227,110 @@ const CONFIG = {
 };
 
 /**
+ * Get real Reddit content using Apify
+ */
+async function getRealRedditContent(subreddit = null) {
+  const apifyToken = process.env.APIFY_API_TOKEN;
+  if (!apifyToken) {
+    throw new Error('No APIFY_API_TOKEN found - cannot fetch real data');
+  }
+  
+  try {
+    const client = new ApifyClient({ token: apifyToken });
+    
+    // Pick a subreddit based on what we need
+    const subreddits = subreddit ? [subreddit] : [
+      'AmItheAsshole',
+      'relationship_advice',
+      'tifu',
+      'antiwork',
+      'MaliciousCompliance'
+    ];
+    
+    const randomSubreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
+    
+    const input = {
+      searches: [`subreddit:${randomSubreddit}`],
+      startUrls: [{
+        url: `https://www.reddit.com/r/${randomSubreddit}/top/?t=day`
+      }],
+      maxItems: 5,
+      maxCommentsPerPost: 5,
+      useApifyProxy: true
+    };
+    
+    console.log(`🔍 Fetching real content from r/${randomSubreddit}...`);
+    const run = await client.actor('trudax/reddit-scraper-lite').call(input);
+    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    
+    if (items && items.length > 0) {
+      // Pick a random post from the results
+      const post = items[Math.floor(Math.random() * items.length)];
+      console.log(`✅ Found real Reddit post: "${(post.title || 'Untitled').slice(0, 50)}..."`);
+      
+      // Debug: Check what fields we have
+      if (!post.title) {
+        console.log('⚠️  Post structure:', Object.keys(post).slice(0, 10));
+      }
+      
+      return post;
+    }
+  } catch (error) {
+    console.log(`❌ Apify error: ${error.message}`);
+    throw new Error('Failed to fetch real Reddit data');
+  }
+  
+  return null;
+}
+
+/**
+ * Get real Twitter content using Apify
+ */
+async function getRealTwitterContent() {
+  const apifyToken = process.env.APIFY_API_TOKEN;
+  if (!apifyToken) {
+    throw new Error('No APIFY_API_TOKEN found - cannot fetch real data');
+  }
+  
+  try {
+    const client = new ApifyClient({ token: apifyToken });
+    
+    // Viral Twitter accounts
+    const accounts = [
+      'elonmusk',
+      'dril',
+      'dog_rates',
+      'sosadtoday',
+      'dramaalert'
+    ];
+    
+    const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
+    
+    const input = {
+      searchTerms: [`from:${randomAccount}`],
+      maxTweets: 10,
+      addUserInfo: true
+    };
+    
+    console.log(`🐦 Fetching real content from @${randomAccount}...`);
+    const run = await client.actor('quacker/twitter-scraper').call(input);
+    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    
+    if (items && items.length > 0) {
+      // Pick a tweet with good engagement
+      const tweet = items.find(t => (t.likes || 0) > 100) || items[0];
+      console.log(`✅ Found real tweet: "${(tweet.text || 'No text').slice(0, 50)}..."`);
+      return tweet;
+    }
+  } catch (error) {
+    console.log(`❌ Twitter Apify error: ${error.message}`);
+    throw new Error('Failed to fetch real Twitter data');
+  }
+  
+  return null;
+}
+
+/**
  * Generate story content using OpenAI
  */
 async function generateStoryContent(options = {}) {
@@ -248,7 +353,48 @@ async function generateStoryContent(options = {}) {
     twitter: 'Twitter thread controversy with quote tweets, ratios, and viral screenshots'
   };
 
-  const prompt = `Create a viral ${contentSource.toUpperCase()}-style story for ThreadJuice. Focus on ${CONFIG.categories[category]}
+  // ALWAYS get real content - no AI generation allowed
+  let realPost = null;
+  let prompt = '';
+  
+  if (contentSource === 'reddit') {
+    realPost = await getRealRedditContent();
+    if (!realPost) {
+      throw new Error('No real Reddit data available - cannot generate story');
+    }
+    
+    prompt = `Transform this REAL Reddit post into an engaging ThreadJuice story.
+
+REAL REDDIT POST:
+Title: ${realPost.title}
+Subreddit: r/${realPost.parsedCommunityName || 'reddit'}
+Author: u/${realPost.username || 'anonymous'}
+Comments: ${realPost.numberOfComments || 0}
+
+Body:
+${(realPost.body || '').slice(0, 2000)}
+
+Transform this into a dramatic multi-section story, expanding on the real content.`;
+  } else if (contentSource === 'twitter') {
+    realPost = await getRealTwitterContent();
+    if (!realPost) {
+      throw new Error('No real Twitter data available - cannot generate story');
+    }
+    
+    prompt = `Transform this REAL Twitter thread/tweet into an engaging ThreadJuice story.
+
+REAL TWEET:
+Author: @${realPost.author || realPost.username || 'unknown'}
+Likes: ${realPost.likes || 0}
+Retweets: ${realPost.retweets || 0}
+
+Content:
+${(realPost.text || realPost.content || '').slice(0, 1000)}
+
+${realPost.isThread ? 'This is part of a thread.' : 'Single tweet.'}
+
+Transform this into a dramatic multi-section story about Twitter drama.`;
+  }
 
 Writer persona: ${persona.name} - ${persona.tone}
 
@@ -353,6 +499,7 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
       ],
       temperature: 0.8,
       max_tokens: 4000,
+      response_format: { type: 'json_object' }
     });
 
     let responseContent = completion.choices[0].message.content;
@@ -363,6 +510,40 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
     }
 
     const story = JSON.parse(responseContent);
+    
+    // Ensure story has required structure
+    if (!story.content || !story.content.sections) {
+      console.error('❌ Invalid story structure from AI');
+      throw new Error('Invalid story format');
+    }
+    
+    // Use real Reddit data if available
+    if (realRedditPost) {
+      story.sourceUrl = realRedditPost.url;
+      story.sourceUsername = `u/${realRedditPost.username || 'deleted'}`;
+      story.sourcePlatform = 'reddit';
+      
+      // Update category based on actual subreddit
+      const subredditMap = {
+        'AmItheAsshole': 'relationships',
+        'relationship_advice': 'relationships',
+        'tifu': 'life',
+        'antiwork': 'workplace',
+        'MaliciousCompliance': 'workplace'
+      };
+      const realCategory = subredditMap[realRedditPost.parsedCommunityName] || category;
+      
+      return {
+        ...story,
+        category: realCategory,
+        persona,
+        contentSource,
+        sourceUrl: story.sourceUrl,
+        sourceUsername: story.sourceUsername,
+        sourcePlatform: story.sourcePlatform || contentSource,
+        isRealData: true
+      };
+    }
     
     return {
       ...story,
@@ -978,6 +1159,8 @@ async function main() {
           if (args[i] === '--source') options.source = args[i + 1];
           if (args[i] === '--save-file') options.saveFile = true;
           if (args[i] === '--no-db') options.noDB = true;
+          if (args[i] === '--real-data') options.useRealData = true;
+          if (args[i] === '--ai-only') options.useRealData = false;
         }
 
         const story = await generateStoryWithMedia(options);
@@ -1042,13 +1225,17 @@ Commands:
 
 Options:
   --category <name>  Specify category
-  --source <type>    Content source (reddit/tiktok)
+  --source <type>    Content source (reddit/twitter)
   --save-file        Save to JSON file
   --no-db           Don't save to database
+  --real-data       Use real Reddit data from Apify (requires APIFY_API_TOKEN)
+  --ai-only         Use AI generation only (default if no Apify token)
 
 Examples:
   node generate-story-unified.js
   node generate-story-unified.js generate --category workplace
+  node generate-story-unified.js generate --real-data
+  node generate-story-unified.js generate --source reddit --real-data
   node generate-story-unified.js bulk 10
         `);
         break;

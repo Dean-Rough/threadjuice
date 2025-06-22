@@ -133,6 +133,26 @@ export function renderAdditionalSections(section: any, index: number, post: any)
         </div>
       );
 
+    case 'twitter-conversation':
+      return (
+        <div key={index} className='twitter-conversation-section my-12'>
+          {section.title && (
+            <h3 className='mb-6 text-2xl font-extrabold text-foreground'>
+              {section.title}
+            </h3>
+          )}
+          {section.content && (
+            <p className='mb-6 text-lg text-muted-foreground'>
+              {section.content}
+            </p>
+          )}
+          <TwitterConversation 
+            conversation={section.metadata?.conversation || []}
+            title={section.title}
+          />
+        </div>
+      );
+
     case 'story_link':
       return (
         <div key={index} className='story-link-section my-12 p-6 bg-orange-500/10 rounded-lg border border-orange-500/20'>
