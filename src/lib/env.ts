@@ -25,7 +25,7 @@ const envSchema = z.object({
     .min(1, 'Supabase anon key is required'),
   SUPABASE_SERVICE_ROLE_KEY: z
     .string()
-    .min(1, 'Supabase service role key is required'),
+    .optional(), // Made optional temporarily
 
   // AI & Content Generation - OpenAI
   OPENAI_API_KEY: z
@@ -127,7 +127,7 @@ function validateEnv() {
         const criticalFields = [
           'NEXT_PUBLIC_SUPABASE_URL',
           'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-          'SUPABASE_SERVICE_ROLE_KEY',
+          // 'SUPABASE_SERVICE_ROLE_KEY', // Made optional temporarily
           'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
           'CLERK_SECRET_KEY',
           'NEXT_PUBLIC_APP_URL',

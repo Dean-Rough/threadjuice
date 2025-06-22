@@ -45,12 +45,12 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* Show devtools in development */}
-      {process.env.NODE_ENV === 'development' && (
+      {/* Show devtools in development - temporarily disabled due to v4/v5 compatibility issue */}
+      {/* {process.env.NODE_ENV === 'development' && (
         <ReactQueryDevtools
           initialIsOpen={false}
         />
-      )}
+      )} */}
     </QueryClientProvider>
   );
 }
