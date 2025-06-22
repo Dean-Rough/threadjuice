@@ -592,7 +592,9 @@ function extractKeyNouns(title) {
                      'dramatic', 'saga', 'tale', 'story', 'bizarre', 'wild', 'epic',
                      'incredible', 'unbelievable', 'shocking', 'amazing', 'crazy',
                      'insane', 'ultimate', 'greatest', 'worst', 'best', 'ever',
-                     'this', 'that', 'these', 'those', 'really', 'very', 'just'];
+                     'this', 'that', 'these', 'those', 'really', 'very', 'just',
+                     'great', 'good', 'bad', 'new', 'old', 'big', 'small', 'little',
+                     'unveiled', 'revealed', 'discovered', 'found', 'turned', 'changed'];
   
   // Common compound terms to keep together - expanded
   const compoundTerms = {
@@ -668,15 +670,13 @@ function extractKeyNouns(title) {
   
   // Prioritize certain types of words for better image matching
   const priorityWords = {
-    objects: ['resume', 'attachment', 'document', 'email', 'phone', 'computer', 'office', 'desk', 'warehouse', 'job', 'application', 'letter', 'package', 'text', 'message', 'rules', 'ticket', 'birthday'],
-    people: ['boss', 'manager', 'employee', 'worker', 'family', 'mother', 'father', 'friend', 'colleague', 'neighbor', 'teacher', 'student'],
-    places: ['office', 'warehouse', 'workplace', 'home', 'restaurant', 'school', 'hospital', 'store', 'airport'],
-    concepts: ['interview', 'meeting', 'deadline', 'vacation', 'relationship', 'friendship', 'conflict', 'drama']
+    objects: ['resume', 'attachment', 'document', 'email', 'phone', 'computer', 'office', 'desk', 'warehouse', 'job', 'application', 'letter', 'package', 'text', 'message', 'rules', 'ticket', 'birthday', 'alphabet', 'childhood', 'misunderstanding', 'conspiracy', 'secret', 'mystery'],
+    people: ['boss', 'manager', 'employee', 'worker', 'family', 'mother', 'father', 'friend', 'colleague', 'neighbor', 'teacher', 'student', 'child', 'kid', 'parent', 'adult'],
+    places: ['office', 'warehouse', 'workplace', 'home', 'restaurant', 'school', 'hospital', 'store', 'airport', 'classroom', 'playground'],
+    concepts: ['interview', 'meeting', 'deadline', 'vacation', 'relationship', 'friendship', 'conflict', 'drama', 'education', 'learning', 'mistake', 'confusion', 'realization', 'discovery']
   };
   
-  // Find priority words in the title
-  let primaryConcept = null;
-  let secondaryConcept = null;
+  // Find priority words in the title if not already found in compound terms
   
   if (!primaryConcept) {
     // Check for priority objects first
