@@ -1294,18 +1294,16 @@ export default function SimplePostDetail({
             const [, linkText, linkUrl] = linkMatch;
             return (
               <div key={index} className='tiktok-link-section my-8 text-center'>
-                <div className='inline-flex items-center gap-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full font-semibold'>
+                <a 
+                  href={linkUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className='inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-colors'
+                >
                   <Play className='h-5 w-5' />
-                  <a 
-                    href={linkUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className='hover:underline'
-                  >
-                    {linkText}
-                  </a>
+                  <span>{linkText}</span>
                   <ExternalLink className='h-4 w-4' />
-                </div>
+                </a>
               </div>
             );
           }

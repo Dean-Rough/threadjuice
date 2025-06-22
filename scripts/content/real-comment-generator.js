@@ -22,10 +22,6 @@ export async function generateRealComments(platform = 'reddit', storyContext = {
       case 'twitter':
         return await generateTwitterComments(query || title, category);
       
-      case 'tiktok':
-        // TikTok doesn't have easy scraping, use curated responses
-        return generateTikTokStyleComments(category);
-      
       default:
         console.log(`⚠️  Unknown platform ${platform}, using Reddit`);
         return await generateRedditComments(query || title, category);
@@ -99,39 +95,6 @@ async function generateTwitterComments(query, category) {
   }
 }
 
-/**
- * Generate TikTok-style comments (no easy scraping available)
- */
-function generateTikTokStyleComments(category) {
-  const tiktokComments = {
-    general: [
-      { content: 'WAIT WHAT?! I need part 47 immediately 😭', author: 'user93847', likes: 23456 },
-      { content: 'Not me watching this whole saga instead of doing homework', author: 'procrastinator22', likes: 12345 },
-      { content: 'This is better than Netflix I swear', author: 'bingewatcher', likes: 34567 },
-      { content: 'The absolute CHAOS... I live for this drama', author: 'dramaqueen', likes: 45678 }
-    ],
-    celebrity: [
-      { content: 'the way they thought we wouldn\'t notice 💀', author: 'detectivemode', likes: 56789 },
-      { content: 'their PR team is STRESSED stressed', author: 'prnightmare', likes: 23456 },
-      { content: 'bestie really said let me end my whole career', author: 'cancelled2023', likes: 34567 },
-      { content: 'imagine being their manager rn', author: 'stressedaf', likes: 12345 }
-    ],
-    food: [
-      { content: 'Gordon Ramsay has been real quiet since this dropped', author: 'foodcritic101', likes: 45678 },
-      { content: 'jail. immediately. no trial.', author: 'foodpolice', likes: 34567 },
-      { content: 'my ancestors are crying', author: 'traditional_foodie', likes: 23456 },
-      { content: 'this is why I have trust issues', author: 'nevereatingout', likes: 12345 }
-    ]
-  };
-
-  const comments = tiktokComments[category] || tiktokComments.general;
-  
-  return comments.map(c => ({
-    ...c,
-    timestamp: '2h ago',
-    verified: c.likes > 30000
-  }));
-}
 
 /**
  * Fallback comments when scraping fails
@@ -160,14 +123,6 @@ function generateFallbackComments(platform, category) {
         { content: 'The way this escalated... I can\'t breathe 💀', author: '@dead_rn', likes: 9876, retweets: 2345 },
         { content: 'Quote tweeting for posterity before it gets deleted', author: '@archive_queen', likes: 7654, retweets: 1234 },
         { content: 'Not the plot twist in tweet 7/23 😭😭😭', author: '@plot_twist', likes: 5432, retweets: 987 }
-      ]
-    },
-    tiktok: {
-      general: [
-        { content: 'WAIT WHAT?! I need part 47 immediately 😭', author: 'user93847', likes: 23456 },
-        { content: 'Not me watching this whole saga instead of doing homework', author: 'procrastinator22', likes: 12345 },
-        { content: 'This is better than Netflix I swear', author: 'bingewatcher', likes: 34567 },
-        { content: 'The absolute CHAOS... I live for this drama', author: 'dramaqueen', likes: 45678 }
       ]
     }
   };

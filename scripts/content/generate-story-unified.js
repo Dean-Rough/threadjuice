@@ -239,13 +239,12 @@ async function generateStoryContent(options = {}) {
     if (storyCounter % 6 === 0) {
       contentSource = 'twitter';
     } else {
-      contentSource = Math.random() < 0.15 ? 'tiktok' : 'reddit';
+      contentSource = 'reddit'; // No TikTok
     }
   }
 
   const platformStyles = {
     reddit: 'Reddit post with authentic community feel, using subreddit-style language',
-    tiktok: 'TikTok viral drama with quick cuts and dramatic reveals',
     twitter: 'Twitter thread controversy with quote tweets, ratios, and viral screenshots'
   };
 
@@ -267,25 +266,23 @@ CRITICAL WRITING STYLE REQUIREMENTS:
 - Add unexpected twists and unique observations
 
 MEDIA REFERENCES:
-- When mentioning specific videos, tweets, or viral content, add a media placeholder
-- Format: [MEDIA: type="video/tweet/tiktok" query="search terms" context="what it shows"]
+- When mentioning specific videos or tweets, add a media placeholder
+- Format: [MEDIA: type="video/tweet" query="search terms" context="what it shows"]
 - Examples:
   - "The CEO posted an apology video [MEDIA: type="video" query="CEO name apology 2024" context="emotional apology about layoffs"]"
   - "The tweet went viral [MEDIA: type="tweet" query="specific quote from tweet" context="ratio'd response about topic"]"
-  - "The TikTok showed [MEDIA: type="tiktok" query="dance trend name" context="person doing viral dance"]"
+- If the story mentions TikTok, just reference it naturally without media embeds
 
 ${contentSource === 'twitter' ? 
 'TWITTER SPECIFIC: Include mentions of quote tweets, viral threads, being "ratioed", screenshots going viral, blue check drama' : 
-contentSource === 'tiktok' ?
-'TIKTOK SPECIFIC: Include mentions of parts/updates, duets, comments section drama, viral sounds' :
 'REDDIT SPECIFIC: Include subreddit culture, upvotes, awards, cross-posting, "Edit: Thanks for the gold!"'}
 
 Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
 {
   "title": "Wildly specific clickbait title that hints at the absurdity",
   "excerpt": "2-3 sentence hook that creates intrigue without giving everything away",
-  "sourceUrl": "${contentSource === 'reddit' ? 'https://reddit.com/r/AmItheAsshole/comments/xyz123' : contentSource === 'twitter' ? 'https://twitter.com/user/status/123456789' : 'https://tiktok.com/@user/video/987654321'}",
-  "sourceUsername": "${contentSource === 'reddit' ? 'u/throwaway12345' : contentSource === 'twitter' ? '@dramauser123' : '@chaosqueen99'}",
+  "sourceUrl": "${contentSource === 'reddit' ? 'https://reddit.com/r/AmItheAsshole/comments/xyz123' : 'https://twitter.com/user/status/123456789'}",
+  "sourceUsername": "${contentSource === 'reddit' ? 'u/throwaway12345' : '@dramauser123'}",
   "sourcePlatform": "${contentSource}",
   "content": {
     "sections": [

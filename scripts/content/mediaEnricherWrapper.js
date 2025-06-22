@@ -106,16 +106,9 @@ export class MediaEnricher {
       // Add media embeds after sections that had placeholders
       const sectionRefs = references.filter(r => r.sectionIndex === index);
       sectionRefs.forEach(ref => {
-        // Skip TikTok embeds - just add a link in the content
+        // Skip TikTok embeds entirely - no TikTok
         if (ref.type === 'tiktok') {
-          const tiktokUrl = this.getExampleTikTokUrl(ref.query, ref.context);
-          enrichedSections.push({
-            type: 'text',
-            content: `[Click here to see the TikTok video](${tiktokUrl})`,
-            metadata: {
-              isTikTokLink: true
-            }
-          });
+          // Do nothing - skip TikTok references
         } else {
           // Add other embeds normally
           enrichedSections.push({
