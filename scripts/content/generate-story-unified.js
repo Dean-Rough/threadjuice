@@ -585,12 +585,16 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
  * Extract key nouns from a title for image searches
  */
 function extractKeyNouns(title) {
-  // Common words to ignore
+  // Common words to ignore - expanded list
   const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 
                      'of', 'with', 'by', 'from', 'when', 'where', 'how', 'why', 'what',
-                     'becomes', 'turns', 'makes', 'gets', 'goes', 'comes', 'takes'];
+                     'becomes', 'turns', 'makes', 'gets', 'goes', 'comes', 'takes',
+                     'dramatic', 'saga', 'tale', 'story', 'bizarre', 'wild', 'epic',
+                     'incredible', 'unbelievable', 'shocking', 'amazing', 'crazy',
+                     'insane', 'ultimate', 'greatest', 'worst', 'best', 'ever',
+                     'this', 'that', 'these', 'those', 'really', 'very', 'just'];
   
-  // Common compound terms to keep together
+  // Common compound terms to keep together - expanded
   const compoundTerms = {
     'hedge fund': 'finance investment',
     'social media': 'social media',
@@ -620,7 +624,25 @@ function extractKeyNouns(title) {
     'startup founder': 'entrepreneur',
     'tech bro': 'technology person',
     'wine mom': 'parent lifestyle',
-    'gender reveal': 'party celebration'
+    'gender reveal': 'party celebration',
+    // Work-related compounds
+    'job application': 'resume office',
+    'resume attachment': 'resume document',
+    'cover letter': 'job application',
+    'job interview': 'interview office',
+    'warehouse job': 'warehouse worker',
+    'employment gap': 'resume unemployment',
+    'severance package': 'office termination',
+    'office drama': 'workplace conflict',
+    'work from home': 'home office',
+    'zoom meeting': 'video conference',
+    // Relationship compounds
+    'family text': 'phone message family',
+    'group chat': 'phone messaging',
+    'wake up call': 'morning alarm',
+    'common sense': 'wisdom thinking',
+    'reddit post': 'social media forum',
+    'reddit rules': 'forum moderation'
   };
   
   // Check for compound terms first
@@ -644,18 +666,60 @@ function extractKeyNouns(title) {
     .split(' ')
     .filter(word => word.length > 2 && !stopWords.includes(word));
   
-  // Filter out common filler words
-  const potentialObjects = words.filter(word => 
-    !['missing', 'viral', 'shocking', 'amazing', 'incredible', 'breaking', 'exclusive', 'trending'].includes(word)
-  );
+  // Prioritize certain types of words for better image matching
+  const priorityWords = {
+    objects: ['resume', 'attachment', 'document', 'email', 'phone', 'computer', 'office', 'desk', 'warehouse', 'job', 'application', 'letter', 'package', 'text', 'message', 'rules', 'ticket', 'birthday'],
+    people: ['boss', 'manager', 'employee', 'worker', 'family', 'mother', 'father', 'friend', 'colleague', 'neighbor', 'teacher', 'student'],
+    places: ['office', 'warehouse', 'workplace', 'home', 'restaurant', 'school', 'hospital', 'store', 'airport'],
+    concepts: ['interview', 'meeting', 'deadline', 'vacation', 'relationship', 'friendship', 'conflict', 'drama']
+  };
   
-  // If no compound term found, use the first meaningful words
+  // Find priority words in the title
+  let primaryConcept = null;
+  let secondaryConcept = null;
+  
   if (!primaryConcept) {
-    primaryConcept = potentialObjects[0] || words[0] || 'lifestyle';
+    // Check for priority objects first
+    for (const word of words) {
+      if (priorityWords.objects.includes(word)) {
+        primaryConcept = word;
+        break;
+      }
+    }
   }
   
-  // Find secondary concept
-  secondaryConcept = potentialObjects.find(word => word !== primaryConcept) || potentialObjects[1] || primaryConcept;
+  if (!primaryConcept) {
+    // Check for people
+    for (const word of words) {
+      if (priorityWords.people.includes(word)) {
+        primaryConcept = word;
+        break;
+      }
+    }
+  }
+  
+  if (!primaryConcept) {
+    // Check for places
+    for (const word of words) {
+      if (priorityWords.places.includes(word)) {
+        primaryConcept = word;
+        break;
+      }
+    }
+  }
+  
+  // If still no primary concept, use the first non-stop word
+  if (!primaryConcept) {
+    primaryConcept = words[0] || 'lifestyle';
+  }
+  
+  // Find secondary concept (different from primary)
+  secondaryConcept = words.find(word => {
+    return word !== primaryConcept && 
+           (priorityWords.objects.includes(word) || 
+            priorityWords.people.includes(word) || 
+            priorityWords.places.includes(word));
+  }) || words.find(word => word !== primaryConcept) || primaryConcept;
   
   return {
     what: primaryConcept,
@@ -675,31 +739,44 @@ async function selectImagesForStory(story) {
     const concepts = extractKeyNouns(story.title);
     console.log(`📎 Key concepts - What: "${concepts.what}", Where: "${concepts.where}"`);
     
-    // Category-specific search terms
+    // Enhanced category-specific search terms with multiple options
     const categorySearchTerms = {
-      workplace: 'office',
-      relationships: 'couple',
-      technology: 'computer',
-      politics: 'government',
-      sports: 'sports',
-      celebrity: 'celebrity',
-      food: 'restaurant',
-      parenting: 'family',
-      travel: 'travel',
-      legal: 'courtroom',
-      housing: 'house',
-      education: 'classroom',
-      gaming: 'gaming',
-      health: 'medical',
-      money: 'finance',
-      social: 'social media',
+      workplace: ['office work', 'business meeting', 'office desk', 'corporate'],
+      relationships: ['couple relationship', 'love romance', 'dating', 'marriage'],
+      technology: ['computer laptop', 'technology digital', 'coding programming', 'tech'],
+      politics: ['government politics', 'politician', 'election', 'congress'],
+      sports: ['sports athlete', 'sports competition', 'stadium', 'athletic'],
+      celebrity: ['celebrity famous', 'red carpet', 'paparazzi', 'hollywood'],
+      food: ['restaurant food', 'cooking kitchen', 'chef cuisine', 'dining'],
+      parenting: ['family parents', 'mother child', 'parenting kids', 'family home'],
+      travel: ['travel vacation', 'airport journey', 'tourist destination', 'adventure'],
+      legal: ['courtroom lawyer', 'justice legal', 'law court', 'judge'],
+      housing: ['house home', 'real estate', 'apartment living', 'residential'],
+      education: ['classroom education', 'school student', 'teacher learning', 'university'],
+      gaming: ['gaming video games', 'gamer computer', 'esports', 'console gaming'],
+      health: ['medical health', 'doctor hospital', 'healthcare', 'wellness'],
+      money: ['finance money', 'business finance', 'investment', 'banking'],
+      social: ['social media', 'online community', 'internet culture', 'viral content'],
+      life: ['lifestyle everyday', 'daily life', 'modern living', 'urban life'],
+      family: ['family together', 'family gathering', 'relatives', 'family drama'],
+      entitled: ['angry customer', 'complaint demanding', 'entitled person', 'karen'],
+      fails: ['mistake fail', 'accident mishap', 'error problem', 'disaster']
     };
     
-    const categoryTerm = categorySearchTerms[story.category] || story.category;
+    const categoryTerms = categorySearchTerms[story.category] || ['lifestyle', 'people', 'modern life'];
+    const categoryTerm = categoryTerms[0];
     
-    // Search for hero image (the "what")
-    console.log(`🎯 Searching for hero image: "${concepts.what}"`);
-    let heroImage = await searchPexels(concepts.what);
+    // Improve search terms based on content
+    let heroSearchTerm = concepts.what;
+    
+    // If the extracted concept is too generic, use category-specific term
+    if (['lifestyle', 'story', 'saga', 'tale', 'drama'].includes(concepts.what)) {
+      heroSearchTerm = categoryTerm;
+    }
+    
+    // Search for hero image
+    console.log(`🎯 Searching for hero image: "${heroSearchTerm}"`);
+    let heroImage = await searchPexels(heroSearchTerm);
     
     if (!heroImage) {
       // Try with category context
