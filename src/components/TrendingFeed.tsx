@@ -74,6 +74,28 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
     }
   }, []);
 
+  // Memoize posts to prevent unnecessary re-renders - ALL hooks must be before conditionals
+  const posts = useMemo(() => postsResponse?.posts || [], [postsResponse?.posts]);
+
+  // Memoize mixed content creation - expensive operation
+  const mixedContent = useMemo(() => {
+    if (posts.length === 0) return [];
+    
+    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
+    
+    posts.forEach((post, index) => {
+      // Add the post
+      mixedContent.push({ type: 'post', data: post, index });
+      
+      // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
+      if ((index + 1) % 10 === 0) {
+        mixedContent.push({ type: 'ad', index: index + 1 });
+      }
+    });
+    
+    return mixedContent;
+  }, [posts]);
+
   if (isLoading) {
     return (
       <div className='space-y-6'>
@@ -97,28 +119,6 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
       </div>
     );
   }
-
-  // Memoize posts to prevent unnecessary re-renders - moved before conditional
-  const posts = useMemo(() => postsResponse?.posts || [], [postsResponse?.posts]);
-
-  // Memoize mixed content creation - expensive operation - moved before conditional
-  const mixedContent = useMemo(() => {
-    if (posts.length === 0) return [];
-    
-    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
-    
-    posts.forEach((post, index) => {
-      // Add the post
-      mixedContent.push({ type: 'post', data: post, index });
-      
-      // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
-      if ((index + 1) % 10 === 0) {
-        mixedContent.push({ type: 'ad', index: index + 1 });
-      }
-    });
-    
-    return mixedContent;
-  }, [posts]);
 
   if (error) {
     return (

@@ -35,7 +35,7 @@ export function usePopularPosts(limit = 5) {
     queryKey: ['posts', 'popular', limit],
     queryFn: () => fetchPopularPosts(limit),
     staleTime: 15 * 60 * 1000, // 15 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    cacheTime: 30 * 60 * 1000, // 30 minutes
   });
 }
 
@@ -44,6 +44,6 @@ export function useMostSharedPosts(limit = 5) {
     queryKey: ['posts', 'most-shared', limit],
     queryFn: () => fetchMostSharedPosts(limit),
     staleTime: 15 * 60 * 1000, // 15 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    cacheTime: 30 * 60 * 1000, // 30 minutes
   });
 }
