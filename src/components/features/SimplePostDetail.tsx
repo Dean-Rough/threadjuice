@@ -810,7 +810,7 @@ export default function SimplePostDetail({
           <div key={index} className='image-section my-12'>
             <div className='overflow-hidden rounded-lg border border-border'>
               <Image
-                src={section.metadata?.imageUrl || `/assets/img/lifestyle/life_style0${(index % 9) + 1}.jpg`}
+                src={section.metadata?.imageUrl || section.metadata?.image_url || `/assets/img/lifestyle/life_style0${(index % 9) + 1}.jpg`}
                 alt={section.content}
                 width={800}
                 height={400}
@@ -825,9 +825,6 @@ export default function SimplePostDetail({
                 </div>
               )}
             </div>
-            <p className='mt-2 text-sm italic text-muted-foreground text-center'>
-              {section.content}
-            </p>
           </div>
         );
 

@@ -98,8 +98,8 @@ export class KlipyService {
         const data = await response.json();
         console.log(`📊 Klipy response:`, data);
 
-        if (data.result && data.data && data.data.length > 0) {
-          const transformedGifs = data.data.map((gif: any) => this.transformKlipyResult(gif, context));
+        if (data.result && data.data && data.data.data && data.data.data.length > 0) {
+          const transformedGifs = data.data.data.map((gif: any) => this.transformKlipyResult(gif, context));
           
           // Cache results
           this.cache.set(cacheKey, transformedGifs);
@@ -143,8 +143,8 @@ export class KlipyService {
 
       const data = await response.json();
       
-      if (data.result && data.data) {
-        return data.data.map((gif: any) => this.transformKlipyResult(gif, 'Trending reaction'));
+      if (data.result && data.data && data.data.data) {
+        return data.data.data.map((gif: any) => this.transformKlipyResult(gif, 'Trending reaction'));
       }
       
       return [];
@@ -177,19 +177,45 @@ export class KlipyService {
    * Transform Klipy API result to our format
    */
   private transformKlipyResult(gif: any, context: string): GifResult {
-    // Klipy API format: { id, slug, title, file: { gif: url, width, height }, type }
+    // Klipy API format has nested structure: file.{size}.{format}.url
     const file = gif.file || {};
-    const width = file.width || 400;
-    const height = file.height || 300;
+    
+    // Get the best quality GIF URL - try HD first, then MD, then SM
+    const getGifUrl = (): string => {
+      if (file.hd?.gif?.url) return file.hd.gif.url;
+      if (file.md?.gif?.url) return file.md.gif.url;
+      if (file.sm?.gif?.url) return file.sm.gif.url;
+      if (file.xs?.gif?.url) return file.xs.gif.url;
+      return '';
+    };
+
+    // Get dimensions from the highest quality available
+    const getDimensions = (): { width: number; height: number } => {
+      if (file.hd?.gif) return { width: file.hd.gif.width || 400, height: file.hd.gif.height || 300 };
+      if (file.md?.gif) return { width: file.md.gif.width || 400, height: file.md.gif.height || 300 };
+      if (file.sm?.gif) return { width: file.sm.gif.width || 200, height: file.sm.gif.height || 150 };
+      return { width: 400, height: 300 };
+    };
+
+    // Get preview/thumbnail URL (use smaller size for preview)
+    const getPreviewUrl = (): string => {
+      if (file.sm?.gif?.url) return file.sm.gif.url;
+      if (file.xs?.gif?.url) return file.xs.gif.url;
+      if (file.sm?.jpg?.url) return file.sm.jpg.url;
+      return getGifUrl(); // Fallback to main URL
+    };
+
+    const gifUrl = getGifUrl();
+    const { width, height } = getDimensions();
     
     return {
-      id: gif.id || gif.slug || Math.random().toString(36),
-      url: file.gif || file.url || gif.url,
+      id: gif.id?.toString() || gif.slug || Math.random().toString(36),
+      url: gifUrl,
       title: gif.title || 'Reaction GIF',
       width: width,
       height: height,
       aspectRatio: width / height,
-      preview: file.thumbnail || file.preview || file.gif,
+      preview: getPreviewUrl(),
       caption: context
     };
   }

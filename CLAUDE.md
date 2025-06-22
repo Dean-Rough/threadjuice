@@ -101,3 +101,23 @@ The `generate-story-unified.js` script now REQUIRES real Reddit data from Apify.
 - NO AI STORIES: We transform real posts, not create fictional ones
 - AUTHENTICITY: Every story is based on actual viral internet content
 - TRANSFORMATION: We enhance real stories with multiple sections, not copy them directly
+
+## Content Integrity Rules
+- NO FAKE DATA, NO MOCK DATA, NO EXCEPTIONS
+
+## Current System Status (Dec 2024)
+
+### ✅ WORKING
+- Reddit scraping via Apify (trudax/reddit-scraper-lite)
+- Story generation from real Reddit data
+- Image selection with Pexels API
+- Supabase database integration
+
+### ❌ NOT WORKING
+- Twitter/X scraping via Apify (all actors returning 0 results or demo data)
+- Twitter API hitting rate limits (429 errors)
+- Comments occasionally showing from wrong story
+
+### Known Issues & Next Steps
+- Twitter scrapers not functioning - need alternative solution
+- See `/handover.md` for detailed status and troubleshooting

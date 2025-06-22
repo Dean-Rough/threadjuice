@@ -227,6 +227,219 @@ const CONFIG = {
 };
 
 /**
+ * Extract media from Reddit post
+ */
+function extractRedditMedia(post) {
+  const media = {
+    images: [],
+    videos: [],
+    galleries: [],
+    embeds: []
+  };
+
+  // Check for thumbnail (basic image)
+  if (post.thumbnailUrl && post.thumbnailUrl !== 'self' && post.thumbnailUrl !== 'default') {
+    media.images.push({
+      url: post.thumbnailUrl,
+      type: 'thumbnail',
+      source: 'reddit'
+    });
+  }
+
+  // Check for direct link (often an image)
+  if (post.link && post.link !== post.url) {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const videoExtensions = ['.mp4', '.webm', '.mov'];
+    
+    if (imageExtensions.some(ext => post.link.toLowerCase().includes(ext))) {
+      media.images.push({
+        url: post.link,
+        type: 'direct',
+        source: 'reddit'
+      });
+    } else if (videoExtensions.some(ext => post.link.toLowerCase().includes(ext))) {
+      media.videos.push({
+        url: post.link,
+        type: 'direct',
+        source: 'reddit'
+      });
+    }
+  }
+
+  // Parse HTML content for embedded images
+  if (post.html) {
+    const imgRegex = /<img[^>]+src="([^"]+)"/gi;
+    let match;
+    while ((match = imgRegex.exec(post.html)) !== null) {
+      const url = match[1].replace(/&amp;/g, '&');
+      if (!media.images.some(img => img.url === url)) {
+        media.images.push({
+          url,
+          type: 'embedded',
+          source: 'reddit'
+        });
+      }
+    }
+  }
+
+  // Check for Reddit video
+  if (post.isVideo) {
+    media.videos.push({
+      url: post.url,
+      type: 'reddit_video',
+      source: 'reddit'
+    });
+  }
+
+  return media;
+}
+
+/**
+ * Extract media from OP comments
+ */
+function extractOPCommentMedia(post) {
+  const opMedia = [];
+  
+  if (!post.topComments && !post.comments) return opMedia;
+  
+  const comments = post.topComments || post.comments || [];
+  const opComments = comments.filter(c => 
+    c.is_submitter || c.isOP || c.author === post.username || c.username === post.username
+  );
+
+  opComments.forEach(comment => {
+    const text = comment.body || comment.text || '';
+    
+    // Look for image URLs
+    const imgRegex = /https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp)/gi;
+    const urls = text.match(imgRegex) || [];
+    
+    urls.forEach(url => {
+      opMedia.push({
+        url: url.replace(/&amp;/g, '&'),
+        type: 'op_comment',
+        source: 'reddit',
+        context: text.slice(0, 100)
+      });
+    });
+
+    // Look for imgur links
+    const imgurRegex = /https?:\/\/(i\.)?imgur\.com\/[a-zA-Z0-9]+/gi;
+    const imgurUrls = text.match(imgurRegex) || [];
+    
+    imgurUrls.forEach(url => {
+      // Convert imgur URLs to direct image links
+      const cleanUrl = url.replace('imgur.com', 'i.imgur.com');
+      const imageUrl = cleanUrl.includes('.') ? cleanUrl : `${cleanUrl}.jpg`;
+      
+      opMedia.push({
+        url: imageUrl,
+        type: 'op_comment_imgur',
+        source: 'reddit',
+        context: text.slice(0, 100)
+      });
+    });
+  });
+
+  return opMedia;
+}
+
+/**
+ * Segment Reddit post into readable chunks for interspersing
+ */
+function segmentRedditPost(post) {
+  if (!post.body) return [];
+  
+  const content = post.body.trim();
+  if (content.length < 200) {
+    // If post is short, return as single segment
+    return [content];
+  }
+  
+  // Split by paragraphs first
+  const paragraphs = content.split('\n\n').filter(p => p.trim().length > 0);
+  
+  if (paragraphs.length <= 1) {
+    // No paragraph breaks, split by sentences
+    const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const segments = [];
+    let currentSegment = '';
+    
+    for (const sentence of sentences) {
+      if (currentSegment.length + sentence.length > 400) {
+        if (currentSegment) segments.push(currentSegment.trim() + '.');
+        currentSegment = sentence;
+      } else {
+        currentSegment += sentence + '.';
+      }
+    }
+    if (currentSegment) segments.push(currentSegment.trim());
+    
+    return segments.slice(0, 4); // Max 4 segments
+  }
+  
+  // Group paragraphs into 2-4 segments
+  const targetSegments = Math.min(4, Math.max(2, Math.ceil(paragraphs.length / 2)));
+  const segmentSize = Math.ceil(paragraphs.length / targetSegments);
+  const segments = [];
+  
+  for (let i = 0; i < paragraphs.length; i += segmentSize) {
+    const segment = paragraphs.slice(i, i + segmentSize).join('\n\n');
+    segments.push(segment);
+  }
+  
+  return segments.slice(0, 4); // Max 4 segments
+}
+
+/**
+ * Extract controversial comment from Reddit post
+ */
+function extractControversialComment(post) {
+  if (!post.topComments && !post.comments) return null;
+  
+  const comments = post.topComments || post.comments || [];
+  
+  // Filter out OP comments and deleted comments
+  const eligibleComments = comments.filter(c => 
+    c.body && 
+    c.body !== '[deleted]' && 
+    c.body !== '[removed]' &&
+    c.author !== post.username &&
+    !c.is_submitter &&
+    !c.isOP
+  );
+  
+  if (eligibleComments.length === 0) return null;
+  
+  // Sort by most controversial (lowest score, or high score with many downvotes)
+  const controversial = eligibleComments.sort((a, b) => {
+    const scoreA = a.score || a.upVotes || 0;
+    const scoreB = b.score || b.upVotes || 0;
+    
+    // Prioritize negative scores
+    if (scoreA < 0 && scoreB >= 0) return -1;
+    if (scoreB < 0 && scoreA >= 0) return 1;
+    
+    // For positive scores, prefer lower scores (more controversial)
+    if (scoreA >= 0 && scoreB >= 0) return scoreA - scoreB;
+    
+    // For negative scores, prefer most negative
+    return scoreA - scoreB;
+  })[0];
+  
+  // Only return if it's actually controversial (negative or very low score)
+  if (controversial && (controversial.score < 5 || controversial.upVotes < 5)) {
+    return {
+      body: controversial.body || controversial.text,
+      author: controversial.author || controversial.username || 'deleted',
+      score: controversial.score || controversial.upVotes || 0
+    };
+  }
+  
+  return null;
+}
+
+/**
  * Get real Reddit content using Apify
  */
 async function getRealRedditContent(subreddit = null) {
@@ -255,7 +468,7 @@ async function getRealRedditContent(subreddit = null) {
         url: `https://www.reddit.com/r/${randomSubreddit}/top/?t=day`
       }],
       maxItems: 5,
-      maxCommentsPerPost: 5,
+      maxCommentsPerPost: 10, // Increased to get more OP comments
       useApifyProxy: true
     };
     
@@ -268,9 +481,29 @@ async function getRealRedditContent(subreddit = null) {
       const post = items[Math.floor(Math.random() * items.length)];
       console.log(`✅ Found real Reddit post: "${(post.title || 'Untitled').slice(0, 50)}..."`);
       
-      // Debug: Check what fields we have
-      if (!post.title) {
-        console.log('⚠️  Post structure:', Object.keys(post).slice(0, 10));
+      // Extract all available media
+      const extractedMedia = extractRedditMedia(post);
+      const opCommentMedia = extractOPCommentMedia(post);
+      
+      // Extract controversial comment
+      const controversialComment = extractControversialComment(post);
+      
+      // Segment the original post for interspersing
+      const postSegments = segmentRedditPost(post);
+      
+      // Add extracted media, controversial comment, and segments to post object
+      post.extractedMedia = {
+        ...extractedMedia,
+        opImages: opCommentMedia
+      };
+      post.controversialComment = controversialComment;
+      post.segments = postSegments;
+      
+      console.log(`📸 Found media: ${extractedMedia.images.length} images, ${extractedMedia.videos.length} videos, ${opCommentMedia.length} OP comment images`);
+      console.log(`📖 Segmented post into ${postSegments.length} parts for interspersing`);
+      console.log(`🗂️  Reddit data: subreddit=${post.parsedCommunityName}, author=${post.username}, score=${post.upVotes || post.score}`);
+      if (controversialComment) {
+        console.log(`🔥 Found controversial comment (${controversialComment.score} score)`);
       }
       
       return post;
@@ -295,39 +528,49 @@ async function getRealTwitterContent() {
   try {
     const client = new ApifyClient({ token: apifyToken });
     
-    // Viral Twitter accounts
-    const accounts = [
-      'elonmusk',
-      'dril',
-      'dog_rates',
-      'sosadtoday',
-      'dramaalert'
-    ];
-    
-    const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
-    
+    // Try using a Twitter/X scraper that searches for viral content
     const input = {
-      searchTerms: [`from:${randomAccount}`],
-      maxTweets: 10,
-      addUserInfo: true
+      "searchQueries": [
+        "min_faves:10000",
+        "viral -filter:retweets",
+        "(amazing OR incredible OR unbelievable) min_faves:5000",
+        "thread min_faves:10000"
+      ],
+      "maxTweets": 20,
+      "scrapeTweetReplies": false
     };
     
-    console.log(`🐦 Fetching real content from @${randomAccount}...`);
-    const run = await client.actor('quacker/twitter-scraper').call(input);
+    console.log(`🐦 Searching for viral Twitter content...`);
+    
+    // Try different actor that might work better
+    const run = await client.actor('apidojo/twitter-scraper-v2').call(input);
     const { items } = await client.dataset(run.defaultDatasetId).listItems();
     
+    console.log(`📦 Retrieved ${items.length} tweets`);
+    
     if (items && items.length > 0) {
+      // Debug first item
+      console.log(`🔍 First item structure:`, Object.keys(items[0]));
+      
       // Pick a tweet with good engagement
-      const tweet = items.find(t => (t.likes || 0) > 100) || items[0];
-      console.log(`✅ Found real tweet: "${(tweet.text || 'No text').slice(0, 50)}..."`);
+      const tweet = items.find(t => {
+        const likes = t.likeCount || t.likes || t.favorite_count || 0;
+        const retweets = t.retweetCount || t.retweets || t.retweet_count || 0;
+        console.log(`Tweet engagement: ${likes} likes, ${retweets} RTs`);
+        return likes > 1000;
+      }) || items[0];
+      
+      console.log(`✅ Found tweet with ${tweet.likeCount || tweet.likes || 0} likes`);
       return tweet;
     }
   } catch (error) {
     console.log(`❌ Twitter Apify error: ${error.message}`);
-    throw new Error('Failed to fetch real Twitter data');
+    
+    // If Apify fails, we absolutely cannot proceed without real data
+    throw new Error('Failed to fetch real Twitter data - NO MOCK DATA ALLOWED');
   }
   
-  return null;
+  throw new Error('No Twitter data available - cannot generate story without real data');
 }
 
 /**
@@ -735,7 +978,72 @@ async function selectImagesForStory(story) {
   try {
     console.log(`🖼️  Finding images for: "${story.title}"`);
     
-    // Extract key concepts
+    // Check if we have Reddit media available
+    if (story.realPost && story.realPost.extractedMedia) {
+      const redditMedia = story.realPost.extractedMedia;
+      console.log(`🎯 Checking Reddit media: ${redditMedia.images.length} images, ${redditMedia.opImages?.length || 0} OP images`);
+      
+      // Prioritize Reddit's own media
+      let heroImage = null;
+      let inlineImage = null;
+      
+      // Use direct/embedded images for hero if available
+      const mainImages = redditMedia.images.filter(img => img.type !== 'thumbnail');
+      if (mainImages.length > 0) {
+        heroImage = {
+          path: mainImages[0].url,
+          url: mainImages[0].url,
+          description: `Image from Reddit post`,
+          source_name: 'Reddit',
+          source_url: story.realPost.url,
+          author: story.realPost.username || 'Reddit user',
+          license_type: 'Reddit Content',
+          isRedditMedia: true
+        };
+        console.log(`✅ Using Reddit image as hero: ${mainImages[0].url}`);
+      }
+      
+      // Use OP comment images for inline if available
+      if (redditMedia.opImages && redditMedia.opImages.length > 0) {
+        inlineImage = {
+          path: redditMedia.opImages[0].url,
+          url: redditMedia.opImages[0].url,
+          description: `OP provided this image in comments`,
+          source_name: 'Reddit (OP Comment)',
+          source_url: story.realPost.url,
+          author: story.realPost.username || 'Reddit OP',
+          license_type: 'Reddit Content',
+          isRedditMedia: true,
+          context: redditMedia.opImages[0].context
+        };
+        console.log(`✅ Using OP comment image as inline: ${redditMedia.opImages[0].url}`);
+      } else if (mainImages.length > 1) {
+        // Use second Reddit image if available
+        inlineImage = {
+          path: mainImages[1].url,
+          url: mainImages[1].url,
+          description: `Additional image from Reddit post`,
+          source_name: 'Reddit',
+          source_url: story.realPost.url,
+          author: story.realPost.username || 'Reddit user',
+          license_type: 'Reddit Content',
+          isRedditMedia: true
+        };
+      }
+      
+      // If we have both images from Reddit, return them
+      if (heroImage && inlineImage) {
+        console.log(`🎉 Using all Reddit media - no stock photos needed!`);
+        return { heroImage, inlineImage };
+      }
+      
+      // Otherwise continue to search for missing images
+      if (!heroImage || !inlineImage) {
+        console.log(`📸 Need to supplement with stock photos: hero=${!!heroImage}, inline=${!!inlineImage}`);
+      }
+    }
+    
+    // Extract key concepts for Pexels search
     const concepts = extractKeyNouns(story.title);
     console.log(`📎 Key concepts - What: "${concepts.what}", Where: "${concepts.where}"`);
     
@@ -774,22 +1082,48 @@ async function selectImagesForStory(story) {
       heroSearchTerm = categoryTerm;
     }
     
-    // Search for hero image
-    console.log(`🎯 Searching for hero image: "${heroSearchTerm}"`);
-    let heroImage = await searchPexels(heroSearchTerm);
+    // Search for hero image if we don't have one from Reddit
+    let heroImage = story.realPost?.extractedMedia?.images?.[0] ? {
+      path: story.realPost.extractedMedia.images[0].url,
+      url: story.realPost.extractedMedia.images[0].url,
+      description: `Image from Reddit post`,
+      source_name: 'Reddit',
+      source_url: story.realPost.url,
+      author: story.realPost.username || 'Reddit user',
+      license_type: 'Reddit Content',
+      isRedditMedia: true
+    } : null;
     
     if (!heroImage) {
-      // Try with category context
-      heroImage = await searchPexels(`${concepts.what} ${categoryTerm}`);
+      console.log(`🎯 Searching Pexels for hero image: "${heroSearchTerm}"`);
+      heroImage = await searchPexels(heroSearchTerm);
+      
+      if (!heroImage) {
+        // Try with category context
+        heroImage = await searchPexels(`${concepts.what} ${categoryTerm}`);
+      }
     }
     
-    // Search for inline image (the "where" or setting)
-    console.log(`🎯 Searching for inline image: "${concepts.where}" or "${categoryTerm}"`);
-    let inlineImage = await searchPexels(concepts.where !== concepts.what ? concepts.where : categoryTerm);
+    // Search for inline image if we don't have one from Reddit
+    let inlineImage = story.realPost?.extractedMedia?.opImages?.[0] ? {
+      path: story.realPost.extractedMedia.opImages[0].url,
+      url: story.realPost.extractedMedia.opImages[0].url,
+      description: `OP provided this image`,
+      source_name: 'Reddit (OP Comment)',
+      source_url: story.realPost.url,
+      author: story.realPost.username || 'Reddit OP',
+      license_type: 'Reddit Content',
+      isRedditMedia: true
+    } : null;
     
     if (!inlineImage) {
-      // Try broader category search
-      inlineImage = await searchPexels(`${categoryTerm} ${story.category}`);
+      console.log(`🎯 Searching Pexels for inline image: "${concepts.where}" or "${categoryTerm}"`);
+      inlineImage = await searchPexels(concepts.where !== concepts.what ? concepts.where : categoryTerm);
+      
+      if (!inlineImage) {
+        // Try broader category search
+        inlineImage = await searchPexels(`${categoryTerm} ${story.category}`);
+      }
     }
     
     // Fallback to stock photos if needed
@@ -1133,6 +1467,135 @@ export async function generateStory(options = {}) {
       });
     }
     
+    // Build sections array with Reddit media and interspersed original content
+    const sections = [];
+    const contentSections = storyData.content.sections.slice(2).filter(s => s.type !== 'outro');
+    const redditSegments = storyData.realPost?.segments || [];
+    
+    // Add first two sections (intro/setup)
+    sections.push(...storyData.content.sections.slice(0, 2));
+    
+    // Add first Reddit segment if available
+    if (redditSegments.length > 0) {
+      sections.push({
+        type: 'reddit_quote',
+        content: redditSegments[0],
+        metadata: {
+          subreddit: storyData.realPost?.parsedCommunityName || 'reddit',
+          author: storyData.realPost?.username || 'OP',
+          score: storyData.realPost?.upVotes || storyData.realPost?.score || 0,
+          context: 'Original Reddit post - Part 1'
+        }
+      });
+    }
+    
+    // Add inline image
+    sections.push({
+      type: 'image',
+      content: inlineImage.description,
+      metadata: {
+        image_source: inlineImage.source_name || 'Stock photo from ThreadJuice library',
+        image_url: inlineImage.path,
+        attribution: inlineImage.author || 'Stock photo',
+        source: inlineImage.source_url || 'ThreadJuice curated library',
+        license_type: inlineImage.license_type || 'Standard License',
+        isRedditMedia: inlineImage.isRedditMedia || false
+      },
+    });
+    
+    // Intersperse remaining content with Reddit segments
+    const maxSegments = Math.min(redditSegments.length, contentSections.length);
+    
+    for (let i = 0; i < Math.max(contentSections.length, redditSegments.length - 1); i++) {
+      // Add content section if available
+      if (i < contentSections.length) {
+        sections.push(contentSections[i]);
+      }
+      
+      // Add Reddit segment if available (skip first one, already added)
+      if (i + 1 < redditSegments.length) {
+        sections.push({
+          type: 'reddit_quote',
+          content: redditSegments[i + 1],
+          metadata: {
+            subreddit: storyData.realPost?.parsedCommunityName || 'reddit',
+            author: storyData.realPost?.username || 'OP',
+            score: storyData.realPost?.upVotes || storyData.realPost?.score || 0,
+            context: `Original Reddit post - Part ${i + 2}`
+          }
+        });
+      }
+    }
+    
+    // Add Reddit videos if available
+    if (storyData.realPost?.extractedMedia?.videos?.length > 0) {
+      storyData.realPost.extractedMedia.videos.forEach((video, index) => {
+        sections.push({
+          type: 'media_embed',
+          content: `Video from the Reddit post${index > 0 ? ` (Part ${index + 1})` : ''}`,
+          metadata: {
+            media: {
+              type: 'video',
+              embedUrl: video.url,
+              title: 'Reddit Video',
+              platform: 'Reddit',
+              confidence: 1.0,
+              isRedditMedia: true
+            }
+          }
+        });
+      });
+    }
+    
+    // Add additional Reddit images as gallery
+    if (storyData.realPost?.extractedMedia?.images?.length > 2) {
+      const galleryImages = storyData.realPost.extractedMedia.images.slice(2);
+      galleryImages.forEach((img, index) => {
+        sections.push({
+          type: 'image',
+          content: `Additional image from Reddit post ${index + 3}`,
+          metadata: {
+            image_source: 'Reddit Gallery',
+            image_url: img.url,
+            attribution: storyData.realPost.username || 'Reddit user',
+            source: storyData.realPost.url,
+            license_type: 'Reddit Content',
+            isRedditMedia: true
+          }
+        });
+      });
+    }
+    
+    // Add controversial comment if available (for ragebait)
+    if (storyData.realPost?.controversialComment) {
+      const controversial = storyData.realPost.controversialComment;
+      
+      // Add a separator section
+      sections.push({
+        type: 'terry_corner',
+        title: "Meanwhile, in the Depths of Reddit...",
+        content: "Brace yourself, we found the one comment that's making everyone lose their minds. Remember, we're just the messengers here:"
+      });
+      
+      // Add the controversial comment with clear distancing
+      sections.push({
+        type: 'pullquote',
+        content: controversial.body,
+        metadata: {
+          author: `u/${controversial.author}`,
+          context: `⚠️ This controversial take got ${controversial.score} points and sparked HEATED debate. ThreadJuice does not endorse this view - we're just showing you what got Reddit riled up.`,
+          isControversial: true
+        }
+      });
+      
+      // Add another Terry comment to further distance
+      sections.push({
+        type: 'terry_corner',
+        title: "The Terry's Take",
+        content: "And this, ladies and gentlemen, is why we can't have nice things. Some people just wake up and choose violence. At least it gave everyone something to argue about in the replies. 🍿"
+      });
+    }
+    
     // Build complete story
     const story = {
       id: `story-${Date.now()}`,
@@ -1149,21 +1612,7 @@ export async function generateStory(options = {}) {
       persona: storyData.persona,
       content: {
         sections: [
-          // Add inline image after the second describe section
-          ...storyData.content.sections.slice(0, 2),
-          {
-            type: 'image',
-            content: inlineImage.description,
-            metadata: {
-              image_source: inlineImage.source_name || 'Stock photo from ThreadJuice library',
-              image_url: inlineImage.path,
-              attribution: inlineImage.author || 'Stock photo',
-              source: inlineImage.source_url || 'ThreadJuice curated library',
-              license_type: inlineImage.license_type || 'Standard License',
-            },
-          },
-          // Insert all sections except outro
-          ...storyData.content.sections.slice(2).filter(s => s.type !== 'outro'),
+          ...sections,
           {
             type: 'comments-1',
             title: storyData.contentSource === 'twitter' 

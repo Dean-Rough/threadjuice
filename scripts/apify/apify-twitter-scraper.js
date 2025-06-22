@@ -103,17 +103,22 @@ async function scrapeViralTwitter(options = {}) {
   const { apify } = getClients();
 
   // Prepare input for Apify Twitter scraper
+  // Using apidojo/tweet-scraper which is actively maintained
   const input = {
-    "searchTerms": [`from:${accounts[0]}`], // Use first account
-    "maxTweets": tweetsPerAccount * 2,
-    "addUserInfo": true
+    startUrls: accounts.map(account => ({
+      url: `https://twitter.com/${account}`
+    })),
+    maxTweets: tweetsPerAccount,
+    searchMode: 'user',
+    addUserInfo: true
   };
 
   try {
     console.log(`\n🚀 Starting Apify Twitter scraper...`);
+    console.log(`📍 Scraping profiles: ${accounts.join(', ')}`);
     
-    // Run the actor
-    const run = await apify.actor('quacker/twitter-scraper').call(input);
+    // Run the actor - using apidojo/tweet-scraper
+    const run = await apify.actor('apidojo/tweet-scraper').call(input);
     
     console.log(`✅ Apify run completed: ${run.id}`);
     console.log(`📊 Status: ${run.status}`);
@@ -122,6 +127,12 @@ async function scrapeViralTwitter(options = {}) {
     const { items } = await apify.dataset(run.defaultDatasetId).listItems();
     
     console.log(`📦 Retrieved ${items.length} Twitter items`);
+    
+    // Debug: Let's see what we're getting
+    if (items.length > 0) {
+      console.log(`\n🔍 Sample tweet structure:`);
+      console.log(JSON.stringify(items[0], null, 2).slice(0, 1000) + '...');
+    }
     
     // Filter for high engagement (viral content)
     const viralTweets = items.filter(tweet => {
@@ -133,7 +144,7 @@ async function scrapeViralTwitter(options = {}) {
       return totalEngagement > 10; // Temporarily lowered to see any content
     });
     
-    console.log(`🔥 Found ${viralTweets.length} viral tweets (>1K engagement)`);
+    console.log(`🔥 Found ${viralTweets.length} viral tweets (>10 engagement)`);
     
     return viralTweets;
     

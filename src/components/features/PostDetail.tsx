@@ -187,9 +187,9 @@ export default function PostDetail({
       case 'image':
         return (
           <div className='image-section text-center'>
-            {post?.imageUrl && (
+            {(section.metadata?.image_url || post?.imageUrl) && (
               <Image
-                src={post.imageUrl}
+                src={section.metadata?.image_url || post.imageUrl || ''}
                 alt={section.metadata?.image_prompt || post.title}
                 width={800}
                 height={400}
@@ -201,7 +201,6 @@ export default function PostDetail({
                 }}
               />
             )}
-            <p className='image-caption text-muted'>{section.content}</p>
           </div>
         );
 

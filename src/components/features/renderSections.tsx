@@ -184,6 +184,46 @@ export function renderAdditionalSections(section: any, index: number, post: any)
         </div>
       );
 
+    case 'reddit_quote':
+      return (
+        <div key={index} className='reddit-quote-section my-12'>
+          <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6'>
+            <div className='flex items-start gap-4'>
+              <div className='flex-shrink-0'>
+                <div className='w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center'>
+                  <span className='text-white font-bold text-sm'>r/</span>
+                </div>
+              </div>
+              <div className='flex-1 min-w-0'>
+                <div className='flex items-center flex-wrap gap-2 mb-3 text-sm'>
+                  <span className='font-medium text-orange-600 dark:text-orange-400'>
+                    r/{section.metadata?.subreddit || 'reddit'}
+                  </span>
+                  <span className='text-gray-400'>•</span>
+                  <span className='text-gray-600 dark:text-gray-300'>
+                    Posted by u/{section.metadata?.author || 'OP'}
+                  </span>
+                  <span className='text-gray-400'>•</span>
+                  <span className='text-gray-600 dark:text-gray-300'>
+                    {section.metadata?.score || 0} points
+                  </span>
+                </div>
+                <div className='text-gray-900 dark:text-gray-100 leading-relaxed'>
+                  <div className='whitespace-pre-wrap'>
+                    {section.content}
+                  </div>
+                </div>
+                {section.metadata?.context && (
+                  <div className='mt-3 text-xs text-gray-500 dark:text-gray-400 italic'>
+                    {section.metadata.context}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return null;
   }
