@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePosts } from '@/hooks/usePosts';
@@ -38,7 +38,7 @@ interface Post {
   featured?: boolean;
 }
 
-export function TrendingFeed() {
+export const TrendingFeed = React.memo(function TrendingFeed() {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
@@ -50,14 +50,14 @@ export function TrendingFeed() {
     limit: 12,
   });
 
-  const handleCommentClick = (e: React.MouseEvent, postId: string) => {
+  const handleCommentClick = useCallback((e: React.MouseEvent, postId: string) => {
     e.preventDefault();
     e.stopPropagation();
     setSelectedPostId(postId);
     setCommentModalOpen(true);
-  };
+  }, []);
 
-  const handleShareClick = (e: React.MouseEvent, post: Post) => {
+  const handleShareClick = useCallback((e: React.MouseEvent, post: Post) => {
     e.preventDefault();
     e.stopPropagation();
     if (navigator.share) {
@@ -72,7 +72,7 @@ export function TrendingFeed() {
       );
       // Could add a toast notification here
     }
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -98,6 +98,28 @@ export function TrendingFeed() {
     );
   }
 
+  // Memoize posts to prevent unnecessary re-renders - moved before conditional
+  const posts = useMemo(() => postsResponse?.posts || [], [postsResponse?.posts]);
+
+  // Memoize mixed content creation - expensive operation - moved before conditional
+  const mixedContent = useMemo(() => {
+    if (posts.length === 0) return [];
+    
+    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
+    
+    posts.forEach((post, index) => {
+      // Add the post
+      mixedContent.push({ type: 'post', data: post, index });
+      
+      // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
+      if ((index + 1) % 10 === 0) {
+        mixedContent.push({ type: 'ad', index: index + 1 });
+      }
+    });
+    
+    return mixedContent;
+  }, [posts]);
+
   if (error) {
     return (
       <Card className='p-8 text-center'>
@@ -113,8 +135,6 @@ export function TrendingFeed() {
     );
   }
 
-  const posts = postsResponse?.posts || [];
-
   if (posts.length === 0) {
     return (
       <Card className='p-8 text-center'>
@@ -127,25 +147,6 @@ export function TrendingFeed() {
       </Card>
     );
   }
-
-  // Create mixed content array with ads injected every 10th position
-  const createMixedContent = () => {
-    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
-    
-    posts.forEach((post, index) => {
-      // Add the post
-      mixedContent.push({ type: 'post', data: post, index });
-      
-      // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
-      if ((index + 1) % 10 === 0) {
-        mixedContent.push({ type: 'ad', index: index + 1 });
-      }
-    });
-    
-    return mixedContent;
-  };
-
-  const mixedContent = createMixedContent();
 
   return (
     <div className='space-y-6'>
@@ -181,7 +182,8 @@ export function TrendingFeed() {
                         alt={post.title}
                         fill
                         className='object-cover transition-transform duration-300 group-hover:scale-105'
-                        sizes='33vw'
+                        sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -256,4 +258,4 @@ export function TrendingFeed() {
       )}
     </div>
   );
-}
+});

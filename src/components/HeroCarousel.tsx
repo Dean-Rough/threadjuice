@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePosts } from '@/hooks/usePosts';
@@ -20,7 +20,7 @@ interface Post {
 // Max title length for consistent layout
 const MAX_TITLE_LENGTH = 80;
 
-export function HeroCarousel() {
+export const HeroCarousel = React.memo(function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const { data: postsResponse } = usePosts({
@@ -28,23 +28,37 @@ export function HeroCarousel() {
     limit: 5,
   });
 
-  const posts = postsResponse?.posts || [];
-  const featuredPosts = posts.slice(0, 5);
+  // Memoize featured posts to prevent unnecessary re-renders
+  const featuredPosts = useMemo(() => {
+    return postsResponse?.posts?.slice(0, 5) || [];
+  }, [postsResponse?.posts]);
 
-  // Auto-cycle through slides
+  // Memoize slide navigation to prevent recreation
+  const goToNextSlide = useCallback(() => {
+    setCurrentSlide(prev => (prev + 1) % featuredPosts.length);
+  }, [featuredPosts.length]);
+
+  // Auto-cycle through slides - optimized
   useEffect(() => {
     if (featuredPosts.length <= 1) return;
 
-    const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % featuredPosts.length);
-    }, 5000);
-
+    const interval = setInterval(goToNextSlide, 5000);
     return () => clearInterval(interval);
-  }, [featuredPosts.length]);
+  }, [goToNextSlide, featuredPosts.length]);
 
-  const goToSlide = (index: number) => {
+  const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index);
-  };
+  }, []);
+
+  // Memoize current post and title processing - moved before conditional return
+  const currentPost = useMemo(() => featuredPosts[currentSlide], [featuredPosts, currentSlide]);
+
+  const truncatedTitle = useMemo(() => {
+    if (!currentPost?.title) return '';
+    return currentPost.title.length > MAX_TITLE_LENGTH
+      ? currentPost.title.substring(0, MAX_TITLE_LENGTH) + '...'
+      : currentPost.title;
+  }, [currentPost?.title]);
 
   if (featuredPosts.length === 0) {
     return (
@@ -62,15 +76,6 @@ export function HeroCarousel() {
     );
   }
 
-  const currentPost = featuredPosts[currentSlide];
-
-  // Truncate title if too long
-  const truncatedTitle = currentPost?.title
-    ? currentPost.title.length > MAX_TITLE_LENGTH
-      ? currentPost.title.substring(0, MAX_TITLE_LENGTH) + '...'
-      : currentPost.title
-    : '';
-
   return (
     <section className='relative h-[500px] overflow-hidden md:h-[600px]'>
       {/* Background Image */}
@@ -80,9 +85,8 @@ export function HeroCarousel() {
           alt={currentPost?.title || 'Hero background'}
           fill
           className='object-cover transition-all duration-1000 ease-in-out'
-          key={currentSlide} // Force re-render for smooth transition
           priority
-          sizes='100vw'
+          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
         />
         <div className='absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent'></div>
         <div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent'></div>
@@ -155,4 +159,4 @@ export function HeroCarousel() {
       </div>
     </section>
   );
-}
+});

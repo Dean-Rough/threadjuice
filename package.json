@@ -11,6 +11,7 @@
     "dev": "npm run kill-ports && next dev -p 4242",
     "kill-ports": "lsof -ti:4242 | xargs kill -9 2>/dev/null || true",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",

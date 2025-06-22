@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -259,12 +259,12 @@ export default function SimplePostDetail({
   const [metaphorInsight, setMetaphorInsight] = useState<MetaphorInsight | null>(null);
   const [showTerrysBubble, setShowTerrysBubble] = useState(false);
 
-  // Helper function to format view/comment counts
-  const formatCount = (count: number): string => {
+  // Helper function to format view/comment counts - memoized
+  const formatCount = useCallback((count: number): string => {
     if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
     if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
     return count.toString();
-  };
+  }, []);
 
   // Function to determine what content to insert between paragraphs
   const getInsertionContent = (paragraphIndex: number, emotion?: EmotionalAnalysis) => {
@@ -598,13 +598,12 @@ export default function SimplePostDetail({
     return emotions;
   };
 
-  // Enhance story with contextual GIF reactions
+  // Enhance story with contextual GIF reactions - properly memoized
   const enhanceStoryWithGifs = useCallback(async (
     sections: any[],
     emotions: EmotionalAnalysis[]
   ): Promise<any[]> => {
     const enhancedSections: any[] = [];
-    const emotionIndex = 0;
 
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
@@ -615,7 +614,6 @@ export default function SimplePostDetail({
       
       // Insert GIF reactions at optimal points based on emotional analysis
       if (emotion && shouldInsertGifReaction(emotion, i, sections.length)) {
-        // Inserting GIF for emotion
         try {
           const gifResult = await giphyService.searchReactionGif({
             searchTerms: emotion.giffSearchTerms,
@@ -625,7 +623,6 @@ export default function SimplePostDetail({
           });
 
           if (gifResult) {
-            // GIF found
             const gifSection = {
               type: 'gif-reaction',
               content: getGifCaption(emotion),
@@ -643,19 +640,15 @@ export default function SimplePostDetail({
             };
 
             enhancedSections.push(gifSection);
-          } else {
-            // No GIF found for emotion
           }
         } catch (error) {
-          // Failed to fetch GIF for emotion
+          console.warn('Failed to fetch GIF for emotion:', error);
         }
-      } else if (emotion) {
-        // Skipping GIF - doesn't meet criteria
       }
     }
 
     return enhancedSections;
-  }, []);
+  }, []); // Removed giphyService dependency - it's a static import
 
   // Determine if we should insert a GIF reaction at this point
   const shouldInsertGifReaction = (
@@ -1275,6 +1268,8 @@ export default function SimplePostDetail({
                       width={800}
                       height={400}
                       className='h-[400px] w-full object-cover'
+                      priority
+                      sizes='(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 800px'
                     />
                   </div>
                 )}

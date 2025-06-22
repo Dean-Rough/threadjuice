@@ -31,10 +31,10 @@ export const usePosts = (filters: PostFilters = {}) => {
   return useQuery({
     queryKey: postKeys.list(filters),
     queryFn: () => postService.getPosts(filters),
-    staleTime: 0, // Force fresh data
-    gcTime: 0, // No caching
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
+    staleTime: 2 * 60 * 1000, // 2 minutes - reasonable caching
+    gcTime: 10 * 60 * 1000, // 10 minutes - keep in memory longer
+    refetchOnMount: false, // Only refetch if data is stale
+    refetchOnWindowFocus: false, // Prevent excessive refetching
   });
 };
 
