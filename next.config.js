@@ -34,7 +34,13 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self'; frame-src 'self' https://www.tiktok.com https://platform.twitter.com https://www.youtube.com https://www.youtube-nocookie.com;",
+            value: [
+              "frame-ancestors 'self'",
+              "frame-src 'self' https://www.tiktok.com https://platform.twitter.com https://www.youtube.com https://www.youtube-nocookie.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.googletagmanager.com https://www.google-analytics.com",
+              "img-src 'self' data: https: http:",
+              "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+            ].join('; '),
           },
         ],
       },

@@ -1067,20 +1067,8 @@ Examples:
 // Initialize media enricher (using JavaScript wrapper)
 async function getMediaEnricher() {
   try {
-    const { mediaEnricher, youtubeExtractor, twitterExtractor, tiktokExtractor, redditExtractor } = await import('./mediaEnricherWrapper.js');
-    
-    // Register extractors if not already registered
-    if (!mediaEnricher.platformExtractors?.has('video')) {
-      mediaEnricher.registerExtractor('video', youtubeExtractor);
-      mediaEnricher.registerExtractor('youtube', youtubeExtractor);
-      mediaEnricher.registerExtractor('tweet', twitterExtractor);
-      mediaEnricher.registerExtractor('twitter', twitterExtractor);
-      mediaEnricher.registerExtractor('tiktok', tiktokExtractor);
-      mediaEnricher.registerExtractor('reddit', redditExtractor);
-      mediaEnricher.registerExtractor('reddit_post', redditExtractor);
-    }
-    
-    return mediaEnricher;
+    const { realMediaEnricher } = await import('./real-media-enricher.js');
+    return realMediaEnricher;
   } catch (error) {
     console.warn('⚠️ Media enricher not available:', error.message);
     return null;
