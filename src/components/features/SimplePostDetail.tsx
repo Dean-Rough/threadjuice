@@ -32,6 +32,9 @@ import { giphyService, GifResult } from '@/lib/klipyService';
 import GifReaction from '@/components/ui/GifReaction';
 import { renderAdditionalSections } from './renderSections';
 import { usePostsByCategory } from '@/hooks/usePosts';
+import YouTubeEmbed from '@/components/embeds/YouTubeEmbed';
+import TwitterEmbed from '@/components/embeds/TwitterEmbed';
+import TikTokEmbed from '@/components/embeds/TikTokEmbed';
 
 interface PostDetailProps {
   postId: string;
@@ -721,12 +724,86 @@ export default function SimplePostDetail({
     }
   };
 
+  const renderMediaEmbed = (section: any, index: number) => {
+    const media = section.metadata?.media;
+    if (!media) return null;
+
+    switch (media.type) {
+      case 'youtube':
+      case 'video':
+        return (
+          <div key={index} className="media-embed-section my-12">
+            <YouTubeEmbed
+              videoId={media.embedId}
+              embedUrl={media.embedUrl}
+              title={media.title}
+              thumbnailUrl={media.thumbnailUrl}
+              className="w-full"
+            />
+            {media.title && (
+              <div className="mt-4">
+                <h4 className="text-lg font-semibold text-foreground">{media.title}</h4>
+                {media.author && (
+                  <p className="text-sm text-muted-foreground">by {media.author}</p>
+                )}
+                {media.confidence < 0.8 && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    <span className="italic">Related video - exact match unavailable</span>
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'tweet':
+        return (
+          <div key={index} className="media-embed-section my-12">
+            <TwitterEmbed
+              tweetId={media.embedId}
+              embedUrl={media.embedUrl}
+              embedHtml={media.embedHtml}
+              className="w-full max-w-2xl mx-auto"
+            />
+            {media.confidence < 0.8 && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                <span className="italic">Related tweet - exact match unavailable</span>
+              </p>
+            )}
+          </div>
+        );
+      
+      case 'tiktok':
+        return (
+          <div key={index} className="media-embed-section my-12">
+            <TikTokEmbed
+              videoId={media.embedId}
+              embedUrl={media.embedUrl}
+              embedHtml={media.embedHtml}
+              className="w-full max-w-md mx-auto"
+            />
+            {media.confidence < 0.8 && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                <span className="italic">Related TikTok - exact match unavailable</span>
+              </p>
+            )}
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   const renderSection = (section: any, index: number) => {
     // Check additional section types first
     const additionalSection = renderAdditionalSections(section, index, post);
     if (additionalSection) return additionalSection;
     
     switch (section.type) {
+      case 'media_embed':
+        return renderMediaEmbed(section, index);
+      
       case 'image':
         return (
           <div key={index} className='image-section my-12'>

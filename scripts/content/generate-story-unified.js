@@ -266,6 +266,14 @@ CRITICAL WRITING STYLE REQUIREMENTS:
 - Include specific details, dialogue, and vivid descriptions
 - Add unexpected twists and unique observations
 
+MEDIA REFERENCES:
+- When mentioning specific videos, tweets, or viral content, add a media placeholder
+- Format: [MEDIA: type="video/tweet/tiktok" query="search terms" context="what it shows"]
+- Examples:
+  - "The CEO posted an apology video [MEDIA: type="video" query="CEO name apology 2024" context="emotional apology about layoffs"]"
+  - "The tweet went viral [MEDIA: type="tweet" query="specific quote from tweet" context="ratio'd response about topic"]"
+  - "The TikTok showed [MEDIA: type="tiktok" query="dance trend name" context="person doing viral dance"]"
+
 ${contentSource === 'twitter' ? 
 'TWITTER SPECIFIC: Include mentions of quote tweets, viral threads, being "ratioed", screenshots going viral, blue check drama' : 
 contentSource === 'tiktok' ?
@@ -383,21 +391,76 @@ function extractKeyNouns(title) {
                      'of', 'with', 'by', 'from', 'when', 'where', 'how', 'why', 'what',
                      'becomes', 'turns', 'makes', 'gets', 'goes', 'comes', 'takes'];
   
+  // Common compound terms to keep together
+  const compoundTerms = {
+    'hedge fund': 'finance investment',
+    'social media': 'social media',
+    'high school': 'school',
+    'middle school': 'school', 
+    'real estate': 'property',
+    'wall street': 'finance',
+    'silicon valley': 'technology',
+    'venture capital': 'business investment',
+    'private equity': 'business finance',
+    'artificial intelligence': 'AI technology',
+    'machine learning': 'technology',
+    'electric vehicle': 'electric car',
+    'climate change': 'environment',
+    'stock market': 'trading finance',
+    'crypto currency': 'cryptocurrency',
+    'bitcoin': 'cryptocurrency',
+    'video game': 'gaming',
+    'tik tok': 'social media',
+    'gen z': 'young people',
+    'baby boomer': 'older people',
+    'millennial': 'millennial generation',
+    'air fryer': 'kitchen appliance',
+    'avocado toast': 'food brunch',
+    'escape room': 'entertainment',
+    'food truck': 'restaurant',
+    'startup founder': 'entrepreneur',
+    'tech bro': 'technology person',
+    'wine mom': 'parent lifestyle',
+    'gender reveal': 'party celebration'
+  };
+  
+  // Check for compound terms first
+  let lowerTitle = title.toLowerCase();
+  let primaryConcept = null;
+  let secondaryConcept = null;
+  
+  // Look for compound terms
+  for (const [compound, replacement] of Object.entries(compoundTerms)) {
+    if (lowerTitle.includes(compound)) {
+      primaryConcept = replacement;
+      // Remove the compound term from title for further processing
+      lowerTitle = lowerTitle.replace(compound, '');
+      break;
+    }
+  }
+  
   // Extract meaningful words
-  const words = title
-    .toLowerCase()
+  const words = lowerTitle
     .replace(/[^a-z0-9\s]/g, ' ')
     .split(' ')
     .filter(word => word.length > 2 && !stopWords.includes(word));
   
-  // Identify the "what" (object/person) and "where" (location/setting)
+  // Filter out common filler words
   const potentialObjects = words.filter(word => 
-    !['missing', 'viral', 'shocking', 'amazing', 'incredible'].includes(word)
+    !['missing', 'viral', 'shocking', 'amazing', 'incredible', 'breaking', 'exclusive', 'trending'].includes(word)
   );
   
+  // If no compound term found, use the first meaningful words
+  if (!primaryConcept) {
+    primaryConcept = potentialObjects[0] || words[0] || 'lifestyle';
+  }
+  
+  // Find secondary concept
+  secondaryConcept = potentialObjects.find(word => word !== primaryConcept) || potentialObjects[1] || primaryConcept;
+  
   return {
-    what: potentialObjects[0] || words[0],
-    where: potentialObjects[1] || words[1] || potentialObjects[0],
+    what: primaryConcept,
+    where: secondaryConcept,
     all: words
   };
 }
@@ -648,12 +711,43 @@ async function saveToDatabase(story) {
 }
 
 /**
+ * Parse media placeholders from story content
+ */
+function parseMediaPlaceholders(content) {
+  const mediaRegex = /\[MEDIA:\s*type="([^"]+)"\s*query="([^"]+)"\s*context="([^"]+)"\]/g;
+  const placeholders = [];
+  
+  // Search through all sections
+  content.sections.forEach((section, index) => {
+    if (section.content) {
+      let match;
+      while ((match = mediaRegex.exec(section.content)) !== null) {
+        placeholders.push({
+          sectionIndex: index,
+          type: match[1],
+          query: match[2],
+          context: match[3],
+          fullMatch: match[0],
+          position: match.index
+        });
+      }
+    }
+  });
+  
+  return placeholders;
+}
+
+/**
  * Generate a complete story
  */
 export async function generateStory(options = {}) {
   try {
     // Generate content
     const storyData = await generateStoryContent(options);
+    
+    // Parse media placeholders
+    const mediaPlaceholders = parseMediaPlaceholders(storyData.content);
+    console.log(`🎬 Found ${mediaPlaceholders.length} media placeholders`);
     
     // Select images (hero + inline)
     const { heroImage, inlineImage } = await selectImagesForStory(storyData);
@@ -787,7 +881,7 @@ async function main() {
           if (args[i] === '--no-db') options.noDB = true;
         }
 
-        const story = await generateStory(options);
+        const story = await generateStoryWithMedia(options);
         
         if (!options.noDB) {
           await saveToDatabase(story);
@@ -855,6 +949,65 @@ Examples:
   } catch (error) {
     console.error('\n💥 Generation failed:', error.message);
     process.exit(1);
+  }
+}
+
+// Initialize media enricher (using JavaScript wrapper)
+async function getMediaEnricher() {
+  try {
+    const { mediaEnricher, youtubeExtractor, twitterExtractor, tiktokExtractor, redditExtractor } = await import('./mediaEnricherWrapper.js');
+    
+    // Register extractors if not already registered
+    if (!mediaEnricher.platformExtractors?.has('video')) {
+      mediaEnricher.registerExtractor('video', youtubeExtractor);
+      mediaEnricher.registerExtractor('youtube', youtubeExtractor);
+      mediaEnricher.registerExtractor('tweet', twitterExtractor);
+      mediaEnricher.registerExtractor('twitter', twitterExtractor);
+      mediaEnricher.registerExtractor('tiktok', tiktokExtractor);
+      mediaEnricher.registerExtractor('reddit', redditExtractor);
+      mediaEnricher.registerExtractor('reddit_post', redditExtractor);
+    }
+    
+    return mediaEnricher;
+  } catch (error) {
+    console.warn('⚠️ Media enricher not available:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Generate story with media enrichment
+ */
+export async function generateStoryWithMedia(options = {}) {
+  try {
+    // Generate base story
+    const story = await generateStory(options);
+    
+    // Check if we have media placeholders
+    const hasMedia = story.content.sections.some(s => 
+      s.content && s.content.includes('[MEDIA:')
+    );
+    
+    if (!hasMedia) {
+      return story;
+    }
+    
+    // Enrich with media
+    console.log('🎬 Enriching story with media embeds...');
+    const enricher = await getMediaEnricher();
+    
+    if (!enricher) {
+      console.log('⚠️ Media enricher not available, returning story without embeds');
+      return story;
+    }
+    
+    const enrichedStory = await enricher.processStory(story);
+    
+    return enrichedStory;
+  } catch (error) {
+    console.error('❌ Media enrichment failed:', error.message);
+    // Return story without media enrichment
+    return generateStory(options);
   }
 }
 
