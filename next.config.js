@@ -10,7 +10,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN', // Changed from DENY to allow embeds
           },
           {
             key: 'X-Content-Type-Options',
@@ -31,6 +31,10 @@ const nextConfig = {
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self'; frame-src 'self' https://www.tiktok.com https://platform.twitter.com https://www.youtube.com https://www.youtube-nocookie.com;",
           },
         ],
       },
