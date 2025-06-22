@@ -266,6 +266,115 @@ export default function SimplePostDetail({
     return count.toString();
   }, []);
 
+  // Determine if we should insert a GIF reaction at this point
+  const shouldInsertGifReaction = (
+    emotion: EmotionalAnalysis,
+    sectionIndex: number,
+    totalSections: number
+  ): boolean => {
+    // Insert GIFs for high-intensity emotions
+    if (emotion.intensity >= 0.6) return true;
+    
+    // Insert at peak moments (around 40-80% through the story)
+    const storyProgress = sectionIndex / totalSections;
+    if (storyProgress >= 0.4 && storyProgress <= 0.8 && emotion.intensity >= 0.4) return true;
+    
+    // Insert for specific high-impact emotions
+    const highImpactEmotions = ['peak_chaos', 'escalating_drama', 'pure_entertainment', 'twist', 'climax'];
+    if (highImpactEmotions.includes(emotion.emotion)) return true;
+    
+    // Always insert at least one GIF if we're past the middle
+    if (storyProgress >= 0.5 && Math.random() < 0.3) return true;
+    
+    return false;
+  };
+
+  // Generate appropriate caption for GIF based on emotion
+  const getGifCaption = (emotion: EmotionalAnalysis): string => {
+    const captions: { [key: string]: string[] } = {
+      'opening_tension': [
+        "Everyone watching this unfold:",
+        "The vibes right now:",
+        "Here we go..."
+      ],
+      'escalating_drama': [
+        "Everyone in the replies:",
+        "The collective reaction:",
+        "This is getting spicy:"
+      ],
+      'peak_chaos': [
+        "Literally everyone right now:",
+        "The entire internet:",
+        "All of us watching this:"
+      ],
+      'pure_entertainment': [
+        "Us enjoying the show:",
+        "Peak entertainment:",
+        "This is why we're here:"
+      ],
+      'resolution': [
+        "How we're all feeling:",
+        "The aftermath:",
+        "When the dust settles:"
+      ]
+    };
+
+    const emotionCaptions = captions[emotion.emotion] || ["Everyone right now:"];
+    return emotionCaptions[Math.floor(Math.random() * emotionCaptions.length)];
+  };
+
+  // Enhance story with contextual GIF reactions - properly memoized
+  const enhanceStoryWithGifs = useCallback(async (
+    sections: any[],
+    emotions: EmotionalAnalysis[]
+  ): Promise<any[]> => {
+    const enhancedSections: any[] = [];
+
+    for (let i = 0; i < sections.length; i++) {
+      const section = sections[i];
+      enhancedSections.push(section);
+
+      // Find corresponding emotion analysis for this section
+      const emotion = emotions.find(e => e.sectionIndex === i);
+      
+      // Insert GIF reactions at optimal points based on emotional analysis
+      if (emotion && shouldInsertGifReaction(emotion, i, sections.length)) {
+        try {
+          const gifResult = await giphyService.searchReactionGif({
+            searchTerms: emotion.giffSearchTerms,
+            emotion: emotion.emotion,
+            intensity: emotion.intensity,
+            safeSearch: true
+          });
+
+          if (gifResult) {
+            const gifSection = {
+              type: 'gif-reaction',
+              content: getGifCaption(emotion),
+              metadata: {
+                id: `emotion-gif-${i}`,
+                url: gifResult.url,
+                title: gifResult.title,
+                caption: getGifCaption(emotion),
+                width: gifResult.width,
+                height: gifResult.height,
+                preview: gifResult.preview,
+                emotion: emotion.emotion,
+                intensity: emotion.intensity
+              }
+            };
+
+            enhancedSections.push(gifSection);
+          }
+        } catch (error) {
+          console.warn('Failed to fetch GIF for emotion:', error);
+        }
+      }
+    }
+
+    return enhancedSections;
+  }, []); // Removed giphyService dependency - it's a static import
+
   // Function to determine what content to insert between paragraphs
   const getInsertionContent = (paragraphIndex: number, emotion?: EmotionalAnalysis) => {
     const insertionType = paragraphIndex % 12; // Cycle through different types
@@ -598,114 +707,6 @@ export default function SimplePostDetail({
     return emotions;
   };
 
-  // Enhance story with contextual GIF reactions - properly memoized
-  const enhanceStoryWithGifs = useCallback(async (
-    sections: any[],
-    emotions: EmotionalAnalysis[]
-  ): Promise<any[]> => {
-    const enhancedSections: any[] = [];
-
-    for (let i = 0; i < sections.length; i++) {
-      const section = sections[i];
-      enhancedSections.push(section);
-
-      // Find corresponding emotion analysis for this section
-      const emotion = emotions.find(e => e.sectionIndex === i);
-      
-      // Insert GIF reactions at optimal points based on emotional analysis
-      if (emotion && shouldInsertGifReaction(emotion, i, sections.length)) {
-        try {
-          const gifResult = await giphyService.searchReactionGif({
-            searchTerms: emotion.giffSearchTerms,
-            emotion: emotion.emotion,
-            intensity: emotion.intensity,
-            safeSearch: true
-          });
-
-          if (gifResult) {
-            const gifSection = {
-              type: 'gif-reaction',
-              content: getGifCaption(emotion),
-              metadata: {
-                id: `emotion-gif-${i}`,
-                url: gifResult.url,
-                title: gifResult.title,
-                caption: getGifCaption(emotion),
-                width: gifResult.width,
-                height: gifResult.height,
-                preview: gifResult.preview,
-                emotion: emotion.emotion,
-                intensity: emotion.intensity
-              }
-            };
-
-            enhancedSections.push(gifSection);
-          }
-        } catch (error) {
-          console.warn('Failed to fetch GIF for emotion:', error);
-        }
-      }
-    }
-
-    return enhancedSections;
-  }, []); // Removed giphyService dependency - it's a static import
-
-  // Determine if we should insert a GIF reaction at this point
-  const shouldInsertGifReaction = (
-    emotion: EmotionalAnalysis,
-    sectionIndex: number,
-    totalSections: number
-  ): boolean => {
-    // Insert GIFs for high-intensity emotions
-    if (emotion.intensity >= 0.6) return true;
-    
-    // Insert at peak moments (around 40-80% through the story)
-    const storyProgress = sectionIndex / totalSections;
-    if (storyProgress >= 0.4 && storyProgress <= 0.8 && emotion.intensity >= 0.4) return true;
-    
-    // Insert for specific high-impact emotions
-    const highImpactEmotions = ['peak_chaos', 'escalating_drama', 'pure_entertainment', 'twist', 'climax'];
-    if (highImpactEmotions.includes(emotion.emotion)) return true;
-    
-    // Always insert at least one GIF if we're past the middle
-    if (storyProgress >= 0.5 && Math.random() < 0.3) return true;
-    
-    return false;
-  };
-
-  // Generate appropriate caption for GIF based on emotion
-  const getGifCaption = (emotion: EmotionalAnalysis): string => {
-    const captions: { [key: string]: string[] } = {
-      'opening_tension': [
-        "Everyone watching this unfold:",
-        "The vibes right now:",
-        "Here we go..."
-      ],
-      'escalating_drama': [
-        "Everyone in the replies:",
-        "The collective reaction:",
-        "This is getting spicy:"
-      ],
-      'peak_chaos': [
-        "Literally everyone right now:",
-        "The entire internet:",
-        "All of us watching this:"
-      ],
-      'pure_entertainment': [
-        "Us enjoying the show:",
-        "Peak entertainment:",
-        "This is why we're here:"
-      ],
-      'resolution': [
-        "How we're all feeling:",
-        "The aftermath:",
-        "When the dust settles:"
-      ]
-    };
-
-    const emotionCaptions = captions[emotion.emotion] || ["Everyone right now:"];
-    return emotionCaptions[Math.floor(Math.random() * emotionCaptions.length)];
-  };
 
   const handleShare = () => {
     if (navigator.share) {

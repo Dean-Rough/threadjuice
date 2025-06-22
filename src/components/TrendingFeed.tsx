@@ -175,10 +175,10 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
               >
                 <Card className='touch-target group relative h-full cursor-pointer overflow-hidden transition-shadow hover:shadow-lg'>
                   {/* Full Background Image */}
-                  {post.image_url && (
+                  {(post.imageUrl || post.image_url) && (
                     <div className='absolute inset-0'>
                       <Image
-                        src={post.image_url}
+                        src={post.imageUrl || post.image_url}
                         alt={post.title}
                         fill
                         className='object-cover transition-transform duration-300 group-hover:scale-105'
