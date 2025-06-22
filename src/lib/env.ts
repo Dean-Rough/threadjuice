@@ -25,7 +25,7 @@ const envSchema = z.object({
     .min(1, 'Supabase anon key is required'),
   SUPABASE_SERVICE_ROLE_KEY: z
     .string()
-    .min(1, 'Supabase service role key is required')
+    .min(1, 'Supabase service role key is required'),
 
   // AI & Content Generation - OpenAI
   OPENAI_API_KEY: z
