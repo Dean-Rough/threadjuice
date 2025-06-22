@@ -395,6 +395,9 @@ ${realPost.isThread ? 'This is part of a thread.' : 'Single tweet.'}
 
 Transform this into a dramatic multi-section story about Twitter drama.`;
   }
+  
+  // Add persona and platform info to prompt
+  prompt += `
 
 Writer persona: ${persona.name} - ${persona.tone}
 
@@ -517,32 +520,49 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
       throw new Error('Invalid story format');
     }
     
-    // Use real Reddit data if available
-    if (realRedditPost) {
-      story.sourceUrl = realRedditPost.url;
-      story.sourceUsername = `u/${realRedditPost.username || 'deleted'}`;
-      story.sourcePlatform = 'reddit';
-      
-      // Update category based on actual subreddit
-      const subredditMap = {
-        'AmItheAsshole': 'relationships',
-        'relationship_advice': 'relationships',
-        'tifu': 'life',
-        'antiwork': 'workplace',
-        'MaliciousCompliance': 'workplace'
-      };
-      const realCategory = subredditMap[realRedditPost.parsedCommunityName] || category;
-      
-      return {
-        ...story,
-        category: realCategory,
-        persona,
-        contentSource,
-        sourceUrl: story.sourceUrl,
-        sourceUsername: story.sourceUsername,
-        sourcePlatform: story.sourcePlatform || contentSource,
-        isRealData: true
-      };
+    // Use real data if available
+    if (options.realPost) {
+      if (contentSource === 'reddit') {
+        story.sourceUrl = options.realPost.url;
+        story.sourceUsername = `u/${options.realPost.username || 'deleted'}`;
+        story.sourcePlatform = 'reddit';
+        
+        // Update category based on actual subreddit
+        const subredditMap = {
+          'AmItheAsshole': 'relationships',
+          'relationship_advice': 'relationships',
+          'tifu': 'life',
+          'antiwork': 'workplace',
+          'MaliciousCompliance': 'workplace'
+        };
+        const realCategory = subredditMap[options.realPost.parsedCommunityName] || category;
+        
+        return {
+          ...story,
+          category: realCategory,
+          persona,
+          contentSource,
+          sourceUrl: story.sourceUrl,
+          sourceUsername: story.sourceUsername,
+          sourcePlatform: story.sourcePlatform || contentSource,
+          isRealData: true
+        };
+      } else if (contentSource === 'twitter') {
+        story.sourceUrl = `https://twitter.com/${options.realPost.author || 'user'}/status/${options.realPost.id || '123'}`;
+        story.sourceUsername = `@${options.realPost.author || options.realPost.username || 'unknown'}`;
+        story.sourcePlatform = 'twitter';
+        
+        return {
+          ...story,
+          category,
+          persona,
+          contentSource,
+          sourceUrl: story.sourceUrl,
+          sourceUsername: story.sourceUsername,
+          sourcePlatform: story.sourcePlatform || contentSource,
+          isRealData: true
+        };
+      }
     }
     
     return {
@@ -553,6 +573,7 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
       sourceUrl: story.sourceUrl,
       sourceUsername: story.sourceUsername,
       sourcePlatform: story.sourcePlatform || contentSource,
+      realPost: realPost
     };
   } catch (error) {
     console.error('❌ Story generation failed:', error.message);

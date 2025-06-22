@@ -35,6 +35,8 @@ export default function HoverLink({
     }
     
     timeoutRef.current = setTimeout(() => {
+      if (!e.currentTarget || !e.currentTarget.getBoundingClientRect) return;
+      
       const rect = e.currentTarget.getBoundingClientRect();
       setPreviewPosition({
         x: rect.left + rect.width / 2,
