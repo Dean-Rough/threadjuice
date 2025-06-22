@@ -106,29 +106,39 @@ export class MediaEnricher {
       // Add media embeds after sections that had placeholders
       const sectionRefs = references.filter(r => r.sectionIndex === index);
       sectionRefs.forEach(ref => {
-        enrichedSections.push({
-          type: 'media_embed',
-          content: '',
-          metadata: {
-            media: {
-              type: ref.type,
-              query: ref.query,
-              context: ref.context,
-              // Use real example content that will actually load
-              embedUrl: ref.type === 'tweet' 
-                ? this.getExampleTweetUrl(ref.query, ref.context)
-                : ref.type === 'tiktok'
-                ? this.getExampleTikTokUrl(ref.query, ref.context)
-                : 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-              embedId: ref.type === 'tweet'
-                ? this.getExampleTweetId(ref.query, ref.context)
-                : undefined,
-              title: `${ref.type} about ${ref.query}`,
-              platform: ref.type === 'tweet' ? 'Twitter' : ref.type === 'tiktok' ? 'TikTok' : 'YouTube',
-              confidence: 0.85
+        // Skip TikTok embeds - just add a link in the content
+        if (ref.type === 'tiktok') {
+          const tiktokUrl = this.getExampleTikTokUrl(ref.query, ref.context);
+          enrichedSections.push({
+            type: 'text',
+            content: `[Click here to see the TikTok video](${tiktokUrl})`,
+            metadata: {
+              isTikTokLink: true
             }
-          }
-        });
+          });
+        } else {
+          // Add other embeds normally
+          enrichedSections.push({
+            type: 'media_embed',
+            content: '',
+            metadata: {
+              media: {
+                type: ref.type,
+                query: ref.query,
+                context: ref.context,
+                embedUrl: ref.type === 'tweet' 
+                  ? this.getExampleTweetUrl(ref.query, ref.context)
+                  : 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                embedId: ref.type === 'tweet'
+                  ? this.getExampleTweetId(ref.query, ref.context)
+                  : undefined,
+                title: `${ref.type} about ${ref.query}`,
+                platform: ref.type === 'tweet' ? 'Twitter' : 'YouTube',
+                confidence: 0.85
+              }
+            }
+          });
+        }
       });
     });
 

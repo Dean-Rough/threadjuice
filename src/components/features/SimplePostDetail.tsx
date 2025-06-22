@@ -18,6 +18,7 @@ import {
   Award,
   Reply,
   Quote,
+  Play,
 } from 'lucide-react';
 import { InlineAd, SidebarAd } from '@/components/ads';
 import TwitterQuote from '@/components/ui/TwitterQuote';
@@ -1281,6 +1282,41 @@ export default function SimplePostDetail({
                 ))}
               </div>
             )}
+          </div>
+        );
+
+      case 'text':
+        // Handle TikTok links and other plain text sections
+        if (section.metadata?.isTikTokLink) {
+          // Parse markdown link
+          const linkMatch = section.content.match(/\[([^\]]+)\]\(([^)]+)\)/);
+          if (linkMatch) {
+            const [, linkText, linkUrl] = linkMatch;
+            return (
+              <div key={index} className='tiktok-link-section my-8 text-center'>
+                <div className='inline-flex items-center gap-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full font-semibold'>
+                  <Play className='h-5 w-5' />
+                  <a 
+                    href={linkUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className='hover:underline'
+                  >
+                    {linkText}
+                  </a>
+                  <ExternalLink className='h-4 w-4' />
+                </div>
+              </div>
+            );
+          }
+        }
+        
+        // Regular text section
+        return (
+          <div key={index} className='text-section mb-8'>
+            <p className='text-lg font-medium leading-relaxed text-foreground'>
+              {renderContentWithLinks(section.content)}
+            </p>
           </div>
         );
 
