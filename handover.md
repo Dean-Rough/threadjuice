@@ -1,13 +1,15 @@
 # ThreadJuice Handover Notes
 
-## Current Status: Twitter Scraping Issues
+## Current Status: Fully Working Reddit, Twitter Still Problematic
 
 ### What's Working
-1. **Reddit Scraping via Apify** ✅
-   - Using `trudax/reddit-scraper-lite` (FREE actor)
+1. **Reddit Scraping via Direct API** ✅
+   - NO LONGER USING APIFY - Direct Reddit API access
+   - No rate limits! Using .json endpoints
+   - Rich media extraction (images, videos, galleries)
    - Successfully fetching real Reddit posts from viral subreddits
    - Generating stories with real content, not mock data
-   - Command: `npm run story:generate -- --source reddit --real-data`
+   - Command: `npm run story:generate`
 
 2. **Image Selection** ✅
    - Improved keyword extraction to avoid generic terms

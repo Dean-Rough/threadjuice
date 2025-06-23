@@ -39,6 +39,8 @@
     "story:generate": "node scripts/content/generate-story-unified.js",
     "story:bulk": "node scripts/content/generate-story-unified.js bulk",
     "story:help": "node scripts/content/generate-story-unified.js help",
+    "story:auto": "node scripts/auto-generate.js",
+    "content:clear": "node scripts/clear-all-content.js",
     "discover:reddit": "node scripts/discovery/reddit-viral-discovery.js",
     "discover:twitter": "node scripts/discovery/twitter-viral-discovery.js",
     "discover": "node scripts/discovery/viral-content-orchestrator.js",

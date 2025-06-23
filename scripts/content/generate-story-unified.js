@@ -15,6 +15,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { ApifyClient } from 'apify-client';
+import fetch from 'node-fetch';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -440,80 +441,149 @@ function extractControversialComment(post) {
 }
 
 /**
- * Get real Reddit content using Apify
+ * Get real Reddit content using direct Reddit API
  */
 async function getRealRedditContent(subreddit = null) {
-  const apifyToken = process.env.APIFY_API_TOKEN;
-  if (!apifyToken) {
-    throw new Error('No APIFY_API_TOKEN found - cannot fetch real data');
-  }
-  
   try {
-    const client = new ApifyClient({ token: apifyToken });
-    
     // Pick a subreddit based on what we need
     const subreddits = subreddit ? [subreddit] : [
       'AmItheAsshole',
       'relationship_advice',
       'tifu',
       'antiwork',
-      'MaliciousCompliance'
+      'MaliciousCompliance',
+      'entitledparents',
+      'JUSTNOMIL',
+      'ChoosingBeggars',
+      'PublicFreakout'
     ];
     
     const randomSubreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
     
-    const input = {
-      searches: [`subreddit:${randomSubreddit}`],
-      startUrls: [{
-        url: `https://www.reddit.com/r/${randomSubreddit}/top/?t=day`
-      }],
-      maxItems: 5,
-      maxCommentsPerPost: 10, // Increased to get more OP comments
-      useApifyProxy: true
-    };
-    
     console.log(`🔍 Fetching real content from r/${randomSubreddit}...`);
-    const run = await client.actor('trudax/reddit-scraper-lite').call(input);
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
     
-    if (items && items.length > 0) {
-      // Pick a random post from the results
-      const post = items[Math.floor(Math.random() * items.length)];
-      console.log(`✅ Found real Reddit post: "${(post.title || 'Untitled').slice(0, 50)}..."`);
-      
-      // Extract all available media
-      const extractedMedia = extractRedditMedia(post);
-      const opCommentMedia = extractOPCommentMedia(post);
-      
-      // Extract controversial comment
-      const controversialComment = extractControversialComment(post);
-      
-      // Segment the original post for interspersing
-      const postSegments = segmentRedditPost(post);
-      
-      // Add extracted media, controversial comment, and segments to post object
-      post.extractedMedia = {
-        ...extractedMedia,
-        opImages: opCommentMedia
-      };
-      post.controversialComment = controversialComment;
-      post.segments = postSegments;
-      
-      console.log(`📸 Found media: ${extractedMedia.images.length} images, ${extractedMedia.videos.length} videos, ${opCommentMedia.length} OP comment images`);
-      console.log(`📖 Segmented post into ${postSegments.length} parts for interspersing`);
-      console.log(`🗂️  Reddit data: subreddit=${post.parsedCommunityName}, author=${post.username}, score=${post.upVotes || post.score}`);
-      if (controversialComment) {
-        console.log(`🔥 Found controversial comment (${controversialComment.score} score)`);
+    // Fetch top posts from the subreddit
+    const response = await fetch(`https://www.reddit.com/r/${randomSubreddit}/top.json?t=day&limit=10`, {
+      headers: {
+        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)'
       }
-      
-      return post;
+    });
+
+    if (!response.ok) {
+      throw new Error(`Reddit API error: ${response.status}`);
     }
+
+    const data = await response.json();
+    const posts = data.data.children.filter(child => 
+      child.data.selftext && child.data.selftext.length > 100 // Only posts with substantial content
+    );
+
+    if (posts.length === 0) {
+      throw new Error('No suitable posts found');
+    }
+
+    // Pick a random post from the results
+    const postData = posts[Math.floor(Math.random() * posts.length)].data;
+    
+    // Now fetch the full post with comments
+    const postUrl = `https://reddit.com${postData.permalink}`;
+    const jsonUrl = postUrl.replace(/\/?$/, '.json');
+    
+    const fullResponse = await fetch(jsonUrl, {
+      headers: {
+        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)'
+      }
+    });
+
+    if (!fullResponse.ok) {
+      throw new Error(`Reddit API error: ${fullResponse.status}`);
+    }
+
+    const fullData = await fullResponse.json();
+    const fullPostData = fullData[0].data.children[0].data;
+    const commentsData = fullData[1].data.children;
+
+    // Parse the post with our comprehensive media extraction
+    const post = {
+      id: fullPostData.id,
+      title: fullPostData.title,
+      body: fullPostData.selftext,
+      username: fullPostData.author,
+      parsedCommunityName: fullPostData.subreddit,
+      url: `https://reddit.com${fullPostData.permalink}`,
+      link: fullPostData.url,
+      upVotes: fullPostData.score,
+      score: fullPostData.score,
+      numComments: fullPostData.num_comments,
+      thumbnailUrl: fullPostData.thumbnail,
+      isVideo: fullPostData.is_video,
+      html: fullPostData.selftext_html,
+      media: fullPostData.media,
+      media_metadata: fullPostData.media_metadata,
+      preview: fullPostData.preview,
+      is_gallery: fullPostData.is_gallery,
+      gallery_data: fullPostData.gallery_data
+    };
+
+    // Parse comments for top and controversial
+    const comments = [];
+    commentsData.forEach(item => {
+      if (item.kind === 't1' && item.data.body && item.data.body !== '[deleted]') {
+        const comment = item.data;
+        comments.push({
+          id: comment.id,
+          author: comment.author,
+          username: comment.author,
+          body: comment.body,
+          text: comment.body,
+          score: comment.score,
+          is_submitter: comment.is_submitter,
+          isOP: comment.is_submitter,
+          controversiality: comment.controversiality || 0
+        });
+      }
+    });
+
+    // Sort by score for top comments
+    const topComments = [...comments]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+
+    post.topComments = topComments;
+    post.comments = topComments;
+
+    console.log(`✅ Found real Reddit post: "${(post.title || 'Untitled').slice(0, 50)}..."`);
+    
+    // Extract all available media using our existing functions
+    const extractedMedia = extractRedditMedia(post);
+    const opCommentMedia = extractOPCommentMedia(post);
+    
+    // Extract controversial comment
+    const controversialComment = extractControversialComment(post);
+    
+    // Segment the original post for interspersing
+    const postSegments = segmentRedditPost(post);
+    
+    // Add extracted media, controversial comment, and segments to post object
+    post.extractedMedia = {
+      ...extractedMedia,
+      opImages: opCommentMedia
+    };
+    post.controversialComment = controversialComment;
+    post.segments = postSegments;
+    
+    console.log(`📸 Found media: ${extractedMedia.images.length} images, ${extractedMedia.videos.length} videos, ${opCommentMedia.length} OP comment images`);
+    console.log(`📖 Segmented post into ${postSegments.length} parts for interspersing`);
+    console.log(`🗂️  Reddit data: subreddit=${post.parsedCommunityName}, author=${post.username}, score=${post.upVotes || post.score}`);
+    if (controversialComment) {
+      console.log(`🔥 Found controversial comment (${controversialComment.score} score)`);
+    }
+    
+    return post;
   } catch (error) {
-    console.log(`❌ Apify error: ${error.message}`);
+    console.log(`❌ Reddit API error: ${error.message}`);
     throw new Error('Failed to fetch real Reddit data');
   }
-  
-  return null;
 }
 
 /**

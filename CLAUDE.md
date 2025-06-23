@@ -31,12 +31,16 @@ ThreadJuice is a modern viral content aggregator that curates and presents engag
 - **Reddit Scraper** (`scripts/scraping/scrape-reddit-story.js`) - Direct API via .json endpoints
 - **Twitter Scraper** (`scripts/scraping/scrape-twitter-story.js`) - Twitter API v2 with bearer token
 
-### Apify Integration (Backup Solution)
-- **Reddit**: `scripts/apify/apify-reddit-scraper.js` using `trudax/reddit-scraper-lite` (FREE!)
+### Reddit Direct API (Primary Solution)
+- **Reddit**: Direct API access via .json endpoints - NO RATE LIMITS!
+- **Comprehensive media extraction**: Images, videos, galleries, embeds
+- **Rich comment data**: Top comments, controversial detection
+- **No dependencies**: Uses built-in fetch, no external services needed
+
+### Apify Integration (Twitter Only)
 - **Twitter**: `scripts/apify/apify-twitter-scraper.js` using `quacker/twitter-scraper`
-- **Professional managed scraping** with proxy rotation and rate limit handling
-- **Automatic Pexels images** for all Reddit posts
-- **See**: `docs/APIFY_INTEGRATION.md` for setup and usage
+- **Note**: Currently not functional - all Twitter scrapers returning 0 results
+- **See**: `docs/APIFY_INTEGRATION.md` for setup
 
 ## Development Commands
 
@@ -89,9 +93,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxx
 ## NO MOCK OR SIMULATED DATA ANYWHERE
 **HARD RULE**: Never use mock, simulated, dummy, or placeholder data. All content must be real, production-ready material. No "simulate", "mock", or "fake" prefixes in data generation. 
 
-**CRITICAL**: Stories MUST be based on REAL Reddit/Twitter posts scraped via Apify. If no real data is available, DO NOT generate a story. The system will throw an error rather than create AI-generated content.
+**CRITICAL**: Stories MUST be based on REAL Reddit/Twitter posts. If no real data is available, DO NOT generate a story. The system will throw an error rather than create AI-generated content.
 
-The `generate-story-unified.js` script now REQUIRES real Reddit data from Apify. No AI generation, no data = no story.
+The `generate-story-unified.js` script now REQUIRES real Reddit data via direct API. No AI generation, no data = no story.
 
 ## Script Guidance
 - `generate-story-unified.js` is our MAIN content generation script - that is what we tweak to improve our story generation. DO NOT create new content generation scripts without instruction to do so
@@ -108,8 +112,9 @@ The `generate-story-unified.js` script now REQUIRES real Reddit data from Apify.
 ## Current System Status (Dec 2024)
 
 ### ✅ WORKING
-- Reddit scraping via Apify (trudax/reddit-scraper-lite)
+- Reddit scraping via direct API (no rate limits!)
 - Story generation from real Reddit data
+- Rich media extraction (images, videos, galleries)
 - Image selection with Pexels API
 - Supabase database integration
 
