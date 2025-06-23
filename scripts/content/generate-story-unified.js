@@ -587,60 +587,60 @@ async function getRealRedditContent(subreddit = null) {
 }
 
 /**
- * Get real Twitter content using Apify
+ * Get real Twitter content using Twitter API v2
  */
 async function getRealTwitterContent() {
-  const apifyToken = process.env.APIFY_API_TOKEN;
-  if (!apifyToken) {
-    throw new Error('No APIFY_API_TOKEN found - cannot fetch real data');
+  const bearerToken = process.env.TWITTER_BEARER_TOKEN;
+  if (!bearerToken) {
+    throw new Error('No TWITTER_BEARER_TOKEN found - cannot fetch real Twitter data');
   }
   
   try {
-    const client = new ApifyClient({ token: apifyToken });
+    console.log(`🐦 Searching for viral Twitter content via API v2...`);
     
-    // Try using a Twitter/X scraper that searches for viral content
-    const input = {
-      "searchQueries": [
-        "min_faves:10000",
-        "viral -filter:retweets",
-        "(amazing OR incredible OR unbelievable) min_faves:5000",
-        "thread min_faves:10000"
-      ],
-      "maxTweets": 20,
-      "scrapeTweetReplies": false
-    };
+    // Import TwitterApi dynamically
+    const { TwitterApi } = await import('twitter-api-v2');
+    const client = new TwitterApi(bearerToken);
     
-    console.log(`🐦 Searching for viral Twitter content...`);
+    // Search for viral tweets with minimal API calls
+    // Note: Twitter API v2 doesn't support min_faves operator
+    const searchQuery = 'viral -is:retweet lang:en';
+    const tweets = await client.v2.search(searchQuery, {
+      max_results: 10, // Keep it small to avoid rate limits
+      'tweet.fields': ['author_id', 'created_at', 'public_metrics', 'conversation_id'],
+      'expansions': ['author_id'],
+      'user.fields': ['name', 'username', 'verified']
+    });
     
-    // Try different actor that might work better
-    const run = await client.actor('apidojo/twitter-scraper-v2').call(input);
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
-    
-    console.log(`📦 Retrieved ${items.length} tweets`);
-    
-    if (items && items.length > 0) {
-      // Debug first item
-      console.log(`🔍 First item structure:`, Object.keys(items[0]));
-      
-      // Pick a tweet with good engagement
-      const tweet = items.find(t => {
-        const likes = t.likeCount || t.likes || t.favorite_count || 0;
-        const retweets = t.retweetCount || t.retweets || t.retweet_count || 0;
-        console.log(`Tweet engagement: ${likes} likes, ${retweets} RTs`);
-        return likes > 1000;
-      }) || items[0];
-      
-      console.log(`✅ Found tweet with ${tweet.likeCount || tweet.likes || 0} likes`);
-      return tweet;
+    if (!tweets.data || tweets.data.data.length === 0) {
+      throw new Error('No viral tweets found');
     }
-  } catch (error) {
-    console.log(`❌ Twitter Apify error: ${error.message}`);
     
-    // If Apify fails, we absolutely cannot proceed without real data
-    throw new Error('Failed to fetch real Twitter data - NO MOCK DATA ALLOWED');
+    // Pick the tweet with highest engagement
+    const sortedTweets = tweets.data.data.sort((a, b) => {
+      const aScore = (a.public_metrics?.like_count || 0) + (a.public_metrics?.retweet_count || 0);
+      const bScore = (b.public_metrics?.like_count || 0) + (b.public_metrics?.retweet_count || 0);
+      return bScore - aScore;
+    });
+    
+    const bestTweet = sortedTweets[0];
+    const author = tweets.includes?.users?.find(u => u.id === bestTweet.author_id);
+    
+    console.log(`✅ Found viral tweet with ${bestTweet.public_metrics.like_count} likes`);
+    
+    return {
+      id: bestTweet.id,
+      text: bestTweet.text,
+      author: author?.username || 'unknown',
+      username: author?.username || 'unknown',
+      likes: bestTweet.public_metrics.like_count,
+      retweets: bestTweet.public_metrics.retweet_count,
+      url: `https://twitter.com/${author?.username || 'i'}/status/${bestTweet.id}`
+    };
+  } catch (error) {
+    console.log(`❌ Twitter API error: ${error.message}`);
+    throw new Error('Failed to fetch real Twitter data - API rate limit or error');
   }
-  
-  throw new Error('No Twitter data available - cannot generate story without real data');
 }
 
 /**
@@ -650,11 +650,11 @@ async function generateStoryContent(options = {}) {
   const category = options.category || Object.keys(CONFIG.categories)[Math.floor(Math.random() * Object.keys(CONFIG.categories).length)];
   const persona = options.persona || CONFIG.personas[0];
   
-  // Every 6th story should be Twitter
+  // Every 50th story should be Twitter (to avoid rate limits)
   storyCounter++;
   let contentSource = options.source;
   if (!contentSource) {
-    if (storyCounter % 6 === 0) {
+    if (storyCounter % 50 === 0) {
       contentSource = 'twitter';
     } else {
       contentSource = 'reddit'; // No TikTok
@@ -675,7 +675,24 @@ async function generateStoryContent(options = {}) {
     if (!realPost) {
       throw new Error('No real Reddit data available - cannot generate story');
     }
-    
+  } else if (contentSource === 'twitter') {
+    try {
+      realPost = await getRealTwitterContent();
+      if (!realPost) {
+        throw new Error('No real Twitter data available');
+      }
+    } catch (twitterError) {
+      console.log('⚠️  Twitter API failed, falling back to Reddit...');
+      contentSource = 'reddit'; // Fall back to Reddit
+      realPost = await getRealRedditContent();
+      if (!realPost) {
+        throw new Error('No real Reddit data available - cannot generate story');
+      }
+    }
+  }
+  
+  // Generate prompt based on final content source
+  if (contentSource === 'reddit') {
     prompt = `Transform this REAL Reddit post into an engaging ThreadJuice story.
 
 REAL REDDIT POST:
@@ -689,11 +706,6 @@ ${(realPost.body || '').slice(0, 2000)}
 
 Transform this into a dramatic multi-section story, expanding on the real content.`;
   } else if (contentSource === 'twitter') {
-    realPost = await getRealTwitterContent();
-    if (!realPost) {
-      throw new Error('No real Twitter data available - cannot generate story');
-    }
-    
     prompt = `Transform this REAL Twitter thread/tweet into an engaging ThreadJuice story.
 
 REAL TWEET:

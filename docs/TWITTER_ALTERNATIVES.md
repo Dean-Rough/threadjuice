@@ -45,10 +45,19 @@
 3. **Community Submissions**: Allow users to submit viral content
 
 ## Current Working Solution
-Reddit API direct access is working flawlessly with:
+
+### Reddit API (Primary - 49/50 stories)
+Direct access is working flawlessly with:
 - No rate limits
 - Rich media extraction
 - Comment data
 - No external dependencies
 
-Recommend focusing on Reddit content until Twitter/X provides better API access.
+### Twitter API v2 (Secondary - 1/50 stories)
+Configured to minimize rate limit issues:
+- Only runs on every 50th story
+- Falls back to Reddit if API fails
+- Uses simple search queries
+- Minimal API calls (10 tweets max)
+
+This balance ensures continuous content generation while occasionally attempting Twitter content.
