@@ -180,7 +180,6 @@ export function createQuickRedditPipeline(subreddit: string) {
     .add(
       RedditSource(subreddit, {
         sort: 'top',
-        time: 'day',
         limit: 5,
         minScore: 1000,
       })
