@@ -25,49 +25,61 @@ async function testSentimentToGif() {
   // Test content samples
   const testSections = [
     {
-      content: "The drama started when someone innocently asked about pineapple on pizza...",
+      content:
+        'The drama started when someone innocently asked about pineapple on pizza...',
       context: {
         category: 'food-drama',
         sectionType: 'describe-1',
         sectionIndex: 0,
         totalSections: 5,
-        contentQuality: 'premium'
-      }
+        contentQuality: 'premium',
+      },
     },
     {
-      content: "Things quickly escalated as the replies turned into an absolute battlefield of culinary opinions!",
+      content:
+        'Things quickly escalated as the replies turned into an absolute battlefield of culinary opinions!',
       context: {
         category: 'food-drama',
         sectionType: 'describe-2',
         sectionIndex: 2,
         totalSections: 5,
-        contentQuality: 'premium'
-      }
+        contentQuality: 'premium',
+      },
     },
     {
-      content: "The chaos reached peak levels when Gordon Ramsay himself joined the conversation with a scathing hot take!",
+      content:
+        'The chaos reached peak levels when Gordon Ramsay himself joined the conversation with a scathing hot take!',
       context: {
         category: 'food-drama',
         sectionType: 'quotes',
         sectionIndex: 3,
         totalSections: 5,
-        contentQuality: 'premium'
-      }
-    }
+        contentQuality: 'premium',
+      },
+    },
   ];
 
   for (const section of testSections) {
-    console.log(`\n📝 Testing Section: "${section.content.substring(0, 50)}..."`);
-    console.log(`Context: ${section.context.sectionType} (${section.context.sectionIndex + 1}/${section.context.totalSections})`);
+    console.log(
+      `\n📝 Testing Section: "${section.content.substring(0, 50)}..."`
+    );
+    console.log(
+      `Context: ${section.context.sectionType} (${section.context.sectionIndex + 1}/${section.context.totalSections})`
+    );
 
     // Step 1: Analyze sentiment
-    const emotionalAnalysis = sentimentAnalyzer.analyzeSection(section.content, section.context);
+    const emotionalAnalysis = sentimentAnalyzer.analyzeSection(
+      section.content,
+      section.context
+    );
     console.log(`\n🎭 Emotional Analysis:`);
     console.log(`- Emotion: ${emotionalAnalysis.emotion}`);
     console.log(`- Intensity: ${emotionalAnalysis.intensity.toFixed(2)}`);
     console.log(`- Confidence: ${emotionalAnalysis.confidence.toFixed(2)}`);
     console.log(`- Context: ${emotionalAnalysis.context}`);
-    console.log(`- Search Terms: ${emotionalAnalysis.giffSearchTerms.join(', ')}`);
+    console.log(
+      `- Search Terms: ${emotionalAnalysis.giffSearchTerms.join(', ')}`
+    );
 
     // Step 2: Search for GIF
     console.log(`\n🔍 Searching for reaction GIF...`);
@@ -76,7 +88,7 @@ async function testSentimentToGif() {
       searchTerms: emotionalAnalysis.giffSearchTerms,
       context: emotionalAnalysis.context,
       intensity: emotionalAnalysis.intensity,
-      safeSearch: true
+      safeSearch: true,
     });
 
     if (gifResult) {
@@ -92,7 +104,7 @@ async function testSentimentToGif() {
     }
 
     console.log('\n' + '='.repeat(80));
-    
+
     // Rate limiting delay
     await new Promise(resolve => setTimeout(resolve, 1500));
   }

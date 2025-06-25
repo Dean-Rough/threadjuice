@@ -38,10 +38,7 @@ async function forceDelete() {
   // Delete each post individually
   let deleted = 0;
   for (const post of posts) {
-    const { error } = await supabase
-      .from('posts')
-      .delete()
-      .eq('id', post.id);
+    const { error } = await supabase.from('posts').delete().eq('id', post.id);
 
     if (error) {
       console.error(`Failed to delete "${post.title}":`, error.message);
@@ -51,12 +48,12 @@ async function forceDelete() {
     }
   }
 
-  console.log(`\n📊 Successfully deleted ${deleted} out of ${posts.length} posts`);
-  
+  console.log(
+    `\n📊 Successfully deleted ${deleted} out of ${posts.length} posts`
+  );
+
   // Verify deletion
-  const { data: remaining } = await supabase
-    .from('posts')
-    .select('id');
+  const { data: remaining } = await supabase.from('posts').select('id');
 
   console.log(`📊 Remaining posts: ${remaining?.length || 0}`);
 }

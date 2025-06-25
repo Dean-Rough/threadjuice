@@ -1,12 +1,16 @@
 /**
  * Generation Stage
- * 
+ *
  * Uses OpenAI to generate story content from source material.
  * Transforms raw Reddit posts and AI prompts into engaging narratives.
  */
 
 import { BasePipelineStage } from '../core/PipelineStage';
-import { PipelineContext, RedditStoryContext, AIStoryContext } from '../core/PipelineContext';
+import {
+  PipelineContext,
+  RedditStoryContext,
+  AIStoryContext,
+} from '../core/PipelineContext';
 import { openAIAdapter } from '../integrations';
 import { redditAdapter } from '../integrations';
 
@@ -53,24 +57,28 @@ export class GenerationStage extends BasePipelineStage {
 
       return context;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`Story generation failed: ${errorMessage}`);
       throw error;
     }
   }
 
-  private async generateRedditStory(context: RedditStoryContext): Promise<void> {
+  private async generateRedditStory(
+    context: RedditStoryContext
+  ): Promise<void> {
     // Fetch comments if needed
     let comments: any[] = [];
-    
+
     if (this.options.fetchComments && this.options.includeComments) {
       try {
         const redditComments = await this.timeOperation(
           'Fetch Reddit comments',
-          () => redditAdapter.fetchComments(context.source.rawData.redditId, {
-            sort: 'top',
-            limit: 50,
-          })
+          () =>
+            redditAdapter.fetchComments(context.source.rawData.redditId, {
+              sort: 'top',
+              limit: 50,
+            })
         );
         comments = redditComments;
         this.log(`Fetched ${comments.length} comments`);
@@ -82,12 +90,13 @@ export class GenerationStage extends BasePipelineStage {
     // Generate story using OpenAI
     const generatedStory = await this.timeOperation(
       'Generate Reddit story',
-      () => openAIAdapter.generateRedditStory(context, comments, {
-        personaId: this.options.personaId,
-        temperature: this.options.temperature,
-        maxTokens: this.options.maxTokens,
-        includeComments: this.options.includeComments,
-      })
+      () =>
+        openAIAdapter.generateRedditStory(context, comments, {
+          personaId: this.options.personaId,
+          temperature: this.options.temperature,
+          maxTokens: this.options.maxTokens,
+          includeComments: this.options.includeComments,
+        })
     );
 
     // Store generated content in context
@@ -96,9 +105,8 @@ export class GenerationStage extends BasePipelineStage {
 
   private async generateAIStory(context: AIStoryContext): Promise<void> {
     // Generate story from AI prompt
-    const generatedStory = await this.timeOperation(
-      'Generate AI story',
-      () => openAIAdapter.generateAIStory(context, {
+    const generatedStory = await this.timeOperation('Generate AI story', () =>
+      openAIAdapter.generateAIStory(context, {
         personaId: this.options.personaId,
         temperature: this.options.temperature || 0.8, // Higher creativity for AI stories
         maxTokens: this.options.maxTokens || 3000,
@@ -112,12 +120,14 @@ export class GenerationStage extends BasePipelineStage {
   private async generateTwitterStory(context: PipelineContext): Promise<void> {
     // For Twitter, we already have thread content, so we need to enhance it
     const twitterData = context.source.rawData;
-    
+
     // Create a mock Reddit post for the adapter
     const mockPost = {
       redditId: twitterData.id,
       title: twitterData.title,
-      content: twitterData.thread ? twitterData.thread.join('\n\n') : twitterData.content,
+      content: twitterData.thread
+        ? twitterData.thread.join('\n\n')
+        : twitterData.content,
       author: twitterData.author,
       score: twitterData.metrics?.likes || 0,
       commentCount: twitterData.metrics?.replies || 0,
@@ -133,23 +143,27 @@ export class GenerationStage extends BasePipelineStage {
 
     // Create a temporary Reddit context
     const tempContext = new RedditStoryContext(mockPost);
-    
+
     // Generate story
     const generatedStory = await this.timeOperation(
       'Generate Twitter story',
-      () => openAIAdapter.generateRedditStory(tempContext, [], {
-        personaId: this.options.personaId,
-        temperature: this.options.temperature,
-        maxTokens: this.options.maxTokens,
-        includeComments: false, // Twitter quotes handled differently
-      })
+      () =>
+        openAIAdapter.generateRedditStory(tempContext, [], {
+          personaId: this.options.personaId,
+          temperature: this.options.temperature,
+          maxTokens: this.options.maxTokens,
+          includeComments: false, // Twitter quotes handled differently
+        })
     );
 
     // Store generated content
     this.storeGeneratedContent(context, generatedStory);
   }
 
-  private storeGeneratedContent(context: PipelineContext, generatedStory: any): void {
+  private storeGeneratedContent(
+    context: PipelineContext,
+    generatedStory: any
+  ): void {
     // Store the generated content in the context
     context.source.rawData = {
       ...context.source.rawData,
@@ -179,16 +193,38 @@ export class GenerationStage extends BasePipelineStage {
     // Add generated content to analysis for further processing
     context.analysis.keywords = this.extractKeywords(generatedStory.content);
 
-    this.log(`Generated story: ${generatedStory.metadata.wordCount} words with ${generatedStory.sections.length} sections`);
+    this.log(
+      `Generated story: ${generatedStory.metadata.wordCount} words with ${generatedStory.sections.length} sections`
+    );
   }
 
   private extractKeywords(content: string): string[] {
     // Simple keyword extraction
     const words = content.toLowerCase().split(/\s+/);
-    const commonWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'as', 'is', 'was', 'are', 'were']);
-    
+    const commonWords = new Set([
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
+      'of',
+      'with',
+      'by',
+      'as',
+      'is',
+      'was',
+      'are',
+      'were',
+    ]);
+
     const wordFreq = new Map<string, number>();
-    
+
     for (const word of words) {
       const clean = word.replace(/[^a-z0-9]/g, '');
       if (clean.length > 3 && !commonWords.has(clean)) {
@@ -222,7 +258,10 @@ export class GenerationStage extends BasePipelineStage {
 /**
  * Factory functions for common generation configurations
  */
-export const RedditGeneration = (personaId: string, options?: Partial<GenerationOptions>) =>
+export const RedditGeneration = (
+  personaId: string,
+  options?: Partial<GenerationOptions>
+) =>
   new GenerationStage({
     personaId,
     includeComments: true,
@@ -230,7 +269,10 @@ export const RedditGeneration = (personaId: string, options?: Partial<Generation
     ...options,
   });
 
-export const AIGeneration = (personaId: string, options?: Partial<GenerationOptions>) =>
+export const AIGeneration = (
+  personaId: string,
+  options?: Partial<GenerationOptions>
+) =>
   new GenerationStage({
     personaId,
     temperature: 0.8,
@@ -240,7 +282,10 @@ export const AIGeneration = (personaId: string, options?: Partial<GenerationOpti
     ...options,
   });
 
-export const TwitterGeneration = (personaId: string, options?: Partial<GenerationOptions>) =>
+export const TwitterGeneration = (
+  personaId: string,
+  options?: Partial<GenerationOptions>
+) =>
   new GenerationStage({
     personaId,
     includeComments: false,

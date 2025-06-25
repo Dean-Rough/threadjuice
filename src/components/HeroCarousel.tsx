@@ -51,7 +51,10 @@ export const HeroCarousel = React.memo(function HeroCarousel() {
   }, []);
 
   // Memoize current post and title processing - moved before conditional return
-  const currentPost = useMemo(() => featuredPosts[currentSlide], [featuredPosts, currentSlide]);
+  const currentPost = useMemo(
+    () => featuredPosts[currentSlide],
+    [featuredPosts, currentSlide]
+  );
 
   const truncatedTitle = useMemo(() => {
     if (!currentPost?.title) return '';
@@ -81,7 +84,10 @@ export const HeroCarousel = React.memo(function HeroCarousel() {
       {/* Background Image */}
       <div className='absolute inset-0'>
         <Image
-          src={currentPost?.imageUrl || currentPost?.image_url || '/assets/img/blog/blog01.jpg'}
+          src={
+            currentPost?.image_url ||
+            '/assets/img/blog/blog01.jpg'
+          }
           alt={currentPost?.title || 'Hero background'}
           fill
           className='object-cover transition-all duration-1000 ease-in-out'
@@ -104,9 +110,9 @@ export const HeroCarousel = React.memo(function HeroCarousel() {
             </div>
 
             {/* Main Title - Clickable */}
-            <Link 
+            <Link
               href={`/blog/${currentPost?.slug}`}
-              className='block mb-4 md:mb-6 transition-opacity hover:opacity-90 cursor-pointer'
+              className='mb-4 block cursor-pointer transition-opacity hover:opacity-90 md:mb-6'
             >
               <h1 className='text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl xl:text-6xl'>
                 {truncatedTitle}

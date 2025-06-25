@@ -328,8 +328,8 @@ export default function LandingPage() {
             Ready to Transform Your Content Diet?
           </h2>
           <p className='mx-auto mb-8 max-w-2xl text-xl text-orange-100'>
-            Join thousands of readers who&apos;ve upgraded from endless scrolling to
-            curated entertainment.
+            Join thousands of readers who&apos;ve upgraded from endless
+            scrolling to curated entertainment.
           </p>
           <Link
             href='/auth/sign-up'

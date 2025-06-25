@@ -1,4 +1,6 @@
-import { describe, it, expect } from '@jest/globals';
+/**
+ * @jest-environment jsdom
+ */
 
 describe('Simple Test Without MSW', () => {
   it('should work with basic jest-extended matchers', () => {

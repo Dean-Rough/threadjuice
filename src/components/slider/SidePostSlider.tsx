@@ -53,9 +53,9 @@ export default function SidePostSlider() {
         }}
         className='sidePost-active'
       >
-        {sidePostData.map((item) => (
+        {sidePostData.map(item => (
           <SwiperSlide key={item.id} className='sidePost__item'>
-            <div className='relative w-[300px] h-[200px] overflow-hidden rounded-lg'>
+            <div className='relative h-[200px] w-[300px] overflow-hidden rounded-lg'>
               <Image
                 src={item.image}
                 alt={item.title}
@@ -64,13 +64,14 @@ export default function SidePostSlider() {
               />
               <div className='absolute inset-0 bg-black/40' />
               <div className='sidePost__content absolute bottom-4 left-4 right-4 text-white'>
-                <Link href='/blog' className='tag inline-block px-2 py-1 bg-orange-500 text-xs rounded mb-2'>
+                <Link
+                  href='/blog'
+                  className='tag mb-2 inline-block rounded bg-orange-500 px-2 py-1 text-xs'
+                >
                   {item.category}
                 </Link>
                 <h5 className='title tgcommon__hover text-white hover:text-orange-400'>
-                  <Link href={`/blog/${item.id}`}>
-                    {item.title}
-                  </Link>
+                  <Link href={`/blog/${item.id}`}>{item.title}</Link>
                 </h5>
               </div>
             </div>

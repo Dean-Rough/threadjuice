@@ -42,7 +42,7 @@ const envSchema = z.object({
   UNSPLASH_ACCESS_KEY: z.string().optional(),
   PEXELS_API_KEY: z.string().optional(),
   WIKIMEDIA_USER_AGENT: z.string().default('ThreadJuice/1.0'),
-  
+
   // Twitter API (Optional)
   TWITTER_BEARER_TOKEN: z.string().optional(),
   TWITTER_API_KEY: z.string().optional(),
@@ -78,23 +78,28 @@ const envSchema = z.object({
  */
 function validateEnv() {
   // Check if we're in test environment and provide mock values
-  const isTestEnvironment = 
-    process.env.NODE_ENV === 'test' || 
+  const isTestEnvironment =
+    process.env.NODE_ENV === 'test' ||
     process.env.PLAYWRIGHT_TEST_BASE_URL ||
     process.env.CI === 'true' ||
     process.env.npm_lifecycle_event?.includes('test') ||
     typeof process.env.JEST_WORKER_ID !== 'undefined';
-  
+
   if (isTestEnvironment) {
     // Provide mock configuration for test environment
     const testEnv = {
       ...process.env,
       NODE_ENV: 'test',
-      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4242',
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_anon_key',
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock_service_key',
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_mock',
+      NEXT_PUBLIC_APP_URL:
+        process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4242',
+      NEXT_PUBLIC_SUPABASE_URL:
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY:
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_anon_key',
+      SUPABASE_SERVICE_ROLE_KEY:
+        process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock_service_key',
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_mock',
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || 'sk_test_mock',
       OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'sk-mock_test_key',
       RATE_LIMIT_ENABLED: 'false',
@@ -102,11 +107,13 @@ function validateEnv() {
       REDDIT_USER_AGENT: 'ThreadJuice-Test/1.0',
       WIKIMEDIA_USER_AGENT: 'ThreadJuice-Test/1.0',
     };
-    
+
     try {
       return envSchema.parse(testEnv);
     } catch (error) {
-      console.warn('⚠️ Test environment validation failed, using safe defaults');
+      console.warn(
+        '⚠️ Test environment validation failed, using safe defaults'
+      );
       return testEnv as any; // Fallback for tests
     }
   }

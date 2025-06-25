@@ -62,7 +62,7 @@ export class JobQueue {
     } = {}
   ): string {
     const jobId = options.id || this.generateJobId();
-    
+
     const job: JobData = {
       id: jobId,
       type,
@@ -75,7 +75,7 @@ export class JobQueue {
 
     this.jobs.set(jobId, job);
     // console.log(`📥 Job added: ${jobId} (${type})`);
-    
+
     return jobId;
   }
 
@@ -130,7 +130,8 @@ export class JobQueue {
   /**
    * Remove completed or failed jobs older than specified time
    */
-  cleanup(maxAge: number = 24 * 60 * 60 * 1000): number { // 24 hours default
+  cleanup(maxAge: number = 24 * 60 * 60 * 1000): number {
+    // 24 hours default
     let removed = 0;
     const cutoff = new Date(Date.now() - maxAge);
 
@@ -196,9 +197,12 @@ export class JobQueue {
     }, 1000); // Check every second
 
     // Cleanup old jobs every hour
-    setInterval(() => {
-      this.cleanup();
-    }, 60 * 60 * 1000);
+    setInterval(
+      () => {
+        this.cleanup();
+      },
+      60 * 60 * 1000
+    );
   }
 
   /**
@@ -211,7 +215,9 @@ export class JobQueue {
 
     // Get pending jobs sorted by priority and creation time
     const pendingJobs = Array.from(this.jobs.values())
-      .filter(job => !job.completedAt && !job.failedAt && !this.processing.has(job.id))
+      .filter(
+        job => !job.completedAt && !job.failedAt && !this.processing.has(job.id)
+      )
       .sort((a, b) => {
         // First by priority (higher first)
         if (a.priority !== b.priority) {
@@ -221,7 +227,10 @@ export class JobQueue {
         return a.createdAt.getTime() - b.createdAt.getTime();
       });
 
-    const jobsToProcess = pendingJobs.slice(0, this.concurrency - this.processing.size);
+    const jobsToProcess = pendingJobs.slice(
+      0,
+      this.concurrency - this.processing.size
+    );
 
     for (const job of jobsToProcess) {
       this.processJob(job);
@@ -246,20 +255,22 @@ export class JobQueue {
 
     try {
       const result = await handler(job);
-      
+
       job.completedAt = new Date();
       // console.log(`✅ Job completed: ${job.id} (${job.type})`);
-      
     } catch (error) {
       console.error(`❌ Job failed: ${job.id} (${job.type})`, error);
-      
+
       job.retryCount++;
-      
+
       if (job.retryCount <= job.maxRetries) {
         // console.log(`🔄 Retrying job: ${job.id} (attempt ${job.retryCount}/${job.maxRetries})`);
         // Job will be retried in next processing cycle
       } else {
-        this.failJob(job, error instanceof Error ? error.message : String(error));
+        this.failJob(
+          job,
+          error instanceof Error ? error.message : String(error)
+        );
       }
     } finally {
       this.processing.delete(job.id);

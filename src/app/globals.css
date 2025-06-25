@@ -242,31 +242,43 @@
 /* Jaunty cut-out styling for tweets and comments */
 .jaunty-cutout {
   transform: rotate(-2deg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .jaunty-cutout:hover {
   transform: rotate(-1deg) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .jaunty-cutout-left {
   transform: rotate(1.5deg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .jaunty-cutout-left:hover {
   transform: rotate(0.5deg) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Enhanced content styling for premium quality stories */
 .enhanced-content {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.02) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.05) 0%,
+    rgba(34, 197, 94, 0.02) 100%
+  );
   border-left: 4px solid #22c55e;
   padding-left: 1.5rem;
   position: relative;
@@ -314,7 +326,8 @@
 
 /* Subtle bounce animation for juicebox character */
 @keyframes bounce-subtle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -373,7 +386,8 @@
 
 /* Subtle float animation for Terry's icon */
 @keyframes terry-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -387,7 +401,8 @@
 
 /* Subtle jiggle animation for speech bubble */
 @keyframes terry-jiggle {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0px) rotate(0deg);
   }
   25% {

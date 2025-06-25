@@ -1,6 +1,6 @@
 /**
  * Reddit API Adapter for Pipeline Integration
- * 
+ *
  * Bridges the existing RedditScraper with the pipeline architecture.
  * Handles authentication, rate limiting, and error recovery.
  */
@@ -39,7 +39,9 @@ export class RedditAdapter {
   /**
    * Fetch posts with automatic retry and error handling
    */
-  async fetchPosts(options: RedditFetchOptions): Promise<ProcessedRedditPost[]> {
+  async fetchPosts(
+    options: RedditFetchOptions
+  ): Promise<ProcessedRedditPost[]> {
     await this.ensureAuth();
 
     try {
@@ -51,11 +53,13 @@ export class RedditAdapter {
         minScore: options.minScore || 0,
       });
 
-      console.log(`🔍 Reddit: Fetched ${posts.length} posts from r/${options.subreddit}`);
+      console.log(
+        `🔍 Reddit: Fetched ${posts.length} posts from r/${options.subreddit}`
+      );
       return posts;
     } catch (error) {
       console.error('❌ Reddit fetch failed:', error);
-      
+
       // Reset auth on 401
       if (error instanceof Error && error.message.includes('401')) {
         this.authenticated = false;
@@ -72,8 +76,12 @@ export class RedditAdapter {
    * Fetch comments for a post
    */
   async fetchComments(
-    postId: string, 
-    options: { sort?: 'top' | 'best' | 'new'; limit?: number; depth?: number } = {}
+    postId: string,
+    options: {
+      sort?: 'top' | 'best' | 'new';
+      limit?: number;
+      depth?: number;
+    } = {}
   ): Promise<ProcessedRedditComment[]> {
     await this.ensureAuth();
 
@@ -85,7 +93,9 @@ export class RedditAdapter {
         depth: options.depth || 5,
       });
 
-      console.log(`💬 Reddit: Fetched ${comments.length} comments for post ${postId}`);
+      console.log(
+        `💬 Reddit: Fetched ${comments.length} comments for post ${postId}`
+      );
       return comments;
     } catch (error) {
       console.error('❌ Reddit comment fetch failed:', error);
@@ -98,14 +108,16 @@ export class RedditAdapter {
    * Search posts across Reddit
    */
   async searchPosts(
-    query: string, 
+    query: string,
     options: Partial<RedditFetchOptions> = {}
   ): Promise<ProcessedRedditPost[]> {
     await this.ensureAuth();
 
     try {
       const posts = await this.scraper.searchPosts(query, options);
-      console.log(`🔍 Reddit: Search found ${posts.length} posts for "${query}"`);
+      console.log(
+        `🔍 Reddit: Search found ${posts.length} posts for "${query}"`
+      );
       return posts;
     } catch (error) {
       console.error('❌ Reddit search failed:', error);
@@ -160,8 +172,9 @@ export class RedditAdapter {
       if (post.videoUrl) score += 5;
 
       // Recency bonus (posts from last 24 hours)
-      const hoursOld = (Date.now() - post.createdAt.getTime()) / (1000 * 60 * 60);
-      if (hoursOld < 24) score += 10 - (hoursOld / 2.4);
+      const hoursOld =
+        (Date.now() - post.createdAt.getTime()) / (1000 * 60 * 60);
+      if (hoursOld < 24) score += 10 - hoursOld / 2.4;
 
       // Flair bonus (indicates quality content)
       if (post.flairText) score += 2;
@@ -171,10 +184,12 @@ export class RedditAdapter {
 
     // Sort by score and return the best
     scoredPosts.sort((a, b) => b.score - a.score);
-    
+
     const selected = scoredPosts[0].post;
-    console.log(`🏆 Selected post: "${selected.title}" (score: ${selected.score}, comments: ${selected.commentCount})`);
-    
+    console.log(
+      `🏆 Selected post: "${selected.title}" (score: ${selected.score}, comments: ${selected.commentCount})`
+    );
+
     return selected;
   }
 
@@ -182,7 +197,7 @@ export class RedditAdapter {
    * Batch fetch posts from multiple subreddits
    */
   async fetchFromMultipleSubreddits(
-    subreddits: string[], 
+    subreddits: string[],
     options: Partial<RedditFetchOptions> = {}
   ): Promise<ProcessedRedditPost[]> {
     const allPosts: ProcessedRedditPost[] = [];
@@ -191,7 +206,7 @@ export class RedditAdapter {
       try {
         const posts = await this.fetchPosts({ ...options, subreddit });
         allPosts.push(...posts);
-        
+
         // Rate limit between subreddit fetches
         if (subreddits.indexOf(subreddit) < subreddits.length - 1) {
           await this.delay(1000);

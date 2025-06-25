@@ -30,21 +30,21 @@ loadEnvVars();
 async function clearPosts() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  
+
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('❌ Missing Supabase credentials');
     return;
   }
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
-  
+
   console.log('🗑️  Clearing all posts from database...');
-  
+
   const { error, count } = await supabase
     .from('posts')
     .delete()
     .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all (using impossible ID)
-  
+
   if (error) {
     console.error('❌ Error clearing posts:', error.message);
   } else {

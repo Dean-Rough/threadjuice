@@ -9,7 +9,7 @@ export class RedditScraper {
   constructor() {
     this.baseUrl = 'https://www.reddit.com';
     this.headers = {
-      'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)'
+      'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)',
     };
   }
 
@@ -21,24 +21,24 @@ export class RedditScraper {
       subreddit = null,
       sort = 'relevance',
       time = 'week',
-      limit = 10
+      limit = 10,
     } = options;
 
     try {
-      const searchUrl = subreddit 
+      const searchUrl = subreddit
         ? `${this.baseUrl}/r/${subreddit}/search.json`
         : `${this.baseUrl}/search.json`;
-      
+
       const params = new URLSearchParams({
         q: query,
         sort: sort,
         t: time,
         limit: limit,
-        restrict_sr: subreddit ? 'true' : 'false'
+        restrict_sr: subreddit ? 'true' : 'false',
       });
 
       const response = await fetch(`${searchUrl}?${params}`, {
-        headers: this.headers
+        headers: this.headers,
       });
 
       if (!response.ok) {
@@ -67,7 +67,7 @@ export class RedditScraper {
       // Fetch post and comments
       const jsonUrl = `${postUrl}.json?limit=${limit}&sort=top`;
       const response = await fetch(jsonUrl, {
-        headers: this.headers
+        headers: this.headers,
       });
 
       if (!response.ok) {
@@ -75,7 +75,7 @@ export class RedditScraper {
       }
 
       const data = await response.json();
-      
+
       // First item is post, second is comments
       if (data.length < 2) {
         return [];
@@ -94,24 +94,26 @@ export class RedditScraper {
    */
   async getTrendingPosts(category = 'all', options = {}) {
     const categoryToSubreddits = {
-      'technology': ['technology', 'programming', 'gadgets'],
-      'relationships': ['relationship_advice', 'AmItheAsshole', 'relationships'],
-      'workplace': ['antiwork', 'WorkReform', 'jobs'],
-      'food': ['food', 'cooking', 'MealPrepSunday'],
-      'sports': ['sports', 'nba', 'soccer'],
-      'entertainment': ['movies', 'television', 'music'],
-      'gaming': ['gaming', 'pcgaming', 'PS5'],
-      'all': ['AskReddit', 'todayilearned', 'mildlyinteresting']
+      technology: ['technology', 'programming', 'gadgets'],
+      relationships: ['relationship_advice', 'AmItheAsshole', 'relationships'],
+      workplace: ['antiwork', 'WorkReform', 'jobs'],
+      food: ['food', 'cooking', 'MealPrepSunday'],
+      sports: ['sports', 'nba', 'soccer'],
+      entertainment: ['movies', 'television', 'music'],
+      gaming: ['gaming', 'pcgaming', 'PS5'],
+      all: ['AskReddit', 'todayilearned', 'mildlyinteresting'],
     };
 
-    const subreddits = categoryToSubreddits[category] || categoryToSubreddits['all'];
+    const subreddits =
+      categoryToSubreddits[category] || categoryToSubreddits['all'];
     const allPosts = [];
 
-    for (const subreddit of subreddits.slice(0, 2)) { // Limit to avoid rate limiting
+    for (const subreddit of subreddits.slice(0, 2)) {
+      // Limit to avoid rate limiting
       try {
         const url = `${this.baseUrl}/r/${subreddit}/hot.json?limit=5`;
         const response = await fetch(url, {
-          headers: this.headers
+          headers: this.headers,
         });
 
         if (response.ok) {
@@ -153,7 +155,7 @@ export class RedditScraper {
           thumbnail: post.thumbnail !== 'self' ? post.thumbnail : null,
           isVideo: post.is_video,
           media: post.media,
-          preview: post.preview
+          preview: post.preview,
         };
       });
   }
@@ -165,7 +167,7 @@ export class RedditScraper {
     if (!commentsData?.data?.children) return [];
 
     const comments = [];
-    
+
     const parseCommentTree = (children, depth = 0) => {
       if (depth > 2) return; // Limit depth to avoid huge trees
 
@@ -181,7 +183,7 @@ export class RedditScraper {
             edited: comment.edited,
             awards: comment.all_awardings?.length || 0,
             isOP: comment.is_submitter,
-            depth: depth
+            depth: depth,
           });
 
           // Parse replies if they exist
@@ -193,11 +195,9 @@ export class RedditScraper {
     };
 
     parseCommentTree(commentsData.data.children);
-    
+
     // Sort by score and return top comments
-    return comments
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
+    return comments.sort((a, b) => b.score - a.score).slice(0, 10);
   }
 
   /**
@@ -217,7 +217,7 @@ export class RedditScraper {
       const posts = await this.searchPosts(query, {
         sort: 'relevance',
         time: 'month',
-        limit: 3
+        limit: 3,
       });
 
       if (posts.length === 0) {
@@ -232,7 +232,7 @@ export class RedditScraper {
       if (posts.length > 0) {
         const topPost = posts[0];
         const comments = await this.getPostComments(topPost.url, 20);
-        
+
         // Format comments for story
         return comments
           .filter(c => c.body.length > 20 && c.body.length < 500)
@@ -241,7 +241,7 @@ export class RedditScraper {
             author: c.author,
             upvotes: c.score,
             awards: c.awards,
-            isOP: c.isOP
+            isOP: c.isOP,
           }))
           .slice(0, 6);
       }

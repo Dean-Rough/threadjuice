@@ -48,7 +48,6 @@ export default function CommentModal({
 
   useEffect(() => {
     if (isOpen) {
-      loadComments();
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     } else {
@@ -59,27 +58,30 @@ export default function CommentModal({
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, postId, sortBy, loadComments]);
+  }, [isOpen]);
 
-  const sortComments = useCallback((comments: Comment[]): Comment[] => {
-    const sorted = [...comments];
+  const sortComments = useCallback(
+    (comments: Comment[]): Comment[] => {
+      const sorted = [...comments];
 
-    switch (sortBy) {
-      case 'newest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      case 'oldest':
-        return sorted.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      case 'popular':
-      default:
-        return sorted.sort((a, b) => b.likes - a.likes);
-    }
-  }, [sortBy]);
+      switch (sortBy) {
+        case 'newest':
+          return sorted.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case 'oldest':
+          return sorted.sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        case 'popular':
+        default:
+          return sorted.sort((a, b) => b.likes - a.likes);
+      }
+    },
+    [sortBy]
+  );
 
   const loadComments = useCallback(async () => {
     try {
@@ -87,10 +89,10 @@ export default function CommentModal({
       // TODO: Replace with actual API call
       // const response = await fetch(`/api/posts/${postId}/comments?sort=${sortBy}`);
       // const data = await response.json();
-      
+
       // eslint-disable-next-line no-unused-vars
       const _postId = postId; // Used in real API call
-      // eslint-disable-next-line no-unused-vars  
+      // eslint-disable-next-line no-unused-vars
       const _sortBy = sortBy; // Used in real API call
 
       // Mock data for now - replace with real API
@@ -142,6 +144,12 @@ export default function CommentModal({
       setLoading(false);
     }
   }, [postId, sortBy, sortComments]);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadComments();
+    }
+  }, [isOpen, postId, sortBy, loadComments]);
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -279,13 +287,13 @@ export default function CommentModal({
           {replyingTo === comment.id && (
             <div className='mt-4 border-t pt-4'>
               <form
-                onSubmit={e => {
+                onSubmit={(e) => {
                   e.preventDefault(); /* handleSubmitReply(comment.id) */
                 }}
               >
                 <textarea
                   value={replyText}
-                  onChange={e => setReplyText(e.target.value)}
+                  onChange={(e) => setReplyText(e.target.value)}
                   placeholder={`Reply to ${comment.author}...`}
                   rows={3}
                   className='w-full resize-none rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary'
@@ -347,7 +355,7 @@ export default function CommentModal({
           <div className='flex items-center space-x-4'>
             <select
               value={sortBy}
-              onChange={e => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'popular')}
               className='rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary'
             >
               <option value='popular'>Most Upvoted</option>
@@ -377,7 +385,7 @@ export default function CommentModal({
                   <div className='flex-1'>
                     <textarea
                       value={newComment}
-                      onChange={e => setNewComment(e.target.value)}
+                      onChange={(e) => setNewComment(e.target.value)}
                       placeholder='Join the conversation...'
                       rows={3}
                       className='w-full resize-none rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary'

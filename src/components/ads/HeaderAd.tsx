@@ -11,7 +11,9 @@ export default function HeaderAd({ className = '' }: HeaderAdProps) {
     <div className={`header-ad mx-auto mb-6 w-full max-w-4xl ${className}`}>
       <div className='flex justify-center'>
         <AdSenseUnit
-          adSlot={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_HEADER_SLOT || '1234567890'}
+          adSlot={
+            process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_HEADER_SLOT || '1234567890'
+          }
           adFormat='horizontal'
           responsive={true}
           lazy={false} // Header ads should load immediately for revenue

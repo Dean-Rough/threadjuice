@@ -1,12 +1,16 @@
 /**
  * Enrichment Stage
- * 
+ *
  * Enriches the story with images, GIFs, and metadata.
  * Uses analysis results to find contextually relevant media.
  */
 
 import { BasePipelineStage } from '../core/PipelineStage';
-import { PipelineContext, ImageResult, GifResult } from '../core/PipelineContext';
+import {
+  PipelineContext,
+  ImageResult,
+  GifResult,
+} from '../core/PipelineContext';
 import { pexelsAdapter, klipyAdapter } from '../integrations';
 
 export interface EnrichmentOptions {
@@ -55,7 +59,9 @@ export class EnrichmentStage extends BasePipelineStage {
     // Run enrichment tasks in parallel
     await Promise.all(tasks);
 
-    this.log(`Enrichment complete: ${context.enrichments.reactionGifs.length} GIFs, image: ${!!context.enrichments.primaryImage}`);
+    this.log(
+      `Enrichment complete: ${context.enrichments.reactionGifs.length} GIFs, image: ${!!context.enrichments.primaryImage}`
+    );
 
     return context;
   }
@@ -69,7 +75,10 @@ export class EnrichmentStage extends BasePipelineStage {
         .filter(link => link.type === 'image')
         .map(link => link.url);
 
-      if (sourceImages.length > 0 && this.options.imageStrategy !== 'fallback') {
+      if (
+        sourceImages.length > 0 &&
+        this.options.imageStrategy !== 'fallback'
+      ) {
         // Use the first source image
         context.enrichments.primaryImage = {
           url: sourceImages[0],
@@ -87,9 +96,8 @@ export class EnrichmentStage extends BasePipelineStage {
       const content = context.source.rawData.content || '';
       const category = context.source.metadata.subreddit || 'general';
 
-      const image = await this.timeOperation(
-        'Image search',
-        () => pexelsAdapter.findImage(title, content, category, {
+      const image = await this.timeOperation('Image search', () =>
+        pexelsAdapter.findImage(title, content, category, {
           strategy: this.options.imageStrategy || 'smart',
         })
       );
@@ -97,9 +105,9 @@ export class EnrichmentStage extends BasePipelineStage {
       if (image) {
         context.enrichments.primaryImage = image;
       }
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`Image enrichment failed: ${errorMessage}`);
       // Continue without image
     }
@@ -108,12 +116,14 @@ export class EnrichmentStage extends BasePipelineStage {
   private async enrichWithGifs(context: PipelineContext): Promise<void> {
     this.log('Finding reaction GIFs');
 
-    const sentiments = context.analysis.sentiment.slice(0, this.options.maxGifs);
+    const sentiments = context.analysis.sentiment.slice(
+      0,
+      this.options.maxGifs
+    );
 
     try {
-      const enhancedGifs = await this.timeOperation(
-        'GIF search',
-        () => klipyAdapter.findReactionGifs(sentiments, {
+      const enhancedGifs = await this.timeOperation('GIF search', () =>
+        klipyAdapter.findReactionGifs(sentiments, {
           maxGifs: this.options.maxGifs,
           safeSearch: true,
         })
@@ -132,13 +142,16 @@ export class EnrichmentStage extends BasePipelineStage {
 
       this.log(`Found ${enhancedGifs.length} reaction GIFs`);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`GIF enrichment failed: ${errorMessage}`);
       context.enrichments.reactionGifs = [];
     }
   }
 
-  private async enrichWithLinkMetadata(context: PipelineContext): Promise<void> {
+  private async enrichWithLinkMetadata(
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Fetching link metadata');
 
     // For now, we'll implement basic metadata structure
@@ -174,24 +187,27 @@ export class EnrichmentStage extends BasePipelineStage {
 /**
  * Factory functions for common enrichment configurations
  */
-export const FullEnrichment = () => new EnrichmentStage({
-  fetchImages: true,
-  fetchGifs: true,
-  fetchLinkMetadata: true,
-  imageStrategy: 'smart',
-  maxGifs: 3,
-});
+export const FullEnrichment = () =>
+  new EnrichmentStage({
+    fetchImages: true,
+    fetchGifs: true,
+    fetchLinkMetadata: true,
+    imageStrategy: 'smart',
+    maxGifs: 3,
+  });
 
-export const MinimalEnrichment = () => new EnrichmentStage({
-  fetchImages: true,
-  fetchGifs: false,
-  fetchLinkMetadata: false,
-  imageStrategy: 'basic',
-});
+export const MinimalEnrichment = () =>
+  new EnrichmentStage({
+    fetchImages: true,
+    fetchGifs: false,
+    fetchLinkMetadata: false,
+    imageStrategy: 'basic',
+  });
 
-export const GifOnlyEnrichment = () => new EnrichmentStage({
-  fetchImages: false,
-  fetchGifs: true,
-  fetchLinkMetadata: false,
-  maxGifs: 5,
-});
+export const GifOnlyEnrichment = () =>
+  new EnrichmentStage({
+    fetchImages: false,
+    fetchGifs: true,
+    fetchLinkMetadata: false,
+    maxGifs: 5,
+  });

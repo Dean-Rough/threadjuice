@@ -1,0 +1,142 @@
+{
+  "stories": [
+    {
+      "slug": "when-free-comes-at-a-price-the-couchsurfing-horror-story",
+      "title": "When 'Free' Comes at a Price: The Couchsurfing Horror Story",
+      "content": {
+        "sections": [
+          {
+            "type": "describe-1",
+            "content": "Originally posted by u/pancakecel on r/ChoosingBeggars, this tale of high-maintenance adventuring begins in the digital halls of the Couchsurfing app. While the app is typically a haven for generous souls seeking to offer a bed to wayward travelers, our protagonist stumbled upon a request that defied the norm."
+          },
+          {
+            "type": "describe-2",
+            "content": "Picture this: a woman, presumably earnest in her quest for free lodging, made the virtual rounds with a list of demands longer than a child's Christmas wish list. She wanted a private room with daily housekeeping, gourmet meals prepared fresh every day, personal tour guide services, and use of the host's car."
+          },
+          {
+            "type": "describe-3",
+            "content": "But here's where it gets absolutely wild - someone actually AGREED to all of this. The host spent three days cooking elaborate meals, driving her around the city, doing her laundry, and cleaning her room every morning like a personal servant."
+          },
+          {
+            "type": "describe-4",
+            "content": "On day four, this choosing beggar had the audacity to leave a ONE-STAR review. Her complaint? The free gourmet breakfast wasn't served early enough for her liking. She then demanded a full refund for her 'disappointing experience' despite paying absolutely nothing."
+          },
+          {
+            "type": "comments-1",
+            "metadata": {
+              "comments": [
+                {
+                  "content": "The audacity is unreal. I would have kicked her out on day one!",
+                  "author": "user123",
+                  "upvotes": 2451,
+                  "isOP": false
+                },
+                {
+                  "content": "This is why I stopped hosting on Couchsurfing. Too many entitled people ruining it for everyone.",
+                  "author": "formerhost99",
+                  "upvotes": 1832,
+                  "isOP": false
+                },
+                {
+                  "content": "Wait, she asked for a REFUND on FREE accommodation? My brain hurts.",
+                  "author": "confused_redditor",
+                  "upvotes": 3219,
+                  "isOP": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "category": "drama",
+      "sourceUrl": "https://reddit.com/r/ChoosingBeggars/comments/abc123/entitled_couchsurfer",
+      "sourceUsername": "u/pancakecel",
+      "upvoteCount": 24500,
+      "commentCount": 892,
+      "created_at": "2024-06-20T15:30:00Z",
+      "status": "published"
+    },
+    {
+      "slug": "billionaires-seek-meaning-in-employee-happiness",
+      "title": "Billionaires Seek Meaning... in Employee Happiness? You Won't Believe What Happens Next!",
+      "content": {
+        "sections": [
+          {
+            "type": "describe-1",
+            "content": "In a shocking turn of events, tech billionaires have discovered that money can't buy happiness. Their solution? Make their employees happier instead through increasingly absurd wellness initiatives."
+          },
+          {
+            "type": "describe-2",
+            "content": "One CEO installed meditation pods that cost more than most people's houses. Another hired 'happiness consultants' at $500/hour to teach employees how to smile. The irony was completely lost on them."
+          },
+          {
+            "type": "comments-1",
+            "metadata": {
+              "comments": [
+                {
+                  "content": "Maybe just pay us more instead of yoga classes?",
+                  "author": "underpaid_dev",
+                  "upvotes": 5621,
+                  "isOP": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "category": "workplace",
+      "sourceUrl": "https://reddit.com/r/antiwork/comments/xyz789/billionaire_wellness",
+      "sourceUsername": "u/corporatedrone",
+      "upvoteCount": 18200,
+      "commentCount": 445,
+      "created_at": "2024-06-19T10:15:00Z",
+      "status": "published"
+    },
+    {
+      "slug": "the-strawberry-incident",
+      "title": "How a Strawberry Became My Mortal Enemy and Sent Me to the ER",
+      "content": {
+        "sections": [
+          {
+            "type": "describe-1",
+            "content": "It started innocently enough. I was at a fancy restaurant for my anniversary, trying to impress my date. The dessert arrived - a beautiful strawberry tart that would soon become my nemesis."
+          },
+          {
+            "type": "describe-2",
+            "content": "Unknown to me, I had developed a severe strawberry allergy. One bite and my face swelled up like a balloon. My date thought I was doing a comedy bit until I started wheezing."
+          },
+          {
+            "type": "describe-3",
+            "content": "The paramedics arrived to find me looking like a tomato with googly eyes. My date documented the whole thing on Instagram. I'm now internet famous as 'Strawberry Balloon Guy'."
+          },
+          {
+            "type": "comments-1",
+            "metadata": {
+              "comments": [
+                {
+                  "content": "Did you at least get a second date?",
+                  "author": "hopeful_romantic",
+                  "upvotes": 892,
+                  "isOP": false
+                },
+                {
+                  "content": "OP: Actually yes! She said anyone who could laugh about becoming a human balloon was a keeper.",
+                  "author": "strawberry_victim",
+                  "upvotes": 2103,
+                  "isOP": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "category": "life",
+      "sourceUrl": "https://reddit.com/r/tifu/comments/def456/tifu_strawberry_allergy",
+      "sourceUsername": "u/strawberry_victim",
+      "upvoteCount": 12300,
+      "commentCount": 234,
+      "created_at": "2024-06-18T20:45:00Z",
+      "status": "published"
+    }
+  ]
+}

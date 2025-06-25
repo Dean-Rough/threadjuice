@@ -4,7 +4,11 @@
  */
 
 import '@testing-library/jest-dom';
+import 'jest-extended';
 import { configure } from '@testing-library/react';
+
+// Polyfill fetch for Node environment (needed for MSW)
+require('whatwg-fetch');
 
 // Configure testing library for better error messages
 configure({
@@ -68,13 +72,13 @@ jest.mock('@supabase/supabase-js', () => ({
 // Mock Clerk authentication
 jest.mock('@clerk/nextjs', () => ({
   auth: jest.fn(() => ({ userId: null })),
-  useAuth: jest.fn(() => ({ 
-    isSignedIn: false, 
+  useAuth: jest.fn(() => ({
+    isSignedIn: false,
     userId: null,
     signOut: jest.fn(),
   })),
-  useUser: jest.fn(() => ({ 
-    isSignedIn: false, 
+  useUser: jest.fn(() => ({
+    isSignedIn: false,
     user: null,
   })),
   SignInButton: ({ children }) => children,
@@ -105,47 +109,51 @@ jest.mock('@tanstack/react-query', () => ({
 }));
 
 // Mock window.matchMedia (for responsive design tests)
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// Only define window mocks if we're in a jsdom environment
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
 
-// Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  observe() {
-    return null;
-  }
-  disconnect() {
-    return null;
-  }
-  unobserve() {
-    return null;
-  }
-};
+// Mock IntersectionObserver and ResizeObserver (only in jsdom environment)
+if (typeof window !== 'undefined') {
+  global.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    observe() {
+      return null;
+    }
+    disconnect() {
+      return null;
+    }
+    unobserve() {
+      return null;
+    }
+  };
 
-// Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
-  constructor() {}
-  observe() {
-    return null;
-  }
-  disconnect() {
-    return null;
-  }
-  unobserve() {
-    return null;
-  }
-};
+  global.ResizeObserver = class ResizeObserver {
+    constructor() {}
+    observe() {
+      return null;
+    }
+    disconnect() {
+      return null;
+    }
+    unobserve() {
+      return null;
+    }
+  };
+}
 
 // Suppress console errors during tests (except for actual test failures)
 const originalError = console.error;
@@ -154,8 +162,12 @@ beforeAll(() => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
-       args[0].includes('Warning: The current testing environment is not configured to support act') ||
-       args[0].includes('act(...) is not supported in production builds of React'))
+        args[0].includes(
+          'Warning: The current testing environment is not configured to support act'
+        ) ||
+        args[0].includes(
+          'act(...) is not supported in production builds of React'
+        ))
     ) {
       return;
     }

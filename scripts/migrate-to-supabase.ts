@@ -21,19 +21,18 @@ async function migrateToSupabase() {
       persona: true,
     },
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
   });
 
   console.log(`Found ${localPosts.length} posts in local database\n`);
 
   // First ensure personas exist in Supabase
   const personas = await prisma.persona.findMany();
-  
+
   for (const persona of personas) {
-    const { error: personaError } = await supabase
-      .from('personas')
-      .upsert({
+    const { error: personaError } = await supabase.from('personas').upsert(
+      {
         id: persona.id,
         name: persona.name,
         slug: persona.slug,
@@ -42,12 +41,17 @@ async function migrateToSupabase() {
         avatar_url: persona.avatarUrl,
         story_count: persona.storyCount,
         rating: persona.rating,
-      }, {
-        onConflict: 'name'
-      });
+      },
+      {
+        onConflict: 'name',
+      }
+    );
 
     if (personaError) {
-      console.error(`Failed to upsert persona ${persona.name}:`, personaError.message);
+      console.error(
+        `Failed to upsert persona ${persona.name}:`,
+        personaError.message
+      );
     } else {
       console.log(`✅ Upserted persona: ${persona.name}`);
     }
@@ -75,9 +79,7 @@ async function migrateToSupabase() {
       persona_id: post.personaId,
     };
 
-    const { error } = await supabase
-      .from('posts')
-      .insert(supabasePost);
+    const { error } = await supabase.from('posts').insert(supabasePost);
 
     if (error) {
       console.error(`Failed to migrate "${post.title}":`, error.message);
@@ -87,8 +89,10 @@ async function migrateToSupabase() {
     }
   }
 
-  console.log(`\n📊 Successfully migrated ${migrated} out of ${localPosts.length} posts`);
-  
+  console.log(
+    `\n📊 Successfully migrated ${migrated} out of ${localPosts.length} posts`
+  );
+
   // Verify migration
   const { data: supabasePosts } = await supabase
     .from('posts')

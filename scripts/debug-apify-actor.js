@@ -28,13 +28,13 @@ loadEnvVars();
 
 async function inspectActor(actorId) {
   const client = new ApifyClient({ token: process.env.APIFY_API_TOKEN });
-  
+
   try {
     console.log(`🔍 Inspecting actor: ${actorId}`);
-    
+
     // Get actor details
     const actor = await client.actor(actorId).get();
-    
+
     console.log(`📋 Actor Details:`);
     console.log(`   Name: ${actor.name}`);
     console.log(`   Title: ${actor.title}`);
@@ -42,15 +42,19 @@ async function inspectActor(actorId) {
     console.log(`   Version: ${actor.defaultRunOptions?.build || 'latest'}`);
     console.log(`   Is Public: ${actor.isPublic}`);
     console.log(`   Is Free: ${!actor.paidUsage}`);
-    
+
     // Try to get input schema if available
     try {
-      const inputSchema = await client.actor(actorId).version('latest').inputSchema().get();
+      const inputSchema = await client
+        .actor(actorId)
+        .version('latest')
+        .inputSchema()
+        .get();
       console.log(`\n📝 Input Schema:`);
       console.log(JSON.stringify(inputSchema, null, 2));
     } catch (error) {
       console.log(`\n❌ Could not get input schema: ${error.message}`);
-      
+
       // Try to get a recent run's input as example
       try {
         const runs = await client.actor(actorId).runs().list({ limit: 1 });
@@ -63,7 +67,7 @@ async function inspectActor(actorId) {
         console.log(`❌ Could not get example input: ${e.message}`);
       }
     }
-    
+
     // Get recent runs to see what inputs work
     try {
       const runs = await client.actor(actorId).runs().list({ limit: 3 });
@@ -74,7 +78,6 @@ async function inspectActor(actorId) {
     } catch (error) {
       console.log(`\n❌ Could not get runs: ${error.message}`);
     }
-    
   } catch (error) {
     console.error(`❌ Error inspecting actor ${actorId}:`, error.message);
   }
@@ -82,16 +85,16 @@ async function inspectActor(actorId) {
 
 async function findTwitterScrapers() {
   const client = new ApifyClient({ token: process.env.APIFY_API_TOKEN });
-  
+
   try {
     console.log('\n🐦 Searching for Twitter scrapers...');
-    
-    const store = await client.actors().list({ 
+
+    const store = await client.actors().list({
       search: 'twitter scraper',
       limit: 10,
-      orderBy: 'relevance'
+      orderBy: 'relevance',
     });
-    
+
     console.log(`\n📦 Found ${store.count} Twitter-related actors:`);
     store.items.forEach((actor, i) => {
       const isFree = !actor.paidUsage;
@@ -99,7 +102,6 @@ async function findTwitterScrapers() {
       console.log(`   ${i + 1}. ${freeIcon} ${actor.name} - ${actor.title}`);
       console.log(`      ${actor.description?.slice(0, 80)}...`);
     });
-    
   } catch (error) {
     console.error('❌ Error searching actors:', error.message);
   }
@@ -108,11 +110,11 @@ async function findTwitterScrapers() {
 async function main() {
   console.log('🔍 APIFY ACTOR DEBUGGING');
   console.log('========================\n');
-  
+
   // Inspect specific actors
   await inspectActor('quacker/twitter-scraper');
   await inspectActor('trudax/reddit-scraper');
-  
+
   // Search for alternatives
   await findTwitterScrapers();
 }

@@ -72,8 +72,8 @@ function WelcomeStep({
           Welcome to ThreadJuice! 🧃
         </h1>
         <p className='mx-auto max-w-md text-lg text-gray-600'>
-          Hi {user?.firstName || 'there'}! Let&apos;s get you set up to discover the
-          best stories from Reddit, transformed by our AI writers.
+          Hi {user?.firstName || 'there'}! Let&apos;s get you set up to discover
+          the best stories from Reddit, transformed by our AI writers.
         </p>
       </div>
 

@@ -16,7 +16,8 @@ if (!process.env.NODE_ENV) {
 }
 process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-key';
 process.env.REDDIT_CLIENT_ID = process.env.REDDIT_CLIENT_ID || 'test-client';
-process.env.REDDIT_CLIENT_SECRET = process.env.REDDIT_CLIENT_SECRET || 'test-secret';
+process.env.REDDIT_CLIENT_SECRET =
+  process.env.REDDIT_CLIENT_SECRET || 'test-secret';
 process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:4242';
 process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = 'pk_test_dummy';
 process.env.CLERK_SECRET_KEY = 'sk_test_dummy';
@@ -39,7 +40,9 @@ const logger = {
     }
   },
   error: (stage: string, message: string, error: any) => {
-    console.error(`\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`);
+    console.error(
+      `\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`
+    );
     if (error) {
       console.error(error.message);
       if (error.stack) {
@@ -49,7 +52,7 @@ const logger = {
   },
   divider: () => {
     console.log('\n' + '='.repeat(80) + '\n');
-  }
+  },
 };
 
 async function ensureOutputDirectory() {
@@ -81,7 +84,7 @@ async function testIndividualComponents() {
     try {
       const { redditClient } = await import('../src/lib/redditClient');
       logger.info('REDDIT', 'Reddit client imported successfully');
-      
+
       // Test Reddit post fetching
       const mockPost = {
         id: 'test123',
@@ -93,9 +96,9 @@ async function testIndividualComponents() {
         num_comments: 567,
         created_utc: Date.now() / 1000,
         permalink: '/r/AmItheAsshole/comments/test123/',
-        upvote_ratio: 0.89
+        upvote_ratio: 0.89,
       };
-      
+
       await saveOutput('test-reddit-post.json', mockPost);
       logger.info('REDDIT', 'Mock Reddit post created');
     } catch (error) {
@@ -106,10 +109,11 @@ async function testIndividualComponents() {
     logger.info('TEST', 'Testing Sentiment Analyzer...');
     try {
       const { analyzeSentiment } = await import('../src/lib/sentimentAnalyzer');
-      
-      const testText = "This is absolutely amazing! I love how everything turned out.";
+
+      const testText =
+        'This is absolutely amazing! I love how everything turned out.';
       const sentiment = await analyzeSentiment(testText);
-      
+
       logger.info('SENTIMENT', 'Analysis result:', sentiment);
       await saveOutput('test-sentiment.json', { text: testText, sentiment });
     } catch (error) {
@@ -119,25 +123,33 @@ async function testIndividualComponents() {
     // Test 3: Content Transformer
     logger.info('TEST', 'Testing Content Transformer...');
     try {
-      const { transformToThreadJuiceFormat } = await import('../src/lib/contentTransformer');
-      
+      const { transformToThreadJuiceFormat } = await import(
+        '../src/lib/contentTransformer'
+      );
+
       const mockStoryData = {
-        title: "The Great Roommate Cooking Debacle",
-        content: "A hilarious story about cultural differences and kitchen disasters...",
-        author: "The Terry",
-        category: "roommates",
-        source: "reddit",
-        original_post_id: "test123",
-        sentiment: { score: 0.7, comparative: 0.5, positive: ['love', 'amazing'], negative: [] }
+        title: 'The Great Roommate Cooking Debacle',
+        content:
+          'A hilarious story about cultural differences and kitchen disasters...',
+        author: 'The Terry',
+        category: 'roommates',
+        source: 'reddit',
+        original_post_id: 'test123',
+        sentiment: {
+          score: 0.7,
+          comparative: 0.5,
+          positive: ['love', 'amazing'],
+          negative: [],
+        },
       };
-      
+
       const transformed = await transformToThreadJuiceFormat(mockStoryData);
       logger.info('TRANSFORM', 'Transformation result:', {
         id: transformed.id,
         slug: transformed.slug,
-        category: transformed.category
+        category: transformed.category,
       });
-      
+
       await saveOutput('test-transformed.json', transformed);
     } catch (error) {
       logger.error('TRANSFORM', 'Failed to test content transformer', error);
@@ -147,7 +159,7 @@ async function testIndividualComponents() {
     logger.info('TEST', 'Testing Image Service...');
     try {
       const { searchImages } = await import('../src/lib/imageService');
-      
+
       // Mock image search result
       const mockImages = [
         {
@@ -155,15 +167,15 @@ async function testIndividualComponents() {
           description: 'Kitchen cooking scene',
           urls: {
             regular: 'https://example.com/kitchen.jpg',
-            small: 'https://example.com/kitchen-small.jpg'
+            small: 'https://example.com/kitchen-small.jpg',
           },
           user: {
             name: 'Test Photographer',
-            username: 'testphoto'
-          }
-        }
+            username: 'testphoto',
+          },
+        },
       ];
-      
+
       logger.info('IMAGES', 'Mock image search result:', mockImages);
       await saveOutput('test-images.json', mockImages);
     } catch (error) {
@@ -172,7 +184,7 @@ async function testIndividualComponents() {
 
     // Test 5: Pipeline Flow Simulation
     logger.info('TEST', 'Simulating Pipeline Flow...');
-    
+
     const pipelineSimulation = {
       stage1_source: {
         type: 'reddit',
@@ -180,36 +192,39 @@ async function testIndividualComponents() {
           id: 'test123',
           title: 'AITA for telling my roommate their cooking smells terrible?',
           score: 1234,
-          comments: 567
-        }
+          comments: 567,
+        },
       },
       stage2_analysis: {
         sentiment: { score: -0.2, comparative: -0.05 },
         entities: ['roommate', 'cooking', 'apartment'],
-        keywords: ['cooking', 'smell', 'roommate', 'culturally insensitive']
+        keywords: ['cooking', 'smell', 'roommate', 'culturally insensitive'],
       },
       stage3_generation: {
         persona: 'the-terry',
         story: {
-          title: "When Your Roommate Turns the Kitchen Into a Chemical Weapons Lab",
-          introduction: "Right, so we've got ourselves a proper domestic nightmare here...",
+          title:
+            'When Your Roommate Turns the Kitchen Into a Chemical Weapons Lab',
+          introduction:
+            "Right, so we've got ourselves a proper domestic nightmare here...",
           sections: [
             {
-              heading: "The Nose Knows",
-              content: "Look, The Terry's all for culinary exploration, but when your flatmate's cooking experiments start violating the Geneva Convention..."
-            }
-          ]
-        }
+              heading: 'The Nose Knows',
+              content:
+                "Look, The Terry's all for culinary exploration, but when your flatmate's cooking experiments start violating the Geneva Convention...",
+            },
+          ],
+        },
       },
       stage4_enrichment: {
         images: ['kitchen-disaster.jpg', 'angry-roommate.jpg'],
-        gifs: ['disgusted-reaction.gif', 'cooking-fail.gif']
+        gifs: ['disgusted-reaction.gif', 'cooking-fail.gif'],
       },
       stage5_output: {
         format: 'threadjuice',
         saved: true,
-        id: 'story-12345'
-      }
+        id: 'story-12345',
+      },
     };
 
     await saveOutput('pipeline-simulation.json', pipelineSimulation);
@@ -225,10 +240,9 @@ async function testIndividualComponents() {
         'test-sentiment.json',
         'test-transformed.json',
         'test-images.json',
-        'pipeline-simulation.json'
-      ]
+        'pipeline-simulation.json',
+      ],
     });
-
   } catch (error) {
     logger.error('TEST', 'Component testing failed', error);
     process.exit(1);

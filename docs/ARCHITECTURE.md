@@ -56,18 +56,21 @@ See [PIPELINE.md](./PIPELINE.md) for detailed documentation.
 ### 2. Content Sources
 
 #### Reddit Integration
+
 - OAuth2 authentication
 - Rate-limited API calls
 - Subreddit monitoring
 - Comment extraction
 
 #### Twitter Integration
+
 - API v2 integration
 - Drama detection algorithms
 - Thread reconstruction
 - Media extraction
 
 #### AI Generation
+
 - OpenAI GPT-4 integration
 - Persona-based writing
 - Category-specific prompts
@@ -76,18 +79,21 @@ See [PIPELINE.md](./PIPELINE.md) for detailed documentation.
 ### 3. Content Analysis
 
 #### Entity Extraction
+
 - Product and brand detection
 - Company name recognition
 - Technology identification
 - Context-aware extraction
 
 #### Sentiment Analysis
+
 - Emotion detection for story sections
 - GIF reaction mapping
 - Reader emotion prediction
 - Intensity scoring
 
 #### Link Analysis
+
 - URL extraction and categorization
 - Media link identification
 - Metadata fetching
@@ -96,12 +102,14 @@ See [PIPELINE.md](./PIPELINE.md) for detailed documentation.
 ### 4. Media Services
 
 #### Image Selection
+
 - Intelligent routing (Wikipedia/Pexels)
 - Context-based search terms
 - Source media prioritization
 - Fallback strategies
 
 #### GIF Reactions
+
 - Emotion-based selection
 - Klipy API integration
 - Strategic placement
@@ -110,6 +118,7 @@ See [PIPELINE.md](./PIPELINE.md) for detailed documentation.
 ### 5. Frontend Architecture
 
 #### Component Structure
+
 ```
 components/
 ├── ui/              # Base UI components (shadcn/ui)
@@ -119,12 +128,14 @@ components/
 ```
 
 #### State Management
+
 - React Query for server state
 - React Context for UI state
 - Local storage for preferences
 - Optimistic updates
 
 #### Performance
+
 - React Server Components
 - Image optimization
 - Code splitting
@@ -137,25 +148,25 @@ components/
 ```
 1. Content Discovery
    └─> Reddit API / Twitter API / User Request
-   
+
 2. Source Acquisition
    └─> Fetch content, normalize format
-   
+
 3. Content Analysis
    ├─> Extract entities and keywords
    ├─> Analyze sentiment
    └─> Extract links and media
-   
+
 4. Media Enrichment
    ├─> Find relevant images
    ├─> Select reaction GIFs
    └─> Fetch link metadata
-   
+
 5. Story Transformation
    ├─> Build story sections
    ├─> Insert media
    └─> Add commentary
-   
+
 6. Output
    ├─> Save to database
    └─> Return for display
@@ -185,18 +196,21 @@ Client Request
 ### Core Tables
 
 #### posts
+
 - Story content and metadata
 - Engagement metrics
 - Publishing status
 - Category and tags
 
 #### personas
+
 - Writer personalities
 - Voice characteristics
 - Story count
 - Performance metrics
 
 #### media_assets
+
 - Image metadata
 - GIF information
 - Source attribution
@@ -207,18 +221,21 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Security Architecture
 
 ### API Security
+
 - JWT authentication
 - Rate limiting per endpoint
 - Input validation
 - CORS configuration
 
 ### Content Security
+
 - XSS prevention
 - Content sanitization
 - Safe HTML rendering
 - CSP headers
 
 ### Data Protection
+
 - Environment variable management
 - Secure API key storage
 - Database connection pooling
@@ -227,18 +244,21 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Performance Architecture
 
 ### Caching Strategy
+
 - Redis for API responses
 - Browser caching for assets
 - CDN for static content
 - Database query caching
 
 ### Optimization Techniques
+
 - Lazy loading for images
 - Code splitting by route
 - API response compression
 - Database indexing
 
 ### Monitoring
+
 - Performance metrics
 - Error tracking
 - API usage monitoring
@@ -247,6 +267,7 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Deployment Architecture
 
 ### Infrastructure
+
 ```
 ┌─────────────────┐
 │    Vercel       │  ← Frontend + API
@@ -262,11 +283,13 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ```
 
 ### Environment Management
+
 - Development: Local setup
 - Staging: Preview deployments
 - Production: Vercel deployment
 
 ### CI/CD Pipeline
+
 1. Code push to GitHub
 2. Automated tests run
 3. Preview deployment created
@@ -275,18 +298,21 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Scalability Considerations
 
 ### Horizontal Scaling
+
 - Stateless API design
 - Database connection pooling
 - Caching layer
 - CDN usage
 
 ### Performance Bottlenecks
+
 - API rate limits
 - Database queries
 - Image processing
 - External API calls
 
 ### Mitigation Strategies
+
 - Queue system for processing
 - Batch operations
 - Caching aggressive
@@ -295,6 +321,7 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Technology Stack
 
 ### Frontend
+
 - Next.js 15 (App Router)
 - TypeScript
 - Tailwind CSS
@@ -302,12 +329,14 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 - React Query
 
 ### Backend
+
 - Next.js API Routes
 - Prisma ORM
 - PostgreSQL (Supabase)
 - Redis caching
 
 ### External Services
+
 - Reddit API
 - Twitter API v2
 - OpenAI GPT-4
@@ -315,6 +344,7 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 - Klipy API
 
 ### Development Tools
+
 - ESLint + Prettier
 - Jest + React Testing Library
 - Playwright (E2E)
@@ -323,24 +353,28 @@ See [DB_SCHEMA.md](./DB_SCHEMA.md) for complete schema.
 ## Future Architecture Considerations
 
 ### Microservices Migration
+
 - Content processing service
 - Media handling service
 - Analytics service
 - Notification service
 
 ### Real-time Features
+
 - WebSocket integration
 - Live story updates
 - Comment streams
 - Engagement tracking
 
 ### AI Enhancements
+
 - Better content understanding
 - Automated categorization
 - Quality scoring
 - Trend prediction
 
 ### Scale Improvements
+
 - Message queue system
 - Worker processes
 - Database sharding

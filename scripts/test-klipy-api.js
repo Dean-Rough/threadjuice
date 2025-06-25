@@ -16,7 +16,8 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
-const API_KEY = process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY;
+const API_KEY =
+  process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY;
 const BASE_URL = 'https://api.klipy.co/api/v1';
 const CUSTOMER_ID = 'threadjuice-user-001';
 
@@ -30,7 +31,7 @@ async function testSearchAPI(searchTerm) {
     q: searchTerm,
     customer_id: CUSTOMER_ID,
     per_page: '5',
-    content_filter: 'medium'
+    content_filter: 'medium',
   });
 
   console.log(`\n🔍 Testing search for: "${searchTerm}"`);
@@ -40,12 +41,15 @@ async function testSearchAPI(searchTerm) {
     const response = await fetch(`${url}?${params.toString()}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     console.log(`Response Status: ${response.status} ${response.statusText}`);
-    console.log(`Response Headers:`, Object.fromEntries(response.headers.entries()));
+    console.log(
+      `Response Headers:`,
+      Object.fromEntries(response.headers.entries())
+    );
 
     const data = await response.json();
     console.log(`Response Body:`, JSON.stringify(data, null, 2));
@@ -56,7 +60,9 @@ async function testSearchAPI(searchTerm) {
         console.log(`${i + 1}. ${gif.title || 'Untitled'}`);
         console.log(`   ID: ${gif.id}`);
         console.log(`   URL: ${gif.file?.gif || gif.url || 'No URL'}`);
-        console.log(`   Size: ${gif.file?.width || '?'}x${gif.file?.height || '?'}`);
+        console.log(
+          `   Size: ${gif.file?.width || '?'}x${gif.file?.height || '?'}`
+        );
       });
     } else {
       console.log('❌ No GIFs found in response');
@@ -71,7 +77,7 @@ async function testTrendingAPI() {
   const url = `${BASE_URL}/${API_KEY}/gifs/trending`;
   const params = new URLSearchParams({
     customer_id: CUSTOMER_ID,
-    per_page: '5'
+    per_page: '5',
   });
 
   console.log(`\n📈 Testing trending GIFs`);
@@ -81,12 +87,12 @@ async function testTrendingAPI() {
     const response = await fetch(`${url}?${params.toString()}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     console.log(`Response Status: ${response.status} ${response.statusText}`);
-    
+
     const data = await response.json();
     console.log(`Response Body:`, JSON.stringify(data, null, 2));
 
@@ -113,7 +119,7 @@ async function runTests() {
     'mind blown',
     'this is fine',
     'drama',
-    'shocked'
+    'shocked',
   ];
 
   for (const term of searchTerms) {

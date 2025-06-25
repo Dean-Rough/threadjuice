@@ -66,7 +66,7 @@ export default function PopularSlider2() {
                     alt={item.title || 'Popular post image'}
                     width={300}
                     height={200}
-                    className="w-full h-auto object-cover"
+                    className='h-auto w-full object-cover'
                   />
                 </Link>
               </div>

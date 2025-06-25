@@ -1,11 +1,16 @@
 /**
  * Klipy GIF Adapter for Pipeline Integration
- * 
+ *
  * Bridges the existing KlipyService with the pipeline architecture.
  * Handles emotion-based GIF selection with caching and fallbacks.
  */
 
-import { giphyService, KlipyService, GifResult, GifSearchOptions } from '@/lib/klipyService';
+import {
+  giphyService,
+  KlipyService,
+  GifResult,
+  GifSearchOptions,
+} from '@/lib/klipyService';
 import { EmotionalAnalysis } from '@/lib/sentimentAnalyzer';
 
 export interface GifSelectionOptions {
@@ -49,7 +54,7 @@ export class KlipyAdapter {
     for (const [index, emotion] of sortedEmotions.entries()) {
       try {
         const gif = await this.findGifForEmotion(emotion, { safeSearch });
-        
+
         if (gif) {
           gifs.push({
             ...gif,
@@ -108,7 +113,7 @@ export class KlipyAdapter {
       return result;
     } catch (error) {
       console.error(`Klipy search failed for ${emotion.emotion}:`, error);
-      
+
       // Try fallback search with simpler terms
       return this.fallbackSearch(emotion, options);
     }
@@ -147,16 +152,16 @@ export class KlipyAdapter {
    */
   private generateFallbackTerms(emotion: string): string[] {
     const fallbackMap: Record<string, string[]> = {
-      'shocked': ['omg', 'surprised', 'wow', 'shock'],
-      'amused': ['funny', 'laugh', 'lol', 'hilarious'],
-      'outraged': ['angry', 'mad', 'furious', 'rage'],
-      'satisfied': ['happy', 'pleased', 'smile', 'yes'],
-      'awkward': ['cringe', 'uncomfortable', 'embarrassed'],
-      'confused': ['confused', 'what', 'huh', 'puzzled'],
-      'excited': ['excited', 'happy', 'celebration', 'party'],
-      'sad': ['sad', 'crying', 'tears', 'depressed'],
-      'disgusted': ['disgusted', 'gross', 'ew', 'yuck'],
-      'proud': ['proud', 'success', 'win', 'achievement'],
+      shocked: ['omg', 'surprised', 'wow', 'shock'],
+      amused: ['funny', 'laugh', 'lol', 'hilarious'],
+      outraged: ['angry', 'mad', 'furious', 'rage'],
+      satisfied: ['happy', 'pleased', 'smile', 'yes'],
+      awkward: ['cringe', 'uncomfortable', 'embarrassed'],
+      confused: ['confused', 'what', 'huh', 'puzzled'],
+      excited: ['excited', 'happy', 'celebration', 'party'],
+      sad: ['sad', 'crying', 'tears', 'depressed'],
+      disgusted: ['disgusted', 'gross', 'ew', 'yuck'],
+      proud: ['proud', 'success', 'win', 'achievement'],
     };
 
     return fallbackMap[emotion] || ['reaction', emotion];
@@ -165,7 +170,10 @@ export class KlipyAdapter {
   /**
    * Calculate relevance score for GIF selection
    */
-  private calculateRelevance(gif: GifResult, emotion: EmotionalAnalysis): number {
+  private calculateRelevance(
+    gif: GifResult,
+    emotion: EmotionalAnalysis
+  ): number {
     let score = 50; // Base score
 
     // Title relevance
@@ -238,16 +246,19 @@ export class KlipyAdapter {
   private addToCache(key: string, gif: GifResult): void {
     const existing = this.getCachedGifs(key);
     existing.push(gif);
-    
+
     // Keep only the last 5 results per emotion
     if (existing.length > 5) {
       existing.shift();
     }
-    
+
     this.emotionSearchCache.set(key, existing);
   }
 
-  private selectFromCache(cached: GifResult[], emotion: EmotionalAnalysis): GifResult {
+  private selectFromCache(
+    cached: GifResult[],
+    emotion: EmotionalAnalysis
+  ): GifResult {
     // Select based on relevance or random for variety
     if (Math.random() > 0.7) {
       // 30% chance of random selection for variety

@@ -215,17 +215,20 @@ export function getAllPersonaPrompts(): PersonaPrompt[] {
 /**
  * Generate content prompt for a specific persona
  */
-export function generateContentPrompt(personaId: string, redditData: {
-  title: string;
-  content: string;
-  comments: Array<{
-    author: string;
+export function generateContentPrompt(
+  personaId: string,
+  redditData: {
+    title: string;
     content: string;
+    comments: Array<{
+      author: string;
+      content: string;
+      score: number;
+    }>;
+    subreddit: string;
     score: number;
-  }>;
-  subreddit: string;
-  score: number;
-}): string {
+  }
+): string {
   const persona = getPersonaPrompt(personaId);
   if (!persona) {
     throw new Error(`Unknown persona: ${personaId}`);
@@ -234,7 +237,10 @@ export function generateContentPrompt(personaId: string, redditData: {
   const topComments = redditData.comments
     .sort((a, b) => b.score - a.score)
     .slice(0, 10)
-    .map(comment => `"${comment.content}" - u/${comment.author} (${comment.score} upvotes)`)
+    .map(
+      comment =>
+        `"${comment.content}" - u/${comment.author} (${comment.score} upvotes)`
+    )
     .join('\n');
 
   return `${persona.systemPrompt}

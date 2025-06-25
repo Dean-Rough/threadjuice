@@ -10,31 +10,32 @@ The main pipeline class that manages stage execution.
 
 ```typescript
 class Pipeline<TContext extends PipelineContext> {
-  constructor(options?: PipelineOptions)
-  
+  constructor(options?: PipelineOptions);
+
   // Add a stage to the pipeline
-  pipe(stage: PipelineStage<TContext>): this
-  
+  pipe(stage: PipelineStage<TContext>): this;
+
   // Execute the pipeline
-  execute(context: TContext): Promise<TContext>
-  
+  execute(context: TContext): Promise<TContext>;
+
   // Execute stages in parallel where possible
-  executeParallel(context: TContext): Promise<TContext>
-  
+  executeParallel(context: TContext): Promise<TContext>;
+
   // Create extended pipeline
-  extend(...stages: PipelineStage<TContext>[]): Pipeline<TContext>
-  
+  extend(...stages: PipelineStage<TContext>[]): Pipeline<TContext>;
+
   // Get pipeline metadata
-  getMetadata(): PipelineMetadata
+  getMetadata(): PipelineMetadata;
 }
 ```
 
 **Options:**
+
 ```typescript
 interface PipelineOptions {
-  parallel?: boolean;      // Enable parallel execution
-  throwOnError?: boolean;  // Stop on first error (default: true)
-  debug?: boolean;         // Enable debug logging
+  parallel?: boolean; // Enable parallel execution
+  throwOnError?: boolean; // Stop on first error (default: true)
+  debug?: boolean; // Enable debug logging
 }
 ```
 
@@ -46,16 +47,16 @@ Interface for all pipeline stages.
 interface PipelineStage<TContext> {
   name: string;
   description?: string;
-  
+
   // Main processing method
   process(context: TContext): Promise<TContext>;
-  
+
   // Optional validation before processing
   validate?(context: TContext): Promise<boolean>;
-  
+
   // Optional post-processing
   postProcess?(context: TContext): Promise<void>;
-  
+
   // Dependencies for parallel execution
   dependsOn?: string[];
 }
@@ -72,7 +73,7 @@ class PipelineContext {
     rawData: any;
     metadata: SourceMetadata;
   };
-  
+
   analysis: {
     entities: string[];
     links: ExtractedLink[];
@@ -80,19 +81,19 @@ class PipelineContext {
     keywords: string[];
     metaphor?: MetaphorInsight;
   };
-  
+
   enrichments: {
     primaryImage?: ImageResult;
     reactionGifs: GifResult[];
     linkMetadata: LinkMetadata[];
     mediaUrls: string[];
   };
-  
+
   output: {
     story?: ProcessedStory;
     media?: MediaAssets;
   };
-  
+
   // Helper methods
   addError(stage: string, error: string): void;
   recordMetric(name: string, value: number): void;
@@ -131,6 +132,7 @@ interface SourceOptions {
 ```
 
 **Factory Functions:**
+
 ```typescript
 RedditSource(subreddit: string, options?: RedditOptions)
 TwitterSource(query: string, options?: TwitterOptions)
@@ -170,10 +172,11 @@ interface EnrichmentOptions {
 ```
 
 **Factory Functions:**
+
 ```typescript
-FullEnrichment()      // All enrichments enabled
-MinimalEnrichment()   // Only images, basic strategy
-GifOnlyEnrichment()   // Only GIFs, no images
+FullEnrichment(); // All enrichments enabled
+MinimalEnrichment(); // Only images, basic strategy
+GifOnlyEnrichment(); // Only GIFs, no images
 ```
 
 #### TransformStage
@@ -207,6 +210,7 @@ interface OutputOptions {
 ```
 
 **Factory Functions:**
+
 ```typescript
 DatabaseOutput()              // Save to database only
 FileOutput(directory?)        // Save to file only
@@ -220,16 +224,17 @@ ApiOutput()                  // Return only, no saving
 
 ```typescript
 createRedditPipeline(
-  subreddit: string, 
+  subreddit: string,
   options?: RedditOptions
 ): Pipeline
 ```
 
 **Example:**
+
 ```typescript
 const pipeline = createRedditPipeline('pettyrevenge', {
   minScore: 1000,
-  sort: 'hot'
+  sort: 'hot',
 });
 ```
 
@@ -243,6 +248,7 @@ createAIPipeline(
 ```
 
 **Example:**
+
 ```typescript
 const pipeline = createAIPipeline('workplace', 'The Terry');
 ```
@@ -253,27 +259,29 @@ Manages multiple pipelines.
 
 ```typescript
 class PipelineOrchestrator {
-  constructor(config?: OrchestratorConfig)
-  
+  constructor(config?: OrchestratorConfig);
+
   // Register a pipeline
-  register(definition: PipelineDefinition): this
-  
+  register(definition: PipelineDefinition): this;
+
   // Execute a pipeline
-  execute<T>(name: string, context: T): Promise<T>
-  
+  execute<T>(name: string, context: T): Promise<T>;
+
   // Execute multiple in sequence
-  executeSequence<T>(names: string[], context: T): Promise<T>
-  
+  executeSequence<T>(names: string[], context: T): Promise<T>;
+
   // Execute multiple in parallel
-  executeParallel<T>(configs: Array<{
-    pipeline: string;
-    context: T;
-  }>): Promise<T[]>
-  
+  executeParallel<T>(
+    configs: Array<{
+      pipeline: string;
+      context: T;
+    }>
+  ): Promise<T[]>;
+
   // Get pipeline info
-  getPipelineInfo(name: string): PipelineInfo
-  listPipelines(): PipelineInfo[]
-  getStats(): OrchestratorStats
+  getPipelineInfo(name: string): PipelineInfo;
+  listPipelines(): PipelineInfo[];
+  getStats(): OrchestratorStats;
 }
 ```
 
@@ -284,16 +292,21 @@ class PipelineOrchestrator {
 ```typescript
 class RedditScraper {
   // Get posts from subreddit
-  getHotPosts(options: RedditFetchOptions): Promise<ProcessedRedditPost[]>
-  
+  getHotPosts(options: RedditFetchOptions): Promise<ProcessedRedditPost[]>;
+
   // Get post comments
-  getComments(options: RedditCommentsOptions): Promise<ProcessedRedditComment[]>
-  
+  getComments(
+    options: RedditCommentsOptions
+  ): Promise<ProcessedRedditComment[]>;
+
   // Search posts
-  searchPosts(query: string, options?: RedditFetchOptions): Promise<ProcessedRedditPost[]>
-  
+  searchPosts(
+    query: string,
+    options?: RedditFetchOptions
+  ): Promise<ProcessedRedditPost[]>;
+
   // Get rate limit status
-  getRateLimitStatus(): RateLimitStatus
+  getRateLimitStatus(): RateLimitStatus;
 }
 ```
 
@@ -306,15 +319,15 @@ class ImageService {
     title: string,
     content: string,
     category: string
-  ): Promise<ImageResult>
-  
+  ): Promise<ImageResult>;
+
   // Search specific sources
-  searchPexelsImages(keywords: string[]): Promise<ImageResult[]>
-  searchWikimediaImages(keywords: string[]): Promise<ImageResult[]>
-  searchWikipediaEntityImages(entity: string): Promise<ImageResult[]>
-  
+  searchPexelsImages(keywords: string[]): Promise<ImageResult[]>;
+  searchWikimediaImages(keywords: string[]): Promise<ImageResult[]>;
+  searchWikipediaEntityImages(entity: string): Promise<ImageResult[]>;
+
   // Get fallback image
-  getFallbackImage(category: string): ImageResult
+  getFallbackImage(category: string): ImageResult;
 }
 ```
 
@@ -323,10 +336,7 @@ class ImageService {
 ```typescript
 class SentimentAnalyzer {
   // Analyze story section
-  analyzeSection(
-    content: string,
-    context: StoryContext
-  ): EmotionalAnalysis
+  analyzeSection(content: string, context: StoryContext): EmotionalAnalysis;
 }
 
 interface EmotionalAnalysis {
@@ -343,14 +353,14 @@ interface EmotionalAnalysis {
 ```typescript
 class KlipyService {
   // Search for reaction GIF
-  searchReactionGif(options: GifSearchOptions): Promise<GifResult | null>
-  
+  searchReactionGif(options: GifSearchOptions): Promise<GifResult | null>;
+
   // Get trending GIFs
-  getTrendingReactions(limit?: number): Promise<GifResult[]>
-  
+  getTrendingReactions(limit?: number): Promise<GifResult[]>;
+
   // Cache management
-  clearCache(): void
-  getCacheStats(): CacheStats
+  clearCache(): void;
+  getCacheStats(): CacheStats;
 }
 ```
 
@@ -431,9 +441,9 @@ interface ExtractedLink {
   position?: number;
 }
 
-type EmotionType = 
+type EmotionType =
   | 'opening_tension'
-  | 'escalating_drama' 
+  | 'escalating_drama'
   | 'peak_chaos'
   | 'shocked_realization'
   | 'satisfied_resolution'
@@ -486,14 +496,14 @@ console.log(`Remaining: ${status.remaining}/${status.limit}`);
 ### Complete Story Processing
 
 ```typescript
-import { 
+import {
   Pipeline,
   RedditSource,
   AnalysisStage,
   FullEnrichment,
   TransformStage,
   DatabaseOutput,
-  PipelineContext
+  PipelineContext,
 } from '@/lib/pipeline';
 
 async function processRedditStory(subreddit: string) {
@@ -505,7 +515,7 @@ async function processRedditStory(subreddit: string) {
     .pipe(DatabaseOutput());
 
   const context = new PipelineContext('reddit', {});
-  
+
   try {
     const result = await pipeline.execute(context);
     console.log('Story processed:', result.output.story?.slug);
@@ -522,20 +532,22 @@ async function processRedditStory(subreddit: string) {
 ```typescript
 async function analyzeContent(content: string) {
   const pipeline = new Pipeline()
-    .pipe(new AnalysisStage({
-      extractEntities: true,
-      analyzeSentiment: true,
-      generateKeywords: true
-    }))
+    .pipe(
+      new AnalysisStage({
+        extractEntities: true,
+        analyzeSentiment: true,
+        generateKeywords: true,
+      })
+    )
     .pipe(ApiOutput());
 
   const context = new PipelineContext('ai-generated', { content });
   const result = await pipeline.execute(context);
-  
+
   return {
     entities: result.analysis.entities,
     sentiment: result.analysis.sentiment,
-    keywords: result.analysis.keywords
+    keywords: result.analysis.keywords,
   };
 }
 ```

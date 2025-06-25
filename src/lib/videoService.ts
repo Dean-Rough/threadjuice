@@ -1,6 +1,6 @@
 /**
  * Video and Embed Service for ThreadJuice
- * 
+ *
  * Handles video content from multiple sources:
  * - Pexels Videos API
  * - YouTube embeds
@@ -20,7 +20,14 @@ export interface VideoResult {
   duration?: number;
   width: number;
   height: number;
-  platform: 'pexels' | 'youtube' | 'twitter' | 'tiktok' | 'instagram' | 'reddit' | 'generic';
+  platform:
+    | 'pexels'
+    | 'youtube'
+    | 'twitter'
+    | 'tiktok'
+    | 'instagram'
+    | 'reddit'
+    | 'generic';
   author?: string;
   authorUrl?: string;
   license?: string;
@@ -52,12 +59,15 @@ class VideoService {
   /**
    * Search for videos on Pexels
    */
-  async searchPexelsVideos(query: string, options?: {
-    orientation?: 'landscape' | 'portrait' | 'square';
-    minDuration?: number;
-    maxDuration?: number;
-    perPage?: number;
-  }): Promise<VideoResult[]> {
+  async searchPexelsVideos(
+    query: string,
+    options?: {
+      orientation?: 'landscape' | 'portrait' | 'square';
+      minDuration?: number;
+      maxDuration?: number;
+      perPage?: number;
+    }
+  ): Promise<VideoResult[]> {
     if (!this.pexelsApiKey) {
       console.warn('No Pexels API key found');
       return [];
@@ -75,15 +85,19 @@ class VideoService {
         query,
         per_page: (options?.perPage || 5).toString(),
         ...(options?.orientation && { orientation: options.orientation }),
-        ...(options?.minDuration && { min_duration: options.minDuration.toString() }),
-        ...(options?.maxDuration && { max_duration: options.maxDuration.toString() }),
+        ...(options?.minDuration && {
+          min_duration: options.minDuration.toString(),
+        }),
+        ...(options?.maxDuration && {
+          max_duration: options.maxDuration.toString(),
+        }),
       });
 
       const response = await fetch(
         `https://api.pexels.com/videos/search?${params}`,
         {
           headers: {
-            'Authorization': this.pexelsApiKey,
+            Authorization: this.pexelsApiKey,
           },
         }
       );
@@ -93,24 +107,25 @@ class VideoService {
       }
 
       const data = await response.json();
-      
-      const results: VideoResult[] = data.videos?.map((video: any) => ({
-        id: `pexels-${video.id}`,
-        url: video.video_files?.[0]?.link || '',
-        thumbnail: video.image,
-        title: video.url.split('/').pop()?.replace(/-/g, ' ') || 'Video',
-        duration: video.duration,
-        width: video.width,
-        height: video.height,
-        platform: 'pexels',
-        author: video.user?.name,
-        authorUrl: video.user?.url,
-        license: 'Pexels License',
-        metadata: {
-          videoFiles: video.video_files,
-          videoPictures: video.video_pictures,
-        }
-      })) || [];
+
+      const results: VideoResult[] =
+        data.videos?.map((video: any) => ({
+          id: `pexels-${video.id}`,
+          url: video.video_files?.[0]?.link || '',
+          thumbnail: video.image,
+          title: video.url.split('/').pop()?.replace(/-/g, ' ') || 'Video',
+          duration: video.duration,
+          width: video.width,
+          height: video.height,
+          platform: 'pexels',
+          author: video.user?.name,
+          authorUrl: video.user?.url,
+          license: 'Pexels License',
+          metadata: {
+            videoFiles: video.video_files,
+            videoPictures: video.video_pictures,
+          },
+        })) || [];
 
       // Cache results
       this.cache.set(cacheKey, results);
@@ -128,7 +143,9 @@ class VideoService {
    */
   async extractEmbedFromUrl(url: string): Promise<EmbedContent | null> {
     // YouTube
-    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
+    const youtubeMatch = url.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+    );
     if (youtubeMatch) {
       const videoId = youtubeMatch[1];
       return {
@@ -138,12 +155,14 @@ class VideoService {
         embedCode: `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`,
         thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
         aspectRatio: '16:9',
-        metadata: { videoId }
+        metadata: { videoId },
       };
     }
 
     // Twitter/X
-    const twitterMatch = url.match(/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
+    const twitterMatch = url.match(
+      /(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/
+    );
     if (twitterMatch) {
       const tweetId = twitterMatch[1];
       return {
@@ -151,7 +170,7 @@ class VideoService {
         platform: 'twitter',
         url,
         aspectRatio: 'auto',
-        metadata: { tweetId }
+        metadata: { tweetId },
       };
     }
 
@@ -164,12 +183,14 @@ class VideoService {
         platform: 'tiktok',
         url,
         aspectRatio: '9:16',
-        metadata: { videoId }
+        metadata: { videoId },
       };
     }
 
     // Instagram
-    const instagramMatch = url.match(/instagram\.com\/(?:p|reel)\/([A-Za-z0-9_-]+)/);
+    const instagramMatch = url.match(
+      /instagram\.com\/(?:p|reel)\/([A-Za-z0-9_-]+)/
+    );
     if (instagramMatch) {
       const postId = instagramMatch[1];
       return {
@@ -177,7 +198,7 @@ class VideoService {
         platform: 'instagram',
         url,
         aspectRatio: 'auto',
-        metadata: { postId }
+        metadata: { postId },
       };
     }
 
@@ -190,7 +211,7 @@ class VideoService {
         platform: 'reddit',
         url,
         aspectRatio: 'auto',
-        metadata: { postId }
+        metadata: { postId },
       };
     }
 
@@ -208,22 +229,24 @@ class VideoService {
   }): Promise<VideoResult[]> {
     // Build search query based on context
     const searchTerms = [];
-    
+
     // Category-specific terms
     const categoryVideoTerms: Record<string, string[]> = {
-      'workplace': ['office', 'meeting', 'computer', 'desk'],
-      'relationships': ['couple', 'dating', 'love', 'argument'],
-      'technology': ['tech', 'computer', 'phone', 'app'],
-      'celebrity': ['celebrity', 'famous', 'red carpet', 'paparazzi'],
-      'sports': ['sports', 'athlete', 'game', 'competition'],
-      'food': ['cooking', 'restaurant', 'food', 'chef'],
-      'travel': ['travel', 'vacation', 'tourist', 'destination'],
-      'gaming': ['gaming', 'video game', 'esports', 'controller'],
-      'parenting': ['family', 'children', 'parenting', 'kids'],
-      'money': ['money', 'finance', 'cash', 'banking'],
+      workplace: ['office', 'meeting', 'computer', 'desk'],
+      relationships: ['couple', 'dating', 'love', 'argument'],
+      technology: ['tech', 'computer', 'phone', 'app'],
+      celebrity: ['celebrity', 'famous', 'red carpet', 'paparazzi'],
+      sports: ['sports', 'athlete', 'game', 'competition'],
+      food: ['cooking', 'restaurant', 'food', 'chef'],
+      travel: ['travel', 'vacation', 'tourist', 'destination'],
+      gaming: ['gaming', 'video game', 'esports', 'controller'],
+      parenting: ['family', 'children', 'parenting', 'kids'],
+      money: ['money', 'finance', 'cash', 'banking'],
     };
 
-    const categoryTerms = categoryVideoTerms[context.category] || [context.category];
+    const categoryTerms = categoryVideoTerms[context.category] || [
+      context.category,
+    ];
     searchTerms.push(...categoryTerms);
 
     // Platform-specific adjustments
@@ -251,7 +274,7 @@ class VideoService {
    */
   getCuratedVideoLibrary(): Record<string, EmbedContent> {
     return {
-      'dramatic_reaction': {
+      dramatic_reaction: {
         type: 'video',
         platform: 'generic',
         url: '/assets/videos/dramatic-reaction.mp4',
@@ -259,7 +282,7 @@ class VideoService {
         title: 'Dramatic Reaction',
         aspectRatio: '16:9',
       },
-      'mind_blown': {
+      mind_blown: {
         type: 'video',
         platform: 'generic',
         url: '/assets/videos/mind-blown.mp4',
@@ -267,7 +290,7 @@ class VideoService {
         title: 'Mind Blown',
         aspectRatio: '16:9',
       },
-      'typing_furiously': {
+      typing_furiously: {
         type: 'video',
         platform: 'generic',
         url: '/assets/videos/typing-furiously.mp4',
@@ -275,7 +298,7 @@ class VideoService {
         title: 'Typing Furiously',
         aspectRatio: '16:9',
       },
-      'scrolling_phone': {
+      scrolling_phone: {
         type: 'video',
         platform: 'generic',
         url: '/assets/videos/scrolling-phone.mp4',

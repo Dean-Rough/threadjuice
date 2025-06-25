@@ -50,12 +50,15 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
     limit: 12,
   });
 
-  const handleCommentClick = useCallback((e: React.MouseEvent, postId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedPostId(postId);
-    setCommentModalOpen(true);
-  }, []);
+  const handleCommentClick = useCallback(
+    (e: React.MouseEvent, postId: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setSelectedPostId(postId);
+      setCommentModalOpen(true);
+    },
+    []
+  );
 
   const handleShareClick = useCallback((e: React.MouseEvent, post: Post) => {
     e.preventDefault();
@@ -75,24 +78,31 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
   }, []);
 
   // Memoize posts to prevent unnecessary re-renders - ALL hooks must be before conditionals
-  const posts = useMemo(() => postsResponse?.posts || [], [postsResponse?.posts]);
+  const posts = useMemo(
+    () => postsResponse?.posts || [],
+    [postsResponse?.posts]
+  );
 
   // Memoize mixed content creation - expensive operation
   const mixedContent = useMemo(() => {
     if (posts.length === 0) return [];
-    
-    const mixedContent: Array<{ type: 'post' | 'ad'; data?: Post; index?: number }> = [];
-    
+
+    const mixedContent: Array<{
+      type: 'post' | 'ad';
+      data?: Post;
+      index?: number;
+    }> = [];
+
     posts.forEach((post, index) => {
       // Add the post
       mixedContent.push({ type: 'post', data: post, index });
-      
+
       // Add ad every 10th position (after 9th, 19th, 29th items, etc.)
       if ((index + 1) % 10 === 0) {
         mixedContent.push({ type: 'ad', index: index + 1 });
       }
     });
-    
+
     return mixedContent;
   }, [posts]);
 
@@ -158,10 +168,7 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
           if (item.type === 'ad') {
             return (
               <div key={`ad-${item.index}`} className={cardClasses}>
-                <FeedAd 
-                  position={item.index} 
-                  className='h-full'
-                />
+                <FeedAd position={item.index} className='h-full' />
               </div>
             );
           }
@@ -175,15 +182,15 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
               >
                 <Card className='touch-target group relative h-full cursor-pointer overflow-hidden transition-shadow hover:shadow-lg'>
                   {/* Full Background Image */}
-                  {(post.imageUrl || post.image_url) && (
+                  {post.image_url && (
                     <div className='absolute inset-0'>
                       <Image
-                        src={post.imageUrl || post.image_url}
+                        src={post.image_url}
                         alt={post.title}
                         fill
                         className='object-cover transition-transform duration-300 group-hover:scale-105'
                         sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
-                        loading="lazy"
+                        loading='lazy'
                       />
                     </div>
                   )}

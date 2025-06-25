@@ -80,21 +80,25 @@ npm run apify:twitter test
 ## Targeted Subreddits
 
 **Drama & Relationships:**
+
 - AmItheAsshole
 - relationship_advice
 - tifu
 - TrueOffMyChest
 
 **Workplace:**
+
 - antiwork
 - MaliciousCompliance
 - pettyrevenge
 
 **Family:**
+
 - JUSTNOMIL
 - entitledparents
 
 **General Viral:**
+
 - HolUp
 - facepalm
 - therewasanattempt
@@ -102,18 +106,23 @@ npm run apify:twitter test
 ## Curated Twitter Accounts
 
 **Tech Drama:**
+
 - @elonmusk, @naval, @paulg, @dhh, @balajis
 
 **Pop Culture:**
+
 - @kanyewest, @justinbieber, @rihanna, @kimkardashian
 
 **News/Politics:**
+
 - @cnn, @breaking911, @mrdeadmoth
 
 **Viral Content:**
+
 - @dril, @dog_rates, @weirdlilguys, @sosadtoday
 
 **Drama/Commentary:**
+
 - @dramaalert, @popbase, @popcrave, @defnoodles
 
 ## Output Format
@@ -138,6 +147,7 @@ Both scrapers convert content to ThreadJuice story format with:
 ## Cost Considerations
 
 Apify pricing is usage-based:
+
 - Free tier: 10,000 results/month
 - Pro plans start at $49/month
 - Pay only for what you scrape
@@ -145,14 +155,17 @@ Apify pricing is usage-based:
 ## Troubleshooting
 
 ### "Missing APIFY_API_TOKEN"
+
 - Add token to `.env.local`
 - Restart development server
 
 ### Actor Not Found
+
 - Verify actor names in scripts
 - Check Apify marketplace availability
 
 ### Rate Limits
+
 - Apify manages rate limits automatically
 - Increase delays if needed
 

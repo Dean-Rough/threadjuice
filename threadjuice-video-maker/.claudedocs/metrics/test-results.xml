@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="7" time="12.211" timestamp="2025-06-23T19:07:22.762523+01:00" hostname="Deans-MacBook-Pro.local"><testcase classname="tests.integration.test_video_pipeline.TestVideoCreationPipeline" name="test_create_video_from_slug" time="0.395"><failure message="postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'JSON object requested, multiple (or no) rows returned'}">tests/integration/test_video_pipeline.py:52: in test_create_video_from_slug
+    result = create_threadjuice_video(story_slug='test-story-slug', use_pexels=True)
+threadjuice_main.py:67: in create_threadjuice_video
+    story = fetcher.get_story_by_slug(story_slug)
+threadjuice/story_fetcher.py:147: in get_story_by_slug
+    response = self.client.table('posts').select('*').eq('slug', slug).single().execute()
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/postgrest/_sync/request_builder.py:127: in execute
+    raise APIError(r.json())
+E   postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'JSON object requested, multiple (or no) rows returned'}</failure></testcase><testcase classname="tests.integration.test_video_pipeline.TestVideoCreationPipeline" name="test_create_video_latest_story" time="0.166"><failure message="TypeError: dict['settings'] is not a generic class">tests/integration/test_video_pipeline.py:86: in test_create_video_latest_story
+    result = create_threadjuice_video(story_slug=None, use_pexels=False)
+threadjuice_main.py:103: in create_threadjuice_video
+    settings.config['settings']['background']['background_video'] = 'minecraft'
+E   TypeError: dict['settings'] is not a generic class</failure></testcase><testcase classname="tests.integration.test_video_pipeline.TestVideoCreationPipeline" name="test_create_video_story_not_found" time="0.137"><failure message="postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'JSON object requested, multiple (or no) rows returned'}">tests/integration/test_video_pipeline.py:101: in test_create_video_story_not_found
+    result = create_threadjuice_video(story_slug='non-existent')
+threadjuice_main.py:67: in create_threadjuice_video
+    story = fetcher.get_story_by_slug(story_slug)
+threadjuice/story_fetcher.py:147: in get_story_by_slug
+    response = self.client.table('posts').select('*').eq('slug', slug).single().execute()
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/postgrest/_sync/request_builder.py:127: in execute
+    raise APIError(r.json())
+E   postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'JSON object requested, multiple (or no) rows returned'}</failure></testcase><testcase classname="tests.integration.test_video_pipeline.TestVideoCreationPipeline" name="test_create_video_without_pexels" time="0.163"><failure message="KeyError: 'tts'">tests/integration/test_video_pipeline.py:125: in test_create_video_without_pexels
+    result = create_threadjuice_video(use_pexels=False)
+threadjuice_main.py:128: in create_threadjuice_video
+    length, number_of_comments = save_text_to_mp3(reddit_object)
+video_creation/voices.py:37: in save_text_to_mp3
+    voice = settings.config["settings"]["tts"]["voice_choice"]
+E   KeyError: 'tts'</failure></testcase><testcase classname="tests.integration.test_video_pipeline.TestMainFunction" name="test_main_with_args" time="0.003" /><testcase classname="tests.integration.test_video_pipeline.TestMainFunction" name="test_main_with_no_pexels_flag" time="0.002" /><testcase classname="tests.integration.test_video_pipeline.TestMainFunction" name="test_main_with_list_flag" time="0.002"><failure message="supabase._sync.client.SupabaseException: Invalid API key">tests/integration/test_video_pipeline.py:185: in test_main_with_list_flag
+    threadjuice_main()
+threadjuice_main.py:178: in main
+    fetcher = ThreadJuiceFetcher()
+threadjuice/story_fetcher.py:135: in __init__
+    self.client = create_client(self.supabase_url, self.supabase_key)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/supabase/_sync/client.py:335: in create_client
+    return SyncClient.create(
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/supabase/_sync/client.py:102: in create
+    client = cls(supabase_url, supabase_key, options)
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/supabase/_sync/client.py:64: in __init__
+    raise SupabaseException("Invalid API key")
+E   supabase._sync.client.SupabaseException: Invalid API key</failure></testcase></testsuite></testsuites>

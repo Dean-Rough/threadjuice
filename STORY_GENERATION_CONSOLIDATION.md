@@ -7,6 +7,7 @@ Successfully consolidated all story generation scripts into a unified system, el
 ## Scripts Consolidated
 
 ### Archived Scripts (moved to `/archive/story-generation-scripts/`):
+
 - `generate-full-automated-story.js` - Old root-level generator
 - `import-story-to-supabase.js` - Database import script
 - `delete-story.js` - Story deletion utility
@@ -20,7 +21,9 @@ Successfully consolidated all story generation scripts into a unified system, el
 ### New Unified System
 
 #### Primary Script
+
 `scripts/content/generate-story-unified.js`
+
 - Consolidated all story generation logic
 - Single configuration source
 - Consistent persona and category handling
@@ -28,6 +31,7 @@ Successfully consolidated all story generation scripts into a unified system, el
 - Support for both CLI and programmatic use
 
 #### Supporting Scripts
+
 1. `scripts/content/generate-story.js` - Wrapper for backward compatibility
 2. `scripts/content/batch-import.js` - Updated to use unified system
 3. `src/lib/storyIngestion.ts` - TypeScript service updated
@@ -35,20 +39,25 @@ Successfully consolidated all story generation scripts into a unified system, el
 ## Key Improvements
 
 ### 1. Single Configuration
+
 All story generation now uses one configuration object:
+
 - Personas (The Terry)
 - Categories (18 content types)
 - Image library (curated stock photos)
 - Content sources (Reddit/TikTok)
 
 ### 2. Consistent Story Structure
+
 Every generated story follows the same format:
+
 - Self-aware clickbait titles
 - Modular content sections
 - Proper image attribution
 - Standardized metadata
 
 ### 3. Better CLI Interface
+
 ```bash
 # Generate single story
 npm run story:generate
@@ -64,12 +73,14 @@ npm run story:help
 ```
 
 ### 4. Unified Database Integration
+
 - Single `saveToDatabase()` function
 - Consistent persona handling
 - Proper error handling
 - Transaction support
 
 ### 5. Lazy Loading
+
 - OpenAI client only initialized when needed
 - Database connection on-demand
 - Better resource management
@@ -77,7 +88,9 @@ npm run story:help
 ## Migration Path
 
 ### For Existing Scripts
+
 Replace any calls to old scripts:
+
 ```bash
 # Old
 node generate-full-automated-story.js
@@ -87,12 +100,16 @@ npm run story:generate
 ```
 
 ### For API Integration
+
 The API routes continue to work unchanged:
+
 - `/api/admin/generate` - Bulk generation endpoint
 - Uses `StoryIngestionService` which now calls unified generator
 
 ### For Cron Jobs
+
 Update any scheduled tasks to use:
+
 ```bash
 node scripts/content/generate-story-unified.js bulk 5
 ```

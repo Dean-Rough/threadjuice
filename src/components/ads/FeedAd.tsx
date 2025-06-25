@@ -25,7 +25,9 @@ export default function FeedAd({ className = '', position = 0 }: FeedAdProps) {
 
         {/* Ad unit */}
         <AdSenseUnit
-          adSlot={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_FEED_SLOT || '1234567896'}
+          adSlot={
+            process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_FEED_SLOT || '1234567896'
+          }
           adFormat='auto'
           responsive={true}
           lazy={true}

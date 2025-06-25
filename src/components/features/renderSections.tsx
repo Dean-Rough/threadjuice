@@ -5,7 +5,11 @@ import TwitterConversation from '@/components/ui/TwitterConversation';
 import { renderContentWithLinks } from '@/lib/contentLinkParser';
 import Link from 'next/link';
 
-export function renderAdditionalSections(section: any, index: number, post: any) {
+export function renderAdditionalSections(
+  section: any,
+  index: number,
+  post: any
+) {
   switch (section.type) {
     case 'hero':
       return (
@@ -15,7 +19,7 @@ export function renderAdditionalSections(section: any, index: number, post: any)
               {section.title}
             </h2>
           )}
-          <p className='text-2xl md:text-3xl font-bold leading-tight text-foreground'>
+          <p className='text-2xl font-bold leading-tight text-foreground md:text-3xl'>
             {section.content}
           </p>
         </div>
@@ -49,23 +53,25 @@ export function renderAdditionalSections(section: any, index: number, post: any)
         <div key={index} className='twitter-quote-section my-8'>
           <div className='rounded-lg border border-border bg-card p-6'>
             <div className='flex items-start gap-3'>
-              <div className='w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 font-bold text-white'>
                 {section.metadata?.author?.charAt(1).toUpperCase() || 'T'}
               </div>
               <div className='flex-1'>
-                <div className='flex items-center gap-2 mb-2'>
-                  <a 
+                <div className='mb-2 flex items-center gap-2'>
+                  <a
                     href={`https://twitter.com/${(section.metadata?.author || '@user').replace('@', '')}`}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='font-bold text-foreground hover:text-orange-500 transition-colors'
+                    className='font-bold text-foreground transition-colors hover:text-orange-500'
                   >
                     {section.metadata?.author || '@user'}
                   </a>
-                  <span className='text-muted-foreground text-sm'>• 2h</span>
+                  <span className='text-sm text-muted-foreground'>• 2h</span>
                 </div>
-                <p className='text-foreground text-lg mb-3'>{section.content}</p>
-                <div className='flex items-center gap-6 text-muted-foreground text-sm'>
+                <p className='mb-3 text-lg text-foreground'>
+                  {section.content}
+                </p>
+                <div className='flex items-center gap-6 text-sm text-muted-foreground'>
                   <span className='flex items-center gap-1'>
                     <MessageCircle className='h-4 w-4' />
                     {section.metadata?.likes || '1.2K'}
@@ -82,7 +88,10 @@ export function renderAdditionalSections(section: any, index: number, post: any)
 
     case 'roundup':
       return (
-        <div key={index} className='roundup-section my-12 p-6 rounded-lg bg-muted/50 border border-border'>
+        <div
+          key={index}
+          className='roundup-section my-12 rounded-lg border border-border bg-muted/50 p-6'
+        >
           {section.title && (
             <h3 className='mb-4 text-2xl font-extrabold text-foreground'>
               {section.title}
@@ -99,13 +108,19 @@ export function renderAdditionalSections(section: any, index: number, post: any)
     case 'terry_corner':
       return (
         <div key={index} className='terry-corner-section my-12'>
-          <div className='relative bg-orange-500 rounded-2xl p-6 flex-1 animate-pulse'>
-            <div className='absolute left-0 top-8 w-0 h-0 border-t-[20px] border-t-transparent border-b-[20px] border-b-transparent border-r-[20px] border-r-orange-500 transform -translate-x-full'></div>
+          <div className='relative flex-1 animate-pulse rounded-2xl bg-orange-500 p-6'>
+            <div className='absolute left-0 top-8 h-0 w-0 -translate-x-full transform border-b-[20px] border-r-[20px] border-t-[20px] border-b-transparent border-r-orange-500 border-t-transparent'></div>
             <div>
-              <div className='text-sm font-medium text-white mb-1' style={{ fontFamily: '"Bouchers Sans", sans-serif' }}>
+              <div
+                className='mb-1 text-sm font-medium text-white'
+                style={{ fontFamily: '"Bouchers Sans", sans-serif' }}
+              >
                 {section.title || "Terry's Take"}
               </div>
-              <p className='text-black leading-relaxed' style={{ fontFamily: '"Bouchers Sans", sans-serif' }}>
+              <p
+                className='leading-relaxed text-black'
+                style={{ fontFamily: '"Bouchers Sans", sans-serif' }}
+              >
                 {section.content}
               </p>
             </div>
@@ -118,15 +133,18 @@ export function renderAdditionalSections(section: any, index: number, post: any)
         <div key={index} className='reaction-gif-section my-8 text-center'>
           <div className='inline-block'>
             <Image
-              src={section.metadata?.gifUrl || 'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'}
+              src={
+                section.metadata?.gifUrl ||
+                'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'
+              }
               alt={section.content}
               width={400}
               height={300}
-              className='rounded-lg shadow-lg max-w-full'
+              className='max-w-full rounded-lg shadow-lg'
               style={{ maxHeight: '300px' }}
               unoptimized={true}
             />
-            <p className='mt-3 text-sm font-medium text-muted-foreground italic'>
+            <p className='mt-3 text-sm font-medium italic text-muted-foreground'>
               {section.content}
             </p>
           </div>
@@ -146,7 +164,7 @@ export function renderAdditionalSections(section: any, index: number, post: any)
               {section.content}
             </p>
           )}
-          <TwitterConversation 
+          <TwitterConversation
             conversation={section.metadata?.conversation || []}
             title={section.title}
           />
@@ -155,16 +173,19 @@ export function renderAdditionalSections(section: any, index: number, post: any)
 
     case 'story_link':
       return (
-        <div key={index} className='story-link-section my-12 p-6 bg-orange-500/10 rounded-lg border border-orange-500/20'>
-          <div className='flex items-center justify-between flex-wrap gap-4'>
+        <div
+          key={index}
+          className='story-link-section my-12 rounded-lg border border-orange-500/20 bg-orange-500/10 p-6'
+        >
+          <div className='flex flex-wrap items-center justify-between gap-4'>
             <div className='flex-1'>
-              <p className='text-lg font-medium text-foreground mb-2'>
+              <p className='mb-2 text-lg font-medium text-foreground'>
                 {section.content}
               </p>
               <div className='flex items-center gap-4'>
                 <Link
                   href={section.metadata?.url || `/blog/${post.slug}`}
-                  className='inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium'
+                  className='inline-flex items-center gap-2 font-medium text-orange-600 hover:text-orange-700'
                 >
                   <Share2 className='h-4 w-4' />
                   {section.metadata?.linkText || 'Share this story'}
@@ -173,7 +194,7 @@ export function renderAdditionalSections(section: any, index: number, post: any)
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(section.metadata?.url || `https://threadjuice.com/blog/${post.slug}`)}`}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium'
+                  className='inline-flex items-center gap-2 font-medium text-blue-600 hover:text-blue-700'
                 >
                   <ExternalLink className='h-4 w-4' />
                   Tweet this
@@ -187,15 +208,15 @@ export function renderAdditionalSections(section: any, index: number, post: any)
     case 'reddit_quote':
       return (
         <div key={index} className='reddit-quote-section my-12'>
-          <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6'>
+          <div className='rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
             <div className='flex items-start gap-4'>
               <div className='flex-shrink-0'>
-                <div className='w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center'>
-                  <span className='text-white font-bold text-sm'>r/</span>
+                <div className='flex h-8 w-8 items-center justify-center rounded-full bg-orange-500'>
+                  <span className='text-sm font-bold text-white'>r/</span>
                 </div>
               </div>
-              <div className='flex-1 min-w-0'>
-                <div className='flex items-center flex-wrap gap-2 mb-3 text-sm'>
+              <div className='min-w-0 flex-1'>
+                <div className='mb-3 flex flex-wrap items-center gap-2 text-sm'>
                   <span className='font-medium text-orange-600 dark:text-orange-400'>
                     r/{section.metadata?.subreddit || 'reddit'}
                   </span>
@@ -208,13 +229,11 @@ export function renderAdditionalSections(section: any, index: number, post: any)
                     {section.metadata?.score || 0} points
                   </span>
                 </div>
-                <div className='text-gray-900 dark:text-gray-100 leading-relaxed'>
-                  <div className='whitespace-pre-wrap'>
-                    {section.content}
-                  </div>
+                <div className='leading-relaxed text-gray-900 dark:text-gray-100'>
+                  <div className='whitespace-pre-wrap'>{section.content}</div>
                 </div>
                 {section.metadata?.context && (
-                  <div className='mt-3 text-xs text-gray-500 dark:text-gray-400 italic'>
+                  <div className='mt-3 text-xs italic text-gray-500 dark:text-gray-400'>
                     {section.metadata.context}
                   </div>
                 )}

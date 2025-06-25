@@ -1,6 +1,6 @@
 /**
  * Pipeline Orchestrator
- * 
+ *
  * Manages multiple pipelines and provides high-level coordination.
  * Handles pipeline selection, caching, and monitoring.
  */
@@ -44,11 +44,11 @@ export class PipelineOrchestrator {
    */
   register(definition: PipelineDefinition): this {
     this.definitions.set(definition.name, definition);
-    
+
     // Create pipeline instance
     const pipeline = this.createPipeline(definition);
     this.pipelines.set(definition.name, pipeline);
-    
+
     console.log(`✅ Registered pipeline: ${definition.name}`);
     return this;
   }
@@ -67,7 +67,9 @@ export class PipelineOrchestrator {
 
     // Check concurrent limit
     if (this.activePipelines.size >= this.config.maxConcurrent!) {
-      throw new Error(`Maximum concurrent pipelines (${this.config.maxConcurrent}) reached`);
+      throw new Error(
+        `Maximum concurrent pipelines (${this.config.maxConcurrent}) reached`
+      );
     }
 
     const executionId = `${pipelineName}-${Date.now()}`;
@@ -88,14 +90,15 @@ export class PipelineOrchestrator {
       }
 
       return result;
-
     } catch (error) {
       // Record failure
       if (this.config.monitoring) {
-        this.recordFailure(executionId, error instanceof Error ? error : new Error(String(error)));
+        this.recordFailure(
+          executionId,
+          error instanceof Error ? error : new Error(String(error))
+        );
       }
       throw error;
-
     } finally {
       this.activePipelines.delete(executionId);
     }
@@ -178,7 +181,7 @@ export class PipelineOrchestrator {
     };
 
     const pipeline = new Pipeline(options);
-    
+
     for (const stage of definition.stages) {
       pipeline.pipe(stage);
     }
@@ -215,8 +218,9 @@ export class PipelineOrchestrator {
   }
 
   private getMetrics(pipelineName: string) {
-    const pipelineMetrics = Array.from(this.metrics.values())
-      .filter(m => m.pipeline === pipelineName);
+    const pipelineMetrics = Array.from(this.metrics.values()).filter(
+      m => m.pipeline === pipelineName
+    );
 
     const successful = pipelineMetrics.filter(m => m.status === 'success');
     const failed = pipelineMetrics.filter(m => m.status === 'failed');
@@ -244,7 +248,7 @@ export class PipelineOrchestrator {
 
   private calculateAverageDuration(metrics: any[]): number {
     if (metrics.length === 0) return 0;
-    
+
     const total = metrics.reduce((sum, m) => sum + (m.duration || 0), 0);
     return Math.round(total / metrics.length);
   }

@@ -3,11 +3,17 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CommentSystem from '../CommentSystem';
 
-// Mock lucide-react icons  
+// Mock lucide-react icons
 jest.mock('lucide-react', () => ({
   MessageSquare: (props: any) => <svg {...props} data-testid='mock-icon' />,
   Reply: (props: any) => <svg {...props} data-testid='mock-icon' />,
@@ -135,7 +141,9 @@ describe('CommentSystem', () => {
 
     await waitFor(() => {
       // Wait for comments to load - check for the first comment author
-      const comments = screen.getAllByText(/SarcasticSage|TechEnthusiast2024|AIResearcher/);
+      const comments = screen.getAllByText(
+        /SarcasticSage|TechEnthusiast2024|AIResearcher/
+      );
       expect(comments.length).toBeGreaterThan(0);
     });
 
@@ -146,7 +154,9 @@ describe('CommentSystem', () => {
       // The placeholder text will use the first comment's author
       const placeholders = screen.getAllByPlaceholderText(/Reply to/);
       expect(placeholders.length).toBeGreaterThan(0);
-      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Cancel' })
+      ).toBeInTheDocument();
     });
   });
 
@@ -216,7 +226,9 @@ describe('CommentSystem', () => {
 
     await waitFor(() => {
       // Check for the specific nested reply content
-      const nestedContents = screen.getAllByText(/Right\?! I saw the same thing happen|Wait, what happened on r\/technology/);
+      const nestedContents = screen.getAllByText(
+        /Right\?! I saw the same thing happen|Wait, what happened on r\/technology/
+      );
       expect(nestedContents.length).toBeGreaterThan(0);
     });
   });
@@ -232,12 +244,16 @@ describe('CommentSystem', () => {
     });
 
     // Find collapse buttons by looking for chevron icons near comments with replies
-    const collapseButtons = document.querySelectorAll('button[title*="Collapse"], button[title*="Expand"]');
-    
+    const collapseButtons = document.querySelectorAll(
+      'button[title*="Collapse"], button[title*="Expand"]'
+    );
+
     if (collapseButtons.length > 0) {
       const firstCollapseButton = collapseButtons[0];
-      const isCollapsed = firstCollapseButton.getAttribute('title')?.includes('Expand');
-      
+      const isCollapsed = firstCollapseButton
+        .getAttribute('title')
+        ?.includes('Expand');
+
       await user.click(firstCollapseButton);
 
       await waitFor(() => {
@@ -295,7 +311,9 @@ describe('CommentSystem', () => {
     // The submit button in the form should be disabled initially
     // Look for the button that has 'Reply' text and is within the form
     const replyForm = screen.getByPlaceholderText(/Reply to/).closest('form');
-    const submitButton = within(replyForm as HTMLElement).getByRole('button', { name: 'Reply' });
+    const submitButton = within(replyForm as HTMLElement).getByRole('button', {
+      name: 'Reply',
+    });
     expect(submitButton).toBeDisabled();
   });
 

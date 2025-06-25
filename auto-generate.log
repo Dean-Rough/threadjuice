@@ -1,0 +1,1058 @@
+
+> threadjuice@1.0.0 story:auto
+> node scripts/auto-generate.js
+
+🤖 ThreadJuice Auto-Generator Started
+📦 First generating 20 stories...
+⏰ Then continuing with 1 story per hour
+🛑 Press Ctrl+C to stop
+
+
+📦 Generating batch of 20 stories...
+
+🚀 [10:30:05 AM] Generating story 1...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "MIL is a hoarder who keeps "gifting" us expired fo..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=PineappleRoses91, score=247
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "When Your Mother-in-Law's Gifts Belong in a Museum (of Horrors)"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "mother", Where: "your"
+🎯 Searching Pexels for hero image: "mother"
+📸 Searching Pexels for: "mother"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "your" or "travel vacation"
+📸 Searching Pexels for: "your"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "When Your Mother-in-Law's Gifts Belong in a Museum (of Horrors)"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "When Your Mother-in-Law's Gifts Belong in a Museum (of Horrors)"
+🔗 View at: http://localhost:4242/blog/when-your-mother-in-laws-gifts-belong-in-a-museum-of-horrors
+
+🚀 [10:31:04 AM] Generating story 2...
+🔍 Fetching real content from r/entitledparents...
+✅ Found real Reddit post: "my mom keeps throwing out my vibrators...."
+📸 Found media: 1 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=entitledparents, author=alibaba10011, score=2781
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Mom vs. Vibrator: The £120 Stand-off That No One Saw Coming"
+🎯 Checking Reddit media: 1 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "mom", Where: "vibrator"
+🎯 Searching Pexels for inline image: "vibrator" or "classroom education"
+📸 Searching Pexels for: "vibrator"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Mom vs. Vibrator: The £120 Stand-off That No One Saw Coming"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Mom vs. Vibrator: The £120 Stand-off That No One Saw Coming"
+🔗 View at: http://localhost:4242/blog/mom-vs-vibrator-the-120-stand-off-that-no-one-saw-coming
+
+🚀 [10:31:43 AM] Generating story 3...
+🔍 Fetching real content from r/AmItheAsshole...
+✅ Found real Reddit post: "AITA  for not letting my husband sleep in swim tru..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=AmItheAsshole, author=Finest_Mediocrity, score=941
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Great Swim Trunk Stand-Off: A Bedtime Battle of Wits and Fabric"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "swim", Where: "trunk"
+🎯 Searching Pexels for hero image: "swim"
+📸 Searching Pexels for: "swim"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "trunk" or "gaming video games"
+📸 Searching Pexels for: "trunk"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Great Swim Trunk Stand-Off: A Bedtime Battle of Wits and Fabric"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Great Swim Trunk Stand-Off: A Bedtime Battle of Wits and Fabric"
+🔗 View at: http://localhost:4242/blog/the-great-swim-trunk-stand-off-a-bedtime-battle-of-wits-and-
+
+🚀 [10:32:22 AM] Generating story 4...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Manager refused to give me a 10k salary rise, but ..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=ThrowRAmiss04, score=2852
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "How to Lose $10k and Alienate Your Best Employee"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "employee", Where: "lose"
+🎯 Searching Pexels for hero image: "employee"
+📸 Searching Pexels for: "employee"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "lose" or "sports athlete"
+📸 Searching Pexels for: "lose"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How to Lose $10k and Alienate Your Best Employee"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "How to Lose $10k and Alienate Your Best Employee"
+🔗 View at: http://localhost:4242/blog/how-to-lose-10k-and-alienate-your-best-employee
+
+🚀 [10:32:51 AM] Generating story 5...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "MIL is a hoarder who keeps "gifting" us expired fo..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=PineappleRoses91, score=248
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Expired Food Hoarders Unite: One Mother's Battle Against the Ticking Pasta Bomb"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "mother", Where: "expired"
+🎯 Searching Pexels for hero image: "mother"
+📸 Searching Pexels for: "mother"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "expired" or "gaming video games"
+📸 Searching Pexels for: "expired"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Expired Food Hoarders Unite: One Mother's Battle Against the Ticking Pasta Bomb"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Expired Food Hoarders Unite: One Mother's Battle Against the Ticking Pasta Bomb"
+🔗 View at: http://localhost:4242/blog/expired-food-hoarders-unite-one-mothers-battle-against-the-t
+
+🚀 [10:33:31 AM] Generating story 6...
+🔍 Fetching real content from r/ChoosingBeggars...
+✅ Found real Reddit post: "Choosy guest on the couchsurfing app..."
+📸 Found media: 2 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=ChoosingBeggars, author=pancakecel, score=438
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Woman Demands Key to Home She Isn't Paying For: The Couchsurfing Drama You Didn't Know You Needed"
+🎯 Checking Reddit media: 2 images, 0 OP images
+✅ Using Reddit image as hero: https://i.redd.it/agq8mfustk8f1.png
+📸 Need to supplement with stock photos: hero=true, inline=false
+📎 Key concepts - What: "home", Where: "woman"
+🎯 Searching Pexels for inline image: "woman" or "gaming video games"
+📸 Searching Pexels for: "woman"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Woman Demands Key to Home She Isn't Paying For: The Couchsurfing Drama You Didn't Know You Needed"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Woman Demands Key to Home She Isn't Paying For: The Couchsurfing Drama You Didn't Know You Needed"
+🔗 View at: http://localhost:4242/blog/woman-demands-key-to-home-she-isnt-paying-for-the-couchsurfi
+
+🚀 [10:34:12 AM] Generating story 7...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "Can I come in here to grieve?..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=Flat-Ad-471, score=319
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Grandmother Who Mistook a Mall for a War Zone"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "grandmother", Where: "who"
+🎯 Searching Pexels for hero image: "grandmother"
+📸 Searching Pexels for: "grandmother"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "who" or "lifestyle"
+📸 Searching Pexels for: "who"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Grandmother Who Mistook a Mall for a War Zone"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Grandmother Who Mistook a Mall for a War Zone"
+🔗 View at: http://localhost:4242/blog/the-grandmother-who-mistook-a-mall-for-a-war-zone
+
+🚀 [10:34:42 AM] Generating story 8...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Manager refused to give me a 10k salary rise, but ..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=ThrowRAmiss04, score=2853
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Salary Conundrum: When Your Replacement Costs More—and Knows Less!"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "salary", Where: "conundrum"
+🎯 Searching Pexels for hero image: "salary"
+📸 Searching Pexels for: "salary"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "conundrum" or "finance money"
+📸 Searching Pexels for: "conundrum"
+✅ Found 3 Pexels images
+🔍 Fetching real reddit comments for: "The Salary Conundrum: When Your Replacement Costs More—and Knows Less!"
+⚠️  No Reddit comments found, using fallback
+⚠️  Using fallback reddit comments for money
+💬 Generated 4 real comments from reddit
+✅ Generated: "The Salary Conundrum: When Your Replacement Costs More—and Knows Less!"
+🔗 View at: http://localhost:4242/blog/the-salary-conundrum-when-your-replacement-costs-moreand-kno
+
+🚀 [10:35:10 AM] Generating story 9...
+🔍 Fetching real content from r/entitledparents...
+✅ Found real Reddit post: "Mom screamed at me (21F) and pulled my hair in fro..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=entitledparents, author=ssblossom, score=181
+🔥 Found controversial comment (3 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Mom vs. The Airport: The Hair-Pulling Frenzy You Didn't Know You Needed"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "airport", Where: "mom"
+🎯 Searching Pexels for hero image: "airport"
+📸 Searching Pexels for: "airport"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "mom" or "medical health"
+📸 Searching Pexels for: "mom"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Mom vs. The Airport: The Hair-Pulling Frenzy You Didn't Know You Needed"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Mom vs. The Airport: The Hair-Pulling Frenzy You Didn't Know You Needed"
+🔗 View at: http://localhost:4242/blog/mom-vs-the-airport-the-hair-pulling-frenzy-you-didnt-know-yo
+
+🚀 [10:35:45 AM] Generating story 10...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "Moved 1200km away from BPD MIL &amp; It's GLORIOUS..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=Round_Lab_8495, score=103
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "How Moving 1200km Away from 'JustNoMIL' Turned Our Lives into a Millionaire's Dream: A Tale of Escape and Financial Glory"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "moving", Where: "1200km"
+🎯 Searching Pexels for hero image: "moving"
+📸 Searching Pexels for: "moving"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "1200km" or "computer laptop"
+📸 Searching Pexels for: "1200km"
+⚠️  No Pexels results found
+📸 Searching Pexels for: "computer laptop technology"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How Moving 1200km Away from 'JustNoMIL' Turned Our Lives into a Millionaire's Dream: A Tale of Escape and Financial Glory"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "How Moving 1200km Away from 'JustNoMIL' Turned Our Lives into a Millionaire's Dream: A Tale of Escape and Financial Glory"
+🔗 View at: http://localhost:4242/blog/how-moving-1200km-away-from-justnomil-turned-our-lives-into-
+
+🚀 [10:36:18 AM] Generating story 11...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "Can I come in here to grieve?..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=Flat-Ad-471, score=318
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "When Your Mom Becomes the Villain in Your Own Motherhood Saga"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "your", Where: "mom"
+🎯 Searching Pexels for hero image: "your"
+📸 Searching Pexels for: "your"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "mom" or "lifestyle"
+📸 Searching Pexels for: "mom"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "When Your Mom Becomes the Villain in Your Own Motherhood Saga"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "When Your Mom Becomes the Villain in Your Own Motherhood Saga"
+🔗 View at: http://localhost:4242/blog/when-your-mom-becomes-the-villain-in-your-own-motherhood-sag
+
+🚀 [10:36:51 AM] Generating story 12...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "You Are Always The Problem..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=Footboler, score=694
+🎬 Found 1 media placeholders
+🖼️  Finding images for: "How 2000s Advice Became the World's Worst Punchline"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "2000s", Where: "advice"
+🎯 Searching Pexels for hero image: "2000s"
+📸 Searching Pexels for: "2000s"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "advice" or "lifestyle"
+📸 Searching Pexels for: "advice"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How 2000s Advice Became the World's Worst Punchline"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "How 2000s Advice Became the World's Worst Punchline"
+🔗 View at: http://localhost:4242/blog/how-2000s-advice-became-the-worlds-worst-punchline
+
+🚀 [10:37:26 AM] Generating story 13...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU by being too creative when making butter chic..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=hungry_hippos_, score=131
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Great Butter Chicken Debacle: When Culinary Creativity Goes Off the Rails"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "butter", Where: "chicken"
+🎯 Searching Pexels for hero image: "butter"
+📸 Searching Pexels for: "butter"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "chicken" or "couple relationship"
+📸 Searching Pexels for: "chicken"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Great Butter Chicken Debacle: When Culinary Creativity Goes Off the Rails"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Great Butter Chicken Debacle: When Culinary Creativity Goes Off the Rails"
+🔗 View at: http://localhost:4242/blog/the-great-butter-chicken-debacle-when-culinary-creativity-go
+
+🚀 [10:38:13 AM] Generating story 14...
+🔍 Fetching real content from r/PublicFreakout...
+❌ Reddit API error: No suitable posts found
+❌ Story generation failed: Failed to fetch real Reddit data
+❌ [10:38:13 AM] Story generation failed: Failed to fetch real Reddit data
+
+🚀 [10:38:15 AM] Generating story 15...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Billionaires should find fulfillment in workers we..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 1 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=Footboler, score=542
+🎬 Found 1 media placeholders
+🖼️  Finding images for: "Why Billionaires Should Swap Their Yachts for Worker Welfare: An Unexpected Journey"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "worker", Where: "billionaires"
+🎯 Searching Pexels for hero image: "worker"
+📸 Searching Pexels for: "worker"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "billionaires" or "travel vacation"
+📸 Searching Pexels for: "billionaires"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Why Billionaires Should Swap Their Yachts for Worker Welfare: An Unexpected Journey"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Why Billionaires Should Swap Their Yachts for Worker Welfare: An Unexpected Journey"
+🔗 View at: http://localhost:4242/blog/why-billionaires-should-swap-their-yachts-for-worker-welfare
+
+🚀 [10:39:00 AM] Generating story 16...
+🔍 Fetching real content from r/PublicFreakout...
+❌ Reddit API error: No suitable posts found
+❌ Story generation failed: Failed to fetch real Reddit data
+❌ [10:39:00 AM] Story generation failed: Failed to fetch real Reddit data
+
+🚀 [10:39:02 AM] Generating story 17...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "JNMIL intensely pressuring me to drop off my 4 mon..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=Equivalent-Yogurt-36, score=356
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The MIL Chronicles: When Grandma Wants More Than Just a Visit"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "mil", Where: "chronicles"
+🎯 Searching Pexels for hero image: "mil"
+📸 Searching Pexels for: "mil"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "chronicles" or "family parents"
+📸 Searching Pexels for: "chronicles"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The MIL Chronicles: When Grandma Wants More Than Just a Visit"
+✅ Found 5 real Reddit comments
+💬 Generated 5 real comments from reddit
+✅ Generated: "The MIL Chronicles: When Grandma Wants More Than Just a Visit"
+🔗 View at: http://localhost:4242/blog/the-mil-chronicles-when-grandma-wants-more-than-just-a-visit
+
+🚀 [10:39:37 AM] Generating story 18...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "Annoyed after a visit with JNMIL..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=BoatLoose4181, score=71
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "In-Law Invasion: The Unnerving Saga of a Baby's Nap Time Showdown"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "law", Where: "invasion"
+🎯 Searching Pexels for hero image: "law"
+📸 Searching Pexels for: "law"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "invasion" or "sports athlete"
+📸 Searching Pexels for: "invasion"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "In-Law Invasion: The Unnerving Saga of a Baby's Nap Time Showdown"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "In-Law Invasion: The Unnerving Saga of a Baby's Nap Time Showdown"
+🔗 View at: http://localhost:4242/blog/in-law-invasion-the-unnerving-saga-of-a-babys-nap-time-showd
+
+🚀 [10:40:17 AM] Generating story 19...
+🔍 Fetching real content from r/relationship_advice...
+✅ Found real Reddit post: "I 42f got scared last night when my 44m bf screame..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=relationship_advice, author=Substantial-Pipe4400, score=1105
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Night My Boyfriend Decided to Scare the Living Daylights Out of Me"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "night", Where: "boyfriend"
+🎯 Searching Pexels for hero image: "night"
+📸 Searching Pexels for: "night"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "boyfriend" or "medical health"
+📸 Searching Pexels for: "boyfriend"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Night My Boyfriend Decided to Scare the Living Daylights Out of Me"
+✅ Found 2 real Reddit comments
+💬 Generated 2 real comments from reddit
+✅ Generated: "The Night My Boyfriend Decided to Scare the Living Daylights Out of Me"
+🔗 View at: http://localhost:4242/blog/the-night-my-boyfriend-decided-to-scare-the-living-daylights
+
+🚀 [10:40:57 AM] Generating story 20...
+🔍 Fetching real content from r/MaliciousCompliance...
+✅ Found real Reddit post: "If Larry Likes You, You're Good!..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=MaliciousCompliance, author=bestcrispair, score=3074
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "How Larry's Bus Schedule Smashed Corporate Nonsense"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "larry", Where: "bus"
+🎯 Searching Pexels for hero image: "larry"
+📸 Searching Pexels for: "larry"
+✅ Found 3 Pexels images
+🎯 Searching Pexels for inline image: "bus" or "classroom education"
+📸 Searching Pexels for: "bus"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How Larry's Bus Schedule Smashed Corporate Nonsense"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "How Larry's Bus Schedule Smashed Corporate Nonsense"
+🔗 View at: http://localhost:4242/blog/how-larrys-bus-schedule-smashed-corporate-nonsense
+
+✅ Batch complete! Generated 18/20 stories successfully.
+
+⏰ Switching to hourly generation mode...
+📅 Next story will generate in 1 hour
+
+🚀 [12:08:31 PM] Generating story 21...
+🔍 Fetching real content from r/relationship_advice...
+✅ Found real Reddit post: "Boyfriend 33M broke up with me 28F and accused me ..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=relationship_advice, author=ThrowRA_fili, score=552
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Pregnancy Conspiracy: When Love Meets the X-Files"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "conspiracy", Where: "pregnancy"
+🎯 Searching Pexels for hero image: "conspiracy"
+📸 Searching Pexels for: "conspiracy"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "pregnancy" or "sports athlete"
+📸 Searching Pexels for: "pregnancy"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Pregnancy Conspiracy: When Love Meets the X-Files"
+✅ Found 2 real Reddit comments
+💬 Generated 2 real comments from reddit
+✅ Generated: "Pregnancy Conspiracy: When Love Meets the X-Files"
+🔗 View at: http://localhost:4242/blog/pregnancy-conspiracy-when-love-meets-the-x-files
+
+🚀 [1:08:31 PM] Generating story 22...
+🔍 Fetching real content from r/ChoosingBeggars...
+✅ Found real Reddit post: "Choosy guest on the couchsurfing app..."
+📸 Found media: 2 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=ChoosingBeggars, author=pancakecel, score=541
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Couchsurfing Chronicles: The Diva with a Key Fetish"
+🎯 Checking Reddit media: 2 images, 0 OP images
+✅ Using Reddit image as hero: https://i.redd.it/agq8mfustk8f1.png
+📸 Need to supplement with stock photos: hero=true, inline=false
+📎 Key concepts - What: "couchsurfing", Where: "chronicles"
+🎯 Searching Pexels for inline image: "chronicles" or "courtroom lawyer"
+📸 Searching Pexels for: "chronicles"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Couchsurfing Chronicles: The Diva with a Key Fetish"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Couchsurfing Chronicles: The Diva with a Key Fetish"
+🔗 View at: http://localhost:4242/blog/couchsurfing-chronicles-the-diva-with-a-key-fetish
+
+🚀 [2:08:31 PM] Generating story 23...
+🔍 Fetching real content from r/ChoosingBeggars...
+✅ Found real Reddit post: "Choosy guest on the couchsurfing app..."
+📸 Found media: 2 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=ChoosingBeggars, author=pancakecel, score=581
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "When Your Couchsurfing Guest Requests a Butler: The Tale of the Privileged Traveler"
+🎯 Checking Reddit media: 2 images, 0 OP images
+✅ Using Reddit image as hero: https://i.redd.it/agq8mfustk8f1.png
+📸 Need to supplement with stock photos: hero=true, inline=false
+📎 Key concepts - What: "your", Where: "couchsurfing"
+🎯 Searching Pexels for inline image: "couchsurfing" or "lifestyle"
+📸 Searching Pexels for: "couchsurfing"
+✅ Found 1 Pexels images
+🔍 Fetching real reddit comments for: "When Your Couchsurfing Guest Requests a Butler: The Tale of the Privileged Traveler"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "When Your Couchsurfing Guest Requests a Butler: The Tale of the Privileged Traveler"
+🔗 View at: http://localhost:4242/blog/when-your-couchsurfing-guest-requests-a-butler-the-tale-of-t
+
+🚀 [3:08:31 PM] Generating story 24...
+🔍 Fetching real content from r/AmItheAsshole...
+✅ Found real Reddit post: "AITA for refusing to name our child after my MIL?..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=AmItheAsshole, author=JesusLovesYou2911, score=947
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Baby Naming Shock: When Your Husband Loves His Mom Almost as Much as the Baby"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "baby", Where: "naming"
+🎯 Searching Pexels for hero image: "baby"
+📸 Searching Pexels for: "baby"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "naming" or "finance money"
+📸 Searching Pexels for: "naming"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Baby Naming Shock: When Your Husband Loves His Mom Almost as Much as the Baby"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Baby Naming Shock: When Your Husband Loves His Mom Almost as Much as the Baby"
+🔗 View at: http://localhost:4242/blog/baby-naming-shock-when-your-husband-loves-his-mom-almost-as-
+
+🚀 [4:08:31 PM] Generating story 25...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU by accidentally pepper spraying myself with c..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=dragonwillow75, score=16
+🔥 Found controversial comment (2 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Cayenne Catastrophe: How One Cook Accidentally Invented a New Form of Pepper Spray"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "cayenne", Where: "catastrophe"
+🎯 Searching Pexels for hero image: "cayenne"
+📸 Searching Pexels for: "cayenne"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "catastrophe" or "lifestyle"
+📸 Searching Pexels for: "catastrophe"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Cayenne Catastrophe: How One Cook Accidentally Invented a New Form of Pepper Spray"
+✅ Found 4 real Reddit comments
+💬 Generated 4 real comments from reddit
+✅ Generated: "The Cayenne Catastrophe: How One Cook Accidentally Invented a New Form of Pepper Spray"
+🔗 View at: http://localhost:4242/blog/the-cayenne-catastrophe-how-one-cook-accidentally-invented-a
+
+🚀 [5:08:31 PM] Generating story 26...
+🔍 Fetching real content from r/PublicFreakout...
+❌ Reddit API error: No suitable posts found
+❌ Story generation failed: Failed to fetch real Reddit data
+❌ [5:08:32 PM] Story generation failed: Failed to fetch real Reddit data
+
+🚀 [6:08:31 PM] Generating story 27...
+🔍 Fetching real content from r/entitledparents...
+✅ Found real Reddit post: "My mom is upset with me prioritizing my trip to To..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=entitledparents, author=randomuser_q12, score=158
+🔥 Found controversial comment (3 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Bridezilla or Jetsetter? The Ultimate Wedding Planning Showdown"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "bridezilla", Where: "jetsetter"
+🎯 Searching Pexels for hero image: "bridezilla"
+📸 Searching Pexels for: "bridezilla"
+⚠️  No Pexels results found
+📸 Searching Pexels for: "bridezilla medical health"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "jetsetter" or "medical health"
+📸 Searching Pexels for: "jetsetter"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Bridezilla or Jetsetter? The Ultimate Wedding Planning Showdown"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Bridezilla or Jetsetter? The Ultimate Wedding Planning Showdown"
+🔗 View at: http://localhost:4242/blog/bridezilla-or-jetsetter-the-ultimate-wedding-planning-showdo
+
+🚀 [7:08:31 PM] Generating story 28...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "Annoyed after a visit with JNMIL..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=BoatLoose4181, score=86
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "In-Laws Brought Gifts & Drama: A Deep Dive into the Visit That Went Off the Rails"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "laws", Where: "brought"
+🎯 Searching Pexels for hero image: "laws"
+📸 Searching Pexels for: "laws"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "brought" or "government politics"
+📸 Searching Pexels for: "brought"
+⚠️  No Pexels results found
+📸 Searching Pexels for: "government politics politics"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "In-Laws Brought Gifts & Drama: A Deep Dive into the Visit That Went Off the Rails"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "In-Laws Brought Gifts & Drama: A Deep Dive into the Visit That Went Off the Rails"
+🔗 View at: http://localhost:4242/blog/in-laws-brought-gifts-drama-a-deep-dive-into-the-visit-that-
+
+🚀 [9:09:41 PM] Generating story 29...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Work made me a drug addict..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=OpiumBaron, score=302
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "How a Corporate Grind Turned One Man into an Accidental Drug Lord"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "corporate", Where: "grind"
+🎯 Searching Pexels for hero image: "corporate"
+📸 Searching Pexels for: "corporate"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "grind" or "social media"
+📸 Searching Pexels for: "grind"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How a Corporate Grind Turned One Man into an Accidental Drug Lord"
+✅ Found 2 real Reddit comments
+💬 Generated 2 real comments from reddit
+✅ Generated: "How a Corporate Grind Turned One Man into an Accidental Drug Lord"
+🔗 View at: http://localhost:4242/blog/how-a-corporate-grind-turned-one-man-into-an-accidental-drug
+
+🚀 [10:09:41 PM] Generating story 30...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Am I crazy or is this ridiculous?..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=c95Neeman, score=527
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Midnight Texts and the Case of the Missing Clean Shirts"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "midnight", Where: "texts"
+🎯 Searching Pexels for hero image: "midnight"
+📸 Searching Pexels for: "midnight"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "texts" or "government politics"
+📸 Searching Pexels for: "texts"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Midnight Texts and the Case of the Missing Clean Shirts"
+⚠️  No Reddit comments found, using fallback
+⚠️  Using fallback reddit comments for politics
+💬 Generated 4 real comments from reddit
+✅ Generated: "Midnight Texts and the Case of the Missing Clean Shirts"
+🔗 View at: http://localhost:4242/blog/midnight-texts-and-the-case-of-the-missing-clean-shirts
+
+🚀 [11:09:41 PM] Generating story 31...
+🔍 Fetching real content from r/JUSTNOMIL...
+✅ Found real Reddit post: "My MIL has no boundaries while my husband is in th..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=JUSTNOMIL, author=SubUrbanlumberjill67, score=384
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Mother-in-Law Meltdown: Breakfast Edition"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "mother", Where: "law"
+🎯 Searching Pexels for hero image: "mother"
+📸 Searching Pexels for: "mother"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "law" or "couple relationship"
+📸 Searching Pexels for: "law"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Mother-in-Law Meltdown: Breakfast Edition"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Mother-in-Law Meltdown: Breakfast Edition"
+🔗 View at: http://localhost:4242/blog/mother-in-law-meltdown-breakfast-edition
+
+🚀 [12:09:41 AM] Generating story 32...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Uline’s Unhinged President’s Letters..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 1 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=1940sCraftsmen, score=1178
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Uline’s Catalogue Confession: When CEOs Go Roguishly Rogue"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "uline", Where: "catalogue"
+🎯 Searching Pexels for hero image: "uline"
+📸 Searching Pexels for: "uline"
+✅ Found 2 Pexels images
+🎯 Searching Pexels for inline image: "catalogue" or "travel vacation"
+📸 Searching Pexels for: "catalogue"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Uline’s Catalogue Confession: When CEOs Go Roguishly Rogue"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Uline’s Catalogue Confession: When CEOs Go Roguishly Rogue"
+🔗 View at: http://localhost:4242/blog/ulines-catalogue-confession-when-ceos-go-roguishly-rogue
+
+🚀 [3:26:11 PM] Generating story 33...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Not sure this is even legal...."
+📸 Found media: 2 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=Svartrbrisingr, score=1729
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "When Your Manager is BFFs with the Owner and You’re Just Trying Not to Scream"
+🎯 Checking Reddit media: 2 images, 0 OP images
+✅ Using Reddit image as hero: https://i.redd.it/n1z12gs2vq8f1.jpeg
+📸 Need to supplement with stock photos: hero=true, inline=false
+📎 Key concepts - What: "manager", Where: "your"
+🎯 Searching Pexels for inline image: "your" or "family parents"
+📸 Searching Pexels for: "your"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "When Your Manager is BFFs with the Owner and You’re Just Trying Not to Scream"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "When Your Manager is BFFs with the Owner and You’re Just Trying Not to Scream"
+🔗 View at: http://localhost:4242/blog/when-your-manager-is-bffs-with-the-owner-and-youre-just-tryi
+
+🚀 [7:49:37 PM] Generating story 34...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU by trying to impress a Bumble date - spent mo..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=jinzo_the_machine, score=318
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Man Challenges Spice: Loses Battle, Wins Bathroom Marathon"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "man", Where: "challenges"
+🎯 Searching Pexels for hero image: "man"
+📸 Searching Pexels for: "man"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "challenges" or "sports athlete"
+📸 Searching Pexels for: "challenges"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Man Challenges Spice: Loses Battle, Wins Bathroom Marathon"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Man Challenges Spice: Loses Battle, Wins Bathroom Marathon"
+🔗 View at: http://localhost:4242/blog/man-challenges-spice-loses-battle-wins-bathroom-marathon
+
+🚀 [8:49:37 PM] Generating story 35...
+🔍 Fetching real content from r/relationship_advice...
+✅ Found real Reddit post: "I (38M) found out my wife (36F) cheated in the beg..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=relationship_advice, author=ThrowRA_InfectedMars, score=588
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Eavesdropping Disaster: How a Fridge Trip Ended My Happy Marriage"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "eavesdropping", Where: "disaster"
+🎯 Searching Pexels for hero image: "eavesdropping"
+📸 Searching Pexels for: "eavesdropping"
+✅ Found 1 Pexels images
+🎯 Searching Pexels for inline image: "disaster" or "gaming video games"
+📸 Searching Pexels for: "disaster"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Eavesdropping Disaster: How a Fridge Trip Ended My Happy Marriage"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Eavesdropping Disaster: How a Fridge Trip Ended My Happy Marriage"
+🔗 View at: http://localhost:4242/blog/eavesdropping-disaster-how-a-fridge-trip-ended-my-happy-marr
+
+🚀 [9:49:37 PM] Generating story 36...
+🔍 Fetching real content from r/entitledparents...
+✅ Found real Reddit post: "Why won't you just listen?..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=entitledparents, author=casti3l9_18, score=13
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Hormonal Symphony: Why OP's Mom Thinks She's Beethoven's Fifth"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "hormonal", Where: "symphony"
+🎯 Searching Pexels for hero image: "hormonal"
+📸 Searching Pexels for: "hormonal"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "symphony" or "celebrity famous"
+📸 Searching Pexels for: "symphony"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Hormonal Symphony: Why OP's Mom Thinks She's Beethoven's Fifth"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Hormonal Symphony: Why OP's Mom Thinks She's Beethoven's Fifth"
+🔗 View at: http://localhost:4242/blog/the-hormonal-symphony-why-ops-mom-thinks-shes-beethovens-fif
+
+🚀 [11:28:49 PM] Generating story 37...
+🔍 Fetching real content from r/PublicFreakout...
+✅ Found real Reddit post: "F### ICE..."
+📸 Found media: 1 images, 1 videos, 0 OP comment images
+📖 Segmented post into 1 parts for interspersing
+🗂️  Reddit data: subreddit=PublicFreakout, author=MrDonMega, score=5843
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "When a Three-Letter Agency and a Coffee Machine Collapse the Internet"
+🎯 Checking Reddit media: 1 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "letter", Where: "three"
+🎯 Searching Pexels for inline image: "three" or "office work"
+📸 Searching Pexels for: "three"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "When a Three-Letter Agency and a Coffee Machine Collapse the Internet"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "When a Three-Letter Agency and a Coffee Machine Collapse the Internet"
+🔗 View at: http://localhost:4242/blog/when-a-three-letter-agency-and-a-coffee-machine-collapse-the
+
+🚀 [10:56:41 AM] Generating story 38...
+🔍 Fetching real content from r/relationship_advice...
+✅ Found real Reddit post: "My (40f) husband (43f) keeps placing the knives fa..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=relationship_advice, author=ThrowRA-dishdilemma, score=449
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Cutlery Chronicles: How Sharp Knives and a Dishwasher Nearly Disbanded a Family"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "family", Where: "cutlery"
+🎯 Searching Pexels for hero image: "family"
+📸 Searching Pexels for: "family"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "cutlery" or "gaming video games"
+📸 Searching Pexels for: "cutlery"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Cutlery Chronicles: How Sharp Knives and a Dishwasher Nearly Disbanded a Family"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Cutlery Chronicles: How Sharp Knives and a Dishwasher Nearly Disbanded a Family"
+🔗 View at: http://localhost:4242/blog/the-cutlery-chronicles-how-sharp-knives-and-a-dishwasher-nea
+
+🚀 [11:56:41 AM] Generating story 39...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU by walking for 1.5 km straight into a red lig..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=Cultural_Stable_1324, score=487
+🔥 Found controversial comment (3 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Unintentional Walk of Shame: Navigating Hong Kong's Red Light District in Heels—With Parents"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "unintentional", Where: "walk"
+🎯 Searching Pexels for hero image: "unintentional"
+📸 Searching Pexels for: "unintentional"
+✅ Found 2 Pexels images
+🎯 Searching Pexels for inline image: "walk" or "social media"
+📸 Searching Pexels for: "walk"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Unintentional Walk of Shame: Navigating Hong Kong's Red Light District in Heels—With Parents"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Unintentional Walk of Shame: Navigating Hong Kong's Red Light District in Heels—With Parents"
+🔗 View at: http://localhost:4242/blog/the-unintentional-walk-of-shame-navigating-hong-kongs-red-li
+
+🚀 [12:56:41 PM] Generating story 40...
+🔍 Fetching real content from r/AmItheAsshole...
+✅ Found real Reddit post: "AITA for yelling at my aunt when she decorated my ..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=AmItheAsshole, author=ohemgee123__, score=1072
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Teen's Summer Book Meltdown: When Aunt's Craft Obsession Goes Off the Rails!"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "teen", Where: "summer"
+🎯 Searching Pexels for hero image: "teen"
+📸 Searching Pexels for: "teen"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "summer" or "courtroom lawyer"
+📸 Searching Pexels for: "summer"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Teen's Summer Book Meltdown: When Aunt's Craft Obsession Goes Off the Rails!"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Teen's Summer Book Meltdown: When Aunt's Craft Obsession Goes Off the Rails!"
+🔗 View at: http://localhost:4242/blog/teens-summer-book-meltdown-when-aunts-craft-obsession-goes-o
+
+🚀 [1:56:41 PM] Generating story 41...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU I MIXED TOLIET BOWL CLEANER..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=Ok_Bad8802, score=76
+🔥 Found controversial comment (4 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Great Bathroom Alchemy: How One Redditor Accidentally Became a Mad Scientist"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "bathroom", Where: "alchemy"
+🎯 Searching Pexels for hero image: "bathroom"
+📸 Searching Pexels for: "bathroom"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "alchemy" or "family parents"
+📸 Searching Pexels for: "alchemy"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Great Bathroom Alchemy: How One Redditor Accidentally Became a Mad Scientist"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Great Bathroom Alchemy: How One Redditor Accidentally Became a Mad Scientist"
+🔗 View at: http://localhost:4242/blog/the-great-bathroom-alchemy-how-one-redditor-accidentally-bec
+
+🚀 [2:56:41 PM] Generating story 42...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "What are some lazy jobs to do till I reach retirem..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=Throwaway-2020s, score=197
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Quest for a Job That’s More Nap Than Work"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "job", Where: "quest"
+🎯 Searching Pexels for hero image: "job"
+📸 Searching Pexels for: "job"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "quest" or "computer laptop"
+📸 Searching Pexels for: "quest"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Quest for a Job That’s More Nap Than Work"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Quest for a Job That’s More Nap Than Work"
+🔗 View at: http://localhost:4242/blog/the-quest-for-a-job-thats-more-nap-than-work
+
+🚀 [3:56:41 PM] Generating story 43...
+🔍 Fetching real content from r/MaliciousCompliance...
+✅ Found real Reddit post: "You want me to tell people about our + service AND..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=MaliciousCompliance, author=coffeebrewcrew, score=381
+🔥 Found controversial comment (1 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "Pharmacy Drama: When 'Tech Support' Takes Over Your Life"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "pharmacy", Where: "drama"
+🎯 Searching Pexels for hero image: "pharmacy"
+📸 Searching Pexels for: "pharmacy"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "drama" or "classroom education"
+📸 Searching Pexels for: "drama"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Pharmacy Drama: When 'Tech Support' Takes Over Your Life"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Pharmacy Drama: When 'Tech Support' Takes Over Your Life"
+🔗 View at: http://localhost:4242/blog/pharmacy-drama-when-tech-support-takes-over-your-life
+
+🚀 [4:56:41 PM] Generating story 44...
+🔍 Fetching real content from r/ChoosingBeggars...
+✅ Found real Reddit post: "Cursed out for giving only a dollar...."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=ChoosingBeggars, author=Best-Week5303, score=428
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Four-Wheeled Showdown: When Generosity Goes Hilariously Wrong at a Traffic Light"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "four", Where: "wheeled"
+🎯 Searching Pexels for hero image: "four"
+📸 Searching Pexels for: "four"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "wheeled" or "lifestyle"
+📸 Searching Pexels for: "wheeled"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "The Four-Wheeled Showdown: When Generosity Goes Hilariously Wrong at a Traffic Light"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Four-Wheeled Showdown: When Generosity Goes Hilariously Wrong at a Traffic Light"
+🔗 View at: http://localhost:4242/blog/the-four-wheeled-showdown-when-generosity-goes-hilariously-w
+
+🚀 [5:56:41 PM] Generating story 45...
+🔍 Fetching real content from r/antiwork...
+✅ Found real Reddit post: "Just learned today about something called a “bored..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 2 parts for interspersing
+🗂️  Reddit data: subreddit=antiwork, author=Groffulon, score=2158
+🎬 Found 1 media placeholders
+🖼️  Finding images for: "Corporations Have Secret 'Boredom Rooms' and It's as Dystopian as It Sounds"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "secret", Where: "corporations"
+🎯 Searching Pexels for hero image: "secret"
+📸 Searching Pexels for: "secret"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "corporations" or "house home"
+📸 Searching Pexels for: "corporations"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "Corporations Have Secret 'Boredom Rooms' and It's as Dystopian as It Sounds"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "Corporations Have Secret 'Boredom Rooms' and It's as Dystopian as It Sounds"
+🔗 View at: http://localhost:4242/blog/corporations-have-secret-boredom-rooms-and-its-as-dystopian-
+
+🚀 [9:18:14 PM] Generating story 46...
+🔍 Fetching real content from r/tifu...
+✅ Found real Reddit post: "TIFU by not shaking hands with women..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 3 parts for interspersing
+🗂️  Reddit data: subreddit=tifu, author=tuesday-next22, score=166
+🔥 Found controversial comment (4 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "How a Handshake (or Lack Thereof) Turned into a Comedic Cultural Crash Course"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "handshake", Where: "lack"
+🎯 Searching Pexels for hero image: "handshake"
+📸 Searching Pexels for: "handshake"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "lack" or "computer laptop"
+📸 Searching Pexels for: "lack"
+✅ Found 5 Pexels images
+🔍 Fetching real reddit comments for: "How a Handshake (or Lack Thereof) Turned into a Comedic Cultural Crash Course"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "How a Handshake (or Lack Thereof) Turned into a Comedic Cultural Crash Course"
+🔗 View at: http://localhost:4242/blog/how-a-handshake-or-lack-thereof-turned-into-a-comedic-cultur
+
+🚀 [10:18:14 PM] Generating story 47...
+🔍 Fetching real content from r/ChoosingBeggars...
+✅ Found real Reddit post: ""Charities"..."
+📸 Found media: 0 images, 0 videos, 0 OP comment images
+📖 Segmented post into 4 parts for interspersing
+🗂️  Reddit data: subreddit=ChoosingBeggars, author=Bubbly_Invite1032, score=62
+🔥 Found controversial comment (3 score)
+🎬 Found 0 media placeholders
+🖼️  Finding images for: "The Day Lilo, Stitch, and the Charity Guilt Trip Collided"
+🎯 Checking Reddit media: 0 images, 0 OP images
+📸 Need to supplement with stock photos: hero=false, inline=false
+📎 Key concepts - What: "day", Where: "lilo"
+🎯 Searching Pexels for hero image: "day"
+📸 Searching Pexels for: "day"
+✅ Found 5 Pexels images
+🎯 Searching Pexels for inline image: "lilo" or "house home"
+📸 Searching Pexels for: "lilo"
+✅ Found 3 Pexels images
+🔍 Fetching real reddit comments for: "The Day Lilo, Stitch, and the Charity Guilt Trip Collided"
+✅ Found 6 real Reddit comments
+💬 Generated 6 real comments from reddit
+✅ Generated: "The Day Lilo, Stitch, and the Charity Guilt Trip Collided"
+🔗 View at: http://localhost:4242/blog/the-day-lilo-stitch-and-the-charity-guilt-trip-collided

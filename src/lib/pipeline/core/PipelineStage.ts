@@ -1,13 +1,15 @@
 /**
  * Pipeline Stage Interface
- * 
+ *
  * Defines the contract for all pipeline stages.
  * Each stage is responsible for one specific transformation.
  */
 
 import { PipelineContext } from './PipelineContext';
 
-export interface PipelineStage<TContext extends PipelineContext = PipelineContext> {
+export interface PipelineStage<
+  TContext extends PipelineContext = PipelineContext,
+> {
   /**
    * Unique name for this stage
    */
@@ -42,9 +44,10 @@ export interface PipelineStage<TContext extends PipelineContext = PipelineContex
 /**
  * Abstract base class for pipeline stages
  */
-export abstract class BasePipelineStage<TContext extends PipelineContext = PipelineContext> 
-  implements PipelineStage<TContext> {
-  
+export abstract class BasePipelineStage<
+  TContext extends PipelineContext = PipelineContext,
+> implements PipelineStage<TContext>
+{
   abstract name: string;
   description?: string;
   dependsOn?: string[];
@@ -71,7 +74,7 @@ export abstract class BasePipelineStage<TContext extends PipelineContext = Pipel
    * Helper method for timing operations
    */
   protected async timeOperation<T>(
-    operationName: string, 
+    operationName: string,
     operation: () => Promise<T>
   ): Promise<T> {
     const start = Date.now();
@@ -82,7 +85,8 @@ export abstract class BasePipelineStage<TContext extends PipelineContext = Pipel
       return result;
     } catch (error) {
       const duration = Date.now() - start;
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`${operationName} failed after ${duration}ms: ${errorMessage}`);
       throw error;
     }

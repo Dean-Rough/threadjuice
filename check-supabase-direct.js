@@ -13,7 +13,10 @@ envContent.split('\n').forEach(line => {
   }
 });
 
-const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const supabase = createClient(
+  env.NEXT_PUBLIC_SUPABASE_URL,
+  env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 async function checkPosts() {
   try {
@@ -21,17 +24,16 @@ async function checkPosts() {
       .from('posts')
       .select('id, title')
       .order('created_at', { ascending: false });
-    
+
     if (error) {
       console.error('❌ Error:', error);
       return;
     }
-    
+
     console.log('📋 Current posts in Supabase:');
     data.forEach(post => {
       console.log(`- ${post.id}: ${post.title}`);
     });
-    
   } catch (error) {
     console.error('❌ Failed:', error.message);
   }

@@ -333,8 +333,8 @@ export default function HelpPage() {
               Still need help?
             </h2>
             <p className='mb-8 text-gray-600'>
-              Can&apos;t find what you&apos;re looking for? Our support team is here to
-              help.
+              Can&apos;t find what you&apos;re looking for? Our support team is
+              here to help.
             </p>
 
             <div className='grid gap-4 md:grid-cols-2'>

@@ -15,7 +15,7 @@ export default function TikTokEmbed({
   videoId,
   embedUrl,
   embedHtml,
-  className = ''
+  className = '',
 }: TikTokEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [embedError, setEmbedError] = useState(false);
@@ -28,13 +28,17 @@ export default function TikTokEmbed({
   };
 
   const actualVideoId = videoId || (embedUrl ? extractVideoId(embedUrl) : null);
-  const tiktokUrl = embedUrl || (actualVideoId ? `https://www.tiktok.com/@user/video/${actualVideoId}` : null);
+  const tiktokUrl =
+    embedUrl ||
+    (actualVideoId
+      ? `https://www.tiktok.com/@user/video/${actualVideoId}`
+      : null);
 
   useEffect(() => {
     if (scriptLoaded && containerRef.current && actualVideoId) {
       // Clear container
       containerRef.current.innerHTML = '';
-      
+
       // Create blockquote element for TikTok embed
       const blockquote = document.createElement('blockquote');
       blockquote.className = 'tiktok-embed';
@@ -42,14 +46,14 @@ export default function TikTokEmbed({
       blockquote.setAttribute('data-video-id', actualVideoId);
       blockquote.style.maxWidth = '605px';
       blockquote.style.minWidth = '325px';
-      
+
       // Add section for content
       const section = document.createElement('section');
       section.innerHTML = `<a target="_blank" title="TikTok Video" href="${tiktokUrl}">View on TikTok</a>`;
       blockquote.appendChild(section);
-      
+
       containerRef.current.appendChild(blockquote);
-      
+
       // Trigger TikTok embed rendering
       if ((window as any).tiktok?.createEmbed) {
         (window as any).tiktok.createEmbed(containerRef.current);
@@ -59,8 +63,8 @@ export default function TikTokEmbed({
 
   if (!actualVideoId && !embedUrl && !embedHtml) {
     return (
-      <div className={`bg-muted rounded-lg p-8 text-center ${className}`}>
-        <p className="text-muted-foreground">TikTok unavailable</p>
+      <div className={`rounded-lg bg-muted p-8 text-center ${className}`}>
+        <p className='text-muted-foreground'>TikTok unavailable</p>
       </div>
     );
   }
@@ -68,21 +72,25 @@ export default function TikTokEmbed({
   // If embed fails or is blocked, show fallback
   if (embedError) {
     return (
-      <div className={`bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg p-8 text-center ${className}`}>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-            <Play className="w-8 h-8 text-white" />
+      <div
+        className={`rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 p-8 text-center ${className}`}
+      >
+        <div className='flex flex-col items-center gap-4'>
+          <div className='flex h-16 w-16 items-center justify-center rounded-full bg-white/20'>
+            <Play className='h-8 w-8 text-white' />
           </div>
-          <h3 className="text-xl font-bold text-white">TikTok Video</h3>
-          <p className="text-white/90">This TikTok video can't be embedded here</p>
+          <h3 className='text-xl font-bold text-white'>TikTok Video</h3>
+          <p className='text-white/90'>
+            This TikTok video can't be embedded here
+          </p>
           <a
             href={tiktokUrl || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-white/90 transition-colors"
+            target='_blank'
+            rel='noopener noreferrer'
+            className='inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-purple-600 transition-colors hover:bg-white/90'
           >
             <span>Watch on TikTok</span>
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className='h-4 w-4' />
           </a>
         </div>
       </div>
@@ -93,14 +101,14 @@ export default function TikTokEmbed({
   if (embedHtml) {
     return (
       <>
-        <div 
+        <div
           ref={containerRef}
           className={`tiktok-embed-container ${className}`}
           dangerouslySetInnerHTML={{ __html: embedHtml }}
         />
         <Script
-          src="https://www.tiktok.com/embed.js"
-          strategy="lazyOnload"
+          src='https://www.tiktok.com/embed.js'
+          strategy='lazyOnload'
           onLoad={() => setScriptLoaded(true)}
           onError={() => setEmbedError(true)}
         />
@@ -111,19 +119,19 @@ export default function TikTokEmbed({
   // Use TikTok's blockquote embed method
   return (
     <>
-      <div 
+      <div
         ref={containerRef}
         className={`tiktok-embed-container ${className}`}
         onError={() => setEmbedError(true)}
       >
         {/* Container will be populated by useEffect */}
-        <div className="bg-muted rounded-lg p-8 text-center">
-          <p className="text-muted-foreground">Loading TikTok...</p>
+        <div className='rounded-lg bg-muted p-8 text-center'>
+          <p className='text-muted-foreground'>Loading TikTok...</p>
         </div>
       </div>
       <Script
-        src="https://www.tiktok.com/embed.js"
-        strategy="lazyOnload"
+        src='https://www.tiktok.com/embed.js'
+        strategy='lazyOnload'
         onLoad={() => setScriptLoaded(true)}
         onError={() => setEmbedError(true)}
       />

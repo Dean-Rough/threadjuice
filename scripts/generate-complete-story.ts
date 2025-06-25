@@ -112,19 +112,20 @@ async function generateCompleteStory() {
       messages: [
         {
           role: 'system',
-          content: 'You are The Terry, ThreadJuice\'s most cynical and witty writer. Create viral stories with proper British wit and sardonic observations.'
+          content:
+            "You are The Terry, ThreadJuice's most cynical and witty writer. Create viral stories with proper British wit and sardonic observations.",
         },
         {
           role: 'user',
-          content: `${STORY_PROMPT}\n\nGenerate a story about: "Karen demands restaurant remake her salad 17 times until it matches her Instagram aesthetic"`
-        }
+          content: `${STORY_PROMPT}\n\nGenerate a story about: "Karen demands restaurant remake her salad 17 times until it matches her Instagram aesthetic"`,
+        },
       ],
       temperature: 0.8,
       max_tokens: 4000,
     });
 
     const storyData = JSON.parse(completion.choices[0].message.content!);
-    
+
     console.log('✅ Generated story:', storyData.title);
     console.log('📝 Sections:', storyData.content.sections.length);
 
@@ -155,7 +156,6 @@ async function generateCompleteStory() {
 
     console.log('\n✅ Story published successfully!');
     console.log(`📖 View at: http://localhost:4242/blog/${data.slug}`);
-
   } catch (error) {
     console.error('❌ Error:', error);
   }
@@ -164,34 +164,35 @@ async function generateCompleteStory() {
 // Generate multiple stories
 async function generateBatch() {
   const prompts = [
-    "Karen demands restaurant remake her salad 17 times until it matches her Instagram aesthetic",
+    'Karen demands restaurant remake her salad 17 times until it matches her Instagram aesthetic',
     "Tech bro's 'revolutionary' app is just a worse version of something that already exists",
     "Couple's gender reveal party accidentally starts international incident",
-    "Influencer's 'life hack' video causes citywide plumbing crisis"
+    "Influencer's 'life hack' video causes citywide plumbing crisis",
   ];
 
   for (const prompt of prompts) {
     console.log(`\n📝 Generating: ${prompt}`);
-    
+
     try {
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages: [
           {
             role: 'system',
-            content: 'You are The Terry, ThreadJuice\'s most cynical and witty writer. Create viral stories with proper British wit and sardonic observations.'
+            content:
+              "You are The Terry, ThreadJuice's most cynical and witty writer. Create viral stories with proper British wit and sardonic observations.",
           },
           {
             role: 'user',
-            content: `${STORY_PROMPT}\n\nGenerate a story about: "${prompt}"`
-          }
+            content: `${STORY_PROMPT}\n\nGenerate a story about: "${prompt}"`,
+          },
         ],
         temperature: 0.8,
         max_tokens: 4000,
       });
 
       const storyData = JSON.parse(completion.choices[0].message.content!);
-      
+
       // Determine category based on prompt
       let category = 'viral';
       if (prompt.includes('Karen')) category = 'karen';
@@ -200,22 +201,20 @@ async function generateBatch() {
       else if (prompt.includes('Influencer')) category = 'social-media';
 
       // Insert into Supabase
-      const { error } = await supabase
-        .from('posts')
-        .insert({
-          title: storyData.title,
-          slug: storyData.slug,
-          hook: storyData.excerpt,
-          content: storyData.content,
-          category,
-          status: 'published',
-          featured: false,
-          trending_score: Math.floor(Math.random() * 50) + 50,
-          view_count: Math.floor(Math.random() * 30000) + 5000,
-          share_count: Math.floor(Math.random() * 3000) + 500,
-          featured_image: '/assets/img/lifestyle/life_style01.jpg',
-          persona_id: 1, // The Terry
-        });
+      const { error } = await supabase.from('posts').insert({
+        title: storyData.title,
+        slug: storyData.slug,
+        hook: storyData.excerpt,
+        content: storyData.content,
+        category,
+        status: 'published',
+        featured: false,
+        trending_score: Math.floor(Math.random() * 50) + 50,
+        view_count: Math.floor(Math.random() * 30000) + 5000,
+        share_count: Math.floor(Math.random() * 3000) + 500,
+        featured_image: '/assets/img/lifestyle/life_style01.jpg',
+        persona_id: 1, // The Terry
+      });
 
       if (error) {
         console.error(`❌ Error inserting "${storyData.title}":`, error);
@@ -225,7 +224,6 @@ async function generateBatch() {
 
       // Small delay between API calls
       await new Promise(resolve => setTimeout(resolve, 2000));
-
     } catch (error) {
       console.error(`❌ Error generating story:`, error);
     }

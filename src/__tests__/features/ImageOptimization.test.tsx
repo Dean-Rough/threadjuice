@@ -131,9 +131,13 @@ describe('Image Optimization in TrendingFeed', () => {
     expect(backgroundImageDivs.length).toBeGreaterThan(0);
 
     // Check that the first post has the correct background image
-    const firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+    const firstPostCard = backgroundImageDivs[0].querySelector(
+      'div[style*="background-image"]'
+    );
     expect(firstPostCard).toBeTruthy();
-    expect(firstPostCard).toHaveStyle('background-image: url("/assets/img/tech/test1.jpg")');
+    expect(firstPostCard).toHaveStyle(
+      'background-image: url("/assets/img/tech/test1.jpg")'
+    );
   });
 
   it('should use next/image for list layout images', () => {
@@ -259,8 +263,10 @@ describe('Image Optimization in TrendingFeed', () => {
     // Check grid layout uses background images
     let backgroundImageDivs = screen.getAllByRole('article');
     expect(backgroundImageDivs.length).toBeGreaterThan(0);
-    
-    let firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+
+    let firstPostCard = backgroundImageDivs[0].querySelector(
+      'div[style*="background-image"]'
+    );
     expect(firstPostCard).toBeTruthy();
 
     // Test masonry layout
@@ -272,8 +278,10 @@ describe('Image Optimization in TrendingFeed', () => {
 
     backgroundImageDivs = screen.getAllByRole('article');
     expect(backgroundImageDivs.length).toBeGreaterThan(0);
-    
-    firstPostCard = backgroundImageDivs[0].querySelector('div[style*="background-image"]');
+
+    firstPostCard = backgroundImageDivs[0].querySelector(
+      'div[style*="background-image"]'
+    );
     expect(firstPostCard).toBeTruthy();
   });
 });

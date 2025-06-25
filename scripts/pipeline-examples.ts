@@ -1,11 +1,11 @@
 /**
  * Pipeline Integration Examples
- * 
+ *
  * Shows how to use the modular pipeline system in various scenarios
  */
 
-import { 
-  createRedditPipeline, 
+import {
+  createRedditPipeline,
   createAIPipeline,
   Pipeline,
   PipelineContext,
@@ -20,22 +20,24 @@ import {
   FileOutput,
   DualOutput,
   PipelineOrchestrator,
-  createDefaultOrchestrator
+  createDefaultOrchestrator,
 } from '@/lib/pipeline';
 
 // Example 1: Simple Reddit story ingestion
 async function ingestRedditStory() {
   const pipeline = createRedditPipeline('tifu');
   const result = await pipeline.execute(new PipelineContext('reddit', {}));
-  
+
   console.log('Story saved:', result.output.story?.title);
 }
 
 // Example 2: AI story generation with custom persona
 async function generateAIStory() {
   const pipeline = createAIPipeline('workplace', 'the-dry-cynic');
-  const result = await pipeline.execute(new PipelineContext('ai-generated', {}));
-  
+  const result = await pipeline.execute(
+    new PipelineContext('ai-generated', {})
+  );
+
   return result.output.story;
 }
 
@@ -43,27 +45,33 @@ async function generateAIStory() {
 async function customPipeline() {
   const pipeline = new Pipeline({ debug: true })
     // Get content from Reddit
-    .pipe(RedditSource('AmItheAsshole', { 
-      limit: 10, 
-      minScore: 500,
-      sort: 'top' 
-    }))
+    .pipe(
+      RedditSource('AmItheAsshole', {
+        limit: 10,
+        minScore: 500,
+        sort: 'top',
+      })
+    )
     // Analyze the content
-    .pipe(new AnalysisStage({
-      analyzeSentiment: true,
-      generateKeywords: true,
-      extractMetaphors: true
-    }))
+    .pipe(
+      new AnalysisStage({
+        analyzeSentiment: true,
+        generateKeywords: true,
+        extractMetaphors: true,
+      })
+    )
     // Add rich media
     .pipe(FullEnrichment())
     // Transform to story format
-    .pipe(new TransformStage({
-      includeGifs: true,
-      includeTerryCommentary: true
-    }))
+    .pipe(
+      new TransformStage({
+        includeGifs: true,
+        includeTerryCommentary: true,
+      })
+    )
     // Save to both database and file
     .pipe(DualOutput());
-    
+
   return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
@@ -75,26 +83,26 @@ async function testPipeline() {
     .pipe(MinimalEnrichment())
     .pipe(new TransformStage())
     .pipe(FileOutput('./test-stories'));
-    
+
   return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
 // Example 5: Using the orchestrator for multiple pipelines
 async function orchestratorExample() {
   const orchestrator = createDefaultOrchestrator();
-  
+
   // Execute Reddit pipeline
   const redditResult = await orchestrator.execute(
     'reddit-viral',
     new PipelineContext('reddit', {})
   );
-  
+
   // Execute AI pipeline
   const aiResult = await orchestrator.execute(
     'ai-generated',
     new PipelineContext('ai-generated', {})
   );
-  
+
   // Get pipeline stats
   const stats = orchestrator.getStats();
   console.log('Pipeline statistics:', stats);
@@ -104,7 +112,7 @@ async function orchestratorExample() {
 async function batchProcess() {
   const subreddits = ['tifu', 'AmItheAsshole', 'relationships'];
   const results = [];
-  
+
   for (const subreddit of subreddits) {
     const pipeline = new Pipeline()
       .pipe(RedditSource(subreddit, { limit: 5 }))
@@ -112,26 +120,26 @@ async function batchProcess() {
       .pipe(FullEnrichment())
       .pipe(new TransformStage())
       .pipe(DatabaseOutput());
-      
+
     const result = await pipeline.execute(new PipelineContext('reddit', {}));
     results.push(result);
   }
-  
+
   return results;
 }
 
 // Example 7: Error handling and retry logic
 async function robustPipeline() {
-  const pipeline = new Pipeline({ 
+  const pipeline = new Pipeline({
     debug: true,
-    throwOnError: false  // Continue on errors
+    throwOnError: false, // Continue on errors
   })
     .pipe(RedditSource('technology'))
     .pipe(new AnalysisStage())
     .pipe(FullEnrichment())
     .pipe(new TransformStage())
     .pipe(DatabaseOutput());
-  
+
   let retries = 3;
   while (retries > 0) {
     try {
@@ -144,39 +152,37 @@ async function robustPipeline() {
       retries--;
     }
   }
-  
+
   throw new Error('Pipeline failed after all retries');
 }
 
 // Example 8: Conditional pipeline stages
-async function conditionalPipeline(options: { 
+async function conditionalPipeline(options: {
   enrichImages: boolean;
   saveToFile: boolean;
 }) {
   const pipeline = new Pipeline();
-  
+
   // Always add source and analysis
-  pipeline
-    .pipe(RedditSource('todayilearned'))
-    .pipe(new AnalysisStage());
-  
+  pipeline.pipe(RedditSource('todayilearned')).pipe(new AnalysisStage());
+
   // Conditionally add enrichment
   if (options.enrichImages) {
     pipeline.pipe(FullEnrichment());
   } else {
     pipeline.pipe(MinimalEnrichment());
   }
-  
+
   // Always transform
   pipeline.pipe(new TransformStage());
-  
+
   // Choose output
   if (options.saveToFile) {
     pipeline.pipe(FileOutput('./stories'));
   } else {
     pipeline.pipe(DatabaseOutput());
   }
-  
+
   return await pipeline.execute(new PipelineContext('ai-generated', {}));
 }
 
@@ -189,5 +195,5 @@ export {
   orchestratorExample,
   batchProcess,
   robustPipeline,
-  conditionalPipeline
+  conditionalPipeline,
 };

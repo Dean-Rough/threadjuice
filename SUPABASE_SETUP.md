@@ -7,19 +7,23 @@ The codebase is fully prepared for Supabase integration. All scripts, API routes
 ## 🚀 Quick Setup (3 Steps)
 
 ### Step 1: Set up Database Schema
+
 1. Go to **Supabase Dashboard SQL Editor**: https://okugoocdornbiwwykube.supabase.co/project/okugoocdornbiwwykube/sql
-2. Copy the entire contents of `database/schema.sql`  
+2. Copy the entire contents of `database/schema.sql`
 3. Paste and execute in SQL Editor
 4. Verify tables are created (should see: posts, personas, categories, etc.)
 
 ### Step 2: Migrate Existing Stories
+
 ```bash
 # Run the migration script to move all generated stories to Supabase
 node migrate-to-supabase.js
 ```
+
 This will transfer all 8 generated stories from `/data/generated-stories/` to the Supabase database.
 
 ### Step 3: Switch to Production API
+
 ```bash
 # Replace the current API route with the Supabase version
 mv src/app/api/posts/route.ts src/app/api/posts/route-old.ts
@@ -32,7 +36,7 @@ mv src/app/api/posts/route-supabase.ts src/app/api/posts/route.ts
 ✅ **Real Database**: All stories stored in Supabase with proper schema  
 ✅ **Production Ready**: Scalable database with indexes and triggers  
 ✅ **Story Generation Pipeline**: Scripts save directly to Supabase  
-✅ **Clean Architecture**: Proper separation of concerns  
+✅ **Clean Architecture**: Proper separation of concerns
 
 ## 🔄 Story Generation After Setup
 
@@ -49,7 +53,7 @@ node scripts/generate-real-story.js
 ## 📊 Database Features Enabled
 
 - **Full-text search** on titles and content
-- **Automatic counters** for views, shares, comments  
+- **Automatic counters** for views, shares, comments
 - **Trending score calculation** with triggers
 - **User interaction tracking** ready for Clerk auth
 - **Image management** with proper attribution
@@ -84,18 +88,18 @@ After setup, test the complete pipeline:
 
 ## 📝 Current File System vs Supabase
 
-| Component | Current (Files) | After Migration (Supabase) |
-|-----------|----------------|----------------------------|
-| Story Storage | `/data/generated-stories/*.json` | `posts` table |
-| API Data Source | File reading + mock data | Direct Supabase queries |
-| Story Generation | Saves to files | Saves to database |
-| Performance | File I/O on every request | Cached database queries |
-| Scalability | Limited by filesystem | Unlimited cloud database |
+| Component        | Current (Files)                  | After Migration (Supabase) |
+| ---------------- | -------------------------------- | -------------------------- |
+| Story Storage    | `/data/generated-stories/*.json` | `posts` table              |
+| API Data Source  | File reading + mock data         | Direct Supabase queries    |
+| Story Generation | Saves to files                   | Saves to database          |
+| Performance      | File I/O on every request        | Cached database queries    |
+| Scalability      | Limited by filesystem            | Unlimited cloud database   |
 
 ## 🚨 Important Notes
 
 - **Supabase connection is already configured** ✅
-- **All scripts are ready** ✅  
+- **All scripts are ready** ✅
 - **API routes are prepared** ✅
 - **Schema is comprehensive** ✅
 - **Migration tools are tested** ✅

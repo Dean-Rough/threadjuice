@@ -30,7 +30,7 @@ const YOUTUBE_VIDEOS = {
     'YQHsXMglC9A', // Viral moments
     'kffacxfA7G4', // Baby Shark
     '9bZkp7q19f0', // Gangnam Style
-  ]
+  ],
 };
 
 // Real tweet examples that should still be live
@@ -51,7 +51,7 @@ const REAL_TWEETS = {
   general: [
     { id: '1737945821562839466', user: 'dril' }, // Weird Twitter
     { id: '1738201439241404850', user: 'dog_rates' }, // Wholesome content
-  ]
+  ],
 };
 
 export class RealMediaEnricher {
@@ -61,15 +61,16 @@ export class RealMediaEnricher {
   }
 
   detectReferences(sections) {
-    const mediaRegex = /\[MEDIA:\s*type="([^"]+)"\s*query="([^"]+)"\s*context="([^"]+)"\]/g;
+    const mediaRegex =
+      /\[MEDIA:\s*type="([^"]+)"\s*query="([^"]+)"\s*context="([^"]+)"\]/g;
     const references = [];
-    
+
     sections.forEach((section, index) => {
       if (section.content && typeof section.content === 'string') {
         let match;
         const content = section.content;
         mediaRegex.lastIndex = 0;
-        
+
         while ((match = mediaRegex.exec(content)) !== null) {
           references.push({
             sectionIndex: index,
@@ -77,19 +78,19 @@ export class RealMediaEnricher {
             query: match[2],
             context: match[3],
             fullMatch: match[0],
-            position: match.index
+            position: match.index,
           });
         }
       }
     });
-    
+
     return references;
   }
 
   getRelevantYouTubeVideo(query, context, category) {
     // Determine video category based on context
     let videoCategory = 'general';
-    
+
     if (context.includes('apology') || query.includes('apology')) {
       videoCategory = 'apology';
     } else if (context.includes('drama') || context.includes('fight')) {
@@ -99,9 +100,9 @@ export class RealMediaEnricher {
     } else if (context.includes('tech') || context.includes('computer')) {
       videoCategory = 'technology';
     }
-    
+
     const videos = YOUTUBE_VIDEOS[videoCategory] || YOUTUBE_VIDEOS.general;
-    
+
     // Get a video we haven't used yet
     for (const videoId of videos) {
       if (!this.usedVideos.has(videoId)) {
@@ -109,7 +110,7 @@ export class RealMediaEnricher {
         return videoId;
       }
     }
-    
+
     // If all used, return a random one
     return videos[Math.floor(Math.random() * videos.length)];
   }
@@ -117,7 +118,7 @@ export class RealMediaEnricher {
   getRelevantTweet(query, context, category) {
     // Determine tweet category based on context
     let tweetCategory = 'general';
-    
+
     if (context.includes('drama') || context.includes('controversy')) {
       tweetCategory = 'drama';
     } else if (context.includes('food') || context.includes('restaurant')) {
@@ -125,9 +126,9 @@ export class RealMediaEnricher {
     } else if (context.includes('tech') || context.includes('app')) {
       tweetCategory = 'tech';
     }
-    
+
     const tweets = REAL_TWEETS[tweetCategory] || REAL_TWEETS.general;
-    
+
     // Get a tweet we haven't used yet
     for (const tweet of tweets) {
       const tweetKey = `${tweet.user}/${tweet.id}`;
@@ -136,7 +137,7 @@ export class RealMediaEnricher {
         return tweet;
       }
     }
-    
+
     // If all used, return a random one
     return tweets[Math.floor(Math.random() * tweets.length)];
   }
@@ -152,26 +153,32 @@ export class RealMediaEnricher {
     }
 
     console.log(`🎬 Found ${references.length} media references to enrich`);
-    
+
     const enrichedSections = [];
-    
+
     story.content.sections.forEach((section, index) => {
       // Add the original section with placeholders removed
       const cleanedSection = { ...section };
       if (references.some(r => r.sectionIndex === index)) {
-        cleanedSection.content = section.content.replace(
-          /\[MEDIA:\s*type="[^"]+"\s*query="[^"]+"\s*context="[^"]+"\]/g,
-          ''
-        ).trim();
+        cleanedSection.content = section.content
+          .replace(
+            /\[MEDIA:\s*type="[^"]+"\s*query="[^"]+"\s*context="[^"]+"\]/g,
+            ''
+          )
+          .trim();
       }
       enrichedSections.push(cleanedSection);
-      
+
       // Add media embeds after sections that had placeholders
       const sectionRefs = references.filter(r => r.sectionIndex === index);
       sectionRefs.forEach(ref => {
         if (ref.type === 'video') {
           // Add YouTube video
-          const videoId = this.getRelevantYouTubeVideo(ref.query, ref.context, story.category);
+          const videoId = this.getRelevantYouTubeVideo(
+            ref.query,
+            ref.context,
+            story.category
+          );
           enrichedSections.push({
             type: 'media_embed',
             content: '',
@@ -182,13 +189,17 @@ export class RealMediaEnricher {
                 embedId: videoId,
                 title: `Video: ${ref.context}`,
                 platform: 'YouTube',
-                confidence: 0.85
-              }
-            }
+                confidence: 0.85,
+              },
+            },
           });
         } else if (ref.type === 'tweet') {
           // Add real tweet
-          const tweet = this.getRelevantTweet(ref.query, ref.context, story.category);
+          const tweet = this.getRelevantTweet(
+            ref.query,
+            ref.context,
+            story.category
+          );
           enrichedSections.push({
             type: 'media_embed',
             content: '',
@@ -199,9 +210,9 @@ export class RealMediaEnricher {
                 embedId: tweet.id,
                 title: `Tweet about ${ref.query}`,
                 platform: 'Twitter',
-                confidence: 0.85
-              }
-            }
+                confidence: 0.85,
+              },
+            },
           });
         }
       });
@@ -211,8 +222,8 @@ export class RealMediaEnricher {
       ...story,
       content: {
         ...story.content,
-        sections: enrichedSections
-      }
+        sections: enrichedSections,
+      },
     };
   }
 }

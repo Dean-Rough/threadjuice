@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 export default function TestStoryPage() {
-  const [story, setStory] = useState(null);
+  const [story, setStory] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchTestStory() {
@@ -21,7 +21,7 @@ export default function TestStoryPage() {
         setStory(storyData);
       } catch (err) {
         console.error('Error loading story:', err);
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'Failed to load story');
       } finally {
         setIsLoading(false);
       }
@@ -155,7 +155,7 @@ export default function TestStoryPage() {
                 ✅ Modular Sections Verified:
               </h3>
               <div className='grid grid-cols-2 gap-2 text-sm'>
-                {story.content?.sections?.map((section, index) => (
+                {story.content?.sections?.map((section: any, index: number) => (
                   <div key={index} className='flex items-center space-x-2'>
                     <CheckCircle className='h-4 w-4 text-green-500' />
                     <span>

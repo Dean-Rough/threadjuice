@@ -22,7 +22,7 @@ export default function HoverLink({
   children,
   preview,
   className = '',
-  external = true
+  external = true,
 }: HoverLinkProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
@@ -33,14 +33,14 @@ export default function HoverLink({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    
+
     timeoutRef.current = setTimeout(() => {
       if (!e.currentTarget || !e.currentTarget.getBoundingClientRect) return;
-      
+
       const rect = e.currentTarget.getBoundingClientRect();
       setPreviewPosition({
         x: rect.left + rect.width / 2,
-        y: rect.bottom + 10
+        y: rect.bottom + 10,
       });
       setShowPreview(true);
     }, 500); // Show preview after 500ms hover
@@ -59,9 +59,9 @@ export default function HoverLink({
     // Handle special cases
     if (!href || href === '#') {
       return {
-        title: "Link not available",
-        description: "This link is not yet configured",
-        domain: "ThreadJuice"
+        title: 'Link not available',
+        description: 'This link is not yet configured',
+        domain: 'ThreadJuice',
       };
     }
 
@@ -69,43 +69,47 @@ export default function HoverLink({
       // Auto-generate preview based on href
       const url = new URL(href.startsWith('http') ? href : `https://${href}`);
       const domain = url.hostname;
-      
+
       // Generate preview based on common domains
       if (domain.includes('buzzfeed')) {
         return {
-          title: "17 Pizza Reheating Methods That Will Change Your Life",
-          description: "From the obvious to the absolutely ridiculous, these pizza reheating methods will revolutionize your leftover game.",
-          domain: "BuzzFeed",
-          image: "/api/placeholder/300/150"
+          title: '17 Pizza Reheating Methods That Will Change Your Life',
+          description:
+            'From the obvious to the absolutely ridiculous, these pizza reheating methods will revolutionize your leftover game.',
+          domain: 'BuzzFeed',
+          image: '/api/placeholder/300/150',
         };
       } else if (domain.includes('nytimes')) {
         return {
-          title: "The Science of Reheating: A Thermal Analysis",
-          description: "Food science meets kitchen practicality in this comprehensive guide to optimal food reheating techniques.",
-          domain: "The New York Times",
-          image: "/api/placeholder/300/150"
+          title: 'The Science of Reheating: A Thermal Analysis',
+          description:
+            'Food science meets kitchen practicality in this comprehensive guide to optimal food reheating techniques.',
+          domain: 'The New York Times',
+          image: '/api/placeholder/300/150',
         };
       } else if (domain.includes('foodnetwork')) {
         return {
-          title: "Reheat Masters: New Show Coming This Fall",
-          description: "Professional chefs compete to create the most innovative leftover transformation techniques.",
-          domain: "Food Network",
-          image: "/api/placeholder/300/150"
+          title: 'Reheat Masters: New Show Coming This Fall',
+          description:
+            'Professional chefs compete to create the most innovative leftover transformation techniques.',
+          domain: 'Food Network',
+          image: '/api/placeholder/300/150',
         };
       }
 
       return {
-        title: url.pathname.split('/').pop()?.replace(/-/g, ' ') || 'Link Preview',
+        title:
+          url.pathname.split('/').pop()?.replace(/-/g, ' ') || 'Link Preview',
         description: `Visit ${domain} for more information`,
         domain: domain,
-        image: "/api/placeholder/300/150"
+        image: '/api/placeholder/300/150',
       };
     } catch (error) {
       // Invalid URL, return default preview
       return {
-        title: "External Link",
+        title: 'External Link',
         description: href,
-        domain: "Link"
+        domain: 'Link',
       };
     }
   };
@@ -119,53 +123,53 @@ export default function HoverLink({
         href={href}
         target={external ? '_blank' : '_self'}
         rel={external ? 'noopener noreferrer' : undefined}
-        className={`inline-flex items-center gap-1 text-orange-500 hover:text-orange-600 underline decoration-orange-500/30 hover:decoration-orange-600 transition-colors ${className}`}
+        className={`inline-flex items-center gap-1 text-orange-500 underline decoration-orange-500/30 transition-colors hover:text-orange-600 hover:decoration-orange-600 ${className}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         {children}
-        {external && <ExternalLink className="h-3 w-3" />}
+        {external && <ExternalLink className='h-3 w-3' />}
       </a>
 
       {/* Hover Preview */}
       {showPreview && (
-        <div 
-          className="fixed z-50 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 p-4 pointer-events-none"
+        <div
+          className='pointer-events-none fixed z-50 w-80 rounded-lg border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-800'
           style={{
             left: `${previewPosition.x}px`,
             top: `${previewPosition.y}px`,
             transform: 'translateX(-50%)',
-            animation: 'fadeIn 0.2s ease-out'
+            animation: 'fadeIn 0.2s ease-out',
           }}
         >
           {previewData.image && (
-            <div className="w-full h-32 bg-slate-100 dark:bg-slate-700 rounded-md mb-3 overflow-hidden">
-              <Image 
-                src={previewData.image} 
-                alt={previewData.title}
+            <div className='mb-3 h-32 w-full overflow-hidden rounded-md bg-slate-100 dark:bg-slate-700'>
+              <Image
+                src={previewData.image}
+                alt={previewData.title || 'Preview image'}
                 width={320}
                 height={128}
-                className="w-full h-full object-cover"
+                className='h-full w-full object-cover'
               />
             </div>
           )}
-          
-          <div className="space-y-2">
-            <h4 className="font-bold text-sm text-foreground line-clamp-2">
+
+          <div className='space-y-2'>
+            <h4 className='line-clamp-2 text-sm font-bold text-foreground'>
               {previewData.title}
             </h4>
-            
+
             {previewData.description && (
-              <p className="text-xs text-muted-foreground line-clamp-2">
+              <p className='line-clamp-2 text-xs text-muted-foreground'>
                 {previewData.description}
               </p>
             )}
-            
-            <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-600">
-              <span className="text-xs font-medium text-orange-500">
+
+            <div className='flex items-center gap-2 border-t border-slate-100 pt-2 dark:border-slate-600'>
+              <span className='text-xs font-medium text-orange-500'>
                 {previewData.domain}
               </span>
-              <ExternalLink className="h-3 w-3 text-muted-foreground" />
+              <ExternalLink className='h-3 w-3 text-muted-foreground' />
             </div>
           </div>
         </div>

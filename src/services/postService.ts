@@ -75,27 +75,29 @@ class PostService {
 
   async getPosts(filters: PostFilters = {}): Promise<PostsResponse> {
     const params = new URLSearchParams();
-    
+
     if (filters.category) params.set('category', filters.category);
     if (filters.author) params.set('author', filters.author);
-    if (filters.featured !== undefined) params.set('featured', filters.featured.toString());
-    if (filters.trending !== undefined) params.set('trending', filters.trending.toString());
+    if (filters.featured !== undefined)
+      params.set('featured', filters.featured.toString());
+    if (filters.trending !== undefined)
+      params.set('trending', filters.trending.toString());
     if (filters.page) params.set('page', filters.page.toString());
     if (filters.limit) params.set('limit', filters.limit.toString());
     if (filters.search) params.set('search', filters.search);
-    
+
     // Add cache buster
     params.set('_t', Date.now().toString());
 
     const url = `${this.baseUrl}?${params.toString()}`;
-    
+
     const response = await fetch(url, {
       cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache',
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);
     }
@@ -105,7 +107,7 @@ class PostService {
 
   async getPost(id: string): Promise<{ post: PostDetail }> {
     const response = await fetch(`${this.baseUrl}/${id}`);
-    
+
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error('Post not found');
@@ -159,7 +161,7 @@ class PostService {
   async getPostsWithCache(filters: PostFilters = {}): Promise<PostsResponse> {
     const cacheKey = this.getCacheKey(filters);
     const cached = this.getCachedData<PostsResponse>(cacheKey);
-    
+
     if (cached) {
       return cached;
     }

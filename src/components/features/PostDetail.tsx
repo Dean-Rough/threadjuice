@@ -187,10 +187,10 @@ export default function PostDetail({
       case 'image':
         return (
           <div className='image-section text-center'>
-            {(section.metadata?.image_url || post?.imageUrl) && (
+            {((section.metadata as any)?.image_url || post?.imageUrl) && (
               <Image
-                src={section.metadata?.image_url || post.imageUrl || ''}
-                alt={section.metadata?.image_prompt || post.title}
+                src={(section.metadata as any)?.image_url || post?.imageUrl || ''}
+                alt={(section.metadata as any)?.image_prompt || post?.title || ''}
                 width={800}
                 height={400}
                 className='img-fluid mb-3 rounded'
@@ -455,7 +455,7 @@ export default function PostDetail({
                           height: '48px',
                           objectFit: 'cover',
                         }}
-                        onError={e => {
+                        onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.src = '/assets/img/blog/blog01.jpg';
                         }}
@@ -592,7 +592,7 @@ export default function PostDetail({
                         height: '80px',
                         objectFit: 'cover',
                       }}
-                      onError={e => {
+                      onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = '/assets/img/blog/blog01.jpg';
                       }}

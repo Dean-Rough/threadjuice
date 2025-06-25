@@ -28,10 +28,10 @@ export class YouTubeExtractor implements IPlatformExtractor {
     try {
       // Build search query with context
       const searchQuery = this.buildSearchQuery(query, context);
-      
+
       // Search YouTube API
       const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&maxResults=5&order=relevance&key=${this.apiKey}`;
-      
+
       const response = await fetch(searchUrl);
       if (!response.ok) {
         throw new Error(`YouTube API error: ${response.status}`);
@@ -53,11 +53,13 @@ export class YouTubeExtractor implements IPlatformExtractor {
         embedId: bestMatch.id.videoId,
         embedUrl: this.buildEmbedUrl(bestMatch.id.videoId),
         originalUrl: `https://www.youtube.com/watch?v=${bestMatch.id.videoId}`,
-        thumbnailUrl: bestMatch.snippet.thumbnails.high?.url || bestMatch.snippet.thumbnails.default?.url,
+        thumbnailUrl:
+          bestMatch.snippet.thumbnails.high?.url ||
+          bestMatch.snippet.thumbnails.default?.url,
         title: bestMatch.snippet.title,
         author: bestMatch.snippet.channelTitle,
         platform: 'YouTube',
-        confidence: this.calculateConfidence(bestMatch, context)
+        confidence: this.calculateConfidence(bestMatch, context),
       };
     } catch (error) {
       console.error('YouTube search failed:', error);
@@ -71,15 +73,18 @@ export class YouTubeExtractor implements IPlatformExtractor {
   private buildSearchQuery(query: string, context: string): string {
     // Extract key terms from context
     const contextKeywords = this.extractKeywords(context);
-    
+
     // Combine query with top context keywords
     const enhancedQuery = `${query} ${contextKeywords.slice(0, 3).join(' ')}`;
-    
+
     // Add recency if context suggests recent event
-    if (context.toLowerCase().includes('recent') || context.toLowerCase().includes('2024')) {
+    if (
+      context.toLowerCase().includes('recent') ||
+      context.toLowerCase().includes('2024')
+    ) {
       return `${enhancedQuery} 2024`;
     }
-    
+
     return enhancedQuery;
   }
 
@@ -88,8 +93,25 @@ export class YouTubeExtractor implements IPlatformExtractor {
    */
   private extractKeywords(context: string): string[] {
     // Remove common words
-    const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'about', 'with', 'from', 'showing', 'video'];
-    
+    const stopWords = [
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
+      'about',
+      'with',
+      'from',
+      'showing',
+      'video',
+    ];
+
     return context
       .toLowerCase()
       .split(/\s+/)
@@ -118,9 +140,11 @@ export class YouTubeExtractor implements IPlatformExtractor {
       });
 
       // Bonus for certain indicators
-      if (contextLower.includes('apology') && title.includes('apology')) score += 3;
+      if (contextLower.includes('apology') && title.includes('apology'))
+        score += 3;
       if (contextLower.includes('viral') && title.includes('viral')) score += 2;
-      if (contextLower.includes('reaction') && title.includes('reaction')) score += 2;
+      if (contextLower.includes('reaction') && title.includes('reaction'))
+        score += 2;
 
       if (score > bestScore) {
         bestScore = score;
@@ -156,36 +180,42 @@ export class YouTubeExtractor implements IPlatformExtractor {
   /**
    * Mock search for development
    */
-  private async mockSearch(query: string, context: string): Promise<MediaEmbed> {
+  private async mockSearch(
+    query: string,
+    context: string
+  ): Promise<MediaEmbed> {
     // Popular videos for different contexts
     const mockVideos = {
       apology: {
         embedId: 'dQw4w9WgXcQ',
         title: 'CEO Apology Video - Company Response',
-        author: 'Corporate Channel'
+        author: 'Corporate Channel',
       },
       viral: {
         embedId: '9bZkp7q19f0',
         title: 'Viral Sensation - Must Watch',
-        author: 'Viral Videos'
+        author: 'Viral Videos',
       },
       reaction: {
         embedId: 'kffacxfA7G4',
         title: 'Internet Reacts - Compilation',
-        author: 'Reaction Channel'
+        author: 'Reaction Channel',
       },
       default: {
         embedId: 'jNQXAC9IVRw',
         title: 'Related Video Content',
-        author: 'Content Creator'
-      }
+        author: 'Content Creator',
+      },
     };
 
     // Select video based on context
     let selected = mockVideos.default;
-    if (context.toLowerCase().includes('apology')) selected = mockVideos.apology;
-    else if (context.toLowerCase().includes('viral')) selected = mockVideos.viral;
-    else if (context.toLowerCase().includes('reaction')) selected = mockVideos.reaction;
+    if (context.toLowerCase().includes('apology'))
+      selected = mockVideos.apology;
+    else if (context.toLowerCase().includes('viral'))
+      selected = mockVideos.viral;
+    else if (context.toLowerCase().includes('reaction'))
+      selected = mockVideos.reaction;
 
     return {
       type: 'youtube',
@@ -196,7 +226,7 @@ export class YouTubeExtractor implements IPlatformExtractor {
       title: selected.title,
       author: selected.author,
       platform: 'YouTube',
-      confidence: 0.7
+      confidence: 0.7,
     };
   }
 

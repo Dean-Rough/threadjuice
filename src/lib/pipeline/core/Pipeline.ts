@@ -1,6 +1,6 @@
 /**
  * Base Pipeline Class
- * 
+ *
  * A beautiful, extensible pipeline for processing stories through multiple stages.
  * Each stage transforms the context, building up a rich story object.
  */
@@ -47,16 +47,16 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
    */
   async execute(context: TContext): Promise<TContext> {
     this.log('🚀 Pipeline execution started');
-    
+
     try {
       let currentContext = context;
 
       for (const [index, stage] of this.stages.entries()) {
         this.log(`📍 Stage ${index + 1}/${this.stages.length}: ${stage.name}`);
-        
+
         try {
           // Validate context before stage
-          if (stage.validate && !await stage.validate(currentContext)) {
+          if (stage.validate && !(await stage.validate(currentContext))) {
             throw new Error(`Validation failed for stage: ${stage.name}`);
           }
 
@@ -64,21 +64,20 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
           const startTime = Date.now();
           currentContext = await stage.process(currentContext);
           const duration = Date.now() - startTime;
-          
+
           this.log(`✅ Stage ${stage.name} completed in ${duration}ms`);
 
           // Post-process hook
           if (stage.postProcess) {
             await stage.postProcess(currentContext);
           }
-
         } catch (error) {
           this.log(`❌ Stage ${stage.name} failed: ${getErrorMessage(error)}`);
-          
+
           if (this.options.throwOnError) {
             throw error;
           }
-          
+
           // Skip to next stage if not throwing
           continue;
         }
@@ -86,7 +85,6 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
 
       this.log('🎉 Pipeline execution completed');
       return currentContext;
-
     } catch (error) {
       this.log(`💥 Pipeline failed: ${getErrorMessage(error)}`);
       throw error;
@@ -102,14 +100,14 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
     }
 
     this.log('🚀 Pipeline parallel execution started');
-    
+
     // Group stages by dependencies
     const stageGroups = this.groupStagesByDependencies();
     let currentContext = context;
 
     for (const group of stageGroups) {
       this.log(`⚡ Executing ${group.length} stages in parallel`);
-      
+
       const results = await Promise.all(
         group.map(stage => this.executeStage(stage, currentContext))
       );
@@ -147,17 +145,19 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
   }
 
   private async executeStage(
-    stage: PipelineStage<TContext>, 
+    stage: PipelineStage<TContext>,
     context: TContext
   ): Promise<TContext> {
     try {
-      if (stage.validate && !await stage.validate(context)) {
+      if (stage.validate && !(await stage.validate(context))) {
         throw new Error(`Validation failed`);
       }
       return await stage.process(context);
     } catch (error) {
       if (this.options.throwOnError) {
-        throw new Error(`Stage ${stage.name} failed: ${getErrorMessage(error)}`);
+        throw new Error(
+          `Stage ${stage.name} failed: ${getErrorMessage(error)}`
+        );
       }
       return context;
     }
@@ -179,7 +179,9 @@ export class Pipeline<TContext extends PipelineContext = PipelineContext> {
 /**
  * Fluent builder for creating pipelines
  */
-export class PipelineBuilder<TContext extends PipelineContext = PipelineContext> {
+export class PipelineBuilder<
+  TContext extends PipelineContext = PipelineContext,
+> {
   private pipeline: Pipeline<TContext>;
 
   constructor(options?: PipelineOptions) {

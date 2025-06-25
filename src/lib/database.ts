@@ -12,8 +12,10 @@ let supabase: any;
 try {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 } catch (error) {
-  console.warn('⚠️ Supabase client initialization failed, using mock client for tests');
-  
+  console.warn(
+    '⚠️ Supabase client initialization failed, using mock client for tests'
+  );
+
   // Mock Supabase client for test environment
   supabase = {
     from: () => ({

@@ -96,9 +96,9 @@ export function LoadingSpinner({
 
       default:
         return (
-          <div 
-            className={`${baseClass} animate-spin border-2 border-transparent border-t-current rounded-full`}
-            data-testid="default-spinner"
+          <div
+            className={`${baseClass} animate-spin rounded-full border-2 border-transparent border-t-current`}
+            data-testid='default-spinner'
           />
         );
     }

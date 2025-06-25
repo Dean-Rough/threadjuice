@@ -16,25 +16,25 @@ const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
 // Search Pexels for relevant images
 async function searchPexelsImage(query: string): Promise<string | null> {
   if (!PEXELS_API_KEY) return null;
-  
+
   try {
     const response = await fetch(
       `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
       {
         headers: {
-          'Authorization': PEXELS_API_KEY,
+          Authorization: PEXELS_API_KEY,
         },
       }
     );
-    
-    const data = await response.json() as any;
+
+    const data = (await response.json()) as any;
     if (data.photos && data.photos.length > 0) {
       return data.photos[0].src.large || data.photos[0].src.original;
     }
   } catch (error) {
     console.error('Pexels search error:', error);
   }
-  
+
   return null;
 }
 
@@ -43,26 +43,26 @@ function getReactionGif(emotion: string): { url: string; caption: string } {
   const reactionGifs: Record<string, { url: string; caption: string }> = {
     shocked: {
       url: 'https://media.giphy.com/media/l0MYP6WAFfaR7Q1jO/giphy.gif',
-      caption: 'MRW I realize what they did'
+      caption: 'MRW I realize what they did',
     },
     facepalm: {
       url: 'https://media.giphy.com/media/XsUtdIeJ0MWMo/giphy.gif',
-      caption: 'The only appropriate response'
+      caption: 'The only appropriate response',
     },
     laughing: {
       url: 'https://media.giphy.com/media/Q7ozWVYCR0nyW2rvPW/giphy.gif',
-      caption: 'Cannot stop laughing at this'
+      caption: 'Cannot stop laughing at this',
     },
     confused: {
       url: 'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif',
-      caption: 'Wait, what just happened?'
+      caption: 'Wait, what just happened?',
     },
     mindblown: {
       url: 'https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif',
-      caption: 'Brain.exe has stopped working'
-    }
+      caption: 'Brain.exe has stopped working',
+    },
   };
-  
+
   return reactionGifs[emotion] || reactionGifs.confused;
 }
 
@@ -83,7 +83,7 @@ async function enhanceStoryWithMedia() {
 
   for (const post of posts) {
     console.log(`\n📖 Processing: ${post.title}`);
-    
+
     if (!post.content || !post.content.sections) {
       console.log('❌ No sections found');
       continue;
@@ -99,22 +99,22 @@ async function enhanceStoryWithMedia() {
       // Enhance image sections
       if (section.type === 'image' && !section.metadata?.imageUrl) {
         console.log('🖼️  Finding image for:', section.content);
-        
+
         // Extract search terms from the image description
         const searchQuery = section.content
           .replace(/Image of|Picture of|Photo of/gi, '')
           .trim();
-        
+
         const imageUrl = await searchPexelsImage(searchQuery);
-        
+
         if (imageUrl) {
           sections[i] = {
             ...section,
             metadata: {
               ...section.metadata,
               imageUrl: imageUrl,
-              source: 'pexels'
-            }
+              source: 'pexels',
+            },
           };
           updated = true;
           console.log('✅ Found image from Pexels');
@@ -126,8 +126,8 @@ async function enhanceStoryWithMedia() {
             metadata: {
               ...section.metadata,
               imageUrl: randomImage,
-              source: 'local'
-            }
+              source: 'local',
+            },
           };
           updated = true;
           console.log('📁 Using local fallback image');
@@ -135,26 +135,33 @@ async function enhanceStoryWithMedia() {
       }
 
       // Add reaction GIFs after key sections
-      if ((section.type === 'describe-2' || section.type === 'describe-3') && 
-          i < sections.length - 1 && 
-          sections[i + 1].type !== 'reaction_gif') {
-        
+      if (
+        (section.type === 'describe-2' || section.type === 'describe-3') &&
+        i < sections.length - 1 &&
+        sections[i + 1].type !== 'reaction_gif'
+      ) {
         // Determine emotion based on section content
         let emotion = 'shocked';
         const content = section.content.toLowerCase();
-        
+
         if (content.includes('hilarious') || content.includes('laughing')) {
           emotion = 'laughing';
         } else if (content.includes('confused') || content.includes('what')) {
           emotion = 'confused';
-        } else if (content.includes('disaster') || content.includes('mistake')) {
+        } else if (
+          content.includes('disaster') ||
+          content.includes('mistake')
+        ) {
           emotion = 'facepalm';
-        } else if (content.includes('incredible') || content.includes('amazing')) {
+        } else if (
+          content.includes('incredible') ||
+          content.includes('amazing')
+        ) {
           emotion = 'mindblown';
         }
 
         const gif = getReactionGif(emotion);
-        
+
         // Insert reaction GIF after this section
         sections.splice(i + 1, 0, {
           type: 'reaction_gif',
@@ -162,10 +169,10 @@ async function enhanceStoryWithMedia() {
           metadata: {
             gifUrl: gif.url,
             emotion: emotion,
-            placement: 'after-drama'
-          }
+            placement: 'after-drama',
+          },
         });
-        
+
         updated = true;
         console.log(`🎭 Added ${emotion} reaction GIF`);
         i++; // Skip the newly inserted section
@@ -180,8 +187,8 @@ async function enhanceStoryWithMedia() {
         content: 'Read more stories like this on ThreadJuice',
         metadata: {
           url: `https://threadjuice.com/blog/${post.slug}`,
-          linkText: 'Share this story'
-        }
+          linkText: 'Share this story',
+        },
       });
       updated = true;
     }
@@ -191,7 +198,7 @@ async function enhanceStoryWithMedia() {
       const { error: updateError } = await supabase
         .from('posts')
         .update({
-          content: { sections }
+          content: { sections },
         })
         .eq('id', post.id);
 
@@ -219,14 +226,16 @@ async function updateFeaturedImages() {
   if (!posts) return;
 
   for (const post of posts) {
-    const imageUrl = await searchPexelsImage(post.category + ' ' + post.title.split(' ').slice(0, 3).join(' '));
-    
+    const imageUrl = await searchPexelsImage(
+      post.category + ' ' + post.title.split(' ').slice(0, 3).join(' ')
+    );
+
     if (imageUrl) {
       await supabase
         .from('posts')
         .update({ featured_image: imageUrl })
         .eq('id', post.id);
-      
+
       console.log(`✅ Updated featured image for: ${post.title}`);
     }
   }

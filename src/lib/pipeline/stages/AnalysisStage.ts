@@ -1,6 +1,6 @@
 /**
  * Analysis Stage
- * 
+ *
  * Analyzes content to extract entities, links, keywords, and sentiment.
  * This stage enriches the context with metadata needed for intelligent processing.
  */
@@ -71,7 +71,9 @@ export class AnalysisStage extends BasePipelineStage {
     // Execute all analysis tasks in parallel
     await Promise.all(tasks);
 
-    this.log(`Analysis complete: ${context.analysis.entities.length} entities, ${context.analysis.links.length} links`);
+    this.log(
+      `Analysis complete: ${context.analysis.entities.length} entities, ${context.analysis.links.length} links`
+    );
 
     return context;
   }
@@ -85,16 +87,21 @@ export class AnalysisStage extends BasePipelineStage {
       // For AI content, we might have it in a different format
       return context.source.rawData.prompt || '';
     }
-    
+
     return '';
   }
 
-  private async extractLinks(content: string, context: PipelineContext): Promise<void> {
+  private async extractLinks(
+    content: string,
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Extracting links from content');
 
     // Regular expressions for different link types
-    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
-    const redditMediaRegex = /(i\.redd\.it|v\.redd\.it|imgur\.com|gfycat\.com)\/[\w\-\.]+/gi;
+    const urlRegex =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+    const redditMediaRegex =
+      /(i\.redd\.it|v\.redd\.it|imgur\.com|gfycat\.com)\/[\w\-\.]+/gi;
     const twitterMediaRegex = /(pic\.twitter\.com|pbs\.twimg\.com)\/[\w]+/gi;
 
     const links: ExtractedLink[] = [];
@@ -130,21 +137,29 @@ export class AnalysisStage extends BasePipelineStage {
     let type: ExtractedLink['type'] = 'other';
 
     // Categorize by domain and URL patterns
-    if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i) || 
-        domain.includes('imgur') || 
-        url.includes('i.redd.it')) {
+    if (
+      url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ||
+      domain.includes('imgur') ||
+      url.includes('i.redd.it')
+    ) {
       type = 'image';
-    } else if (url.match(/\.(mp4|webm|mov)$/i) || 
-               url.includes('v.redd.it') || 
-               domain.includes('gfycat')) {
+    } else if (
+      url.match(/\.(mp4|webm|mov)$/i) ||
+      url.includes('v.redd.it') ||
+      domain.includes('gfycat')
+    ) {
       type = 'video';
-    } else if (domain.includes('twitter') || 
-               domain.includes('reddit') || 
-               domain.includes('facebook')) {
+    } else if (
+      domain.includes('twitter') ||
+      domain.includes('reddit') ||
+      domain.includes('facebook')
+    ) {
       type = 'social';
-    } else if (domain.includes('medium') || 
-               domain.includes('substack') || 
-               url.includes('/article/')) {
+    } else if (
+      domain.includes('medium') ||
+      domain.includes('substack') ||
+      url.includes('/article/')
+    ) {
       type = 'article';
     }
 
@@ -164,7 +179,10 @@ export class AnalysisStage extends BasePipelineStage {
     }
   }
 
-  private async extractEntities(content: string, context: PipelineContext): Promise<void> {
+  private async extractEntities(
+    content: string,
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Extracting entities from content');
 
     const entities: string[] = [];
@@ -186,12 +204,14 @@ export class AnalysisStage extends BasePipelineStage {
     // Extract company names (capitalized words that might be companies)
     const companyPattern = /\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g;
     const potentialCompanies = content.match(companyPattern) || [];
-    
+
     // Filter to likely company names
     const companyKeywords = ['Inc', 'Corp', 'LLC', 'Ltd', 'Company'];
     for (const potential of potentialCompanies) {
-      if (companyKeywords.some(kw => potential.includes(kw)) || 
-          entities.includes(potential)) {
+      if (
+        companyKeywords.some(kw => potential.includes(kw)) ||
+        entities.includes(potential)
+      ) {
         entities.push(potential);
       }
     }
@@ -200,7 +220,10 @@ export class AnalysisStage extends BasePipelineStage {
     context.analysis.entities = [...new Set(entities)];
   }
 
-  private async analyzeSentiment(content: string, context: PipelineContext): Promise<void> {
+  private async analyzeSentiment(
+    content: string,
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Analyzing sentiment');
 
     // For now, analyze the overall content
@@ -217,7 +240,10 @@ export class AnalysisStage extends BasePipelineStage {
     context.analysis.sentiment = [sentiment];
   }
 
-  private async generateKeywords(content: string, context: PipelineContext): Promise<void> {
+  private async generateKeywords(
+    content: string,
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Generating keywords');
 
     const keywords: string[] = [];
@@ -227,16 +253,43 @@ export class AnalysisStage extends BasePipelineStage {
 
     // Common viral story keywords
     const viralKeywords = [
-      'revenge', 'karma', 'justice', 'exposed', 'caught', 'revealed',
-      'viral', 'trending', 'shocking', 'unbelievable', 'dramatic',
-      'petty', 'satisfying', 'perfect', 'brilliant', 'clever',
+      'revenge',
+      'karma',
+      'justice',
+      'exposed',
+      'caught',
+      'revealed',
+      'viral',
+      'trending',
+      'shocking',
+      'unbelievable',
+      'dramatic',
+      'petty',
+      'satisfying',
+      'perfect',
+      'brilliant',
+      'clever',
     ];
 
     // Category-specific keywords
     const categoryKeywords: Record<string, string[]> = {
-      workplace: ['boss', 'manager', 'office', 'meeting', 'email', 'presentation'],
+      workplace: [
+        'boss',
+        'manager',
+        'office',
+        'meeting',
+        'email',
+        'presentation',
+      ],
       family: ['cousin', 'aunt', 'uncle', 'reunion', 'wedding', 'holiday'],
-      dating: ['tinder', 'bumble', 'date', 'relationship', 'cheating', 'ghosted'],
+      dating: [
+        'tinder',
+        'bumble',
+        'date',
+        'relationship',
+        'cheating',
+        'ghosted',
+      ],
       neighbor: ['HOA', 'noise', 'parking', 'property', 'fence', 'complaint'],
     };
 
@@ -260,7 +313,10 @@ export class AnalysisStage extends BasePipelineStage {
     context.analysis.keywords = [...new Set(keywords)];
   }
 
-  private async extractMetaphors(content: string, context: PipelineContext): Promise<void> {
+  private async extractMetaphors(
+    content: string,
+    context: PipelineContext
+  ): Promise<void> {
     this.log('Extracting metaphors');
 
     try {
@@ -277,7 +333,8 @@ export class AnalysisStage extends BasePipelineStage {
 
       context.analysis.metaphor = metaphor;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log('Failed to extract metaphor: ' + errorMessage);
     }
   }

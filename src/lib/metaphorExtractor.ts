@@ -25,62 +25,62 @@ export class MetaphorExtractor {
 
   constructor() {
     this.commonMetaphors = [
-      "like watching someone try to fold a fitted sheet while the house burns down",
-      "like debating the proper way to sink on the Titanic",
-      "like arguing about deck chair arrangements during an earthquake",
+      'like watching someone try to fold a fitted sheet while the house burns down',
+      'like debating the proper way to sink on the Titanic',
+      'like arguing about deck chair arrangements during an earthquake',
       "like critiquing someone's driving while the car is on fire",
-      "like discussing interior design in a collapsing building",
-      "like rating the band while the ship goes down",
+      'like discussing interior design in a collapsing building',
+      'like rating the band while the ship goes down',
       "like judging someone's table manners during food poisoning",
-      "like complaining about the Wi-Fi during a zombie apocalypse",
-      "like arguing about parking while being chased by bears",
-      "like debating grammar during a hostage situation"
+      'like complaining about the Wi-Fi during a zombie apocalypse',
+      'like arguing about parking while being chased by bears',
+      'like debating grammar during a hostage situation',
     ];
 
     this.terryPhrases = [
-      "The Terry notes this is",
+      'The Terry notes this is',
       "What we're witnessing here is",
-      "This perfectly encapsulates",
+      'This perfectly encapsulates',
       "The real story isn't about",
-      "Beneath all this chaos lies",
+      'Beneath all this chaos lies',
       "Strip away the noise and you'll find",
-      "This whole debacle reveals",
-      "The beautiful absurdity here is",
-      "What makes this fascinating is",
-      "The deeper truth emerging is"
+      'This whole debacle reveals',
+      'The beautiful absurdity here is',
+      'What makes this fascinating is',
+      'The deeper truth emerging is',
     ];
 
     this.moralPatterns = {
-      'class_warfare': [
-        "just classism with better seasoning",
-        "economic anxiety dressed up as taste preferences",
-        "privilege disguised as sophistication",
-        "social hierarchy with extra steps"
+      class_warfare: [
+        'just classism with better seasoning',
+        'economic anxiety dressed up as taste preferences',
+        'privilege disguised as sophistication',
+        'social hierarchy with extra steps',
       ],
-      'gatekeeping': [
-        "who gets to decide what constitutes acceptable happiness",
-        "the arbitrary nature of cultural superiority",
-        "the psychology of manufactured exclusivity",
-        "how we use taste to create in-groups and out-groups"
+      gatekeeping: [
+        'who gets to decide what constitutes acceptable happiness',
+        'the arbitrary nature of cultural superiority',
+        'the psychology of manufactured exclusivity',
+        'how we use taste to create in-groups and out-groups',
       ],
-      'internet_psychology': [
-        "how the internet turns every preference into a moral battlefield",
-        "why we perform sophistication for strangers online",
-        "the human need to be right about absolutely everything",
-        "how social media weaponizes mundane disagreements"
+      internet_psychology: [
+        'how the internet turns every preference into a moral battlefield',
+        'why we perform sophistication for strangers online',
+        'the human need to be right about absolutely everything',
+        'how social media weaponizes mundane disagreements',
       ],
-      'modern_absurdity': [
-        "peak internet behavior",
-        "the magnificent futility of online discourse",
+      modern_absurdity: [
+        'peak internet behavior',
+        'the magnificent futility of online discourse',
         "how we've managed to make everything contentious",
-        "the beautiful chaos of having opinions about everything"
+        'the beautiful chaos of having opinions about everything',
       ],
-      'human_nature': [
-        "our infinite capacity to miss the point spectacularly",
-        "how we turn molehills into mountains for entertainment",
-        "the psychology of manufactured outrage",
-        "why humans will argue about literally anything"
-      ]
+      human_nature: [
+        'our infinite capacity to miss the point spectacularly',
+        'how we turn molehills into mountains for entertainment',
+        'the psychology of manufactured outrage',
+        'why humans will argue about literally anything',
+      ],
     };
   }
 
@@ -104,16 +104,20 @@ export class MetaphorExtractor {
       moral: moral.lesson,
       terryVoice,
       confidence,
-      triggers
+      triggers,
     };
   }
 
   /**
    * Analyze the underlying moral/lesson of the story
    */
-  private analyzeMoral(title: string, content: string, category: string): StoryMoral {
+  private analyzeMoral(
+    title: string,
+    content: string,
+    category: string
+  ): StoryMoral {
     const combined = `${title} ${content}`.toLowerCase();
-    
+
     // Detect themes based on content patterns
     let theme = 'human_nature'; // default
     let lesson = '';
@@ -121,47 +125,96 @@ export class MetaphorExtractor {
     let culturalContext = '';
 
     // Food-related class warfare
-    if (this.containsPatterns(combined, [
-      'privilege', 'access', 'afford', 'class', 'bougie', 'sophisticated',
-      'proper', 'authentic', 'real', 'wrong way', 'right way'
-    ])) {
+    if (
+      this.containsPatterns(combined, [
+        'privilege',
+        'access',
+        'afford',
+        'class',
+        'bougie',
+        'sophisticated',
+        'proper',
+        'authentic',
+        'real',
+        'wrong way',
+        'right way',
+      ])
+    ) {
       theme = 'class_warfare';
-      lesson = 'Food preferences become proxies for social status and economic access';
+      lesson =
+        'Food preferences become proxies for social status and economic access';
       absurdity = 'Adults having passionate debates about condiment choices';
-      culturalContext = 'Late-stage capitalism where everything becomes a status symbol';
+      culturalContext =
+        'Late-stage capitalism where everything becomes a status symbol';
     }
 
     // Gatekeeping behavior
-    else if (this.containsPatterns(combined, [
-      'should', 'shouldn\'t', 'wrong', 'right', 'proper', 'improper',
-      'rules', 'standards', 'acceptable', 'unacceptable', 'taste'
-    ])) {
+    else if (
+      this.containsPatterns(combined, [
+        'should',
+        "shouldn't",
+        'wrong',
+        'right',
+        'proper',
+        'improper',
+        'rules',
+        'standards',
+        'acceptable',
+        'unacceptable',
+        'taste',
+      ])
+    ) {
       theme = 'gatekeeping';
-      lesson = 'The arbitrary nature of cultural rules and who gets to enforce them';
-      absurdity = 'Strangers on the internet appointing themselves taste police';
-      culturalContext = 'Social media platforms as modern public squares for moral judgment';
+      lesson =
+        'The arbitrary nature of cultural rules and who gets to enforce them';
+      absurdity =
+        'Strangers on the internet appointing themselves taste police';
+      culturalContext =
+        'Social media platforms as modern public squares for moral judgment';
     }
 
     // Internet psychology patterns
-    else if (this.containsPatterns(combined, [
-      'twitter', 'viral', 'trending', 'ratio', 'quote tweet', 'replies',
-      'internet', 'online', 'discourse', 'social media'
-    ])) {
+    else if (
+      this.containsPatterns(combined, [
+        'twitter',
+        'viral',
+        'trending',
+        'ratio',
+        'quote tweet',
+        'replies',
+        'internet',
+        'online',
+        'discourse',
+        'social media',
+      ])
+    ) {
       theme = 'internet_psychology';
       lesson = 'How digital platforms amplify and distort human behavior';
-      absurdity = 'Turning every opinion into a battle for the soul of civilization';
-      culturalContext = 'The attention economy incentivizing performative outrage';
+      absurdity =
+        'Turning every opinion into a battle for the soul of civilization';
+      culturalContext =
+        'The attention economy incentivizing performative outrage';
     }
 
     // Modern life absurdity
-    else if (this.containsPatterns(combined, [
-      'peak', 'energy', 'behavior', 'absolutely', 'perfectly',
-      'exactly', 'classic', 'typical', 'standard'
-    ])) {
+    else if (
+      this.containsPatterns(combined, [
+        'peak',
+        'energy',
+        'behavior',
+        'absolutely',
+        'perfectly',
+        'exactly',
+        'classic',
+        'typical',
+        'standard',
+      ])
+    ) {
       theme = 'modern_absurdity';
       lesson = 'The beautiful chaos of having strong opinions about everything';
       absurdity = 'Making mountains out of molehills for entertainment value';
-      culturalContext = 'Information age overwhelming us with things to have opinions about';
+      culturalContext =
+        'Information age overwhelming us with things to have opinions about';
     }
 
     return { theme, lesson, absurdity, culturalContext };
@@ -186,23 +239,24 @@ export class MetaphorExtractor {
    */
   private craftTerryCommentary(moral: StoryMoral, metaphor: string): string {
     const opener = this.getRandomItem(this.terryPhrases);
-    const moralPattern = this.moralPatterns[moral.theme] || this.moralPatterns['human_nature'];
+    const moralPattern =
+      this.moralPatterns[moral.theme] || this.moralPatterns['human_nature'];
     const insight = this.getRandomItem(moralPattern);
 
     // Different commentary styles based on theme
     switch (moral.theme) {
       case 'class_warfare':
         return `${opener} ${moral.absurdity.toLowerCase()} is ${insight}. ${metaphor} - technically fascinating, ultimately pointless, but absolutely mesmerizing to witness.`;
-      
+
       case 'gatekeeping':
         return `${opener} really about ${insight}. ${metaphor}, except the deck chairs are condiment preferences and the ocean is human dignity.`;
-      
+
       case 'internet_psychology':
         return `${opener} ${insight}. ${metaphor}, except we're all voluntarily participating and somehow surprised by the outcome.`;
-      
+
       case 'modern_absurdity':
         return `${opener} ${insight}. ${metaphor}, and we're all here for it because apparently this is what entertainment looks like now.`;
-      
+
       default:
         return `${opener} ${insight}. ${metaphor}, which perfectly captures the human condition in the digital age.`;
     }
@@ -214,7 +268,7 @@ export class MetaphorExtractor {
   private calculateConfidence(content: string, moral: StoryMoral): number {
     const contentLength = content.length;
     const themeKeywords = this.getThemeKeywords(moral.theme);
-    
+
     const keywordMatches = themeKeywords.reduce((count, keyword) => {
       const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
       return count + (content.match(regex) || []).length;
@@ -223,7 +277,7 @@ export class MetaphorExtractor {
     // Base confidence on content length and keyword matches
     const lengthFactor = Math.min(contentLength / 2000, 1); // Longer content = more confidence
     const keywordFactor = Math.min(keywordMatches / 5, 1); // More matches = more confidence
-    
+
     return (lengthFactor + keywordFactor) / 2;
   }
 
@@ -235,11 +289,29 @@ export class MetaphorExtractor {
     const lowerContent = content.toLowerCase();
 
     const triggerPatterns = {
-      'class_indicators': ['privilege', 'access', 'afford', 'bougie', 'sophisticated'],
-      'judgment_language': ['should', 'wrong', 'proper', 'acceptable', 'standards'],
-      'emotional_escalation': ['outrage', 'angry', 'furious', 'chaos', 'meltdown'],
-      'internet_culture': ['viral', 'trending', 'ratio', 'discourse', 'twitter'],
-      'food_culture': ['authentic', 'traditional', 'proper way', 'right way']
+      class_indicators: [
+        'privilege',
+        'access',
+        'afford',
+        'bougie',
+        'sophisticated',
+      ],
+      judgment_language: [
+        'should',
+        'wrong',
+        'proper',
+        'acceptable',
+        'standards',
+      ],
+      emotional_escalation: [
+        'outrage',
+        'angry',
+        'furious',
+        'chaos',
+        'meltdown',
+      ],
+      internet_culture: ['viral', 'trending', 'ratio', 'discourse', 'twitter'],
+      food_culture: ['authentic', 'traditional', 'proper way', 'right way'],
     };
 
     Object.entries(triggerPatterns).forEach(([category, keywords]) => {
@@ -264,11 +336,17 @@ export class MetaphorExtractor {
 
   private getThemeKeywords(theme: string): string[] {
     const keywordMap: { [key: string]: string[] } = {
-      'class_warfare': ['privilege', 'access', 'afford', 'bougie', 'class'],
-      'gatekeeping': ['should', 'proper', 'wrong', 'standards', 'acceptable'],
-      'internet_psychology': ['twitter', 'viral', 'online', 'discourse', 'social'],
-      'modern_absurdity': ['peak', 'absolutely', 'perfectly', 'classic'],
-      'human_nature': ['behavior', 'psychology', 'people', 'human', 'society']
+      class_warfare: ['privilege', 'access', 'afford', 'bougie', 'class'],
+      gatekeeping: ['should', 'proper', 'wrong', 'standards', 'acceptable'],
+      internet_psychology: [
+        'twitter',
+        'viral',
+        'online',
+        'discourse',
+        'social',
+      ],
+      modern_absurdity: ['peak', 'absolutely', 'perfectly', 'classic'],
+      human_nature: ['behavior', 'psychology', 'people', 'human', 'society'],
     };
 
     return keywordMap[theme] || keywordMap['human_nature'];

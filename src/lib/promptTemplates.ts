@@ -43,7 +43,7 @@ FINAL CHECK
 2. Trim repetitive phrasing
 3. Let small imperfections stay if they serve naturalness
 4. Ensure it flows like actual human speech
-`
+`;
 
 /**
  * Base story structure prompt
@@ -90,7 +90,7 @@ VIRAL ELEMENTS
 • Add relatable elements that make readers say "this could be me"
 • Include specific details that feel authentic
 • Create moments that spark discussion or debate
-`
+`;
 
 /**
  * Writer persona configurations with distinct voices
@@ -126,7 +126,7 @@ AVOID
 • Using humor that would hurt rather than entertain
 • Being sarcastic about genuinely tragic situations
 `,
-    categories: ['aita', 'revenge', 'malicious-compliance', 'choosing-beggars']
+    categories: ['aita', 'revenge', 'malicious-compliance', 'choosing-beggars'],
   },
 
   'the-down-to-earth-buddy': {
@@ -159,7 +159,7 @@ APPROACH
 • Provides context that helps readers relate
 • Maintains warmth even when discussing drama
 `,
-    categories: ['relationships', 'tifu', 'advice', 'dating']
+    categories: ['relationships', 'tifu', 'advice', 'dating'],
   },
 
   'the-dry-cynic': {
@@ -192,9 +192,14 @@ PERSPECTIVE
 • Creates content that makes readers laugh at life's absurdity
 • Celebrates the beautiful disaster that is human existence
 `,
-    categories: ['work-stories', 'entitled-parents', 'mildly-infuriating', 'antiwork']
-  }
-}
+    categories: [
+      'work-stories',
+      'entitled-parents',
+      'mildly-infuriating',
+      'antiwork',
+    ],
+  },
+};
 
 /**
  * Generate complete prompt for content transformation
@@ -205,11 +210,11 @@ export function generateContentPrompt(
   post: any,
   comments: any[]
 ): string {
-  const persona = WRITER_PERSONAS[personaKey]
+  const persona = WRITER_PERSONAS[personaKey];
   const topComments = comments
     .slice(0, 10)
     .map(c => `Score: ${c.score} | ${c.author}: ${c.body}`)
-    .join('\n\n')
+    .join('\n\n');
 
   return `${SYNTAX_GRAMMAR_PROMPT}
 
@@ -321,7 +326,7 @@ FINAL REQUIREMENTS:
 • Identify any notable entities with Wikipedia titles
 • Only include entities that are genuinely notable
 • Set confidence scores based on certainty the entity exists
-`
+`;
 }
 
 /**
@@ -357,4 +362,4 @@ GUIDELINES:
 • Don't include private individuals without public profiles
 • Focus on entities that would enhance image search
 • Prioritize entities central to the story
-`
+`;

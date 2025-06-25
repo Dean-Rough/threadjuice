@@ -1,21 +1,24 @@
 /**
  * ThreadJuice Pipeline System
- * 
+ *
  * A modular, extensible pipeline for processing viral content.
  */
 
 // Core pipeline infrastructure
-export { Pipeline, PipelineBuilder } from './core/pipeline';
-export { BasePipelineStage, PipelineStage } from './core/PipelineStage';
-export { 
-  PipelineContext, 
-  RedditStoryContext, 
+export { Pipeline, PipelineBuilder } from './core/Pipeline';
+export { BasePipelineStage } from './core/PipelineStage';
+export type { PipelineStage } from './core/PipelineStage';
+export {
+  PipelineContext,
+  RedditStoryContext,
   AIStoryContext,
+} from './core/PipelineContext';
+export type {
   ProcessedStory,
   StorySection,
   ImageResult,
   GifResult,
-  MediaAssets
+  MediaAssets,
 } from './core/PipelineContext';
 
 // Pipeline stages
@@ -28,7 +31,12 @@ export * from './integrations';
 export * from './integrations/ExamplePipelines';
 
 // Output classes
-export { OutputStage, DatabaseOutput, FileOutput, DualOutput } from './stages/OutputStage';
+export {
+  OutputStage,
+  DatabaseOutput,
+  FileOutput,
+  DualOutput,
+} from './stages/OutputStage';
 
 // Orchestrator
 export { PipelineOrchestrator } from './core/PipelineOrchestrator';
@@ -43,7 +51,7 @@ export function createDefaultOrchestrator() {
     defaultOptions: { debug: false },
     maxConcurrent: 3,
     cacheEnabled: true,
-    monitoring: true
+    monitoring: true,
   });
 }
 
@@ -64,23 +72,29 @@ export function createStandardPipeline(options: {
   // Add source stage
   switch (options.source) {
     case 'reddit':
-      builder.add(stages.RedditSource(
-        options.sourceConfig.subreddit,
-        options.sourceConfig
-      ));
+      builder.add(
+        stages.RedditSource(
+          options.sourceConfig.subreddit,
+          options.sourceConfig
+        )
+      );
       break;
     case 'twitter':
-      builder.add(stages.TwitterSource(
-        options.sourceConfig.query || '',
-        options.sourceConfig
-      ));
+      builder.add(
+        stages.TwitterSource(
+          options.sourceConfig.query || '',
+          options.sourceConfig
+        )
+      );
       break;
     case 'ai':
-      builder.add(stages.AISource(
-        options.sourceConfig.category,
-        options.sourceConfig.persona,
-        options.sourceConfig.prompt
-      ));
+      builder.add(
+        stages.AISource(
+          options.sourceConfig.category,
+          options.sourceConfig.persona,
+          options.sourceConfig.prompt
+        )
+      );
       break;
   }
 
@@ -88,11 +102,13 @@ export function createStandardPipeline(options: {
   builder.add(new stages.AnalysisStage());
 
   // Add generation
-  builder.add(new GenerationStage({
-    personaId: options.personaId,
-    includeComments: options.source === 'reddit',
-    fetchComments: options.source === 'reddit',
-  }));
+  builder.add(
+    new GenerationStage({
+      personaId: options.personaId,
+      includeComments: options.source === 'reddit',
+      fetchComments: options.source === 'reddit',
+    })
+  );
 
   // Add enrichment
   switch (options.enrichment || 'full') {
@@ -109,12 +125,14 @@ export function createStandardPipeline(options: {
   builder.add(new stages.TransformStage());
 
   // Add output
-  builder.add(new stages.OutputStage({
-    includeMetadata: options.debug || false,
-  }));
+  builder.add(
+    new stages.OutputStage({
+      includeMetadata: options.debug || false,
+    })
+  );
 
   const pipeline = builder.build();
-  
+
   if (options.debug) {
     pipeline.options.debug = true;
   }
@@ -128,14 +146,16 @@ export function createStandardPipeline(options: {
 export async function quickStart() {
   const { initializeServices } = require('./integrations');
   const { createRedditPipeline } = require('./integrations/ExamplePipelines');
-  
+
   console.log('🚀 ThreadJuice Pipeline Quick Start');
-  
+
   // Initialize services
   const services = await initializeServices();
-  
+
   if (!services.reddit.available || !services.openai.available) {
-    console.error('❌ Required services not configured. Please set environment variables.');
+    console.error(
+      '❌ Required services not configured. Please set environment variables.'
+    );
     return;
   }
 
@@ -147,6 +167,6 @@ export async function quickStart() {
 
   console.log('✅ Pipeline created successfully!');
   console.log('📝 Run pipeline.execute(context) to process content');
-  
+
   return pipeline;
 }

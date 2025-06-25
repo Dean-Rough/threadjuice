@@ -37,15 +37,20 @@ function loadGeneratedStories() {
     if (!fs.existsSync(storiesDir)) {
       return [];
     }
-    
-    const files = fs.readdirSync(storiesDir).filter(file => file.endsWith('.json'));
+
+    const files = fs
+      .readdirSync(storiesDir)
+      .filter(file => file.endsWith('.json'));
     const stories = files.map(file => {
       const content = fs.readFileSync(path.join(storiesDir, file), 'utf-8');
       return JSON.parse(content);
     });
-    
+
     // Sort by creation date, newest first
-    return stories.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return stories.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   } catch (error) {
     console.warn('Failed to load generated stories:', error);
     return [];
@@ -56,9 +61,11 @@ function loadGeneratedStories() {
 const mockPosts = [
   {
     id: '1',
-    title: 'Coworker Discovered My Secret Reddit Addiction During Teams Meeting',
+    title:
+      'Coworker Discovered My Secret Reddit Addiction During Teams Meeting',
     slug: 'coworker-discovered-secret-reddit-addiction',
-    excerpt: 'Forgot to close my tabs during screen share. Now they know about my 47-hour binge of r/antiwork stories.',
+    excerpt:
+      'Forgot to close my tabs during screen share. Now they know about my 47-hour binge of r/antiwork stories.',
     imageUrl: '/assets/img/blog/blog01.jpg',
     category: 'Work Drama',
     author: 'the-snarky-sage',
@@ -75,9 +82,11 @@ const mockPosts = [
   },
   {
     id: '2',
-    title: 'Landlord Tried to Charge Me for "Excessive Breathing" in Lease Renewal',
+    title:
+      'Landlord Tried to Charge Me for "Excessive Breathing" in Lease Renewal',
     slug: 'landlord-excessive-breathing-charge',
-    excerpt: 'Apparently my respiratory rate exceeds the "standard tenant oxygen consumption allowance." I wish I was making this up.',
+    excerpt:
+      'Apparently my respiratory rate exceeds the "standard tenant oxygen consumption allowance." I wish I was making this up.',
     imageUrl: '/assets/img/blog/blog02.jpg',
     category: 'Housing Hell',
     author: 'the-dry-cynic',
@@ -96,7 +105,8 @@ const mockPosts = [
     id: '3',
     title: 'Gym Bro Asked if I "Even Lift" While I Was Literally Mid-Deadlift',
     slug: 'gym-bro-do-you-even-lift',
-    excerpt: 'Had 315 pounds in my hands. Apparently that doesn\'t count unless you grunt loud enough for the entire facility to hear.',
+    excerpt:
+      "Had 315 pounds in my hands. Apparently that doesn't count unless you grunt loud enough for the entire facility to hear.",
     imageUrl: '/assets/img/blog/blog03.jpg',
     category: 'Gym Life',
     author: 'the-down-to-earth-buddy',
@@ -115,7 +125,8 @@ const mockPosts = [
     id: '4',
     title: 'Karen at Starbucks Demanded to Speak to the Manager of My Laptop',
     slug: 'karen-starbucks-laptop-manager',
-    excerpt: 'Apparently my MacBook was "hogging bandwidth" from her Instagram live stream. She wanted Apple\'s corporate number.',
+    excerpt:
+      'Apparently my MacBook was "hogging bandwidth" from her Instagram live stream. She wanted Apple\'s corporate number.',
     imageUrl: '/assets/img/blog/blog04.jpg',
     category: 'Public Freakouts',
     author: 'the-snarky-sage',
@@ -132,9 +143,11 @@ const mockPosts = [
   },
   {
     id: '5',
-    title: 'Uber Driver Started Livestreaming Our Conversation Without Permission',
+    title:
+      'Uber Driver Started Livestreaming Our Conversation Without Permission',
     slug: 'uber-driver-livestream-conversation',
-    excerpt: 'Found out I was the unwilling star of "Awkward Passenger Reactions" on TikTok. My social anxiety is now viral content.',
+    excerpt:
+      'Found out I was the unwilling star of "Awkward Passenger Reactions" on TikTok. My social anxiety is now viral content.',
     imageUrl: '/assets/img/blog/blog05.jpg',
     category: 'Tech Nightmares',
     author: 'the-dry-cynic',
@@ -151,9 +164,11 @@ const mockPosts = [
   },
   {
     id: '6',
-    title: 'Neighbor\'s WiFi Name Changed to "Pay Your Rent Steve" After Argument',
+    title:
+      'Neighbor\'s WiFi Name Changed to "Pay Your Rent Steve" After Argument',
     slug: 'neighbor-wifi-name-pay-rent',
-    excerpt: 'Now every device in my apartment reminds me of our property line dispute. Even my smart TV is taking sides.',
+    excerpt:
+      'Now every device in my apartment reminds me of our property line dispute. Even my smart TV is taking sides.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Neighbor Wars',
     author: 'the-down-to-earth-buddy',
@@ -172,7 +187,8 @@ const mockPosts = [
     id: '7',
     title: 'Dating App Match Asked for My Credit Score on First Message',
     slug: 'dating-app-credit-score-request',
-    excerpt: 'Apparently "Hey gorgeous" is too mainstream. Modern romance requires a full financial disclosure and three references.',
+    excerpt:
+      'Apparently "Hey gorgeous" is too mainstream. Modern romance requires a full financial disclosure and three references.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Dating Disasters',
     author: 'the-snarky-sage',
@@ -189,9 +205,11 @@ const mockPosts = [
   },
   {
     id: '8',
-    title: 'Boss Scheduled "Mandatory Fun" Meeting to Discuss Why Morale is Low',
+    title:
+      'Boss Scheduled "Mandatory Fun" Meeting to Discuss Why Morale is Low',
     slug: 'boss-mandatory-fun-morale-meeting',
-    excerpt: 'Nothing says "we care about employee happiness" like forcing people to explain why they\'re miserable at 8 AM on Monday.',
+    excerpt:
+      'Nothing says "we care about employee happiness" like forcing people to explain why they\'re miserable at 8 AM on Monday.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Work Drama',
     author: 'the-dry-cynic',
@@ -210,7 +228,8 @@ const mockPosts = [
     id: '9',
     title: 'Mother-in-Law Critiqued My Grocery Receipt Line by Line',
     slug: 'mother-in-law-grocery-receipt-critique',
-    excerpt: 'Apparently organic milk is "showing off" and store-brand cereal means I don\'t love her son enough. Peak holiday family time.',
+    excerpt:
+      'Apparently organic milk is "showing off" and store-brand cereal means I don\'t love her son enough. Peak holiday family time.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Family Drama',
     author: 'the-down-to-earth-buddy',
@@ -229,7 +248,8 @@ const mockPosts = [
     id: '10',
     title: 'Food Delivery Driver Left My Order with "Suspicious Guy in Hoodie"',
     slug: 'delivery-driver-suspicious-guy-hoodie',
-    excerpt: 'Plot twist: I was the suspicious guy in a hoodie. Apparently my own appearance made me untrustworthy to receive my own food.',
+    excerpt:
+      'Plot twist: I was the suspicious guy in a hoodie. Apparently my own appearance made me untrustworthy to receive my own food.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Tech Nightmares',
     author: 'the-snarky-sage',
@@ -248,7 +268,8 @@ const mockPosts = [
     id: '11',
     title: 'Zoom Meeting Turned into Accidental Therapy Session',
     slug: 'zoom-meeting-accidental-therapy-session',
-    excerpt: 'Client started oversharing about their divorce. Somehow I became their unpaid counselor while trying to discuss quarterly reports.',
+    excerpt:
+      'Client started oversharing about their divorce. Somehow I became their unpaid counselor while trying to discuss quarterly reports.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Work Drama',
     author: 'the-dry-cynic',
@@ -267,7 +288,8 @@ const mockPosts = [
     id: '12',
     title: 'Barista Wrote "Disappointed Dad" Instead of My Name on Cup',
     slug: 'barista-disappointed-dad-name',
-    excerpt: 'Ordered a simple latte. Got an emotional intervention instead. Apparently my life choices are written all over my face.',
+    excerpt:
+      'Ordered a simple latte. Got an emotional intervention instead. Apparently my life choices are written all over my face.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Public Freakouts',
     author: 'the-down-to-earth-buddy',
@@ -285,9 +307,11 @@ const mockPosts = [
   // FRESH TWITTER DRAMA STORY (Just Generated)
   {
     id: 'simulated-twitter-1750417063190',
-    title: 'Food Twitter Civil War Erupts Over Whether Microwaving Leftover Pizza is a Crime Against Humanity',
+    title:
+      'Food Twitter Civil War Erupts Over Whether Microwaving Leftover Pizza is a Crime Against Humanity',
     slug: 'food-twitter-civil-war-erupts-over-whether-microwaving-leftover-pizza-is-a-crime-against-humanity',
-    excerpt: 'A innocent poll about reheating methods triggered 567 quote tweets of pure culinary rage, scientific papers about heat distribution, and deeply personal stories about childhood pizza trauma.',
+    excerpt:
+      'A innocent poll about reheating methods triggered 567 quote tweets of pure culinary rage, scientific papers about heat distribution, and deeply personal stories about childhood pizza trauma.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Food Wars',
     author: 'the-snarky-sage',
@@ -307,7 +331,8 @@ const mockPosts = [
     id: 'live-twitter-ranch-drama',
     title: 'Food Twitter Declares War Over Ranch Pizza and Nobody Wins',
     slug: 'food-twitter-declares-war-ranch-pizza-nobody-wins',
-    excerpt: 'What started as a PSA about pizza condiments escalated into 189 replies questioning life choices, personality traits, and middle school trauma. Peak food discourse achieved.',
+    excerpt:
+      'What started as a PSA about pizza condiments escalated into 189 replies questioning life choices, personality traits, and middle school trauma. Peak food discourse achieved.',
     imageUrl: '/assets/img/blog/blog06.jpg',
     category: 'Food Wars',
     author: 'the-snarky-sage',
@@ -321,7 +346,7 @@ const mockPosts = [
     status: 'published',
     createdAt: new Date('2025-06-20T10:15:00Z'),
     updatedAt: new Date('2025-06-20T10:35:00Z'),
-  }
+  },
 ];
 
 export async function GET(request: NextRequest) {
@@ -405,7 +430,6 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-
     // Combine real generated stories with mock posts
     const generatedStories = loadGeneratedStories();
     const allPosts = [...generatedStories, ...mockPosts];
@@ -414,22 +438,22 @@ export async function GET(request: NextRequest) {
     const filteredPosts = allPosts.filter(post => {
       // Status filter (all posts are published, generated stories don't have status field)
       if (post.status && post.status !== 'published') return false;
-      
+
       // Category filter
       if (category && post.category !== category) return false;
-      
+
       // Author filter
       if (author) {
         const authorSlug = author.toLowerCase().replace(/\s+/g, '-');
         if (!post.author.toLowerCase().includes(authorSlug)) return false;
       }
-      
+
       // Trending filter
       if (trending === true && !post.trending) return false;
-      
-      // Featured filter  
+
+      // Featured filter
       if (featured === true && !post.featured) return false;
-      
+
       // Search filter
       if (search) {
         const searchLower = search.toLowerCase();
@@ -437,7 +461,7 @@ export async function GET(request: NextRequest) {
         const excerptMatch = post.excerpt?.toLowerCase().includes(searchLower);
         if (!titleMatch && !excerptMatch) return false;
       }
-      
+
       return true;
     });
 
@@ -459,14 +483,19 @@ export async function GET(request: NextRequest) {
         });
         break;
       case 'latest':
-        filteredPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filteredPosts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         break;
       default:
         // Default ordering: trending first, then featured, then by date
         filteredPosts.sort((a, b) => {
           if (b.trending !== a.trending) return b.trending ? 1 : -1;
           if (b.featured !== a.featured) return b.featured ? 1 : -1;
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         });
     }
 

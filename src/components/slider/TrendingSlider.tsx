@@ -74,7 +74,7 @@ export default function TrendingSlider({ showItem = 4 }: TrendingSiderProps) {
                     alt={item.title}
                     width={400}
                     height={250}
-                    className="w-full h-auto object-cover"
+                    className='h-auto w-full object-cover'
                   />
                 </Link>
               </div>

@@ -1,12 +1,15 @@
 # Story Generation System
 
 ## Overview
+
 The ThreadJuice story generation system uses AI to create viral Reddit-style stories with consistent structure and formatting. The system has been unified into a single, maintainable codebase.
 
 ## Unified Architecture
 
 ### Main Script
+
 The story generation system is now consolidated into:
+
 ```
 scripts/content/generate-story-unified.js
 ```
@@ -14,6 +17,7 @@ scripts/content/generate-story-unified.js
 This replaces all previous scattered scripts and provides a single source of truth for story generation.
 
 ### Key Features
+
 - **AI-Powered Generation**: Uses OpenAI GPT-4o for authentic viral content
 - **Smart Image Selection**: Analyzes story content to select the most relevant stock images
 - **Consistent Structure**: Every story follows the proven 12-section format
@@ -24,6 +28,7 @@ This replaces all previous scattered scripts and provides a single source of tru
 ### Usage
 
 #### Generate a Single Story
+
 ```bash
 # Random category and persona
 npm run story:generate
@@ -36,6 +41,7 @@ node scripts/content/generate-story-unified.js generate --persona snarky-sage
 ```
 
 #### Bulk Generation
+
 ```bash
 # Generate 5 stories
 npm run story:bulk 5
@@ -45,6 +51,7 @@ node scripts/content/generate-story-unified.js bulk --count 10 --category family
 ```
 
 #### Import to Database
+
 ```bash
 # Import specific file
 node scripts/content/generate-story-unified.js import <story-file.json>
@@ -53,6 +60,7 @@ node scripts/content/generate-story-unified.js import <story-file.json>
 ```
 
 ## Story Structure
+
 Each story contains exactly 12 sections in this order:
 
 1. **Hero Image** - Stock photo selected based on story content
@@ -71,6 +79,7 @@ Each story contains exactly 12 sections in this order:
 ## Content Configuration
 
 ### Personas
+
 ```javascript
 {
   'snarky-sage': {
@@ -78,7 +87,7 @@ Each story contains exactly 12 sections in this order:
     tone: 'Sarcastic and deadpan with brutal honesty'
   },
   'down-to-earth-buddy': {
-    name: 'The Down-to-Earth Buddy', 
+    name: 'The Down-to-Earth Buddy',
     tone: 'Chill and friendly with relatable insights'
   },
   'dry-cynic': {
@@ -89,6 +98,7 @@ Each story contains exactly 12 sections in this order:
 ```
 
 ### Categories
+
 - **workplace** - Office politics, toxic bosses, corporate revenge
 - **family** - Family drama, reunions, exposed lies
 - **dating** - Relationship revenge, dating app disasters
@@ -101,7 +111,9 @@ Each story contains exactly 12 sections in this order:
 - **social-media** - Influencer callouts, online feuds
 
 ### Image Library
+
 The system includes a curated library of stock photos mapped to story themes:
+
 - Office and workplace scenes
 - Family gatherings and confrontations
 - Social situations and reactions
@@ -111,6 +123,7 @@ The system includes a curated library of stock photos mapped to story themes:
 ## Environment Configuration
 
 ### Required Variables
+
 ```bash
 # AI Generation
 OPENAI_API_KEY=sk-...
@@ -121,6 +134,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
 ### Optional Variables
+
 ```bash
 # Separate API key for images (falls back to main key)
 OPENAI_IMAGE_API_KEY=sk-...
@@ -129,6 +143,7 @@ OPENAI_IMAGE_API_KEY=sk-...
 ## Technical Details
 
 ### File Structure
+
 ```
 scripts/
 └── content/
@@ -138,11 +153,13 @@ scripts/
 ```
 
 ### Generated Output
+
 - Files saved as: `auto-generated-[slug].json`
 - Images stored in: `public/assets/img/generated/`
 - Automatic database import on generation
 
 ### Error Handling
+
 - Graceful fallbacks for API failures
 - Retry logic for transient errors
 - Detailed error logging
@@ -151,12 +168,15 @@ scripts/
 ## Migration Notes
 
 ### From Old Scripts
+
 If you were using the old scripts:
+
 - `generate-full-automated-story.js` → Use `npm run story:generate`
 - `scripts/storygen-1.js` → Deprecated, use unified script
 - `import-story-to-supabase.js` → Now integrated into main script
 
 ### Backward Compatibility
+
 The main `generate-story.js` at root is maintained as a wrapper for compatibility but internally uses the unified system.
 
 ## Best Practices

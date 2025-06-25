@@ -13,19 +13,9 @@ describe('UserProfile', () => {
   });
 
   it('renders with loading state initially', () => {
-    // Mock loading state
-    jest
-      .spyOn(React, 'useState')
-      .mockReturnValueOnce(['overview', jest.fn()]) // activeTab
-      .mockReturnValueOnce([true, jest.fn()]) // loading - set to true
-      .mockReturnValueOnce([null, jest.fn()]) // stats
-      .mockReturnValueOnce([[], jest.fn()]) // recentActivity
-      .mockReturnValueOnce([false, jest.fn()]) // isEditing
-      .mockReturnValueOnce([{}, jest.fn()]); // profileData
-
     render(<UserProfile />);
 
-    // Should show loading spinner
+    // Should show loading spinner initially
     const spinner = document.querySelector('.animate-spin');
     expect(spinner).toBeInTheDocument();
   });
@@ -409,36 +399,20 @@ describe('UserProfile', () => {
   });
 
   it('handles empty activity state', async () => {
-    // Mock empty activity
-    jest
-      .spyOn(React, 'useState')
-      .mockReturnValueOnce(['overview', jest.fn()]) // activeTab
-      .mockReturnValueOnce([false, jest.fn()]) // loading
-      .mockReturnValueOnce([null, jest.fn()]) // stats
-      .mockReturnValueOnce([[], jest.fn()]) // recentActivity - empty
-      .mockReturnValueOnce([false, jest.fn()]) // isEditing
-      .mockReturnValueOnce([
-        {
-          username: 'ThreadJuiceUser',
-          bio: 'Test bio',
-          location: 'Test location',
-          website: 'https://test.com',
-          email: 'test@test.com',
-          isEmailPublic: false,
-          notificationSettings: {
-            comments: true,
-            likes: true,
-            follows: true,
-            newsletters: false,
-          },
-        },
-        jest.fn(),
-      ]); // profileData
-
     render(<UserProfile />);
 
+    // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('ThreadJuiceUser')).toBeInTheDocument();
+    });
+
+    // Switch to activity tab
+    const activityTab = screen.getByText('Activity');
+    fireEvent.click(activityTab);
+
+    // Should show "No recent activity" message
+    await waitFor(() => {
+      expect(screen.getByText(/no recent activity/i)).toBeInTheDocument();
     });
   });
 

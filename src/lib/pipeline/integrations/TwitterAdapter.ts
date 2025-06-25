@@ -1,6 +1,6 @@
 /**
  * Twitter API Adapter for Pipeline Integration
- * 
+ *
  * Bridges the Twitter API client with the pipeline architecture.
  * Handles Twitter drama detection and thread reconstruction.
  */
@@ -177,7 +177,7 @@ export class TwitterAdapter {
         .sort((a: any, b: any) => b.metrics.like_count - a.metrics.like_count)
         .slice(0, 3)
         .map((r: any) => `@${r.author}: ${r.text}`);
-      
+
       thread.push(...topReplies);
     }
 
@@ -214,14 +214,12 @@ export class TwitterAdapter {
           text: r.text || '',
           engagement: r.metrics?.like_count || 0,
         }));
-      
+
       quotes.push(...notableReplies);
     }
 
     // Sort by engagement and return top quotes
-    return quotes
-      .sort((a, b) => b.engagement - a.engagement)
-      .slice(0, 5);
+    return quotes.sort((a, b) => b.engagement - a.engagement).slice(0, 5);
   }
 
   /**
@@ -246,7 +244,7 @@ export class TwitterAdapter {
       });
 
       const threads: ProcessedTwitterThread[] = [];
-      
+
       for (const result of results) {
         const thread = await this.processTwitterDrama(result);
         if (thread) {
@@ -310,7 +308,8 @@ export class TwitterAdapter {
       // Extract @mentions as potential topics
       const mentions = thread.content.main.match(/@\w+/g) || [];
       for (const mention of mentions) {
-        if (mention.length > 4) { // Skip short mentions
+        if (mention.length > 4) {
+          // Skip short mentions
           const topic = mention.toLowerCase();
           topicCounts.set(topic, (topicCounts.get(topic) || 0) + 1);
         }

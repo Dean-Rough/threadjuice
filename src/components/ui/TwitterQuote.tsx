@@ -41,7 +41,7 @@ export default function TwitterQuote({
 
   return (
     <div className='twitter-quote-section mb-8'>
-      <div className='rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 jaunty-cutout-left'>
+      <div className='jaunty-cutout-left rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900'>
         {/* Twitter Header */}
         <div className='mb-4 flex items-start gap-3'>
           <div
@@ -74,7 +74,7 @@ export default function TwitterQuote({
               <span className='text-slate-500'>{timestamp}</span>
             </div>
           </div>
-          
+
           {/* Twitter Bird Icon */}
           <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-500'>
             <svg

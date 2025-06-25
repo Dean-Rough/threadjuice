@@ -52,12 +52,12 @@ export default function Basic() {
       >
         <SwiperSlide className='swiper-slide'>
           <div className='item'>
-            <Image 
-              src='/assets/images/gallery-06.jpeg' 
-              alt='Gallery' 
+            <Image
+              src='/assets/images/gallery-06.jpeg'
+              alt='Gallery'
               width={400}
               height={300}
-              className="w-full h-auto object-cover"
+              className='h-auto w-full object-cover'
             />
           </div>
         </SwiperSlide>

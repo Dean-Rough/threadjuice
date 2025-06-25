@@ -16,17 +16,22 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
-const API_KEY = process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY;
+const API_KEY =
+  process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY;
 const BASE_URL = 'https://api.klipy.co/api/v1';
 const CUSTOMER_ID = 'threadjuice-user-001';
 
 // Emotion to GIF search term mappings (from sentimentAnalyzer)
 const emotionSearchTerms = {
   opening_tension: ['here we go again', 'brace yourself', 'oh boy here we go'],
-  escalating_drama: ['popcorn eating', 'drama intensifies', 'things heating up'],
+  escalating_drama: [
+    'popcorn eating',
+    'drama intensifies',
+    'things heating up',
+  ],
   peak_chaos: ['this is fine fire', 'chaos everywhere', 'what just happened'],
   shocked_realization: ['plot twist', 'mind blown', 'wait what'],
-  satisfied_resolution: ['mic drop', 'well that happened', 'and scene']
+  satisfied_resolution: ['mic drop', 'well that happened', 'and scene'],
 };
 
 async function searchGif(searchTerm, emotion) {
@@ -35,7 +40,7 @@ async function searchGif(searchTerm, emotion) {
     q: searchTerm,
     customer_id: CUSTOMER_ID,
     per_page: '3',
-    content_filter: 'medium'
+    content_filter: 'medium',
   });
 
   console.log(`\n🎭 Emotion: ${emotion}`);
@@ -45,8 +50,8 @@ async function searchGif(searchTerm, emotion) {
     const response = await fetch(`${url}?${params.toString()}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!response.ok) {
@@ -55,20 +60,27 @@ async function searchGif(searchTerm, emotion) {
     }
 
     const data = await response.json();
-    
-    if (data.result && data.data && data.data.data && data.data.data.length > 0) {
+
+    if (
+      data.result &&
+      data.data &&
+      data.data.data &&
+      data.data.data.length > 0
+    ) {
       const gif = data.data.data[0];
       const gifUrl = gif.file?.hd?.gif?.url || gif.file?.md?.gif?.url || '';
-      
+
       console.log(`✅ Found GIF: ${gif.title}`);
       console.log(`   URL: ${gifUrl}`);
-      console.log(`   Size: ${gif.file?.hd?.gif?.width || '?'}x${gif.file?.hd?.gif?.height || '?'}`);
-      
+      console.log(
+        `   Size: ${gif.file?.hd?.gif?.width || '?'}x${gif.file?.hd?.gif?.height || '?'}`
+      );
+
       return {
         id: gif.id,
         title: gif.title,
         url: gifUrl,
-        emotion: emotion
+        emotion: emotion,
       };
     } else {
       console.log('❌ No GIFs found');
@@ -83,7 +95,7 @@ async function searchGif(searchTerm, emotion) {
 async function testEmotionGifs() {
   console.log('🔧 Testing Klipy GIF Search for Story Emotions...');
   console.log('API Key:', API_KEY ? `${API_KEY.slice(0, 10)}...` : 'NOT FOUND');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const results = [];
 
@@ -91,18 +103,20 @@ async function testEmotionGifs() {
     // Test the first search term for each emotion
     const searchTerm = searchTerms[0];
     const result = await searchGif(searchTerm, emotion);
-    
+
     if (result) {
       results.push(result);
     }
-    
+
     // Rate limiting
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
   console.log('\n📊 Summary:');
-  console.log(`Found ${results.length} out of ${Object.keys(emotionSearchTerms).length} emotions`);
-  
+  console.log(
+    `Found ${results.length} out of ${Object.keys(emotionSearchTerms).length} emotions`
+  );
+
   console.log('\n🎬 Sample Story Section Integration:');
   console.log('When someone sees the drama unfolding:');
   const dramaGif = results.find(r => r.emotion === 'escalating_drama');

@@ -46,20 +46,20 @@ interface PipelineContext {
     rawData: any;
     metadata: SourceMetadata;
   };
-  
+
   analysis: {
     entities: string[];
     links: ExtractedLink[];
     sentiment: EmotionalAnalysis[];
     keywords: string[];
   };
-  
+
   enrichments: {
     primaryImage?: ImageResult;
     reactionGifs: GifResult[];
     linkMetadata: LinkMetadata[];
   };
-  
+
   output: {
     story?: ProcessedStory;
     media?: MediaAssets;
@@ -74,12 +74,14 @@ interface PipelineContext {
 Acquires content from various sources and normalizes it.
 
 **Responsibilities:**
+
 - Fetch content from Reddit/Twitter APIs
 - Generate AI content
 - Normalize different formats
 - Select best content based on engagement
 
 **Usage:**
+
 ```typescript
 // Reddit source
 new SourceStage({
@@ -88,12 +90,12 @@ new SourceStage({
     subreddit: 'pettyrevenge',
     sort: 'hot',
     limit: 10,
-    minScore: 1000
-  }
-})
+    minScore: 1000,
+  },
+});
 
 // Or use factory function
-RedditSource('pettyrevenge', { minScore: 1000 })
+RedditSource('pettyrevenge', { minScore: 1000 });
 ```
 
 ### 2. Analysis Stage
@@ -101,6 +103,7 @@ RedditSource('pettyrevenge', { minScore: 1000 })
 Analyzes content to extract metadata and insights.
 
 **Responsibilities:**
+
 - Extract entities (brands, products, companies)
 - Extract URLs and categorize them
 - Analyze sentiment and emotions
@@ -108,14 +111,15 @@ Analyzes content to extract metadata and insights.
 - Extract metaphors for Terry's commentary
 
 **Usage:**
+
 ```typescript
 new AnalysisStage({
   extractEntities: true,
   extractLinks: true,
   analyzeSentiment: true,
   extractMetaphors: true,
-  generateKeywords: true
-})
+  generateKeywords: true,
+});
 ```
 
 ### 3. Enrichment Stage
@@ -123,24 +127,26 @@ new AnalysisStage({
 Enriches content with media and additional context.
 
 **Responsibilities:**
+
 - Find contextually relevant images
 - Search for reaction GIFs based on sentiment
 - Fetch metadata for extracted links
 - Download and cache media
 
 **Usage:**
+
 ```typescript
 new EnrichmentStage({
   fetchImages: true,
   fetchGifs: true,
   fetchLinkMetadata: true,
   maxGifs: 3,
-  imageStrategy: 'smart'
-})
+  imageStrategy: 'smart',
+});
 
 // Or use presets
-FullEnrichment()
-MinimalEnrichment()
+FullEnrichment();
+MinimalEnrichment();
 ```
 
 ### 4. Transform Stage
@@ -148,18 +154,20 @@ MinimalEnrichment()
 Transforms analyzed content into the final story format.
 
 **Responsibilities:**
+
 - Build story sections
 - Insert media at appropriate positions
 - Add Terry's commentary
 - Format for output
 
 **Usage:**
+
 ```typescript
 new TransformStage({
   includeGifs: true,
   includeTerryCommentary: true,
-  includeComments: true
-})
+  includeComments: true,
+});
 ```
 
 ### 5. Output Stage
@@ -167,24 +175,26 @@ new TransformStage({
 Handles final output to various destinations.
 
 **Responsibilities:**
+
 - Save to database
 - Write to files
 - Return for API responses
 - Clean up resources
 
 **Usage:**
+
 ```typescript
 // Save to database
-DatabaseOutput()
+DatabaseOutput();
 
 // Save to file
-FileOutput('data/stories')
+FileOutput('data/stories');
 
 // Both database and file
-DualOutput()
+DualOutput();
 
 // API response only
-ApiOutput()
+ApiOutput();
 ```
 
 ## Usage Examples
@@ -196,7 +206,7 @@ import { createRedditPipeline } from '@/lib/pipeline';
 
 const pipeline = createRedditPipeline('pettyrevenge', {
   minScore: 1000,
-  limit: 10
+  limit: 10,
 });
 
 const context = new PipelineContext('reddit', {});
@@ -208,29 +218,35 @@ console.log(result.output.story);
 ### Custom Pipeline
 
 ```typescript
-import { 
+import {
   Pipeline,
   RedditSource,
   AnalysisStage,
   EnrichmentStage,
   TransformStage,
-  DatabaseOutput
+  DatabaseOutput,
 } from '@/lib/pipeline';
 
 const customPipeline = new Pipeline({ debug: true })
   .pipe(RedditSource('AmItheAsshole'))
-  .pipe(new AnalysisStage({
-    extractEntities: true,
-    analyzeSentiment: true
-  }))
-  .pipe(new EnrichmentStage({
-    fetchImages: true,
-    fetchGifs: true,
-    maxGifs: 5
-  }))
-  .pipe(new TransformStage({
-    includeTerryCommentary: true
-  }))
+  .pipe(
+    new AnalysisStage({
+      extractEntities: true,
+      analyzeSentiment: true,
+    })
+  )
+  .pipe(
+    new EnrichmentStage({
+      fetchImages: true,
+      fetchGifs: true,
+      maxGifs: 5,
+    })
+  )
+  .pipe(
+    new TransformStage({
+      includeTerryCommentary: true,
+    })
+  )
   .pipe(DatabaseOutput());
 ```
 
@@ -243,7 +259,7 @@ import { PipelineOrchestrator } from '@/lib/pipeline';
 
 const orchestrator = new PipelineOrchestrator({
   maxConcurrent: 3,
-  monitoring: true
+  monitoring: true,
 });
 
 // Register pipelines
@@ -255,8 +271,8 @@ orchestrator.register({
     new AnalysisStage(),
     FullEnrichment(),
     new TransformStage(),
-    DatabaseOutput()
-  ]
+    DatabaseOutput(),
+  ],
 });
 
 // Execute pipeline
@@ -298,7 +314,7 @@ export class CustomContext extends PipelineContext {
   constructor() {
     super('custom', {});
     this.customData = {
-      specialField: 'value'
+      specialField: 'value',
     };
   }
 }
@@ -332,9 +348,9 @@ PIPELINE_MAX_CONCURRENT=5
 
 ```typescript
 interface PipelineOptions {
-  parallel?: boolean;      // Enable parallel stage execution
-  throwOnError?: boolean;  // Stop on first error
-  debug?: boolean;         // Enable debug logging
+  parallel?: boolean; // Enable parallel stage execution
+  throwOnError?: boolean; // Stop on first error
+  debug?: boolean; // Enable debug logging
 }
 ```
 
@@ -389,6 +405,7 @@ const story = result.output.story;
 ```
 
 The new pipeline system provides better:
+
 - Modularity and testability
 - Error handling and recovery
 - Performance monitoring

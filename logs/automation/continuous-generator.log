@@ -1,0 +1,77 @@
+[2025-06-23T23:26:51.350Z] 🤖 THREADJUICE CONTINUOUS GENERATOR STARTED
+[2025-06-23T23:26:51.351Z] ==========================================
+[2025-06-23T23:26:51.351Z] 🎯 Configuration:
+[2025-06-23T23:26:51.351Z]    • Stories per run: 3
+[2025-06-23T23:26:51.351Z]    • Source: reddit
+[2025-06-23T23:26:51.351Z]    • Interval: 60 minutes
+[2025-06-23T23:26:51.351Z]    • Max daily: 50
+[2025-06-23T23:26:51.351Z]    • PID: 76587
+[2025-06-23T23:26:51.352Z]    • Log file: /Users/deannewton/Documents/ThreadJuice/logs/automation/continuous-generator.log
+[2025-06-23T23:26:51.352Z] 
+[2025-06-23T23:26:51.352Z] 📊 Current state:
+[2025-06-23T23:26:51.352Z]    • Total runs: 0
+[2025-06-23T23:26:51.352Z]    • Total stories: 0
+[2025-06-23T23:26:51.352Z]    • Success rate: 0%
+[2025-06-23T23:26:51.352Z]    • Today: 0/50
+[2025-06-23T23:26:51.352Z] 
+[2025-06-23T23:26:51.353Z] 🚀 Starting generation run #1
+[2025-06-23T23:26:51.353Z] 📊 Target: 3 stories from reddit
+[2025-06-23T23:26:51.389Z] ✅ Generation completed: 0/0 stories successful
+[2025-06-23T23:26:51.389Z] 📈 Statistics: 0/0 total (NaN% success)
+[2025-06-23T23:26:51.401Z] ⏰ Next run scheduled for 1:26:51 AM
+[2025-06-23T23:26:51.402Z] 😴 Sleeping for 60 minutes...
+[2025-06-23T23:26:51.402Z] 
+[2025-06-24T16:04:37.889Z] 🚀 Starting generation run #2
+[2025-06-24T16:04:37.890Z] 📊 Target: 3 stories from reddit
+[2025-06-24T16:22:19.810Z] ❌ Generation failed with code 1
+[2025-06-24T16:22:19.811Z] Error: ❌ Story generation failed: Failed to fetch real Reddit data
+❌ Media enrichment failed: Failed to fetch real Reddit data
+❌ Story generation failed: Failed to fetch real Reddit data
+❌ Media enrichment f
+[2025-06-24T16:22:19.811Z] ⏰ Next run scheduled for 6:22:19 PM
+[2025-06-24T16:22:19.811Z] 😴 Sleeping for 60 minutes...
+[2025-06-24T16:22:19.811Z] 
+[2025-06-24T19:06:52.645Z] 🚀 Starting generation run #3
+[2025-06-24T19:06:52.646Z] 📊 Target: 3 stories from reddit
+[2025-06-24T19:08:35.725Z] ✅ Generation completed: 3/3 stories successful
+[2025-06-24T19:08:35.725Z] 📈 Statistics: 3/3 total (100% success)
+[2025-06-24T19:08:35.725Z] ⏰ Next run scheduled for 9:08:35 PM
+[2025-06-24T19:08:35.725Z] 😴 Sleeping for 60 minutes...
+[2025-06-24T19:08:35.725Z] 
+[2025-06-24T19:16:56.315Z] 
+[2025-06-24T19:16:56.316Z] 🛑 SHUTDOWN SIGNAL RECEIVED
+[2025-06-24T19:16:56.316Z] ============================
+[2025-06-24T19:16:56.316Z] 📊 Final statistics:
+[2025-06-24T19:16:56.316Z]    • Total runs: 3
+[2025-06-24T19:16:56.316Z]    • Total stories generated: 3
+[2025-06-24T19:16:56.316Z]    • Total stories attempted: 3
+[2025-06-24T19:16:56.316Z]    • Success rate: 100%
+[2025-06-24T19:16:56.316Z]    • Runtime: 1190 minutes
+[2025-06-24T19:16:56.316Z] 
+[2025-06-24T19:16:56.316Z] ✅ Continuous generator stopped gracefully
+[2025-06-24T19:21:10.760Z] 🤖 THREADJUICE CONTINUOUS GENERATOR STARTED
+[2025-06-24T19:21:10.762Z] ==========================================
+[2025-06-24T19:21:10.762Z] 🎯 Configuration:
+[2025-06-24T19:21:10.762Z]    • Stories per run: 3
+[2025-06-24T19:21:10.762Z]    • Source: reddit
+[2025-06-24T19:21:10.762Z]    • Interval: 60 minutes
+[2025-06-24T19:21:10.762Z]    • Max daily: 50
+[2025-06-24T19:21:10.763Z]    • PID: 91818
+[2025-06-24T19:21:10.763Z]    • Log file: /Users/deannewton/Documents/ThreadJuice/logs/automation/continuous-generator.log
+[2025-06-24T19:21:10.763Z] 
+[2025-06-24T19:21:10.763Z] 📊 Current state:
+[2025-06-24T19:21:10.763Z]    • Total runs: 3
+[2025-06-24T19:21:10.763Z]    • Total stories: 3
+[2025-06-24T19:21:10.763Z]    • Success rate: 100%
+[2025-06-24T19:21:10.763Z]    • Today: 3/50
+[2025-06-24T19:21:10.763Z] 
+[2025-06-24T19:21:10.763Z] 🚀 Starting generation run #4
+[2025-06-24T19:21:10.764Z] 📊 Target: 3 stories from reddit
+[2025-06-24T19:22:36.185Z] ✅ Generation completed: 3/3 stories successful
+[2025-06-24T19:22:36.185Z] 📈 Statistics: 6/6 total (100% success)
+[2025-06-24T19:22:36.197Z] ⏰ Next run scheduled for 9:22:36 PM
+[2025-06-24T19:22:36.198Z] 😴 Sleeping for 60 minutes...
+[2025-06-24T19:22:36.198Z] 
+[2025-06-24T20:22:36.206Z] 🚀 Starting generation run #5
+[2025-06-24T20:22:36.209Z] 📊 Target: 3 stories from reddit
+[2025-06-24T20:24:07.569Z] ✅ Generation completed: 3/3 stories successful

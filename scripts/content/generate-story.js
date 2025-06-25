@@ -7,7 +7,11 @@
  * Maintained for backward compatibility
  */
 
-import { generateStory as generateUnifiedStory, generateBulkStories, saveToDatabase } from './generate-story-unified.js';
+import {
+  generateStory as generateUnifiedStory,
+  generateBulkStories,
+  saveToDatabase,
+} from './generate-story-unified.js';
 
 // Re-export unified functions for compatibility
 export { generateUnifiedStory as generateStory, saveToDatabase };
@@ -27,7 +31,7 @@ async function main() {
   try {
     console.log('🚀 ThreadJuice Story Generator (using unified system)');
     console.log('━'.repeat(50));
-    
+
     const story = await generateUnifiedStory(options);
 
     if (options.save !== false) {

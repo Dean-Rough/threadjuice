@@ -59,12 +59,12 @@ export default function HeaderInstagram() {
           <SwiperSlide key={index}>
             <div className='header__instagram-item'>
               <a href='#' className='popup-image'>
-                <Image 
-                  src={src} 
+                <Image
+                  src={src}
                   alt={`Instagram image ${index + 1}`}
                   width={200}
                   height={200}
-                  className="w-full h-auto object-cover"
+                  className='h-auto w-full object-cover'
                 />
               </a>
             </div>

@@ -1,6 +1,6 @@
 /**
  * Pexels Image Adapter for Pipeline Integration
- * 
+ *
  * Bridges the existing ImageService with the pipeline architecture.
  * Focuses on Pexels API integration with intelligent image selection.
  */
@@ -35,7 +35,7 @@ export class PexelsAdapter {
     options: ImageSearchOptions = {}
   ): Promise<ImageResult> {
     const cacheKey = this.generateCacheKey(title, category);
-    
+
     // Check cache first
     const cached = this.getFromCache(cacheKey);
     if (cached) {
@@ -44,7 +44,9 @@ export class PexelsAdapter {
     }
 
     try {
-      console.log(`🔍 Searching for image: "${title}" in category "${category}"`);
+      console.log(
+        `🔍 Searching for image: "${title}" in category "${category}"`
+      );
 
       let result: ImageResult;
 
@@ -82,7 +84,11 @@ export class PexelsAdapter {
     category: string
   ): Promise<ImageResult> {
     // Use intelligent routing to determine the best approach
-    const analysis = intelligentImageRouter.analyzeContent(title, content, category);
+    const analysis = intelligentImageRouter.analyzeContent(
+      title,
+      content,
+      category
+    );
 
     console.log(`🧠 Smart search analysis:`, {
       entities: analysis.entities.length,
@@ -95,7 +101,8 @@ export class PexelsAdapter {
     if (analysis.shouldUseWikipedia && analysis.entities.length > 0) {
       for (const entity of analysis.entities.slice(0, 2)) {
         try {
-          const entityImages = await this.service.searchWikipediaEntityImages(entity);
+          const entityImages =
+            await this.service.searchWikipediaEntityImages(entity);
           if (entityImages.length > 0) {
             console.log(`✅ Found Wikipedia image for entity: ${entity}`);
             return entityImages[0];
@@ -107,7 +114,11 @@ export class PexelsAdapter {
     }
 
     // Generate smart search keywords
-    const stockPrompt = intelligentImageRouter.generateStockImagePrompt(title, content, category);
+    const stockPrompt = intelligentImageRouter.generateStockImagePrompt(
+      title,
+      content,
+      category
+    );
     const keywords = stockPrompt.split(' ').filter(k => k.length > 0);
 
     // Try Pexels with smart keywords

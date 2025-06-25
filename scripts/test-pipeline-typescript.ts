@@ -5,7 +5,10 @@
  * Tests the ThreadJuice content pipeline with real Reddit data
  */
 
-import { createRedditPipeline, runExamplePipeline } from '../src/lib/pipeline/integrations/ExamplePipelines';
+import {
+  createRedditPipeline,
+  runExamplePipeline,
+} from '../src/lib/pipeline/integrations/ExamplePipelines';
 import { PipelineContext } from '../src/lib/pipeline/core/PipelineContext';
 import { initializeServices } from '../src/lib/pipeline/integrations';
 import { promises as fs } from 'fs';
@@ -31,7 +34,9 @@ const logger = {
     }
   },
   error: (stage: string, message: string, error: any) => {
-    console.error(`\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`);
+    console.error(
+      `\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`
+    );
     if (error) {
       console.error(error.message);
       if (error.stack) {
@@ -41,7 +46,7 @@ const logger = {
   },
   divider: () => {
     console.log('\n' + '='.repeat(80) + '\n');
-  }
+  },
 };
 
 async function ensureOutputDirectory() {
@@ -72,7 +77,7 @@ async function testPipeline() {
     // Initialize services first
     logger.info('INIT', 'Initializing services...');
     const services = await initializeServices();
-    
+
     logger.info('INIT', 'Service availability:', {
       reddit: services.reddit.available,
       openai: services.openai.available,
@@ -83,7 +88,9 @@ async function testPipeline() {
     });
 
     if (!services.reddit.available) {
-      throw new Error('Reddit service not available. Check REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET');
+      throw new Error(
+        'Reddit service not available. Check REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET'
+      );
     }
     if (!services.openai.available) {
       throw new Error('OpenAI service not available. Check OPENAI_API_KEY');
@@ -92,24 +99,24 @@ async function testPipeline() {
     // Create Reddit pipeline
     logger.divider();
     logger.info('PIPELINE', 'Creating Reddit pipeline...');
-    
+
     const pipeline = createRedditPipeline({
       subreddit: 'AmItheAsshole',
       personaId: 'the-terry',
       minScore: 100,
-      includeComments: true
+      includeComments: true,
     });
 
     // Create initial context
     const context = new PipelineContext('reddit', {
       debug: true,
-      saveIntermediateResults: true
+      saveIntermediateResults: true,
     });
 
     // Execute pipeline
     logger.divider();
     logger.info('PIPELINE', 'Executing pipeline...');
-    
+
     const result = await pipeline.execute(context);
 
     // Log results
@@ -118,17 +125,20 @@ async function testPipeline() {
 
     if (result.output.story) {
       const story = result.output.story;
-      
+
       logger.info('STORY', 'Generated story:', {
         id: story.id,
         title: story.title,
         author: story.author,
         category: story.category,
         sections: story.content.sections.length,
-        totalLength: story.content.sections.reduce((acc, s) => acc + s.content.length, 0),
+        totalLength: story.content.sections.reduce(
+          (acc, s) => acc + s.content.length,
+          0
+        ),
         hasIntro: !!story.content.introduction,
         hasConclusion: !!story.content.conclusion,
-        personaId: story.personaId
+        personaId: story.personaId,
       });
 
       await saveOutput('final-story.json', story);
@@ -141,8 +151,8 @@ async function testPipeline() {
           title: result.source.posts[0].title,
           score: result.source.posts[0].score,
           author: result.source.posts[0].author,
-          num_comments: result.source.posts[0].num_comments
-        }
+          num_comments: result.source.posts[0].num_comments,
+        },
       });
 
       await saveOutput('reddit-posts.json', result.source.posts);
@@ -153,7 +163,7 @@ async function testPipeline() {
         sentiment: result.analysis.sentiment,
         entities: result.analysis.entities?.length || 0,
         keywords: result.analysis.keywords?.length || 0,
-        metaphors: result.analysis.metaphors?.length || 0
+        metaphors: result.analysis.metaphors?.length || 0,
       });
 
       await saveOutput('analysis-results.json', result.analysis);
@@ -164,9 +174,10 @@ async function testPipeline() {
         primaryImage: !!result.enrichments.primaryImage,
         additionalImages: result.enrichments.additionalImages?.length || 0,
         reactionGifs: result.enrichments.reactionGifs?.length || 0,
-        totalMedia: (result.enrichments.additionalImages?.length || 0) + 
-                   (result.enrichments.reactionGifs?.length || 0) +
-                   (result.enrichments.primaryImage ? 1 : 0)
+        totalMedia:
+          (result.enrichments.additionalImages?.length || 0) +
+          (result.enrichments.reactionGifs?.length || 0) +
+          (result.enrichments.primaryImage ? 1 : 0),
       });
 
       await saveOutput('enrichment-results.json', result.enrichments);
@@ -183,20 +194,19 @@ async function testPipeline() {
         'reddit-posts.json',
         'analysis-results.json',
         'enrichment-results.json',
-        'complete-pipeline-result.json'
-      ]
+        'complete-pipeline-result.json',
+      ],
     });
-
   } catch (error: any) {
     logger.error('PIPELINE', 'Pipeline execution failed', error);
-    
+
     // Save error details
     await saveOutput('pipeline-error.json', {
       error: error.message,
       stack: error.stack,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     process.exit(1);
   }
 }
@@ -206,12 +216,12 @@ async function runExample() {
   try {
     logger.divider();
     logger.info('EXAMPLE', 'Running example pipeline...');
-    
+
     const result = await runExamplePipeline();
-    
+
     await ensureOutputDirectory();
     await saveOutput('example-pipeline-result.json', result);
-    
+
     logger.info('EXAMPLE', 'Example pipeline completed successfully!');
   } catch (error: any) {
     logger.error('EXAMPLE', 'Example pipeline failed', error);

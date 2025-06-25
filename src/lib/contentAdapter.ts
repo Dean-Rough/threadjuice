@@ -14,16 +14,20 @@ export interface NormalizedSection {
 function snakeToCamel(obj: any): any {
   if (obj === null || typeof obj !== 'object') return obj;
   if (Array.isArray(obj)) return obj.map(snakeToCamel);
-  
+
   const camelObj: any = {};
   for (const key in obj) {
-    const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+    const camelKey = key.replace(/_([a-z])/g, (_, letter) =>
+      letter.toUpperCase()
+    );
     camelObj[camelKey] = snakeToCamel(obj[key]);
   }
   return camelObj;
 }
 
-export function normalizeContent(content: any): { sections: NormalizedSection[] } {
+export function normalizeContent(content: any): {
+  sections: NormalizedSection[];
+} {
   if (!content) {
     return { sections: [] };
   }
@@ -37,7 +41,7 @@ export function normalizeContent(content: any): { sections: NormalizedSection[] 
       // Remove the 'text' field to avoid confusion
       text: undefined,
       // Convert metadata snake_case to camelCase
-      metadata: section.metadata ? snakeToCamel(section.metadata) : undefined
+      metadata: section.metadata ? snakeToCamel(section.metadata) : undefined,
     }));
     return { sections: normalizedSections };
   }
@@ -50,7 +54,7 @@ export function normalizeContent(content: any): { sections: NormalizedSection[] 
       // Remove the 'text' field to avoid confusion
       text: undefined,
       // Convert metadata snake_case to camelCase
-      metadata: section.metadata ? snakeToCamel(section.metadata) : undefined
+      metadata: section.metadata ? snakeToCamel(section.metadata) : undefined,
     }));
     return { sections: normalizedSections };
   }
@@ -63,10 +67,12 @@ export function normalizeContent(content: any): { sections: NormalizedSection[] 
     } catch {
       // If it's just a plain string, create a single paragraph section
       return {
-        sections: [{
-          type: 'paragraph',
-          content: content
-        }]
+        sections: [
+          {
+            type: 'paragraph',
+            content: content,
+          },
+        ],
       };
     }
   }

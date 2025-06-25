@@ -52,15 +52,16 @@ export class MediaEnricher {
    * Parse media placeholders from story content
    */
   detectReferences(sections: any[]): MediaReference[] {
-    const mediaRegex = /\[MEDIA:\s*type="([^"]+)"\s*query="([^"]+)"\s*context="([^"]+)"\]/g;
+    const mediaRegex =
+      /\[MEDIA:\s*type="([^"]+)"\s*query="([^"]+)"\s*context="([^"]+)"\]/g;
     const references: MediaReference[] = [];
-    
+
     sections.forEach((section, index) => {
       if (section.content && typeof section.content === 'string') {
         let match;
         const content = section.content;
         mediaRegex.lastIndex = 0; // Reset regex state
-        
+
         while ((match = mediaRegex.exec(content)) !== null) {
           references.push({
             sectionIndex: index,
@@ -68,12 +69,12 @@ export class MediaEnricher {
             query: match[2],
             context: match[3],
             fullMatch: match[0],
-            position: match.index
+            position: match.index,
           });
         }
       }
     });
-    
+
     return references;
   }
 
@@ -98,7 +99,10 @@ export class MediaEnricher {
   /**
    * Enrich story sections with media embeds
    */
-  async enrichStory(sections: any[], references: MediaReference[]): Promise<EnrichedSection[]> {
+  async enrichStory(
+    sections: any[],
+    references: MediaReference[]
+  ): Promise<EnrichedSection[]> {
     // Find media for each reference
     const mediaResults = await Promise.all(
       references.map(ref => this.findMedia(ref))
@@ -117,21 +121,23 @@ export class MediaEnricher {
 
     // Build enriched sections
     const enrichedSections: EnrichedSection[] = [];
-    
+
     sections.forEach((section, index) => {
       // Add the original section
       const enrichedSection: EnrichedSection = { ...section };
-      
+
       // Remove media placeholders from content
       if (references.some(r => r.sectionIndex === index)) {
-        enrichedSection.content = section.content.replace(
-          /\[MEDIA:\s*type="[^"]+"\s*query="[^"]+"\s*context="[^"]+"\]/g,
-          ''
-        ).trim();
+        enrichedSection.content = section.content
+          .replace(
+            /\[MEDIA:\s*type="[^"]+"\s*query="[^"]+"\s*context="[^"]+"\]/g,
+            ''
+          )
+          .trim();
       }
-      
+
       enrichedSections.push(enrichedSection);
-      
+
       // Add media embeds after the section
       const sectionMedia = sectionMediaMap.get(index);
       if (sectionMedia) {
@@ -140,8 +146,8 @@ export class MediaEnricher {
             type: 'media_embed',
             content: '',
             metadata: {
-              media
-            }
+              media,
+            },
           });
         });
       }
@@ -164,14 +170,17 @@ export class MediaEnricher {
     }
 
     console.log(`🎬 Enriching ${references.length} media references`);
-    const enrichedSections = await this.enrichStory(story.content.sections, references);
+    const enrichedSections = await this.enrichStory(
+      story.content.sections,
+      references
+    );
 
     return {
       ...story,
       content: {
         ...story.content,
-        sections: enrichedSections
-      }
+        sections: enrichedSections,
+      },
     };
   }
 }

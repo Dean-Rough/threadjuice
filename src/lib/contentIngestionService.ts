@@ -188,9 +188,17 @@ export class ContentIngestionService {
           }
 
           // Find and process image with intelligent routing
+          // Extract text content from sections for image search
+          const contentText = typeof transformedContent.content === 'string' 
+            ? transformedContent.content 
+            : transformedContent.content?.sections
+              ?.map((s: any) => s.content)
+              .join(' ')
+              .slice(0, 500) || transformedContent.excerpt;
+              
           const imageResult = await imageService.findBestImageIntelligent(
             transformedContent.title,
-            transformedContent.content || transformedContent.excerpt,
+            contentText,
             transformedContent.category
           );
           const processedImage =

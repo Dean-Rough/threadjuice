@@ -36,9 +36,10 @@ export default function AdSenseUnit({
     if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
       const script = document.createElement('script');
       script.async = true;
-      const publisherId = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_PUBLISHER_ID || 'ca-pub-2236849417806650';
-      script.src =
-        `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
+      const publisherId =
+        process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_PUBLISHER_ID ||
+        'ca-pub-2236849417806650';
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
       script.crossOrigin = 'anonymous';
       document.head.appendChild(script);
     }
@@ -117,7 +118,10 @@ export default function AdSenseUnit({
       <ins
         className='adsbygoogle'
         style={defaultStyle}
-        data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_PUBLISHER_ID || 'ca-pub-2236849417806650'}
+        data-ad-client={
+          process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_PUBLISHER_ID ||
+          'ca-pub-2236849417806650'
+        }
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={responsive.toString()}

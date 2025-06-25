@@ -88,16 +88,40 @@ def create_threadjuice_video(story_slug: Optional[str] = None, use_pexels: bool 
         if background_path:
             print_substep(f"✅ Using relevant Pexels video: {background_path.name}")
             # Update settings to use this video
-            settings.config['settings']['background']['background_video'] = str(background_path)
+            # Update background video in settings
+            if not hasattr(settings, 'background_video'):
+                settings.background_video = str(background_path)
+            # For compatibility with existing code
+            os.environ['BACKGROUND_VIDEO'] = str(background_path)
         else:
             print_substep("⚠️ No relevant video found, using default Minecraft")
-            settings.config['settings']['background']['background_video'] = 'minecraft'
+            if not hasattr(settings, 'background_video'):
+                settings.background_video = 'minecraft'
+            os.environ['BACKGROUND_VIDEO'] = 'minecraft'
     else:
         print_substep("Using default Minecraft background")
         settings.config['settings']['background']['background_video'] = 'minecraft'
     
     # Convert story to Reddit format for compatibility
-    reddit_object = story
+    reddit_object = {
+        'thread_id': story.data.get('slug', 'story'),
+        'thread_title': story.title,
+        'thread_author': story.author,
+        'thread_content': story.selftext,
+        'thread_subreddit': story.subreddit,
+        'thread_upvotes': story.score,
+        'thread_permalink': story.permalink,
+        'thread_url': story.url,
+        'comments': [
+            {
+                'comment_id': f'comment_{i}',
+                'comment_body': comment['body'],
+                'comment_author': comment['author'],
+                'comment_score': comment['score']
+            }
+            for i, comment in enumerate(story.comments[:3])  # Top 3 comments
+        ]
+    }
     
     # Generate audio
     print_step("Generating voiceover...")

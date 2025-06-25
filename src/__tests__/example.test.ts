@@ -1,4 +1,6 @@
-import { describe, it, expect } from '@jest/globals';
+/**
+ * @jest-environment jsdom
+ */
 
 describe('Example Test Suite with jest-extended', () => {
   it('should use basic matchers', () => {

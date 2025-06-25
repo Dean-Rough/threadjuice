@@ -3,10 +3,10 @@ import { gptSummariser } from './gptSummariser';
 import { createClient } from '@supabase/supabase-js';
 import { env } from './env';
 import { jobQueue, type JobData } from './jobQueue';
-import type { 
-  ProcessedRedditPost, 
-  ProcessedRedditComment, 
-  RedditIngestionRequest 
+import type {
+  ProcessedRedditPost,
+  ProcessedRedditComment,
+  RedditIngestionRequest,
 } from '@/types/reddit';
 import type { SummarizationResult } from './gptSummariser';
 
@@ -34,7 +34,7 @@ export interface IngestionResult {
 export class IngestionService {
   private readonly PERSONA_IDS = [
     'snarky-sage',
-    'down-to-earth-buddy', 
+    'down-to-earth-buddy',
     'dry-cynic',
     'wholesome-cheerleader',
     'chaos-chronicler',
@@ -45,8 +45,14 @@ export class IngestionService {
 
   constructor() {
     // Register job handlers
-    jobQueue.registerHandler('reddit-ingestion', this.processIngestionJob.bind(this));
-    jobQueue.registerHandler('post-generation', this.processPostGenerationJob.bind(this));
+    jobQueue.registerHandler(
+      'reddit-ingestion',
+      this.processIngestionJob.bind(this)
+    );
+    jobQueue.registerHandler(
+      'post-generation',
+      this.processPostGenerationJob.bind(this)
+    );
   }
 
   /**
@@ -54,7 +60,7 @@ export class IngestionService {
    */
   async startIngestion(request: IngestionJobPayload): Promise<string> {
     // console.log(`🚀 Starting ingestion for r/${request.subreddit}`);
-    
+
     const jobId = jobQueue.addJob('reddit-ingestion', request, {
       priority: 10,
       maxRetries: 2,
@@ -68,7 +74,13 @@ export class IngestionService {
    */
   private async processIngestionJob(job: JobData): Promise<void> {
     const payload = job.payload as IngestionJobPayload;
-    const { subreddit, limit = 25, timeFilter = 'day', minScore = 100, forceRefresh = false } = payload;
+    const {
+      subreddit,
+      limit = 25,
+      timeFilter = 'day',
+      minScore = 100,
+      forceRefresh = false,
+    } = payload;
 
     // console.log(`📡 Fetching posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
 
@@ -99,20 +111,23 @@ export class IngestionService {
       // Create individual post generation jobs
       for (const post of postsToProcess) {
         const personaId = this.selectRandomPersona();
-        
-        jobQueue.addJob('post-generation', {
-          post,
-          personaId,
-          userId: payload.userId,
-          subreddit,
-        }, {
-          priority: 5,
-          maxRetries: 3,
-        });
+
+        jobQueue.addJob(
+          'post-generation',
+          {
+            post,
+            personaId,
+            userId: payload.userId,
+            subreddit,
+          },
+          {
+            priority: 5,
+            maxRetries: 3,
+          }
+        );
       }
 
       // console.log(`🎯 Created ${postsToProcess.length} post generation jobs`);
-
     } catch (error) {
       console.error(`❌ Ingestion job failed for r/${subreddit}:`, error);
       throw error;
@@ -147,15 +162,23 @@ export class IngestionService {
 
       // Validate content quality
       if (summary.validation && !summary.validation.isValid) {
-        console.warn(`⚠️ Content validation failed for "${post.title}":`, summary.validation.issues);
+        console.warn(
+          `⚠️ Content validation failed for "${post.title}":`,
+          summary.validation.issues
+        );
         // Still save it but mark as draft
       }
 
       // Save to database
-      const dbPost = await this.savePostToDatabase(post, summary, personaId, userId, subreddit);
-      
-      // console.log(`✅ Created post: ${dbPost.id} - "${summary.title}"`);
+      const dbPost = await this.savePostToDatabase(
+        post,
+        summary,
+        personaId,
+        userId,
+        subreddit
+      );
 
+      // console.log(`✅ Created post: ${dbPost.id} - "${summary.title}"`);
     } catch (error) {
       console.error(`❌ Post generation failed for "${post.title}":`, error);
       throw error;
@@ -165,11 +188,13 @@ export class IngestionService {
   /**
    * Filter out posts that already exist in our database
    */
-  private async filterExistingPosts(posts: ProcessedRedditPost[]): Promise<ProcessedRedditPost[]> {
+  private async filterExistingPosts(
+    posts: ProcessedRedditPost[]
+  ): Promise<ProcessedRedditPost[]> {
     if (posts.length === 0) return posts;
 
     const redditIds = posts.map(p => p.redditId);
-    
+
     const { data: existingPosts, error } = await supabase
       .from('posts')
       .select('reddit_thread_id')
@@ -188,7 +213,9 @@ export class IngestionService {
    * Select a random persona for content generation
    */
   private selectRandomPersona(): string {
-    return this.PERSONA_IDS[Math.floor(Math.random() * this.PERSONA_IDS.length)];
+    return this.PERSONA_IDS[
+      Math.floor(Math.random() * this.PERSONA_IDS.length)
+    ];
   }
 
   /**
@@ -270,7 +297,7 @@ export class IngestionService {
    * Categorize post based on content and source
    */
   private categorizePost(
-    redditPost: ProcessedRedditPost, 
+    redditPost: ProcessedRedditPost,
     summary: SummarizationResult,
     subreddit?: string
   ): 'viral' | 'trending' | 'chaos' | 'wholesome' | 'drama' {
@@ -279,19 +306,32 @@ export class IngestionService {
 
     // Check for specific subreddit patterns
     if (['amitheasshole', 'aita'].includes(sub)) return 'drama';
-    if (['wholesome', 'mademesmile', 'humansbeingbros'].includes(sub)) return 'wholesome';
+    if (['wholesome', 'mademesmile', 'humansbeingbros'].includes(sub))
+      return 'wholesome';
     if (['tifu', 'facepalm', 'whatcouldgowrong'].includes(sub)) return 'chaos';
 
     // Check content for keywords
-    if (content.includes('drama') || content.includes('conflict') || content.includes('argument')) {
+    if (
+      content.includes('drama') ||
+      content.includes('conflict') ||
+      content.includes('argument')
+    ) {
       return 'drama';
     }
-    
-    if (content.includes('wholesome') || content.includes('heartwarming') || content.includes('sweet')) {
+
+    if (
+      content.includes('wholesome') ||
+      content.includes('heartwarming') ||
+      content.includes('sweet')
+    ) {
       return 'wholesome';
     }
-    
-    if (content.includes('chaos') || content.includes('disaster') || content.includes('went wrong')) {
+
+    if (
+      content.includes('chaos') ||
+      content.includes('disaster') ||
+      content.includes('went wrong')
+    ) {
       return 'chaos';
     }
 
@@ -318,7 +358,8 @@ export class IngestionService {
     }>;
   }> {
     const queueStats = jobQueue.getStats();
-    const recentJobs = jobQueue.getAllJobs()
+    const recentJobs = jobQueue
+      .getAllJobs()
       .slice(0, 20)
       .map(job => ({
         id: job.id,

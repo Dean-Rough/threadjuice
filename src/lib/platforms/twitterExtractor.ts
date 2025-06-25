@@ -28,15 +28,15 @@ export class TwitterExtractor implements IPlatformExtractor {
     try {
       // Build Twitter API v2 search query
       const searchQuery = this.buildTwitterQuery(query, context);
-      
+
       // Search using Twitter API v2 with media fields
       const searchUrl = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(searchQuery)}&max_results=10&tweet.fields=public_metrics,created_at,author_id,attachments&expansions=author_id,attachments.media_keys&media.fields=url,preview_image_url,duration_ms,type,variants`;
-      
+
       const response = await fetch(searchUrl, {
         headers: {
-          'Authorization': `Bearer ${this.bearerToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${this.bearerToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -55,21 +55,27 @@ export class TwitterExtractor implements IPlatformExtractor {
       }
 
       // Get author info
-      const author = data.includes?.users?.find((u: any) => u.id === bestTweet.author_id);
-      
+      const author = data.includes?.users?.find(
+        (u: any) => u.id === bestTweet.author_id
+      );
+
       // Check for media attachments
       let mediaUrl, mediaType;
       if (bestTweet.attachments?.media_keys && data.includes?.media) {
         const mediaKey = bestTweet.attachments.media_keys[0];
-        const media = data.includes.media.find((m: any) => m.media_key === mediaKey);
-        
+        const media = data.includes.media.find(
+          (m: any) => m.media_key === mediaKey
+        );
+
         if (media) {
           mediaType = media.type;
           if (media.type === 'video' && media.variants) {
             // Get highest quality video variant
             const videoVariant = media.variants
               .filter((v: any) => v.content_type === 'video/mp4')
-              .sort((a: any, b: any) => (b.bit_rate || 0) - (a.bit_rate || 0))[0];
+              .sort(
+                (a: any, b: any) => (b.bit_rate || 0) - (a.bit_rate || 0)
+              )[0];
             mediaUrl = videoVariant?.url;
           } else if (media.type === 'photo') {
             mediaUrl = media.url;
@@ -87,7 +93,7 @@ export class TwitterExtractor implements IPlatformExtractor {
           title: bestTweet.text.substring(0, 100) + '...',
           author: author?.name || author?.username || 'Unknown',
           platform: 'Twitter',
-          confidence: this.calculateConfidence(bestTweet, context)
+          confidence: this.calculateConfidence(bestTweet, context),
         };
       }
 
@@ -102,7 +108,7 @@ export class TwitterExtractor implements IPlatformExtractor {
         author: author?.name || author?.username || 'Unknown',
         platform: 'Twitter',
         confidence: this.calculateConfidence(bestTweet, context),
-        metadata: mediaUrl ? { mediaUrl, mediaType } : undefined
+        metadata: mediaUrl ? { mediaUrl, mediaType } : undefined,
       };
     } catch (error) {
       console.error('Twitter search failed:', error);
@@ -116,18 +122,18 @@ export class TwitterExtractor implements IPlatformExtractor {
   private buildTwitterQuery(query: string, context: string): string {
     // Extract key terms from query
     const terms = query.split(' ').filter(t => t.length > 2);
-    
+
     // Add context modifiers
     let enhancedQuery = terms.join(' ');
-    
+
     if (context.includes('viral')) {
       enhancedQuery += ' min_retweets:100';
     }
-    
+
     if (context.includes('recent') || context.includes('2024')) {
       enhancedQuery += ' -is:retweet';
     }
-    
+
     return enhancedQuery;
   }
 
@@ -142,7 +148,7 @@ export class TwitterExtractor implements IPlatformExtractor {
     tweets.forEach(tweet => {
       let score = 0;
       const text = tweet.text.toLowerCase();
-      
+
       // Score based on engagement
       const metrics = tweet.public_metrics;
       if (metrics) {
@@ -152,9 +158,14 @@ export class TwitterExtractor implements IPlatformExtractor {
       }
 
       // Context matching
-      if (contextLower.includes('viral') && metrics?.retweet_count > 1000) score += 5;
-      if (contextLower.includes('ratio') && metrics?.reply_count > metrics?.like_count) score += 3;
-      
+      if (contextLower.includes('viral') && metrics?.retweet_count > 1000)
+        score += 5;
+      if (
+        contextLower.includes('ratio') &&
+        metrics?.reply_count > metrics?.like_count
+      )
+        score += 3;
+
       if (score > bestScore) {
         bestScore = score;
         bestTweet = tweet;
@@ -169,11 +180,15 @@ export class TwitterExtractor implements IPlatformExtractor {
    */
   private calculateConfidence(tweet: any, context: string): number {
     let confidence = 0.6;
-    
+
     const metrics = tweet.public_metrics;
     if (metrics?.retweet_count > 1000) confidence += 0.2;
-    if (context.toLowerCase().includes('viral') && metrics?.retweet_count > 5000) confidence += 0.1;
-    
+    if (
+      context.toLowerCase().includes('viral') &&
+      metrics?.retweet_count > 5000
+    )
+      confidence += 0.1;
+
     return Math.min(confidence, 0.95);
   }
 
@@ -188,32 +203,37 @@ export class TwitterExtractor implements IPlatformExtractor {
   /**
    * Mock search for development
    */
-  private async mockSearch(query: string, context: string): Promise<MediaEmbed> {
+  private async mockSearch(
+    query: string,
+    context: string
+  ): Promise<MediaEmbed> {
     const mockTweets = {
       apology: {
         id: '1234567890123456789',
         username: 'CEOExample',
         text: 'I want to apologize for our recent actions. We failed our community and we will do better.',
-        author: 'Example CEO'
+        author: 'Example CEO',
       },
       viral: {
         id: '9876543210987654321',
         username: 'ViralTweeter',
-        text: 'This is the most unhinged take I\'ve ever seen and I can\'t stop thinking about it',
-        author: 'Viral Account'
+        text: "This is the most unhinged take I've ever seen and I can't stop thinking about it",
+        author: 'Viral Account',
       },
       ratio: {
         id: '1111222233334444555',
         username: 'BadTakeHaver',
         text: 'Unpopular opinion: Pizza is better cold than hot',
-        author: 'Controversial User'
-      }
+        author: 'Controversial User',
+      },
     };
 
     // Select based on context
     let selected = mockTweets.viral;
-    if (context.toLowerCase().includes('apology')) selected = mockTweets.apology;
-    else if (context.toLowerCase().includes('ratio')) selected = mockTweets.ratio;
+    if (context.toLowerCase().includes('apology'))
+      selected = mockTweets.apology;
+    else if (context.toLowerCase().includes('ratio'))
+      selected = mockTweets.ratio;
 
     return {
       type: 'tweet',
@@ -224,7 +244,7 @@ export class TwitterExtractor implements IPlatformExtractor {
       title: selected.text,
       author: selected.author,
       platform: 'Twitter',
-      confidence: 0.75
+      confidence: 0.75,
     };
   }
 

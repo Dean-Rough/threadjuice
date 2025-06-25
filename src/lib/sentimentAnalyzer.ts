@@ -15,9 +15,9 @@ export interface EmotionalAnalysis {
   confidence: number;
 }
 
-export type EmotionType = 
+export type EmotionType =
   | 'opening_tension'
-  | 'escalating_drama' 
+  | 'escalating_drama'
   | 'peak_chaos'
   | 'shocked_realization'
   | 'satisfied_resolution'
@@ -42,49 +42,129 @@ export class SentimentAnalyzer {
 
   constructor() {
     this.sentiment = new Sentiment();
-    
+
     // Emotional keyword patterns
     this.emotionKeywords = {
       opening_tension: [
-        'started', 'began', 'innocent', 'simple', 'thought', 'decided',
-        'posted', 'tweeted', 'asked', 'poll', 'question'
+        'started',
+        'began',
+        'innocent',
+        'simple',
+        'thought',
+        'decided',
+        'posted',
+        'tweeted',
+        'asked',
+        'poll',
+        'question',
       ],
       escalating_drama: [
-        'replies', 'quote tweets', 'heated', 'descended', 'battlefield',
-        'vultures', 'argue', 'debate', 'angry', 'furious', 'rage'
+        'replies',
+        'quote tweets',
+        'heated',
+        'descended',
+        'battlefield',
+        'vultures',
+        'argue',
+        'debate',
+        'angry',
+        'furious',
+        'rage',
       ],
       peak_chaos: [
-        'meltdown', 'chaos', 'exploded', 'viral', 'trending', 'disaster',
-        'complete', 'total', 'absolute', 'nuclear', 'peak', 'maximum'
+        'meltdown',
+        'chaos',
+        'exploded',
+        'viral',
+        'trending',
+        'disaster',
+        'complete',
+        'total',
+        'absolute',
+        'nuclear',
+        'peak',
+        'maximum',
       ],
       shocked_realization: [
-        'turns out', 'realized', 'actually', 'plot twist', 'discovered',
-        'revelation', 'suddenly', 'meanwhile', 'however', 'but then'
+        'turns out',
+        'realized',
+        'actually',
+        'plot twist',
+        'discovered',
+        'revelation',
+        'suddenly',
+        'meanwhile',
+        'however',
+        'but then',
       ],
       satisfied_resolution: [
-        'finally', 'eventually', 'concluded', 'ended', 'aftermath',
-        'settled', 'dust', 'moral', 'lesson', 'learned'
+        'finally',
+        'eventually',
+        'concluded',
+        'ended',
+        'aftermath',
+        'settled',
+        'dust',
+        'moral',
+        'lesson',
+        'learned',
       ],
       awkward_silence: [
-        'silence', 'quiet', 'nobody', 'crickets', 'uncomfortable',
-        'awkward', 'pause', 'moment', 'beat', 'wait'
+        'silence',
+        'quiet',
+        'nobody',
+        'crickets',
+        'uncomfortable',
+        'awkward',
+        'pause',
+        'moment',
+        'beat',
+        'wait',
       ],
       collective_cringe: [
-        'cringe', 'secondhand', 'embarrassing', 'painful', 'yikes',
-        'oof', 'imagine', 'watching', 'witnessing'
+        'cringe',
+        'secondhand',
+        'embarrassing',
+        'painful',
+        'yikes',
+        'oof',
+        'imagine',
+        'watching',
+        'witnessing',
       ],
       here_for_it: [
-        'popcorn', 'tea', 'drama', 'entertainment', 'here for',
-        'living for', 'obsessed', 'fascinating', 'mesmerizing'
+        'popcorn',
+        'tea',
+        'drama',
+        'entertainment',
+        'here for',
+        'living for',
+        'obsessed',
+        'fascinating',
+        'mesmerizing',
       ],
       mild_concern: [
-        'concerning', 'worried', 'troubling', 'problematic', 'red flag',
-        'alarm', 'warning', 'careful', 'caution'
+        'concerning',
+        'worried',
+        'troubling',
+        'problematic',
+        'red flag',
+        'alarm',
+        'warning',
+        'careful',
+        'caution',
       ],
       pure_entertainment: [
-        'hilarious', 'brilliant', 'perfect', 'amazing', 'incredible',
-        'spectacular', 'beautiful', 'chef kiss', 'magnificent'
-      ]
+        'hilarious',
+        'brilliant',
+        'perfect',
+        'amazing',
+        'incredible',
+        'spectacular',
+        'beautiful',
+        'chef kiss',
+        'magnificent',
+      ],
     };
 
     // GIF search term mappings
@@ -94,71 +174,71 @@ export class SentimentAnalyzer {
         'brace yourself',
         'oh boy here we go',
         'this should be good',
-        'buckle up'
+        'buckle up',
       ],
       escalating_drama: [
         'popcorn eating',
         'drama intensifies',
         'things heating up',
         'oh snap',
-        'tea spilling'
+        'tea spilling',
       ],
       peak_chaos: [
         'this is fine fire',
         'chaos everywhere',
         'what just happened',
         'absolute madness',
-        'world burning'
+        'world burning',
       ],
       shocked_realization: [
         'plot twist',
         'mind blown',
         'wait what',
         'hold up',
-        'record scratch'
+        'record scratch',
       ],
       satisfied_resolution: [
         'mic drop',
         'well that happened',
         'and scene',
         'case closed',
-        'dust settling'
+        'dust settling',
       ],
       awkward_silence: [
         'awkward silence',
         'cricket sounds',
         'uncomfortable',
         'yikes',
-        'that was awkward'
+        'that was awkward',
       ],
       collective_cringe: [
         'secondhand embarrassment',
         'cringe watching',
         'painful to watch',
         'hiding behind hands',
-        'oh no'
+        'oh no',
       ],
       here_for_it: [
         'living for this drama',
         'here for it',
         'absolutely fascinated',
-        'can\'t look away',
-        'obsessed with this'
+        "can't look away",
+        'obsessed with this',
       ],
       mild_concern: [
         'side eye',
         'raised eyebrow',
         'concerning behavior',
         'red flag alert',
-        'worry face'
+        'worry face',
       ],
       pure_entertainment: [
         'chef kiss perfection',
         'absolutely brilliant',
         'pure comedy gold',
         'masterpiece',
-        'standing ovation'
-      ]
+        'standing ovation',
+      ],
     };
   }
 
@@ -168,20 +248,28 @@ export class SentimentAnalyzer {
   analyzeSection(content: string, context: StoryContext): EmotionalAnalysis {
     const cleanContent = this.preprocessContent(content);
     const sentimentScore = this.sentiment.analyze(cleanContent);
-    
+
     // Determine emotion based on keywords, sentiment, and story position
-    const emotion = this.determineEmotion(cleanContent, sentimentScore, context);
+    const emotion = this.determineEmotion(
+      cleanContent,
+      sentimentScore,
+      context
+    );
     const intensity = this.calculateIntensity(sentimentScore, emotion, context);
     const giffSearchTerms = this.getGifSearchTerms(emotion, context);
     const emotionContext = this.generateContext(emotion, context);
-    const confidence = this.calculateConfidence(cleanContent, emotion, sentimentScore);
+    const confidence = this.calculateConfidence(
+      cleanContent,
+      emotion,
+      sentimentScore
+    );
 
     return {
       emotion,
       intensity,
       giffSearchTerms,
       context: emotionContext,
-      confidence
+      confidence,
     };
   }
 
@@ -195,7 +283,7 @@ export class SentimentAnalyzer {
       .replace(/"\s*$/g, '') // Remove trailing quotes
       .replace(/^\s*"/g, '') // Remove leading quotes
       .toLowerCase();
-    
+
     return cleaned;
   }
 
@@ -203,24 +291,24 @@ export class SentimentAnalyzer {
    * Determine primary emotion based on content analysis
    */
   private determineEmotion(
-    content: string, 
-    sentimentScore: any, 
+    content: string,
+    sentimentScore: any,
     context: StoryContext
   ): EmotionType {
     const { sectionIndex, totalSections, sectionType } = context;
-    
+
     // Story position influences emotion
     const storyPosition = sectionIndex / (totalSections - 1);
-    
+
     // Check for explicit emotional keywords
     const emotionScores: { [key in EmotionType]: number } = {} as any;
-    
+
     Object.entries(this.emotionKeywords).forEach(([emotion, keywords]) => {
       const matchCount = keywords.reduce((count, keyword) => {
         const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
         return count + (content.match(regex) || []).length;
       }, 0);
-      
+
       emotionScores[emotion as EmotionType] = matchCount;
     });
 
@@ -259,8 +347,9 @@ export class SentimentAnalyzer {
     }
 
     // Find highest scoring emotion
-    const topEmotion = Object.entries(emotionScores)
-      .sort(([,a], [,b]) => b - a)[0][0] as EmotionType;
+    const topEmotion = Object.entries(emotionScores).sort(
+      ([, a], [, b]) => b - a
+    )[0][0] as EmotionType;
 
     // Fallback based on story position if no clear emotion
     if (emotionScores[topEmotion] === 0) {
@@ -277,17 +366,19 @@ export class SentimentAnalyzer {
    * Calculate emotional intensity
    */
   private calculateIntensity(
-    sentimentScore: any, 
-    emotion: EmotionType, 
+    sentimentScore: any,
+    emotion: EmotionType,
     context: StoryContext
   ): number {
     let baseIntensity = Math.min(Math.abs(sentimentScore.score) / 10, 1);
-    
+
     // High-intensity emotions
     const highIntensityEmotions: EmotionType[] = [
-      'peak_chaos', 'shocked_realization', 'pure_entertainment'
+      'peak_chaos',
+      'shocked_realization',
+      'pure_entertainment',
     ];
-    
+
     if (highIntensityEmotions.includes(emotion)) {
       baseIntensity = Math.max(baseIntensity, 0.7);
     }
@@ -303,20 +394,26 @@ export class SentimentAnalyzer {
   /**
    * Get appropriate GIF search terms for emotion
    */
-  private getGifSearchTerms(emotion: EmotionType, context: StoryContext): string[] {
+  private getGifSearchTerms(
+    emotion: EmotionType,
+    context: StoryContext
+  ): string[] {
     const baseTerms = this.giffMappings[emotion];
-    
+
     // Add context-specific terms for food drama
     if (context.category === 'Food Wars') {
       const foodSpecific = {
         opening_tension: ['innocent food question'],
         escalating_drama: ['food fight', 'kitchen drama'],
         peak_chaos: ['cooking disaster', 'chef meltdown'],
-        pure_entertainment: ['chef kiss', 'delicious drama']
+        pure_entertainment: ['chef kiss', 'delicious drama'],
       };
-      
+
       if (foodSpecific[emotion as keyof typeof foodSpecific]) {
-        return [...baseTerms, ...foodSpecific[emotion as keyof typeof foodSpecific]];
+        return [
+          ...baseTerms,
+          ...foodSpecific[emotion as keyof typeof foodSpecific],
+        ];
       }
     }
 
@@ -329,15 +426,15 @@ export class SentimentAnalyzer {
   private generateContext(emotion: EmotionType, context: StoryContext): string {
     const contextMap: { [key in EmotionType]: string } = {
       opening_tension: "Everyone sensing something's about to go down:",
-      escalating_drama: "Viewers watching this unfold:",
-      peak_chaos: "The internet right now:",
-      shocked_realization: "Everyone when the plot twist hits:",
-      satisfied_resolution: "Readers after that conclusion:",
-      awkward_silence: "The collective reaction:",
-      collective_cringe: "All of us watching this:",
-      here_for_it: "The audience absolutely living for this:",
+      escalating_drama: 'Viewers watching this unfold:',
+      peak_chaos: 'The internet right now:',
+      shocked_realization: 'Everyone when the plot twist hits:',
+      satisfied_resolution: 'Readers after that conclusion:',
+      awkward_silence: 'The collective reaction:',
+      collective_cringe: 'All of us watching this:',
+      here_for_it: 'The audience absolutely living for this:',
       mild_concern: "Everyone's internal reaction:",
-      pure_entertainment: "The unanimous response:"
+      pure_entertainment: 'The unanimous response:',
     };
 
     return contextMap[emotion];
@@ -347,18 +444,21 @@ export class SentimentAnalyzer {
    * Calculate confidence in emotion detection
    */
   private calculateConfidence(
-    content: string, 
-    emotion: EmotionType, 
+    content: string,
+    emotion: EmotionType,
     sentimentScore: any
   ): number {
-    const keywordMatches = this.emotionKeywords[emotion].reduce((count, keyword) => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-      return count + (content.match(regex) || []).length;
-    }, 0);
+    const keywordMatches = this.emotionKeywords[emotion].reduce(
+      (count, keyword) => {
+        const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+        return count + (content.match(regex) || []).length;
+      },
+      0
+    );
 
     const keywordConfidence = Math.min(keywordMatches / 3, 1);
     const sentimentConfidence = Math.min(Math.abs(sentimentScore.score) / 5, 1);
-    
+
     return (keywordConfidence + sentimentConfidence) / 2;
   }
 }

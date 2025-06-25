@@ -55,12 +55,25 @@ class TwitterDramaDetector {
     min_reply_count: 50,
     min_follower_threshold: 1000,
     controversy_keywords: [
-      'ratio', 'this you', 'tell me you', 'imagine thinking',
-      'yikes', 'problematic', 'not a good look', 'delete this',
-      'wrong take', 'bad faith', 'strawman', 'cope', 'L take',
-      'unhinged', 'deranged', 'unreal', 'wild take'
+      'ratio',
+      'this you',
+      'tell me you',
+      'imagine thinking',
+      'yikes',
+      'problematic',
+      'not a good look',
+      'delete this',
+      'wrong take',
+      'bad faith',
+      'strawman',
+      'cope',
+      'L take',
+      'unhinged',
+      'deranged',
+      'unreal',
+      'wild take',
     ],
-    time_window_hours: 6
+    time_window_hours: 6,
   };
 
   /**
@@ -69,39 +82,39 @@ class TwitterDramaDetector {
   calculateDramaScore(tweet: TwitterDramaData): number {
     const { retweets, likes, replies, quotes } = tweet.metrics;
     const total_engagement = retweets + likes + replies + quotes;
-    
+
     if (total_engagement < 100) return 0; // Not enough engagement
-    
+
     let score = 0;
-    
+
     // High quote-to-retweet ratio indicates controversy
     const quote_ratio = quotes / (retweets + 1);
     if (quote_ratio > this.config.min_engagement_ratio) {
       score += 40;
     }
-    
+
     // High reply-to-like ratio suggests heated discussion
     const reply_ratio = replies / (likes + 1);
     if (reply_ratio > 0.2) {
       score += 30;
     }
-    
+
     // Check for controversy keywords in text
     const controversy_words = this.config.controversy_keywords.filter(keyword =>
       tweet.text.toLowerCase().includes(keyword.toLowerCase())
     );
     score += controversy_words.length * 10;
-    
+
     // Verified accounts or high followers get drama boost
     if (tweet.author.verified || tweet.author.follower_count > 10000) {
       score += 20;
     }
-    
+
     // Context annotations for trending topics
     if (tweet.context_annotations?.length) {
       score += 15;
     }
-    
+
     return Math.min(score, 100); // Cap at 100
   }
 
@@ -110,11 +123,12 @@ class TwitterDramaDetector {
    */
   analyzeTrendingTopics(tweets: TwitterDramaData[]): DramaThread[] {
     const potential_drama: DramaThread[] = [];
-    
+
     for (const tweet of tweets) {
       const drama_score = this.calculateDramaScore(tweet);
-      
-      if (drama_score >= 60) { // High drama threshold
+
+      if (drama_score >= 60) {
+        // High drama threshold
         const thread: DramaThread = {
           original_tweet: tweet,
           replies: [],
@@ -123,13 +137,13 @@ class TwitterDramaDetector {
           drama_score,
           controversy_indicators: this.identifyControversyIndicators(tweet),
           topic: this.extractTopic(tweet),
-          participants: [tweet.author.username]
+          participants: [tweet.author.username],
         };
-        
+
         potential_drama.push(thread);
       }
     }
-    
+
     return potential_drama.sort((a, b) => b.drama_score - a.drama_score);
   }
 
@@ -139,17 +153,17 @@ class TwitterDramaDetector {
   private identifyControversyIndicators(tweet: TwitterDramaData): string[] {
     const indicators: string[] = [];
     const text = tweet.text.toLowerCase();
-    
+
     // Quote tweet drama patterns
     if (tweet.metrics.quotes > tweet.metrics.retweets) {
       indicators.push('High quote-to-retweet ratio');
     }
-    
+
     // Reply storm indicators
     if (tweet.metrics.replies > tweet.metrics.likes * 0.3) {
       indicators.push('Reply storm detected');
     }
-    
+
     // Controversy keyword detection
     const found_keywords = this.config.controversy_keywords.filter(keyword =>
       text.includes(keyword.toLowerCase())
@@ -157,12 +171,12 @@ class TwitterDramaDetector {
     if (found_keywords.length > 0) {
       indicators.push(`Controversy keywords: ${found_keywords.join(', ')}`);
     }
-    
+
     // Engagement velocity (would need timestamp analysis)
     if (tweet.metrics.likes + tweet.metrics.retweets > 1000) {
       indicators.push('High engagement velocity');
     }
-    
+
     return indicators;
   }
 
@@ -174,13 +188,13 @@ class TwitterDramaDetector {
     if (tweet.context_annotations?.length) {
       return tweet.context_annotations[0].entity.name;
     }
-    
+
     // Extract hashtags
     const hashtags = tweet.text.match(/#\w+/g);
     if (hashtags?.length) {
       return hashtags[0].replace('#', '');
     }
-    
+
     // Fall back to first few words
     return tweet.text.split(' ').slice(0, 3).join(' ') + '...';
   }
@@ -197,38 +211,38 @@ class TwitterDramaDetector {
           username: 'foodie_takes',
           name: 'Sarah Chen',
           verified: false,
-          follower_count: 5432
+          follower_count: 5432,
         },
         metrics: {
           retweets: 45,
           likes: 234,
           replies: 89,
-          quotes: 67 // High quote ratio = drama
+          quotes: 67, // High quote ratio = drama
         },
         created_at: '2024-06-20T14:30:00Z',
         context_annotations: [
           {
             domain: { name: 'Food & Dining', description: 'Food discussions' },
-            entity: { name: 'Pizza', description: 'Pizza debates' }
-          }
-        ]
+            entity: { name: 'Pizza', description: 'Pizza debates' },
+          },
+        ],
       },
       {
         id: '2',
-        text: 'Tell me you\'ve never worked retail without telling me you\'ve never worked retail. This take is unhinged.',
+        text: "Tell me you've never worked retail without telling me you've never worked retail. This take is unhinged.",
         author: {
           username: 'retail_reality',
           name: 'Marcus Johnson',
           verified: true,
-          follower_count: 15670
+          follower_count: 15670,
         },
         metrics: {
           retweets: 123,
           likes: 890,
           replies: 234,
-          quotes: 156 // Very high engagement + controversy keywords
+          quotes: 156, // Very high engagement + controversy keywords
         },
-        created_at: '2024-06-20T13:45:00Z'
+        created_at: '2024-06-20T13:45:00Z',
       },
       {
         id: '3',
@@ -237,16 +251,16 @@ class TwitterDramaDetector {
           username: 'weather_person',
           name: 'Weather Update',
           verified: false,
-          follower_count: 234
+          follower_count: 234,
         },
         metrics: {
           retweets: 5,
           likes: 23,
           replies: 2,
-          quotes: 1 // Low engagement, no drama
+          quotes: 1, // Low engagement, no drama
         },
-        created_at: '2024-06-20T15:00:00Z'
-      }
+        created_at: '2024-06-20T15:00:00Z',
+      },
     ];
   }
 }

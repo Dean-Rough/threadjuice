@@ -65,11 +65,16 @@ describe('API Routes Integration Tests', () => {
           }),
         });
 
-        const request = new NextRequest('http://localhost:3000/api/posts?page=2&limit=5');
+        const request = new NextRequest(
+          'http://localhost:3000/api/posts?page=2&limit=5'
+        );
         await GET(request);
 
         // Verify range was called with correct parameters
-        expect(mockSupabase.from().select().order().range).toHaveBeenCalledWith(5, 9);
+        expect(mockSupabase.from().select().order().range).toHaveBeenCalledWith(
+          5,
+          9
+        );
       });
 
       it('should handle database errors', async () => {
@@ -238,7 +243,9 @@ describe('API Routes Integration Tests', () => {
       const request = new NextRequest('http://localhost:3000/api/posts');
       const response = await GET(request);
 
-      expect(response.headers.get('Content-Type')).toContain('application/json');
+      expect(response.headers.get('Content-Type')).toContain(
+        'application/json'
+      );
     });
   });
 
@@ -272,7 +279,9 @@ describe('API Routes Integration Tests', () => {
         }),
       });
 
-      const request = new NextRequest('http://localhost:3000/api/posts?page=999999');
+      const request = new NextRequest(
+        'http://localhost:3000/api/posts?page=999999'
+      );
       const response = await GET(request);
 
       expect(response.status).toBe(200);
@@ -293,7 +302,9 @@ describe('API Routes Integration Tests', () => {
         }),
       });
 
-      const request = new NextRequest('http://localhost:3000/api/posts?page=-1&limit=-5');
+      const request = new NextRequest(
+        'http://localhost:3000/api/posts?page=-1&limit=-5'
+      );
       const response = await GET(request);
 
       expect(response.status).toBe(200);
@@ -322,7 +333,7 @@ describe('System Integration', () => {
     });
 
     const request = new NextRequest('http://localhost:3000/api/posts');
-    
+
     try {
       const response = await GET(request);
       expect(response.status).toBe(500);

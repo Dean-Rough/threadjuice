@@ -55,12 +55,12 @@ export default function InstagramSidebarSlider() {
         {sidebarImages.map((src, index) => (
           <SwiperSlide key={index}>
             <Link href='https://www.instagram.com/' target='_blank'>
-              <Image 
-                src={src} 
+              <Image
+                src={src}
                 alt={`Instagram sidebar image ${index + 1}`}
                 width={150}
                 height={150}
-                className="w-full h-auto object-cover"
+                className='h-auto w-full object-cover'
               />
             </Link>
           </SwiperSlide>

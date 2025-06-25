@@ -32,10 +32,13 @@ export class KlipyService {
 
   constructor() {
     // Use environment variable for Klipy API key
-    this.appKey = process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY || '';
-    
+    this.appKey =
+      process.env.NEXT_PUBLIC_KLIPY_API_KEY || process.env.KLIPY_API_KEY || '';
+
     if (!this.appKey) {
-      console.warn('Klipy API key not found in environment variables. GIF reactions will be disabled.');
+      console.warn(
+        'Klipy API key not found in environment variables. GIF reactions will be disabled.'
+      );
       return;
     }
   }
@@ -43,19 +46,21 @@ export class KlipyService {
   /**
    * Search for appropriate reaction GIF based on emotion
    */
-  async searchReactionGif(options: GifSearchOptions): Promise<GifResult | null> {
+  async searchReactionGif(
+    options: GifSearchOptions
+  ): Promise<GifResult | null> {
     if (!this.appKey) {
       console.warn('Klipy service not initialized');
       return null;
     }
 
     const { searchTerms, context, safeSearch = true, limit = 5 } = options;
-    
+
     try {
       // Try each search term until we find good results (limit to first 2 for rate limiting)
       for (const searchTerm of searchTerms.slice(0, 2)) {
         const cacheKey = `${searchTerm}-${safeSearch}`;
-        
+
         // Check cache first
         if (this.cache.has(cacheKey)) {
           const cached = this.cache.get(cacheKey)!;
@@ -73,7 +78,7 @@ export class KlipyService {
           q: searchTerm,
           customer_id: this.customerId,
           per_page: Math.min(limit, 24).toString(),
-          content_filter: safeSearch ? 'medium' : 'low'
+          content_filter: safeSearch ? 'medium' : 'low',
         });
 
         console.log(`🔌 Klipy API call: ${url}?${params.toString()}`);
@@ -81,12 +86,14 @@ export class KlipyService {
         const response = await fetch(`${url}?${params.toString()}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {
-          console.warn(`Klipy API error for "${searchTerm}": ${response.status} - ${response.statusText}`);
+          console.warn(
+            `Klipy API error for "${searchTerm}": ${response.status} - ${response.statusText}`
+          );
           // If rate limited (429), don't try more terms
           if (response.status === 429) {
             console.log('🚫 Rate limited - stopping search attempts');
@@ -98,19 +105,25 @@ export class KlipyService {
         const data = await response.json();
         console.log(`📊 Klipy response:`, data);
 
-        if (data.result && data.data && data.data.data && data.data.data.length > 0) {
-          const transformedGifs = data.data.data.map((gif: any) => this.transformKlipyResult(gif, context));
-          
+        if (
+          data.result &&
+          data.data &&
+          data.data.data &&
+          data.data.data.length > 0
+        ) {
+          const transformedGifs = data.data.data.map((gif: any) =>
+            this.transformKlipyResult(gif, context)
+          );
+
           // Cache results
           this.cache.set(cacheKey, transformedGifs);
-          
+
           return this.selectBestGif(transformedGifs, context);
         }
       }
 
       console.warn(`No GIFs found for terms: ${searchTerms.join(', ')}`);
       return null;
-
     } catch (error) {
       console.error('Error fetching GIF from Klipy:', error);
       return null;
@@ -127,14 +140,14 @@ export class KlipyService {
       const url = `${this.baseUrl}/${this.appKey}/gifs/trending`;
       const params = new URLSearchParams({
         customer_id: this.customerId,
-        per_page: Math.min(limit, 24).toString()
+        per_page: Math.min(limit, 24).toString(),
       });
 
       const response = await fetch(`${url}?${params.toString()}`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -142,11 +155,13 @@ export class KlipyService {
       }
 
       const data = await response.json();
-      
+
       if (data.result && data.data && data.data.data) {
-        return data.data.data.map((gif: any) => this.transformKlipyResult(gif, 'Trending reaction'));
+        return data.data.data.map((gif: any) =>
+          this.transformKlipyResult(gif, 'Trending reaction')
+        );
       }
-      
+
       return [];
     } catch (error) {
       console.error('Error fetching trending GIFs:', error);
@@ -160,7 +175,7 @@ export class KlipyService {
   private transformGiphyResult(gif: any, context: string): GifResult {
     const original = gif.images.original;
     const preview = gif.images.preview_gif;
-    
+
     return {
       id: gif.id,
       url: original.url,
@@ -169,7 +184,7 @@ export class KlipyService {
       height: parseInt(original.height),
       aspectRatio: parseInt(original.width) / parseInt(original.height),
       preview: preview?.url,
-      caption: context
+      caption: context,
     };
   }
 
@@ -179,7 +194,7 @@ export class KlipyService {
   private transformKlipyResult(gif: any, context: string): GifResult {
     // Klipy API format has nested structure: file.{size}.{format}.url
     const file = gif.file || {};
-    
+
     // Get the best quality GIF URL - try HD first, then MD, then SM
     const getGifUrl = (): string => {
       if (file.hd?.gif?.url) return file.hd.gif.url;
@@ -191,9 +206,21 @@ export class KlipyService {
 
     // Get dimensions from the highest quality available
     const getDimensions = (): { width: number; height: number } => {
-      if (file.hd?.gif) return { width: file.hd.gif.width || 400, height: file.hd.gif.height || 300 };
-      if (file.md?.gif) return { width: file.md.gif.width || 400, height: file.md.gif.height || 300 };
-      if (file.sm?.gif) return { width: file.sm.gif.width || 200, height: file.sm.gif.height || 150 };
+      if (file.hd?.gif)
+        return {
+          width: file.hd.gif.width || 400,
+          height: file.hd.gif.height || 300,
+        };
+      if (file.md?.gif)
+        return {
+          width: file.md.gif.width || 400,
+          height: file.md.gif.height || 300,
+        };
+      if (file.sm?.gif)
+        return {
+          width: file.sm.gif.width || 200,
+          height: file.sm.gif.height || 150,
+        };
       return { width: 400, height: 300 };
     };
 
@@ -207,7 +234,7 @@ export class KlipyService {
 
     const gifUrl = getGifUrl();
     const { width, height } = getDimensions();
-    
+
     return {
       id: gif.id?.toString() || gif.slug || Math.random().toString(36),
       url: gifUrl,
@@ -216,7 +243,7 @@ export class KlipyService {
       height: height,
       aspectRatio: width / height,
       preview: getPreviewUrl(),
-      caption: context
+      caption: context,
     };
   }
 
@@ -225,20 +252,20 @@ export class KlipyService {
    */
   private selectBestGif(gifs: GifResult[], context: string): GifResult {
     // Prefer GIFs with good aspect ratios (not too tall/wide)
-    const goodAspectRatio = gifs.filter(gif => 
-      gif.aspectRatio >= 0.8 && gif.aspectRatio <= 2.0
+    const goodAspectRatio = gifs.filter(
+      gif => gif.aspectRatio >= 0.8 && gif.aspectRatio <= 2.0
     );
 
     // Use filtered results if available, otherwise use all
     const candidates = goodAspectRatio.length > 0 ? goodAspectRatio : gifs;
-    
+
     // For now, return the first result
     // Could add more sophisticated selection logic here
     const selected = candidates[0];
-    
+
     return {
       ...selected,
-      caption: context
+      caption: context,
     };
   }
 
@@ -262,7 +289,7 @@ export class KlipyService {
   getCacheStats(): { size: number; keys: string[] } {
     return {
       size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      keys: Array.from(this.cache.keys()),
     };
   }
 }

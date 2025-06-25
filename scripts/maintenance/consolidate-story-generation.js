@@ -2,7 +2,7 @@
 
 /**
  * Consolidate Story Generation Scripts
- * 
+ *
  * This script helps migrate from multiple scattered story generation scripts
  * to the new unified system
  */
@@ -23,13 +23,13 @@ const SCRIPTS_TO_ARCHIVE = [
   'import-story-to-supabase.js',
   'delete-story.js',
   'cleanup-tech-ceo-stories.js',
-  
+
   // Scripts directory
   'scripts/storygen-1.js',
   'scripts/fix-images.js',
   'scripts/test-quality-gate.js',
   'scripts/test-twitter-drama.js',
-  
+
   // Deprecated scripts (already in deprecated folder)
   'scripts/deprecated/generate-dynamic-story.js',
   'scripts/deprecated/generate-enhanced-story.js',
@@ -53,8 +53,13 @@ const FILES_TO_UPDATE = [
 async function archiveScript(scriptPath) {
   try {
     const fullPath = path.join(rootDir, scriptPath);
-    const archivePath = path.join(rootDir, 'archive', 'story-generation-scripts', scriptPath);
-    
+    const archivePath = path.join(
+      rootDir,
+      'archive',
+      'story-generation-scripts',
+      scriptPath
+    );
+
     // Check if file exists
     try {
       await fs.access(fullPath);
@@ -62,10 +67,10 @@ async function archiveScript(scriptPath) {
       console.log(`⏭️  Skipping ${scriptPath} - not found`);
       return;
     }
-    
+
     // Create archive directory
     await fs.mkdir(path.dirname(archivePath), { recursive: true });
-    
+
     // Move file
     await fs.rename(fullPath, archivePath);
     console.log(`📦 Archived: ${scriptPath}`);
@@ -76,27 +81,33 @@ async function archiveScript(scriptPath) {
 
 async function updateReferences() {
   console.log('\n📝 Updating references in documentation...\n');
-  
+
   for (const file of FILES_TO_UPDATE) {
     try {
       const fullPath = path.join(rootDir, file);
       let content = await fs.readFile(fullPath, 'utf8');
       let updated = false;
-      
+
       // Replace old script references with new unified script
       const replacements = [
-        ['generate-full-automated-story.js', 'scripts/content/generate-story-unified.js'],
+        [
+          'generate-full-automated-story.js',
+          'scripts/content/generate-story-unified.js',
+        ],
         ['scripts/storygen-1.js', 'scripts/content/generate-story-unified.js'],
-        ['scripts/content/generate-story.js', 'scripts/content/generate-story-unified.js'],
+        [
+          'scripts/content/generate-story.js',
+          'scripts/content/generate-story-unified.js',
+        ],
       ];
-      
+
       for (const [oldRef, newRef] of replacements) {
         if (content.includes(oldRef)) {
           content = content.replace(new RegExp(oldRef, 'g'), newRef);
           updated = true;
         }
       }
-      
+
       if (updated) {
         await fs.writeFile(fullPath, content);
         console.log(`✅ Updated references in ${file}`);
@@ -164,30 +175,38 @@ The API routes now use the unified story generation service:
 4. Remove references to old scripts
 `;
 
-  await fs.writeFile(path.join(rootDir, 'docs', 'STORY_GENERATION_MIGRATION.md'), guide);
-  console.log('\n📚 Created migration guide: docs/STORY_GENERATION_MIGRATION.md');
+  await fs.writeFile(
+    path.join(rootDir, 'docs', 'STORY_GENERATION_MIGRATION.md'),
+    guide
+  );
+  console.log(
+    '\n📚 Created migration guide: docs/STORY_GENERATION_MIGRATION.md'
+  );
 }
 
 async function updatePackageJson() {
   console.log('\n📦 Updating package.json scripts...\n');
-  
+
   try {
     const packagePath = path.join(rootDir, 'package.json');
     const pkg = JSON.parse(await fs.readFile(packagePath, 'utf8'));
-    
+
     // Update or add story generation scripts
     pkg.scripts = pkg.scripts || {};
-    
+
     // Remove old scripts
     delete pkg.scripts['generate:story'];
     delete pkg.scripts['story:generate'];
     delete pkg.scripts['content:generate'];
-    
+
     // Add new unified scripts
-    pkg.scripts['story:generate'] = 'node scripts/content/generate-story-unified.js';
-    pkg.scripts['story:bulk'] = 'node scripts/content/generate-story-unified.js bulk';
-    pkg.scripts['story:help'] = 'node scripts/content/generate-story-unified.js help';
-    
+    pkg.scripts['story:generate'] =
+      'node scripts/content/generate-story-unified.js';
+    pkg.scripts['story:bulk'] =
+      'node scripts/content/generate-story-unified.js bulk';
+    pkg.scripts['story:help'] =
+      'node scripts/content/generate-story-unified.js help';
+
     await fs.writeFile(packagePath, JSON.stringify(pkg, null, 2) + '\n');
     console.log('✅ Updated package.json scripts');
   } catch (error) {
@@ -197,16 +216,22 @@ async function updatePackageJson() {
 
 async function cleanupDeprecatedFolder() {
   console.log('\n🧹 Cleaning up deprecated folder...\n');
-  
+
   try {
     const deprecatedPath = path.join(rootDir, 'scripts', 'deprecated');
     const files = await fs.readdir(deprecatedPath);
-    
+
     for (const file of files) {
       if (file.includes('generate') && file.endsWith('.js')) {
         const oldPath = path.join(deprecatedPath, file);
-        const archivePath = path.join(rootDir, 'archive', 'story-generation-scripts', 'deprecated', file);
-        
+        const archivePath = path.join(
+          rootDir,
+          'archive',
+          'story-generation-scripts',
+          'deprecated',
+          file
+        );
+
         await fs.mkdir(path.dirname(archivePath), { recursive: true });
         await fs.rename(oldPath, archivePath);
         console.log(`📦 Archived deprecated: ${file}`);
@@ -219,29 +244,31 @@ async function cleanupDeprecatedFolder() {
 
 async function main() {
   console.log('🔧 Consolidating Story Generation Scripts');
-  console.log('=' .repeat(50));
-  
+  console.log('='.repeat(50));
+
   // Create archive directory
-  await fs.mkdir(path.join(rootDir, 'archive', 'story-generation-scripts'), { recursive: true });
-  
+  await fs.mkdir(path.join(rootDir, 'archive', 'story-generation-scripts'), {
+    recursive: true,
+  });
+
   // Archive old scripts
   console.log('\n📦 Archiving old scripts...\n');
   for (const script of SCRIPTS_TO_ARCHIVE) {
     await archiveScript(script);
   }
-  
+
   // Update references
   await updateReferences();
-  
+
   // Update package.json
   await updatePackageJson();
-  
+
   // Cleanup deprecated folder
   await cleanupDeprecatedFolder();
-  
+
   // Create migration guide
   await createMigrationGuide();
-  
+
   console.log('\n✅ Consolidation complete!');
   console.log('\n📚 Next steps:');
   console.log('1. Review docs/STORY_GENERATION_MIGRATION.md');

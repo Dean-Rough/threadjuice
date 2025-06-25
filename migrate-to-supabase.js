@@ -27,12 +27,12 @@ console.log('==============================');
 async function loadGeneratedStories() {
   const storiesDir = 'data/generated-stories';
   const files = readdirSync(storiesDir).filter(file => file.endsWith('.json'));
-  
+
   const stories = files.map(file => {
     const content = readFileSync(path.join(storiesDir, file), 'utf-8');
     return JSON.parse(content);
   });
-  
+
   console.log(`📚 Loaded ${stories.length} generated stories`);
   return stories;
 }
@@ -40,13 +40,15 @@ async function loadGeneratedStories() {
 async function migrateStories() {
   try {
     const stories = await loadGeneratedStories();
-    
+
     console.log('\n🚀 Starting migration to Supabase...');
-    
+
     for (let i = 0; i < stories.length; i++) {
       const story = stories[i];
-      console.log(`\n📝 Migrating story ${i + 1}/${stories.length}: "${story.title}"`);
-      
+      console.log(
+        `\n📝 Migrating story ${i + 1}/${stories.length}: "${story.title}"`
+      );
+
       // Transform the story data to match Supabase schema
       const postData = {
         // Generate new UUID for Supabase (old IDs aren't UUID format)
@@ -64,18 +66,18 @@ async function migrateStories() {
         subreddit: story.redditSource?.subreddit,
         featured_image: story.imageUrl,
         created_at: story.createdAt || new Date().toISOString(),
-        updated_at: story.updatedAt || new Date().toISOString()
+        updated_at: story.updatedAt || new Date().toISOString(),
       };
-      
+
       // Insert into Supabase
       const { data, error } = await supabase
         .from('posts')
         .insert(postData)
         .select();
-      
+
       if (error) {
         console.log(`   ❌ Failed: ${error.message}`);
-        
+
         // If it's a table doesn't exist error, provide guidance
         if (error.message.includes('relation "public.posts" does not exist')) {
           console.log('\n🔧 DATABASE SCHEMA NOT SET UP!');
@@ -84,19 +86,20 @@ async function migrateStories() {
           console.log('   2. Copy contents of database/schema.sql');
           console.log('   3. Execute the SQL');
           console.log('   4. Re-run this migration');
-          console.log(`🔗 Dashboard: ${supabaseUrl}/project/${supabaseUrl.split('.')[0].split('//')[1]}/sql`);
+          console.log(
+            `🔗 Dashboard: ${supabaseUrl}/project/${supabaseUrl.split('.')[0].split('//')[1]}/sql`
+          );
           process.exit(1);
         }
-        
+
         continue;
       }
-      
+
       console.log(`   ✅ Success: ${data[0].id}`);
     }
-    
+
     console.log('\n🎉 Migration complete!');
     console.log(`✅ Migrated ${stories.length} stories to Supabase`);
-    
   } catch (error) {
     console.error('❌ Migration failed:', error.message);
     process.exit(1);
@@ -105,28 +108,29 @@ async function migrateStories() {
 
 async function testConnection() {
   console.log('🔍 Testing Supabase connection...');
-  
+
   try {
     // Try to read from posts table
     const { data, error } = await supabase
       .from('posts')
       .select('id, title')
       .limit(1);
-    
+
     if (error) {
       if (error.message.includes('relation "public.posts" does not exist')) {
         console.log('⚠️  Posts table does not exist');
-        console.log('📋 Schema setup required. Run database/schema.sql in Supabase Dashboard');
+        console.log(
+          '📋 Schema setup required. Run database/schema.sql in Supabase Dashboard'
+        );
         return false;
       }
       console.log('❌ Database error:', error.message);
       return false;
     }
-    
+
     console.log('✅ Database connected and ready');
     console.log(`📊 Current posts in database: ${data.length}`);
     return true;
-    
   } catch (error) {
     console.error('❌ Connection test failed:', error.message);
     return false;
@@ -136,12 +140,12 @@ async function testConnection() {
 // Main execution
 async function main() {
   const isReady = await testConnection();
-  
+
   if (!isReady) {
     console.log('\n🛠️  Database setup required before migration');
     process.exit(1);
   }
-  
+
   await migrateStories();
 }
 

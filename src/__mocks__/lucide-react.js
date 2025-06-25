@@ -1,13 +1,13 @@
 import React from 'react';
 
 // Mock all lucide-react icons as simple SVG elements
-const MockIcon = ({ className, ...props }) => 
-  React.createElement('svg', { 
-    className, 
+const MockIcon = ({ className, ...props }) =>
+  React.createElement('svg', {
+    className,
     'data-testid': 'mock-icon',
     width: 24,
     height: 24,
-    ...props 
+    ...props,
   });
 
 // Export commonly used icons
@@ -41,14 +41,17 @@ export const Minus = MockIcon;
 export default MockIcon;
 
 // Create a proxy to handle any other icon names dynamically
-const iconProxy = new Proxy({}, {
-  get: function(target, prop) {
-    if (typeof prop === 'string' && prop !== 'default') {
-      return MockIcon;
-    }
-    return target[prop];
+const iconProxy = new Proxy(
+  {},
+  {
+    get: function (target, prop) {
+      if (typeof prop === 'string' && prop !== 'default') {
+        return MockIcon;
+      }
+      return target[prop];
+    },
   }
-});
+);
 
 // Export everything through the proxy
 module.exports = iconProxy;

@@ -30,7 +30,7 @@ async function cleanSupabase() {
   }
 
   console.log(`Found ${posts?.length || 0} posts in Supabase:\n`);
-  
+
   posts?.forEach((post, index) => {
     console.log(`${index + 1}. ${post.title.substring(0, 60)}...`);
     console.log(`   Created: ${new Date(post.created_at).toLocaleString()}`);
@@ -55,7 +55,7 @@ async function cleanSupabase() {
   }
 
   console.log(`✅ Successfully deleted all posts from Supabase`);
-  
+
   // Verify deletion
   const { data: remaining, error: verifyError } = await supabase
     .from('posts')

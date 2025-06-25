@@ -1,6 +1,6 @@
 /**
  * Output Stage
- * 
+ *
  * Handles the final output of processed stories.
  * Can save to database, files, or return for API responses.
  */
@@ -98,7 +98,8 @@ export class OutputStage extends BasePipelineStage {
           slug: story.slug,
           excerpt: story.excerpt,
           content: JSON.stringify(story.content),
-          imageUrl: context.enrichments.primaryImage?.url || '/assets/img/default.jpg',
+          imageUrl:
+            context.enrichments.primaryImage?.url || '/assets/img/default.jpg',
           category: story.category,
           author: story.author,
           personaId: persona.id,
@@ -115,9 +116,9 @@ export class OutputStage extends BasePipelineStage {
       });
 
       this.log(`Story saved to database: ${story.id}`);
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`Database save failed: ${errorMessage}`);
       throw error;
     }
@@ -157,9 +158,9 @@ export class OutputStage extends BasePipelineStage {
       await fs.writeFile(filepath, JSON.stringify(output, null, 2));
 
       this.log(`Story saved to file: ${filename}`);
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`File save failed: ${errorMessage}`);
       throw error;
     }
@@ -194,22 +195,26 @@ export class OutputStage extends BasePipelineStage {
 /**
  * Factory functions for common output configurations
  */
-export const DatabaseOutput = () => new OutputStage({
-  saveToDatabase: true,
-  saveToFile: false,
-});
+export const DatabaseOutput = () =>
+  new OutputStage({
+    saveToDatabase: true,
+    saveToFile: false,
+  });
 
-export const FileOutput = (directory?: string) => new OutputStage({
-  saveToDatabase: false,
-  saveToFile: true,
-  fileDirectory: directory,
-});
+export const FileOutput = (directory?: string) =>
+  new OutputStage({
+    saveToDatabase: false,
+    saveToFile: true,
+    fileDirectory: directory,
+  });
 
-export const DualOutput = () => new OutputStage({
-  saveToDatabase: true,
-  saveToFile: true,
-});
+export const DualOutput = () =>
+  new OutputStage({
+    saveToDatabase: true,
+    saveToFile: true,
+  });
 
-export const ApiOutput = () => new OutputStage({
-  returnOnly: true,
-});
+export const ApiOutput = () =>
+  new OutputStage({
+    returnOnly: true,
+  });

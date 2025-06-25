@@ -38,25 +38,35 @@ export class StoryIngestionService {
   /**
    * Migrate all file-based stories to database
    */
-  static async migrateAllStories(): Promise<{ success: number; errors: string[] }> {
+  static async migrateAllStories(): Promise<{
+    success: number;
+    errors: string[];
+  }> {
     const results = { success: 0, errors: [] as string[] };
-    
+
     // Get all story files dynamically
     const files = fs.readdirSync(process.cwd());
-    const storyFiles = files.filter(f => 
-      (f.includes('auto-generated-') || f.includes('generated-') || f.includes('story-')) 
-      && f.endsWith('.json')
+    const storyFiles = files.filter(
+      f =>
+        (f.includes('auto-generated-') ||
+          f.includes('generated-') ||
+          f.includes('story-')) &&
+        f.endsWith('.json')
     );
 
     for (const filename of storyFiles) {
       try {
         const filePath = path.join(process.cwd(), filename);
-        const storyData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as StoryData;
+        const storyData = JSON.parse(
+          fs.readFileSync(filePath, 'utf8')
+        ) as StoryData;
         await this.ingestStory(storyData, true); // auto-approve = true
         results.success++;
       } catch (error) {
         console.error(`Error migrating ${filename}:`, error);
-        results.errors.push(`${filename}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `${filename}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -66,32 +76,37 @@ export class StoryIngestionService {
   /**
    * Ingest a single story into the database
    */
-  static async ingestStory(storyData: StoryData, autoApprove = true): Promise<string> {
+  static async ingestStory(
+    storyData: StoryData,
+    autoApprove = true
+  ): Promise<string> {
     // Ensure personas exist
     await this.ensurePersona(storyData.persona);
-    
+
     // Get the persona to ensure it exists and get its ID
     // Try both the exact slug and the slug with "the-" prefix
     let persona = await prisma.persona.findUnique({
-      where: { slug: storyData.persona.id }
+      where: { slug: storyData.persona.id },
     });
 
     if (!persona && !storyData.persona.id.startsWith('the-')) {
       persona = await prisma.persona.findUnique({
-        where: { slug: `the-${storyData.persona.id}` }
+        where: { slug: `the-${storyData.persona.id}` },
       });
     }
 
     if (!persona) {
-      throw new Error(`Persona not found for slug: ${storyData.persona.id} or the-${storyData.persona.id}`);
+      throw new Error(
+        `Persona not found for slug: ${storyData.persona.id} or the-${storyData.persona.id}`
+      );
     }
-    
+
     // Ensure tags exist
     const tagIds = await this.ensureTags(storyData.tags || []);
-    
+
     // Check if story already exists
     const existingPost = await prisma.post.findUnique({
-      where: { slug: storyData.slug }
+      where: { slug: storyData.slug },
     });
 
     if (existingPost) {
@@ -124,13 +139,13 @@ export class StoryIngestionService {
         updatedAt: new Date(storyData.updatedAt),
         personaId: persona.id,
         postTags: {
-          create: tagIds.map(tagId => ({ tagId }))
-        }
+          create: tagIds.map(tagId => ({ tagId })),
+        },
       },
       include: {
         persona: true,
-        postTags: { include: { tag: true } }
-      }
+        postTags: { include: { tag: true } },
+      },
     });
 
     // Handle Reddit comments if they exist
@@ -145,9 +160,11 @@ export class StoryIngestionService {
   /**
    * Generate bulk stories using the unified generator
    */
-  static async generateBulkStories(count: number): Promise<{ success: number; errors: string[] }> {
+  static async generateBulkStories(
+    count: number
+  ): Promise<{ success: number; errors: string[] }> {
     const results = { success: 0, errors: [] as string[] };
-    
+
     try {
       // Use the unified story generator via child process
       const { execSync } = await import('child_process');
@@ -155,31 +172,35 @@ export class StoryIngestionService {
         `node scripts/content/generate-story-unified.js bulk ${count}`,
         { encoding: 'utf8', cwd: process.cwd() }
       );
-      
+
       // Parse results from output
       const generatedMatch = output.match(/Generated (\d+) stories/);
       if (generatedMatch) {
         results.success = parseInt(generatedMatch[1]);
       }
-      
+
       const failedMatch = output.match(/Failed: (\d+)/);
       if (failedMatch && parseInt(failedMatch[1]) > 0) {
         results.errors.push(`${failedMatch[1]} stories failed to generate`);
       }
     } catch (error) {
       console.error('Bulk generation failed:', error);
-      results.errors.push(error instanceof Error ? error.message : 'Unknown error');
+      results.errors.push(
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
-    
+
     return results;
   }
 
   /**
    * Ensure persona exists in database
    */
-  private static async ensurePersona(personaData: StoryData['persona']): Promise<void> {
+  private static async ensurePersona(
+    personaData: StoryData['persona']
+  ): Promise<void> {
     const existingPersona = await prisma.persona.findUnique({
-      where: { slug: personaData.id }
+      where: { slug: personaData.id },
     });
 
     if (!existingPersona) {
@@ -192,16 +213,16 @@ export class StoryIngestionService {
             tone: personaData.tone,
             bio: personaData.bio,
             storyCount: 0,
-            rating: 8.5
-          }
+            rating: 8.5,
+          },
         });
         // console.log(`Created persona: ${personaData.name}`);
       } catch (error) {
         // Check if persona exists by name (in case of race condition)
         const existingByName = await prisma.persona.findUnique({
-          where: { name: personaData.name }
+          where: { name: personaData.name },
         });
-        
+
         if (!existingByName) {
           throw error; // Re-throw if it's not a duplicate name issue
         }
@@ -218,9 +239,9 @@ export class StoryIngestionService {
 
     for (const tagName of tagNames) {
       const slug = tagName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      
+
       let tag = await prisma.tag.findUnique({
-        where: { slug }
+        where: { slug },
       });
 
       if (!tag) {
@@ -228,8 +249,8 @@ export class StoryIngestionService {
           data: {
             name: tagName,
             slug,
-            usageCount: 0
-          }
+            usageCount: 0,
+          },
         });
         // console.log(`Created tag: ${tagName}`);
       }
@@ -237,7 +258,7 @@ export class StoryIngestionService {
       // Increment usage count
       await prisma.tag.update({
         where: { id: tag.id },
-        data: { usageCount: { increment: 1 } }
+        data: { usageCount: { increment: 1 } },
       });
 
       tagIds.push(tag.id);
@@ -249,9 +270,12 @@ export class StoryIngestionService {
   /**
    * Ingest Reddit comments from story sections
    */
-  private static async ingestRedditComments(postId: string, sections: any[]): Promise<void> {
-    const commentSections = sections.filter(section => 
-      section.type === 'comments-1' || section.type === 'comments-2'
+  private static async ingestRedditComments(
+    postId: string,
+    sections: any[]
+  ): Promise<void> {
+    const commentSections = sections.filter(
+      section => section.type === 'comments-1' || section.type === 'comments-2'
     );
 
     for (const section of commentSections) {
@@ -265,8 +289,8 @@ export class StoryIngestionService {
               upvoteCount: Math.floor(Math.random() * 50) + 5,
               downvoteCount: Math.floor(Math.random() * 10),
               isRedditExcerpt: true,
-              status: 'active'
-            }
+              status: 'active',
+            },
           });
         }
       }
@@ -279,11 +303,10 @@ export class StoryIngestionService {
   static async autoApproveAll(): Promise<number> {
     const result = await prisma.post.updateMany({
       where: { status: 'draft' },
-      data: { status: 'published' }
+      data: { status: 'published' },
     });
 
     // console.log(`Auto-approved ${result.count} stories`);
     return result.count;
   }
-
 }

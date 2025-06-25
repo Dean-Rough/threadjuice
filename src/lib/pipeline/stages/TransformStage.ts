@@ -1,12 +1,17 @@
 /**
  * Transform Stage
- * 
+ *
  * Transforms the analyzed and enriched content into the final story format.
  * Builds the story structure with all sections, images, and GIFs.
  */
 
 import { BasePipelineStage } from '../core/PipelineStage';
-import { PipelineContext, StorySection, ProcessedStory, MediaAssets } from '../core/PipelineContext';
+import {
+  PipelineContext,
+  StorySection,
+  ProcessedStory,
+  MediaAssets,
+} from '../core/PipelineContext';
 
 export interface TransformOptions {
   includeGifs?: boolean;
@@ -73,7 +78,10 @@ export class TransformStage extends BasePipelineStage {
     }
 
     // Add reaction GIFs at strategic points
-    if (this.options.includeGifs && context.enrichments.reactionGifs.length > 0) {
+    if (
+      this.options.includeGifs &&
+      context.enrichments.reactionGifs.length > 0
+    ) {
       sections.push(...this.insertReactionGifs(sections, context));
     }
 
@@ -92,7 +100,10 @@ export class TransformStage extends BasePipelineStage {
     // Create the story object
     const story: ProcessedStory = {
       id: `story-${Date.now()}`,
-      title: context.source.rawData.generatedTitle || context.source.rawData.title || 'Untitled Story',
+      title:
+        context.source.rawData.generatedTitle ||
+        context.source.rawData.title ||
+        'Untitled Story',
       slug: this.createSlug(context.source.rawData.title || ''),
       excerpt: this.createExcerpt(context),
       category: context.source.metadata.subreddit || 'general',
@@ -131,7 +142,7 @@ export class TransformStage extends BasePipelineStage {
     } else {
       // Fallback to extracting from raw content
       const content = post.generatedContent || post.content || '';
-      
+
       sections.push({
         type: 'describe-1',
         title: 'The Setup',
@@ -141,24 +152,31 @@ export class TransformStage extends BasePipelineStage {
       sections.push({
         type: 'describe-2',
         title: 'The Situation Unfolds',
-        content: this.extractSection(content, 0.25, 0.5) || 'The story continues...',
+        content:
+          this.extractSection(content, 0.25, 0.5) || 'The story continues...',
       });
 
       sections.push({
         type: 'discussion',
         title: 'What Really Happened',
-        content: this.extractSection(content, 0.5, 0.75) || 'The truth emerges...',
+        content:
+          this.extractSection(content, 0.5, 0.75) || 'The truth emerges...',
       });
 
       sections.push({
         type: 'outro',
         title: 'The Aftermath',
-        content: this.extractSection(content, 0.75, 1.0) || 'And that\'s how it ended.',
+        content:
+          this.extractSection(content, 0.75, 1.0) || "And that's how it ended.",
       });
     }
 
     // Add comments if available
-    if (this.options.includeComments && post.comments && post.comments.length > 0) {
+    if (
+      this.options.includeComments &&
+      post.comments &&
+      post.comments.length > 0
+    ) {
       sections.push({
         type: 'comments-1',
         title: 'Reddit Reactions',
@@ -189,7 +207,7 @@ export class TransformStage extends BasePipelineStage {
   }
 
   private insertReactionGifs(
-    sections: StorySection[], 
+    sections: StorySection[],
     context: PipelineContext
   ): StorySection[] {
     const gifSections: StorySection[] = [];
@@ -240,22 +258,27 @@ export class TransformStage extends BasePipelineStage {
   }
 
   private createExcerpt(context: PipelineContext): string {
-    const content = context.source.rawData.content || context.source.rawData.title || '';
+    const content =
+      context.source.rawData.content || context.source.rawData.title || '';
     return content.substring(0, 150).trim() + '...';
   }
 
   private getAuthor(context: PipelineContext): string {
     // Map to our personas
-    const personas = ['The Terry', 'The Snarky Sage', 'The Down-to-Earth Buddy'];
+    const personas = [
+      'The Terry',
+      'The Snarky Sage',
+      'The Down-to-Earth Buddy',
+    ];
     return personas[Math.floor(Math.random() * personas.length)];
   }
 
   private generateTags(context: PipelineContext): string[] {
     const tags = [context.source.metadata.subreddit || 'general'];
-    
+
     // Add keywords as tags
     tags.push(...context.analysis.keywords.slice(0, 5));
-    
+
     // Add emotion as tag
     if (context.analysis.sentiment[0]) {
       tags.push(context.analysis.sentiment[0].emotion);

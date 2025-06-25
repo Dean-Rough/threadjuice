@@ -1401,6 +1401,7 @@ npm install @tanstack/react-table recharts date-fns lucide-react
 ```
 
 **Implementation details**:
+
 - Use Clerk authentication with role-based access (admin role required)
 - Create responsive layout with collapsible sidebar
 - Add breadcrumb navigation for nested pages
@@ -1408,6 +1409,7 @@ npm install @tanstack/react-table recharts date-fns lucide-react
 - Add loading states and error boundaries
 
 **Acceptance criteria**:
+
 - Admin routes protected by authentication
 - Only users with 'admin' role can access
 - Responsive design works on tablet/desktop
@@ -1423,7 +1425,7 @@ npm install @tanstack/react-table recharts date-fns lucide-react
 interface ContentQueueFeatures {
   // Display pending stories in a table
   pendingStories: Story[];
-  
+
   // Actions per story
   actions: {
     approve: () => void;
@@ -1432,14 +1434,14 @@ interface ContentQueueFeatures {
     preview: () => void;
     schedulePublish: (date: Date) => void;
   };
-  
+
   // Bulk operations
   bulkActions: {
     approveAll: () => void;
     rejectAll: () => void;
     scheduleAll: (date: Date) => void;
   };
-  
+
   // Filtering and search
   filters: {
     dateRange: [Date, Date];
@@ -1451,12 +1453,14 @@ interface ContentQueueFeatures {
 ```
 
 **Components to create**:
+
 - `src/components/admin/ContentTable.tsx` - Sortable, filterable table
 - `src/components/admin/StoryPreviewModal.tsx` - Full story preview
 - `src/components/admin/EditStoryModal.tsx` - In-line story editor
 - `src/components/admin/BulkActionsBar.tsx` - Bulk operation controls
 
 **Acceptance criteria**:
+
 - Table displays all pending stories with metadata
 - Individual approve/reject/edit actions work
 - Bulk operations affect multiple stories
@@ -1472,13 +1476,21 @@ interface ContentQueueFeatures {
 interface RedditSettings {
   // Scraping interval control
   scrapeInterval: {
-    value: '15min' | '30min' | '1hr' | '2hr' | '6hr' | '12hr' | '24hr' | 'manual';
+    value:
+      | '15min'
+      | '30min'
+      | '1hr'
+      | '2hr'
+      | '6hr'
+      | '12hr'
+      | '24hr'
+      | 'manual';
     onChange: (interval: string) => void;
     nextRun: Date;
     lastRun: Date;
     status: 'running' | 'idle' | 'error';
   };
-  
+
   // Subreddit management
   subreddits: {
     active: string[];
@@ -1486,7 +1498,7 @@ interface RedditSettings {
     remove: (subreddit: string) => void;
     toggle: (subreddit: string, enabled: boolean) => void;
   };
-  
+
   // Manual controls
   manualActions: {
     runNow: () => void;
@@ -1498,18 +1510,21 @@ interface RedditSettings {
 ```
 
 **Components to create**:
+
 - `src/components/admin/ScrapeIntervalSelector.tsx` - Dropdown with schedule preview
 - `src/components/admin/SubredditManager.tsx` - Add/remove/toggle subreddits
 - `src/components/admin/ScrapeStatus.tsx` - Real-time scraping status
 - `src/components/admin/ManualScrapeButton.tsx` - Trigger immediate scrape
 
 **Backend requirements**:
+
 - Create `src/app/api/admin/reddit/settings/route.ts` - Save/load settings
 - Create `src/app/api/admin/reddit/scrape/route.ts` - Manual scrape trigger
 - Use environment variables for Reddit API credentials
 - Implement rate limiting to respect Reddit API limits
 
 **Acceptance criteria**:
+
 - Interval changes persist to database
 - Manual scrape button triggers immediate run
 - Subreddit list is editable and persists
@@ -1525,7 +1540,7 @@ interface RedditSettings {
 interface RevenueMetrics {
   // Time period selector
   period: '24h' | '7d' | '30d' | '90d' | 'custom';
-  
+
   // Revenue sources
   sources: {
     adSense: {
@@ -1546,7 +1561,7 @@ interface RevenueMetrics {
       revenue: number;
     };
   };
-  
+
   // Charts
   charts: {
     revenueOverTime: LineChart;
@@ -1557,18 +1572,21 @@ interface RevenueMetrics {
 ```
 
 **Components to create**:
+
 - `src/components/admin/RevenueChart.tsx` - Time series revenue chart
 - `src/components/admin/RevenueCards.tsx` - KPI cards with trends
 - `src/components/admin/TopPostsTable.tsx` - Best performing content
 - `src/components/admin/RevenueForecast.tsx` - Projected earnings
 
 **Integrations needed**:
+
 - Google AdSense API for real metrics
 - Database tables for sponsored content tracking
 - Analytics events for affiliate link clicks
 - Export functionality for accounting
 
 **Acceptance criteria**:
+
 - Real-time AdSense data displayed
 - Sponsored content revenue tracked
 - Charts update with period selection
@@ -1584,12 +1602,12 @@ interface RevenueMetrics {
 interface DashboardSettings {
   // API Configuration
   apiKeys: {
-    reddit: { clientId: string; clientSecret: string; };
-    openai: { key: string; model: string; };
-    twitter: { bearer: string; };
-    adsense: { publisherId: string; };
+    reddit: { clientId: string; clientSecret: string };
+    openai: { key: string; model: string };
+    twitter: { bearer: string };
+    adsense: { publisherId: string };
   };
-  
+
   // Content Settings
   content: {
     autoApprove: boolean;
@@ -1597,7 +1615,7 @@ interface DashboardSettings {
     maxDailyPosts: number;
     defaultPersona: PersonaName;
   };
-  
+
   // Notification Preferences
   notifications: {
     email: string;
@@ -1609,18 +1627,21 @@ interface DashboardSettings {
 ```
 
 **Components to create**:
+
 - `src/components/admin/ApiKeyManager.tsx` - Secure API key input/display
 - `src/components/admin/ContentSettings.tsx` - Content automation rules
 - `src/components/admin/NotificationSettings.tsx` - Alert preferences
 - `src/components/admin/DangerZone.tsx` - Reset/clear data options
 
 **Security requirements**:
+
 - API keys encrypted in database
 - Show only last 4 characters of keys
 - Audit log for settings changes
 - Two-factor auth for sensitive changes
 
 **Acceptance criteria**:
+
 - All settings persist to database
 - API keys securely stored/displayed
 - Changes take effect immediately
@@ -1642,7 +1663,7 @@ interface DashboardSettings {
 interface VideoScript {
   story: Story;
   duration: 30 | 45 | 60; // seconds
-  
+
   scenes: Array<{
     sceneNumber: number;
     duration: number; // seconds
@@ -1651,7 +1672,7 @@ interface VideoScript {
     captionText: string; // On-screen text
     transitionType: 'cut' | 'fade' | 'swipe';
   }>;
-  
+
   metadata: {
     hook: string; // First 3 seconds
     climax: string; // Main revelation
@@ -1671,12 +1692,14 @@ export async function generateVideoScript(story: Story): Promise<VideoScript> {
 ```
 
 **Components to create**:
+
 - `src/app/api/admin/video/generate-script/route.ts` - Script generation endpoint
 - `src/components/admin/VideoScriptEditor.tsx` - Manual script editing UI
 - `src/lib/video/storyCompressor.ts` - Compress story to key points
 - `src/lib/video/visualPromptGenerator.ts` - Create Veo-3 prompts
 
 **Acceptance criteria**:
+
 - Scripts stay within time limits (30-60 seconds)
 - Hook grabs attention in first 3 seconds
 - Visual prompts are specific and actionable
@@ -1692,7 +1715,7 @@ export async function generateVideoScript(story: Story): Promise<VideoScript> {
 interface Veo3Client {
   // Initialize with API credentials
   constructor(apiKey: string);
-  
+
   // Generate video scene
   generateScene(params: {
     prompt: string;
@@ -1705,7 +1728,7 @@ interface Veo3Client {
     thumbnailUrl: string;
     duration: number;
   }>;
-  
+
   // Batch generation for efficiency
   generateBatch(scenes: ScenePrompt[]): Promise<VideoScene[]>;
 }
@@ -1719,6 +1742,7 @@ interface Veo3Client {
 ```
 
 **Implementation requirements**:
+
 - Set up Veo-3 API access (may need waitlist)
 - Handle API quotas and rate limits
 - Store generated videos in cloud storage
@@ -1726,6 +1750,7 @@ interface Veo3Client {
 - Add progress tracking for long operations
 
 **Acceptance criteria**:
+
 - Successfully generates video from text prompt
 - Videos match specified duration
 - Consistent visual style across scenes
@@ -1746,7 +1771,7 @@ interface VoiceSynthesis {
     'The Dry Cynic': 'arnold'; // Deadpan male
     // ... etc
   };
-  
+
   // Generate voiceover
   synthesize(params: {
     text: string;
@@ -1764,6 +1789,7 @@ interface VoiceSynthesis {
 ```
 
 **Additional features**:
+
 - Voice cloning for custom personas
 - Emotion and pacing control
 - Background music mixing
@@ -1771,6 +1797,7 @@ interface VoiceSynthesis {
 - Sync with video timing
 
 **Acceptance criteria**:
+
 - Voices match persona characteristics
 - Audio syncs with video duration
 - Clear and understandable speech
@@ -1796,22 +1823,26 @@ interface VideoAssembler {
       opacity: 0.8;
     };
   }): Promise<FinalVideo>;
-  
+
   // Add captions
   addCaptions(video: Video, captions: Caption[]): Promise<Video>;
-  
+
   // Add end card
-  addEndCard(video: Video, cta: {
-    text: string;
-    url: string;
-    duration: number;
-  }): Promise<Video>;
+  addEndCard(
+    video: Video,
+    cta: {
+      text: string;
+      url: string;
+      duration: number;
+    }
+  ): Promise<Video>;
 }
 
 // Use FFmpeg or cloud service for video processing
 ```
 
 **Branding elements**:
+
 - ThreadJuice watermark throughout
 - Consistent color scheme (orange/black)
 - Animated intro/outro (2 seconds each)
@@ -1819,6 +1850,7 @@ interface VideoAssembler {
 - QR code for story link
 
 **Acceptance criteria**:
+
 - Final video is exactly specified duration
 - All elements properly synchronized
 - Captions readable on mobile
@@ -1846,9 +1878,12 @@ interface PlatformPublisher {
       addToPlaylist(videoId: string, playlistId: string): Promise<void>;
     };
   };
-  
+
   // Bulk publishing
-  publishToAll(video: Video, metadata: UniversalMetadata): Promise<{
+  publishToAll(
+    video: Video,
+    metadata: UniversalMetadata
+  ): Promise<{
     tiktok?: { success: boolean; url?: string; error?: string };
     instagram?: { success: boolean; url?: string; error?: string };
     youtube?: { success: boolean; url?: string; error?: string };
@@ -1857,6 +1892,7 @@ interface PlatformPublisher {
 ```
 
 **Platform-specific requirements**:
+
 - TikTok: Business account API access
 - Instagram: Facebook Graph API
 - YouTube: YouTube Data API v3
@@ -1867,6 +1903,7 @@ interface PlatformPublisher {
   - Description formats
 
 **Acceptance criteria**:
+
 - Videos upload successfully to all platforms
 - Platform-specific optimizations applied
 - Scheduling works for future publishing
@@ -1890,7 +1927,7 @@ interface VideoDashboard {
     };
     refresh: () => void;
   };
-  
+
   // Video management
   actions: {
     approve: (video: VideoItem) => void;
@@ -1898,7 +1935,7 @@ interface VideoDashboard {
     flag: (video: VideoItem, reason: string) => void;
     schedule: (video: VideoItem, publishTime: Date) => void;
   };
-  
+
   // Monitoring settings
   settings: {
     keywords: string[]; // Tracked keywords
@@ -1910,12 +1947,14 @@ interface VideoDashboard {
 ```
 
 **Dashboard components**:
+
 - `src/components/admin/VideoFeed.tsx` - Real-time video list
 - `src/components/admin/VideoCard.tsx` - Video preview card
 - `src/components/admin/VideoMetrics.tsx` - Engagement stats
 - `src/components/admin/KeywordManager.tsx` - Add/remove keywords
 
 **Acceptance criteria**:
+
 - Real-time updates of new videos
 - One-click approval/rejection
 - Keyword management works
@@ -1942,14 +1981,14 @@ interface TwitterClient {
     addRule(rule: StreamRule): Promise<void>;
     removeRule(id: string): Promise<void>;
   };
-  
+
   // Search API for historical data
   search: {
     recent(query: string, params: SearchParams): Promise<Tweet[]>;
     quotes(tweetId: string): Promise<Tweet[]>; // For ratio detection
     thread(conversationId: string): Promise<Tweet[]>;
   };
-  
+
   // Metrics API
   metrics: {
     engagement(tweetId: string): Promise<EngagementMetrics>;
@@ -1962,6 +2001,7 @@ interface TwitterClient {
 ```
 
 **Setup requirements**:
+
 - Twitter API v2 Bearer Token
 - Elevated access for streaming
 - Webhook URL for filtered stream
@@ -1969,6 +2009,7 @@ interface TwitterClient {
 - Error recovery for stream disconnects
 
 **Acceptance criteria**:
+
 - Successfully connects to Twitter stream
 - Filters work for keywords/hashtags
 - Can fetch full threads and quotes
@@ -1984,7 +2025,7 @@ interface TwitterClient {
 interface DramaDetector {
   // Analyze tweet for drama potential
   analyzeTweet(tweet: Tweet): DramaScore;
-  
+
   // Drama indicators
   indicators: {
     ratioDetection: (replies: number, likes: number) => boolean;
@@ -1993,7 +2034,7 @@ interface DramaDetector {
     rapidEngagement: (metrics: MetricsOverTime) => boolean;
     opposingCamps: (replies: Tweet[]) => CampAnalysis;
   };
-  
+
   // Drama classification
   classifyDrama(analysis: DramaAnalysis): {
     type: 'celebrity' | 'political' | 'brand' | 'influencer' | 'general';
@@ -2018,6 +2059,7 @@ interface DramaScore {
 ```
 
 **Detection strategies**:
+
 - Monitor quote tweet ratios
 - Track sentiment in replies
 - Identify pile-on patterns
@@ -2025,6 +2067,7 @@ interface DramaScore {
 - Find opposing viewpoints
 
 **Acceptance criteria**:
+
 - Accurately identifies ratio'd tweets
 - Classifies drama type correctly
 - Ranks by virality potential
@@ -2040,7 +2083,7 @@ interface DramaScore {
 interface ThreadReconstructor {
   // Gather all context
   reconstruct(seedTweet: Tweet): Promise<DramaThread>;
-  
+
   // Components to gather
   components: {
     originalTweet: Tweet;
@@ -2050,7 +2093,7 @@ interface ThreadReconstructor {
     subthreads: Thread[]; // Notable reply chains
     relatedTweets: Tweet[]; // Same topic/hashtag
   };
-  
+
   // Story elements
   extractStoryElements(thread: DramaThread): {
     protagonists: TwitterUser[];
@@ -2074,6 +2117,7 @@ interface DramaTimeline {
 ```
 
 **Reconstruction features**:
+
 - Chronological timeline building
 - Deleted tweet recovery (if cached)
 - Context from user history
@@ -2081,6 +2125,7 @@ interface DramaTimeline {
 - Meme/reaction compilation
 
 **Acceptance criteria**:
+
 - Captures full drama context
 - Maintains chronological order
 - Includes all key players
@@ -2096,7 +2141,7 @@ interface DramaTimeline {
 interface TwitterStoryConverter {
   // Convert drama to story
   convert(drama: DramaThread, persona: PersonaName): Promise<Story>;
-  
+
   // Story templates
   templates: {
     'Twitter is Fighting About X': StoryTemplate;
@@ -2105,7 +2150,7 @@ interface TwitterStoryConverter {
     'Political Twitter Melts Down': StoryTemplate;
     'Main Character of the Day': StoryTemplate;
   };
-  
+
   // Content generation
   generateStory(params: {
     drama: DramaThread;
@@ -2131,6 +2176,7 @@ interface EmbeddedTweet {
 ```
 
 **Story elements**:
+
 - Catchy headlines about the drama
 - Context for non-Twitter users
 - Embedded tweets as evidence
@@ -2138,6 +2184,7 @@ interface EmbeddedTweet {
 - Persona commentary throughout
 
 **Acceptance criteria**:
+
 - Stories are engaging and clear
 - Context provided for outsiders
 - Tweets embedded properly
@@ -2161,7 +2208,7 @@ interface TwitterDashboard {
     };
     refresh: () => void;
   };
-  
+
   // Drama management
   actions: {
     convertToStory: (drama: DramaItem) => void;
@@ -2169,7 +2216,7 @@ interface TwitterDashboard {
     flag: (drama: DramaItem, reason: string) => void;
     schedule: (drama: DramaItem, publishTime: Date) => void;
   };
-  
+
   // Monitoring settings
   settings: {
     keywords: string[]; // Tracked keywords
@@ -2181,12 +2228,14 @@ interface TwitterDashboard {
 ```
 
 **Dashboard components**:
+
 - `src/components/admin/DramaFeed.tsx` - Real-time drama list
 - `src/components/admin/DramaCard.tsx` - Drama preview card
 - `src/components/admin/TwitterMetrics.tsx` - Engagement stats
 - `src/components/admin/KeywordManager.tsx` - Add/remove keywords
 
 **Acceptance criteria**:
+
 - Real-time updates of new drama
 - One-click story conversion
 - Keyword management works
@@ -2213,7 +2262,7 @@ interface SponsoredContent {
     website: string;
     contactEmail: string;
   };
-  
+
   campaign: {
     title: string;
     budget: number;
@@ -2222,7 +2271,7 @@ interface SponsoredContent {
     targetImpressions: number;
     currentImpressions: number;
   };
-  
+
   content: {
     type: 'story' | 'video' | 'quiz';
     title: string;
@@ -2230,7 +2279,7 @@ interface SponsoredContent {
     cta: CallToAction;
     restrictions: string[]; // "No competitor mentions"
   };
-  
+
   performance: {
     views: number;
     clicks: number;
@@ -2244,6 +2293,7 @@ interface SponsoredContent {
 ```
 
 **Database tables needed**:
+
 - `sponsors` - Brand information
 - `campaigns` - Campaign details
 - `sponsored_posts` - Actual content
@@ -2251,6 +2301,7 @@ interface SponsoredContent {
 - `sponsor_invoices` - Billing records
 
 **Acceptance criteria**:
+
 - Full CRUD API for sponsors
 - Campaign date validation
 - Budget tracking works
@@ -2272,14 +2323,14 @@ interface SponsoredContentGenerator {
     persona: PersonaName;
     cta: CallToAction;
   }): Promise<SponsoredStory>;
-  
+
   // Ensure compliance
   validateContent(story: SponsoredStory): {
     compliant: boolean;
     issues: string[];
     suggestions: string[];
   };
-  
+
   // Native integration
   blendWithOrganic(story: SponsoredStory): {
     title: string; // Engaging, not salesy
@@ -2298,6 +2349,7 @@ interface SponsoredStory extends Story {
 ```
 
 **Content requirements**:
+
 - Match organic content style
 - Clear but subtle disclosure
 - Engaging without being salesy
@@ -2305,6 +2357,7 @@ interface SponsoredStory extends Story {
 - Include tracking for metrics
 
 **Acceptance criteria**:
+
 - Generated content feels native
 - Disclosures are clear
 - Brand guidelines followed
@@ -2325,7 +2378,7 @@ interface PlacementEngine {
     userEngagement: EngagementHistory;
     frequency: number; // 1 in N posts
   }): PlacementPlan;
-  
+
   // Placement rules
   rules: {
     minOrganicBetween: 5; // Minimum organic posts between ads
@@ -2333,7 +2386,7 @@ interface PlacementEngine {
     categoryMatch: boolean; // Match sponsored to user interests
     timeDistribution: 'even' | 'prime'; // When to show
   };
-  
+
   // A/B testing
   experiments: {
     placementPosition: number[]; // Test different positions
@@ -2347,6 +2400,7 @@ interface PlacementEngine {
 ```
 
 **Placement strategies**:
+
 - Even distribution throughout feed
 - Higher placement for better performing
 - Category matching for relevance
@@ -2354,6 +2408,7 @@ interface PlacementEngine {
 - User engagement consideration
 
 **Acceptance criteria**:
+
 - Sponsored content appears naturally
 - Frequency caps respected
 - Performance tracking works
@@ -2369,14 +2424,14 @@ interface PlacementEngine {
 interface SponsorDashboard {
   // Authentication separate from admin
   auth: SponsorAuth;
-  
+
   // Campaign overview
   campaigns: {
     active: Campaign[];
     completed: Campaign[];
     draft: Campaign[];
   };
-  
+
   // Real-time metrics
   metrics: {
     impressions: MetricChart;
@@ -2384,7 +2439,7 @@ interface SponsorDashboard {
     engagement: MetricChart;
     spend: MetricChart;
   };
-  
+
   // Content management
   content: {
     create: () => void;
@@ -2392,7 +2447,7 @@ interface SponsorDashboard {
     preview: (id: string) => void;
     requestChanges: (id: string, changes: string) => void;
   };
-  
+
   // Billing
   billing: {
     invoices: Invoice[];
@@ -2403,6 +2458,7 @@ interface SponsorDashboard {
 ```
 
 **Dashboard features**:
+
 - Real-time performance metrics
 - Campaign budget tracking
 - Content preview/approval
@@ -2410,6 +2466,7 @@ interface SponsorDashboard {
 - Performance reports export
 
 **Acceptance criteria**:
+
 - Sponsors can log in separately
 - Real-time metrics displayed
 - Content management works
@@ -2434,14 +2491,14 @@ interface RevenueOptimizer {
     adjustments: PriceAdjustment[];
     finalPrice: number;
   };
-  
+
   // Inventory management
   inventory: {
     available: InventorySlot[];
     booked: InventorySlot[];
     forecast: (days: number) => InventoryForecast;
   };
-  
+
   // Yield optimization
   optimize: {
     fillRate: () => number;
@@ -2452,7 +2509,10 @@ interface RevenueOptimizer {
 
 // Automated deal proposals
 interface DealProposal {
-  generateProposal(brand: Brand, budget: number): {
+  generateProposal(
+    brand: Brand,
+    budget: number
+  ): {
     options: ProposalOption[];
     recommended: ProposalOption;
     customQuote: () => CustomQuote;
@@ -2461,6 +2521,7 @@ interface DealProposal {
 ```
 
 **Revenue features**:
+
 - Dynamic pricing based on demand
 - Inventory forecasting
 - Campaign pacing optimization
@@ -2468,6 +2529,7 @@ interface DealProposal {
 - Revenue reporting
 
 **Acceptance criteria**:
+
 - Pricing algorithm works correctly
 - Inventory tracking accurate
 - Pacing delivers on time
@@ -2479,26 +2541,31 @@ interface DealProposal {
 ## Implementation Timeline & Dependencies
 
 ### Week 1-2: Admin Dashboard Foundation
+
 - Complete Phase B.1 (Dashboard infrastructure)
 - Get content queue working
 - Reddit control panel operational
 
 ### Week 3-4: Video Generation MVP
+
 - Complete Phase B.2.1-B.2.3 (Script, Veo-3, Voice)
 - Generate first test videos
 - Manual publishing initially
 
 ### Week 5-6: Twitter Integration
+
 - Complete Phase B.3 (Twitter monitoring)
 - First Twitter drama stories
 - Automated detection running
 
 ### Week 7-8: Sponsored Content
+
 - Complete Phase B.4 (Sponsored system)
 - First brand partnership
 - Revenue tracking operational
 
 ### Success Metrics
+
 - **Week 2**: Admin can control Reddit scraping
 - **Week 4**: First video published to TikTok
 - **Week 6**: First Twitter drama story live

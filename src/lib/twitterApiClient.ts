@@ -35,11 +35,11 @@ export interface TwitterStreamRule {
 class TwitterApiClient {
   private config: TwitterApiConfig;
   private baseUrl = 'https://api.twitter.com/2';
-  
+
   constructor() {
     // Import env dynamically to avoid circular dependency
     const { env } = require('./env');
-    
+
     this.config = {
       bearerToken: env.TWITTER_BEARER_TOKEN || '',
       apiKey: env.TWITTER_API_KEY || '',
@@ -47,9 +47,15 @@ class TwitterApiClient {
       accessToken: env.TWITTER_ACCESS_TOKEN || '',
       accessTokenSecret: env.TWITTER_ACCESS_TOKEN_SECRET || '',
       dramaEnabled: process.env.TWITTER_DRAMA_ENABLED === 'true',
-      maxStoriesPerDay: parseInt(process.env.TWITTER_DRAMA_MAX_STORIES_PER_DAY || '3'),
-      minEngagement: parseInt(process.env.TWITTER_DRAMA_MIN_ENGAGEMENT || '100'),
-      minDramaScore: parseInt(process.env.TWITTER_DRAMA_MIN_DRAMA_SCORE || '60')
+      maxStoriesPerDay: parseInt(
+        process.env.TWITTER_DRAMA_MAX_STORIES_PER_DAY || '3'
+      ),
+      minEngagement: parseInt(
+        process.env.TWITTER_DRAMA_MIN_ENGAGEMENT || '100'
+      ),
+      minDramaScore: parseInt(
+        process.env.TWITTER_DRAMA_MIN_DRAMA_SCORE || '60'
+      ),
     };
   }
 
@@ -65,8 +71,8 @@ class TwitterApiClient {
    */
   private getAuthHeaders(): Record<string, string> {
     return {
-      'Authorization': `Bearer ${this.config.bearerToken}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${this.config.bearerToken}`,
+      'Content-Type': 'application/json',
     };
   }
 
@@ -74,10 +80,12 @@ class TwitterApiClient {
    * Search for tweets with high engagement that might indicate drama
    * FREE TIER: Maximum 10 results to conserve API calls
    */
-  async searchDramaTweets(options: {
-    timeWindow?: string;
-    maxResults?: number;
-  } = {}): Promise<TwitterDramaData[]> {
+  async searchDramaTweets(
+    options: {
+      timeWindow?: string;
+      maxResults?: number;
+    } = {}
+  ): Promise<TwitterDramaData[]> {
     if (!this.isConfigured()) {
       throw new Error('Twitter API not configured');
     }
@@ -90,37 +98,33 @@ class TwitterApiClient {
 
     // Conservative limits for free tier
     const { timeWindow = '2h', maxResults = 10 } = options;
-    
+
     // Minimal test query for free tier
     const searchQuery: TwitterSearchQuery = {
       query: 'hello world',
       max_results: maxResults,
       tweet_fields: [
         'id',
-        'text', 
+        'text',
         'author_id',
         'created_at',
         'public_metrics',
         'context_annotations',
-        'referenced_tweets'
+        'referenced_tweets',
       ],
-      user_fields: [
-        'id',
-        'username',
-        'name',
-        'verified',
-        'public_metrics'
-      ],
+      user_fields: ['id', 'username', 'name', 'verified', 'public_metrics'],
       expansions: ['author_id', 'referenced_tweets.id'],
-      sort_order: 'recency'
+      sort_order: 'recency',
     };
 
     try {
-      console.log(`🎭 Making Twitter API call (${stats.monthly_used + 1}/${stats.monthly_limit} this month)`);
-      
+      console.log(
+        `🎭 Making Twitter API call (${stats.monthly_used + 1}/${stats.monthly_limit} this month)`
+      );
+
       const response = await this.makeApiRequest('/tweets/search/recent', {
         method: 'GET',
-        params: this.buildQueryParams(searchQuery)
+        params: this.buildQueryParams(searchQuery),
       });
 
       // Log successful API call
@@ -146,9 +150,12 @@ class TwitterApiClient {
 
     try {
       // Note: Trending topics require Twitter API v1.1
-      const response = await fetch(`https://api.twitter.com/1.1/trends/place.json?id=${woeid}`, {
-        headers: this.getAuthHeaders()
-      });
+      const response = await fetch(
+        `https://api.twitter.com/1.1/trends/place.json?id=${woeid}`,
+        {
+          headers: this.getAuthHeaders(),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Twitter API error: ${response.status}`);
@@ -172,29 +179,32 @@ class TwitterApiClient {
 
     const dramaRules: TwitterStreamRule[] = [
       {
-        value: 'has:mentions has:hashtags (ratio OR "tell me you" OR "imagine thinking" OR "unpopular opinion") lang:en -is:retweet',
-        tag: 'drama_indicators'
+        value:
+          'has:mentions has:hashtags (ratio OR "tell me you" OR "imagine thinking" OR "unpopular opinion") lang:en -is:retweet',
+        tag: 'drama_indicators',
       },
       {
-        value: '(controversial OR drama OR debate) has:links lang:en -is:retweet',
-        tag: 'controversy_content'
+        value:
+          '(controversial OR drama OR debate) has:links lang:en -is:retweet',
+        tag: 'controversy_content',
       },
       {
-        value: 'context:60.1220701888179359745 OR context:60.869434538163826689', // Food & Drink, Business & Finance contexts
-        tag: 'drama_prone_topics'
-      }
+        value:
+          'context:60.1220701888179359745 OR context:60.869434538163826689', // Food & Drink, Business & Finance contexts
+        tag: 'drama_prone_topics',
+      },
     ];
 
     try {
       // First, get existing rules
       const existingRules = await this.getStreamRules();
-      
+
       // Delete existing drama rules
       if (existingRules.length > 0) {
         const ruleIds = existingRules
           .filter(rule => rule.tag?.includes('drama'))
           .map(rule => rule.id);
-        
+
         if (ruleIds.length > 0) {
           await this.deleteStreamRules(ruleIds);
         }
@@ -203,7 +213,6 @@ class TwitterApiClient {
       // Add new drama detection rules
       await this.addStreamRules(dramaRules);
       console.log('✅ Twitter drama stream rules configured');
-      
     } catch (error) {
       console.error('❌ Failed to setup stream rules:', error);
       throw error;
@@ -220,7 +229,7 @@ class TwitterApiClient {
 
     return tweets.map((tweet: any) => {
       const author = users.find((user: any) => user.id === tweet.author_id);
-      
+
       return {
         id: tweet.id,
         text: tweet.text,
@@ -228,18 +237,18 @@ class TwitterApiClient {
           username: author?.username || 'unknown',
           name: author?.name || 'Unknown User',
           verified: author?.verified || false,
-          follower_count: author?.public_metrics?.followers_count || 0
+          follower_count: author?.public_metrics?.followers_count || 0,
         },
         metrics: {
           retweets: tweet.public_metrics?.retweet_count || 0,
           likes: tweet.public_metrics?.like_count || 0,
           replies: tweet.public_metrics?.reply_count || 0,
           quotes: tweet.public_metrics?.quote_count || 0,
-          impressions: tweet.public_metrics?.impression_count
+          impressions: tweet.public_metrics?.impression_count,
         },
         created_at: tweet.created_at,
         context_annotations: tweet.context_annotations,
-        referenced_tweets: tweet.referenced_tweets
+        referenced_tweets: tweet.referenced_tweets,
       };
     });
   }
@@ -249,35 +258,42 @@ class TwitterApiClient {
    */
   private buildQueryParams(query: TwitterSearchQuery): URLSearchParams {
     const params = new URLSearchParams();
-    
+
     params.append('query', query.query);
-    if (query.max_results) params.append('max_results', query.max_results.toString());
-    if (query.tweet_fields) params.append('tweet.fields', query.tweet_fields.join(','));
-    if (query.user_fields) params.append('user.fields', query.user_fields.join(','));
-    if (query.expansions) params.append('expansions', query.expansions.join(','));
+    if (query.max_results)
+      params.append('max_results', query.max_results.toString());
+    if (query.tweet_fields)
+      params.append('tweet.fields', query.tweet_fields.join(','));
+    if (query.user_fields)
+      params.append('user.fields', query.user_fields.join(','));
+    if (query.expansions)
+      params.append('expansions', query.expansions.join(','));
     if (query.sort_order) params.append('sort_order', query.sort_order);
-    
+
     return params;
   }
 
   /**
    * Make authenticated request to Twitter API
    */
-  private async makeApiRequest(endpoint: string, options: {
-    method: 'GET' | 'POST' | 'DELETE';
-    params?: URLSearchParams;
-    body?: any;
-  }): Promise<any> {
+  private async makeApiRequest(
+    endpoint: string,
+    options: {
+      method: 'GET' | 'POST' | 'DELETE';
+      params?: URLSearchParams;
+      body?: any;
+    }
+  ): Promise<any> {
     const { method, params, body } = options;
     let url = `${this.baseUrl}${endpoint}`;
-    
+
     if (method === 'GET' && params) {
       url += `?${params.toString()}`;
     }
 
     const requestOptions: RequestInit = {
       method,
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
     };
 
     if (method !== 'GET' && body) {
@@ -285,7 +301,7 @@ class TwitterApiClient {
     }
 
     const response = await fetch(url, requestOptions);
-    
+
     if (!response.ok) {
       const errorData = await response.text();
       throw new Error(`Twitter API ${response.status}: ${errorData}`);
@@ -299,7 +315,7 @@ class TwitterApiClient {
    */
   private async getStreamRules(): Promise<any[]> {
     const response = await this.makeApiRequest('/tweets/search/stream/rules', {
-      method: 'GET'
+      method: 'GET',
     });
     return response.data || [];
   }
@@ -307,14 +323,14 @@ class TwitterApiClient {
   private async addStreamRules(rules: TwitterStreamRule[]): Promise<void> {
     await this.makeApiRequest('/tweets/search/stream/rules', {
       method: 'POST',
-      body: { add: rules }
+      body: { add: rules },
     });
   }
 
   private async deleteStreamRules(ruleIds: string[]): Promise<void> {
     await this.makeApiRequest('/tweets/search/stream/rules', {
       method: 'POST',
-      body: { delete: { ids: ruleIds } }
+      body: { delete: { ids: ruleIds } },
     });
   }
 
@@ -331,8 +347,8 @@ class TwitterApiClient {
       hasCredentials: {
         bearerToken: !!this.config.bearerToken,
         apiKey: !!this.config.apiKey,
-        accessToken: !!this.config.accessToken
-      }
+        accessToken: !!this.config.accessToken,
+      },
     };
   }
 }

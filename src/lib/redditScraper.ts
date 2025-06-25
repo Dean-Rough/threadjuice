@@ -34,13 +34,15 @@ export class RedditScraper {
    */
   async authenticate(): Promise<void> {
     try {
-      const credentials = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64');
-      
+      const credentials = Buffer.from(
+        `${this.config.clientId}:${this.config.clientSecret}`
+      ).toString('base64');
+
       const response = await redditRateLimiter.executeWithBackoff(async () => {
         return fetch(this.authUrl, {
           method: 'POST',
           headers: {
-            'Authorization': `Basic ${credentials}`,
+            Authorization: `Basic ${credentials}`,
             'User-Agent': this.config.userAgent,
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -50,14 +52,16 @@ export class RedditScraper {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Reddit OAuth failed: ${response.status} ${response.statusText} - ${errorText}`);
+        throw new Error(
+          `Reddit OAuth failed: ${response.status} ${response.statusText} - ${errorText}`
+        );
       }
 
       const tokenData: RedditTokenResponse = await response.json();
-      
+
       this.config.accessToken = tokenData.access_token;
-      this.config.tokenExpiresAt = Date.now() + (tokenData.expires_in * 1000);
-      
+      this.config.tokenExpiresAt = Date.now() + tokenData.expires_in * 1000;
+
       // console.log('✅ Reddit authentication successful');
     } catch (error) {
       console.error('❌ Reddit authentication failed:', error);
@@ -75,7 +79,7 @@ export class RedditScraper {
     }
 
     // Refresh token if it expires in the next 5 minutes
-    if (Date.now() > (this.config.tokenExpiresAt - 5 * 60 * 1000)) {
+    if (Date.now() > this.config.tokenExpiresAt - 5 * 60 * 1000) {
       // console.log('🔄 Refreshing Reddit access token...');
       await this.authenticate();
     }
@@ -90,7 +94,7 @@ export class RedditScraper {
     const response = await redditRateLimiter.executeWithBackoff(async () => {
       return fetch(`${this.baseUrl}${endpoint}`, {
         headers: {
-          'Authorization': `Bearer ${this.config.accessToken}`,
+          Authorization: `Bearer ${this.config.accessToken}`,
           'User-Agent': this.config.userAgent,
         },
       });
@@ -98,7 +102,9 @@ export class RedditScraper {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Reddit API error: ${response.status} ${response.statusText} - ${errorText}`);
+      throw new Error(
+        `Reddit API error: ${response.status} ${response.statusText} - ${errorText}`
+      );
     }
 
     return response.json();
@@ -107,23 +113,33 @@ export class RedditScraper {
   /**
    * Get hot posts from a subreddit
    */
-  async getHotPosts(options: RedditFetchOptions): Promise<ProcessedRedditPost[]> {
-    const { subreddit, sort = 'hot', time = 'day', limit = 25, after, minScore = 0 } = options;
-    
+  async getHotPosts(
+    options: RedditFetchOptions
+  ): Promise<ProcessedRedditPost[]> {
+    const {
+      subreddit,
+      sort = 'hot',
+      time = 'day',
+      limit = 25,
+      after,
+      minScore = 0,
+    } = options;
+
     let endpoint = `/r/${subreddit}/${sort}?limit=${limit}`;
-    
+
     if (time && (sort === 'top' || sort === 'controversial')) {
       endpoint += `&t=${time}`;
     }
-    
+
     if (after) {
       endpoint += `&after=${after}`;
     }
 
     // console.log(`📡 Fetching ${sort} posts from r/${subreddit} (limit: ${limit}, minScore: ${minScore})`);
 
-    const response: RedditResponse<RedditListing> = await this.makeRequest(endpoint);
-    
+    const response: RedditResponse<RedditListing> =
+      await this.makeRequest(endpoint);
+
     const posts = response.data.children
       .map(child => child.data as RedditPost)
       .filter(post => post.score >= minScore)
@@ -136,20 +152,30 @@ export class RedditScraper {
   /**
    * Get comments for a specific post
    */
-  async getComments(options: RedditCommentsOptions): Promise<ProcessedRedditComment[]> {
+  async getComments(
+    options: RedditCommentsOptions
+  ): Promise<ProcessedRedditComment[]> {
     const { postId, sort = 'top', limit = 100, depth = 5 } = options;
-    
+
     const endpoint = `/comments/${postId}?sort=${sort}&limit=${limit}&depth=${depth}`;
-    
+
     // console.log(`💬 Fetching comments for post ${postId} (limit: ${limit}, depth: ${depth})`);
 
-    const response: [RedditResponse<RedditListing>, RedditResponse<RedditListing>] = await this.makeRequest(endpoint);
-    
+    const response: [
+      RedditResponse<RedditListing>,
+      RedditResponse<RedditListing>,
+    ] = await this.makeRequest(endpoint);
+
     // Reddit returns an array: [post_data, comments_data]
     const commentsListing = response[1];
     const comments = commentsListing.data.children
       .map(child => child.data as RedditComment)
-      .filter(comment => comment.body && comment.body !== '[deleted]' && comment.body !== '[removed]')
+      .filter(
+        comment =>
+          comment.body &&
+          comment.body !== '[deleted]' &&
+          comment.body !== '[removed]'
+      )
       .map(comment => this.processRedditComment(comment));
 
     // console.log(`✅ Fetched ${comments.length} comments for post ${postId}`);
@@ -162,7 +188,7 @@ export class RedditScraper {
   async getSubredditInfo(subreddit: string): Promise<any> {
     const endpoint = `/r/${subreddit}/about`;
     // console.log(`ℹ️ Fetching info for r/${subreddit}`);
-    
+
     const response: RedditResponse<any> = await this.makeRequest(endpoint);
     return response.data;
   }
@@ -170,23 +196,32 @@ export class RedditScraper {
   /**
    * Search posts across Reddit
    */
-  async searchPosts(query: string, options: Partial<RedditFetchOptions> = {}): Promise<ProcessedRedditPost[]> {
-    const { subreddit, sort = 'relevance', time = 'week', limit = 25 } = options;
-    
+  async searchPosts(
+    query: string,
+    options: Partial<RedditFetchOptions> = {}
+  ): Promise<ProcessedRedditPost[]> {
+    const {
+      subreddit,
+      sort = 'relevance',
+      time = 'week',
+      limit = 25,
+    } = options;
+
     let endpoint = `/search?q=${encodeURIComponent(query)}&sort=${sort}&limit=${limit}`;
-    
+
     if (subreddit) {
       endpoint += `&restrict_sr=true&sr_name=${subreddit}`;
     }
-    
+
     if (time && sort === 'top') {
       endpoint += `&t=${time}`;
     }
 
     // console.log(`🔍 Searching for "${query}" (limit: ${limit})`);
 
-    const response: RedditResponse<RedditListing> = await this.makeRequest(endpoint);
-    
+    const response: RedditResponse<RedditListing> =
+      await this.makeRequest(endpoint);
+
     const posts = response.data.children
       .map(child => child.data as RedditPost)
       .map(post => this.processRedditPost(post));
@@ -215,7 +250,10 @@ export class RedditScraper {
       isNsfw: post.is_nsfw,
       imageUrl: this.extractImageUrl(post),
       videoUrl: this.extractVideoUrl(post),
-      thumbnailUrl: post.thumbnail && post.thumbnail.startsWith('http') ? post.thumbnail : undefined,
+      thumbnailUrl:
+        post.thumbnail && post.thumbnail.startsWith('http')
+          ? post.thumbnail
+          : undefined,
       flairText: post.link_flair_text || undefined,
       rawData: post,
     };
@@ -226,12 +264,18 @@ export class RedditScraper {
    */
   private processRedditComment(comment: RedditComment): ProcessedRedditComment {
     const replies: ProcessedRedditComment[] = [];
-    
+
     if (comment.replies && typeof comment.replies === 'object') {
-      replies.push(...comment.replies.data.children
-        .map(child => child.data as RedditComment)
-        .filter(reply => reply.body && reply.body !== '[deleted]' && reply.body !== '[removed]')
-        .map(reply => this.processRedditComment(reply))
+      replies.push(
+        ...comment.replies.data.children
+          .map(child => child.data as RedditComment)
+          .filter(
+            reply =>
+              reply.body &&
+              reply.body !== '[deleted]' &&
+              reply.body !== '[removed]'
+          )
+          .map(reply => this.processRedditComment(reply))
       );
     }
 
@@ -241,7 +285,9 @@ export class RedditScraper {
       author: comment.author,
       score: comment.score,
       depth: comment.depth,
-      parentId: comment.parent_id.startsWith('t1_') ? comment.parent_id.slice(3) : undefined,
+      parentId: comment.parent_id.startsWith('t1_')
+        ? comment.parent_id.slice(3)
+        : undefined,
       createdAt: new Date(comment.created_utc * 1000),
       isSubmitter: comment.is_submitter,
       replies,

@@ -21,30 +21,56 @@ console.log('✅ Controversial comments (specifically sought out)');
 
 const sampleRedditMedia = {
   images: [
-    { url: 'https://i.redd.it/abc123.jpg', type: 'primary', caption: 'Main post image' },
-    { url: 'https://i.redd.it/def456.jpg', type: 'gallery', width: 1920, height: 1080 },
-    { url: 'https://i.redd.it/ghi789.jpg', type: 'gallery', width: 1920, height: 1080 }
+    {
+      url: 'https://i.redd.it/abc123.jpg',
+      type: 'primary',
+      caption: 'Main post image',
+    },
+    {
+      url: 'https://i.redd.it/def456.jpg',
+      type: 'gallery',
+      width: 1920,
+      height: 1080,
+    },
+    {
+      url: 'https://i.redd.it/ghi789.jpg',
+      type: 'gallery',
+      width: 1920,
+      height: 1080,
+    },
   ],
   videos: [
-    { url: 'https://v.redd.it/xyz789/DASH_720.mp4', type: 'reddit_video', duration: 45000 }
+    {
+      url: 'https://v.redd.it/xyz789/DASH_720.mp4',
+      type: 'reddit_video',
+      duration: 45000,
+    },
   ],
-  gifs: [
-    { url: 'https://i.redd.it/funny.gif', type: 'gif' }
-  ],
+  gifs: [{ url: 'https://i.redd.it/funny.gif', type: 'gif' }],
   embedUrls: [
-    { url: 'https://youtube.com/watch?v=abc123', provider: 'YouTube', title: 'Viral Video' }
+    {
+      url: 'https://youtube.com/watch?v=abc123',
+      provider: 'YouTube',
+      title: 'Viral Video',
+    },
   ],
   externalLinks: [
-    { url: 'https://news.example.com/story', domain: 'news.example.com' }
-  ]
+    { url: 'https://news.example.com/story', domain: 'news.example.com' },
+  ],
 };
 
 console.log('\n📊 Sample Reddit Media Captured:');
-console.log(`   Images: ${sampleRedditMedia.images.length} (including ${sampleRedditMedia.images.filter(i => i.type === 'gallery').length} gallery images)`);
-console.log(`   Videos: ${sampleRedditMedia.videos.length} native Reddit videos`);
+console.log(
+  `   Images: ${sampleRedditMedia.images.length} (including ${sampleRedditMedia.images.filter(i => i.type === 'gallery').length} gallery images)`
+);
+console.log(
+  `   Videos: ${sampleRedditMedia.videos.length} native Reddit videos`
+);
 console.log(`   GIFs: ${sampleRedditMedia.gifs.length} animated GIFs`);
 console.log(`   Embeds: ${sampleRedditMedia.embedUrls.length} external embeds`);
-console.log(`   Links: ${sampleRedditMedia.externalLinks.length} external links`);
+console.log(
+  `   Links: ${sampleRedditMedia.externalLinks.length} external links`
+);
 
 console.log('\n🐦 ENHANCED TWITTER SCRAPER CAPABILITIES:');
 console.log('✅ Thread detection and sequential tweet capture');
@@ -62,23 +88,32 @@ const sampleTwitterThread = {
   tweets: [
     {
       id: '1234567890',
-      content: '🧵 THREAD: Here\'s what really happened...',
+      content: "🧵 THREAD: Here's what really happened...",
       likes: 12543,
       retweets: 3421,
       replies: 542,
       media: [
-        { type: 'photo', url: 'https://pbs.twimg.com/media/abc.jpg', width: 1200, height: 800 }
-      ]
+        {
+          type: 'photo',
+          url: 'https://pbs.twimg.com/media/abc.jpg',
+          width: 1200,
+          height: 800,
+        },
+      ],
     },
     {
       id: '1234567891',
-      content: 'The company\'s response was... not great.',
+      content: "The company's response was... not great.",
       likes: 8234,
       retweets: 2134,
       replies: 234,
       media: [
-        { type: 'video', url: 'https://video.twimg.com/xyz.mp4', duration: 30000 }
-      ]
+        {
+          type: 'video',
+          url: 'https://video.twimg.com/xyz.mp4',
+          duration: 30000,
+        },
+      ],
     },
     {
       id: '1234567892',
@@ -87,20 +122,33 @@ const sampleTwitterThread = {
       retweets: 4532,
       replies: 876,
       media: [
-        { type: 'animated_gif', url: 'https://pbs.twimg.com/tweet_video/reaction.mp4' }
-      ]
-    }
+        {
+          type: 'animated_gif',
+          url: 'https://pbs.twimg.com/tweet_video/reaction.mp4',
+        },
+      ],
+    },
   ],
-  totalEngagement: 50000
+  totalEngagement: 50000,
 };
 
 console.log('\n📊 Sample Twitter Thread Captured:');
 console.log(`   Tweets: ${sampleTwitterThread.tweets.length} in sequence`);
-console.log(`   Total Engagement: ${sampleTwitterThread.totalEngagement.toLocaleString()}`);
-console.log(`   Media Items: ${sampleTwitterThread.tweets.reduce((sum, t) => sum + t.media.length, 0)}`);
-console.log(`   - Photos: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'photo')).length}`);
-console.log(`   - Videos: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'video')).length}`);
-console.log(`   - GIFs: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'animated_gif')).length}`);
+console.log(
+  `   Total Engagement: ${sampleTwitterThread.totalEngagement.toLocaleString()}`
+);
+console.log(
+  `   Media Items: ${sampleTwitterThread.tweets.reduce((sum, t) => sum + t.media.length, 0)}`
+);
+console.log(
+  `   - Photos: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'photo')).length}`
+);
+console.log(
+  `   - Videos: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'video')).length}`
+);
+console.log(
+  `   - GIFs: ${sampleTwitterThread.tweets.filter(t => t.media.some(m => m.type === 'animated_gif')).length}`
+);
 
 const sampleTwitterDrama = {
   type: 'drama',
@@ -112,7 +160,7 @@ const sampleTwitterDrama = {
       likes: 34567,
       retweets: 8901,
       quotes: 234,
-      media: []
+      media: [],
     },
     {
       author: '@challenger',
@@ -121,26 +169,30 @@ const sampleTwitterDrama = {
       retweets: 2345,
       quotes: 45,
       media: [
-        { type: 'photo', url: 'https://pbs.twimg.com/media/receipts.jpg' }
-      ]
+        { type: 'photo', url: 'https://pbs.twimg.com/media/receipts.jpg' },
+      ],
     },
     {
       author: '@originaluser',
-      content: 'I read it. Multiple times. It\'s even worse in context.',
+      content: "I read it. Multiple times. It's even worse in context.",
       likes: 45678,
       retweets: 12345,
       quotes: 567,
-      media: []
-    }
+      media: [],
+    },
   ],
-  totalEngagement: 95000
+  totalEngagement: 95000,
 };
 
 console.log('\n🥊 Sample Twitter Drama Captured:');
 console.log(`   Participants: ${sampleTwitterDrama.participants.length}`);
 console.log(`   Messages: ${sampleTwitterDrama.conversation.length}`);
-console.log(`   Total Engagement: ${sampleTwitterDrama.totalEngagement.toLocaleString()}`);
-console.log(`   Media Evidence: ${sampleTwitterDrama.conversation.reduce((sum, t) => sum + t.media.length, 0)} items`);
+console.log(
+  `   Total Engagement: ${sampleTwitterDrama.totalEngagement.toLocaleString()}`
+);
+console.log(
+  `   Media Evidence: ${sampleTwitterDrama.conversation.reduce((sum, t) => sum + t.media.length, 0)} items`
+);
 
 console.log('\n🔄 HOW IT WORKS:');
 console.log('1. Scripts analyze URLs to determine Reddit vs Twitter');

@@ -1,11 +1,15 @@
 /**
  * OpenAI GPT Adapter for Pipeline Integration
- * 
+ *
  * Bridges the existing GPTSummariser with the pipeline architecture.
  * Handles story generation, summarization, and content enhancement.
  */
 
-import { gptSummariser, GPTSummariser, SummarizationResult } from '@/lib/gptSummariser';
+import {
+  gptSummariser,
+  GPTSummariser,
+  SummarizationResult,
+} from '@/lib/gptSummariser';
 import { ProcessedRedditPost, ProcessedRedditComment } from '@/types/reddit';
 import { RedditStoryContext, AIStoryContext } from '../core/PipelineContext';
 
@@ -70,7 +74,9 @@ export class OpenAIAdapter {
       // Transform the result into story sections
       const sections = this.parseIntoSections(result);
 
-      console.log(`✅ Generated story with ${sections.length} sections (${result.metadata.wordCount} words)`);
+      console.log(
+        `✅ Generated story with ${sections.length} sections (${result.metadata.wordCount} words)`
+      );
 
       return {
         title: result.title,
@@ -116,16 +122,12 @@ export class OpenAIAdapter {
         rawData: context.source.rawData,
       };
 
-      const result = await this.summariser.summarizePost(
-        mockPost,
-        [],
-        {
-          personaId: options.personaId,
-          temperature: options.temperature || 0.8, // Higher creativity for AI stories
-          maxTokens: options.maxTokens || 3000,
-          validateOutput: options.validateOutput !== false,
-        }
-      );
+      const result = await this.summariser.summarizePost(mockPost, [], {
+        personaId: options.personaId,
+        temperature: options.temperature || 0.8, // Higher creativity for AI stories
+        maxTokens: options.maxTokens || 3000,
+        validateOutput: options.validateOutput !== false,
+      });
 
       const sections = this.parseIntoSections(result);
 
@@ -152,7 +154,10 @@ export class OpenAIAdapter {
    */
   async generateQuiz(
     post: ProcessedRedditPost,
-    options: { difficulty?: 'easy' | 'medium' | 'hard'; questionCount?: number } = {}
+    options: {
+      difficulty?: 'easy' | 'medium' | 'hard';
+      questionCount?: number;
+    } = {}
   ) {
     try {
       const quiz = await this.summariser.generateQuiz(post, options);
@@ -172,7 +177,9 @@ export class OpenAIAdapter {
     const content = result.content;
 
     // Split content by double newlines or markdown headers
-    const parts = content.split(/\n\n+|(?=^#{1,3}\s)/m).filter(part => part.trim());
+    const parts = content
+      .split(/\n\n+|(?=^#{1,3}\s)/m)
+      .filter(part => part.trim());
 
     for (const part of parts) {
       const section = this.identifySection(part);
@@ -201,7 +208,7 @@ export class OpenAIAdapter {
     // Remove markdown headers
     const cleanContent = content.replace(/^#{1,3}\s+/, '');
     const words = cleanContent.split(/\s+/).filter(w => w.length > 0);
-    
+
     if (words.length < 10) return null; // Skip very short sections
 
     // Identify section type based on content patterns
@@ -210,16 +217,32 @@ export class OpenAIAdapter {
 
     const lowerContent = cleanContent.toLowerCase();
 
-    if (lowerContent.includes('began') || lowerContent.includes('started') || words.length < 50) {
+    if (
+      lowerContent.includes('began') ||
+      lowerContent.includes('started') ||
+      words.length < 50
+    ) {
       type = 'intro';
       title = 'The Setup';
-    } else if (lowerContent.includes('reddit') || lowerContent.includes('comment') || lowerContent.includes('replied')) {
+    } else if (
+      lowerContent.includes('reddit') ||
+      lowerContent.includes('comment') ||
+      lowerContent.includes('replied')
+    ) {
       type = 'discussion';
       title = 'The Internet Reacts';
-    } else if (lowerContent.includes('terry') || lowerContent.includes('honestly') || lowerContent.includes('let me tell you')) {
+    } else if (
+      lowerContent.includes('terry') ||
+      lowerContent.includes('honestly') ||
+      lowerContent.includes('let me tell you')
+    ) {
       type = 'commentary';
       title = "The Terry's Take";
-    } else if (lowerContent.includes('ended') || lowerContent.includes('finally') || lowerContent.includes('conclusion')) {
+    } else if (
+      lowerContent.includes('ended') ||
+      lowerContent.includes('finally') ||
+      lowerContent.includes('conclusion')
+    ) {
       type = 'outro';
       title = 'The Aftermath';
     }
@@ -254,7 +277,7 @@ export class OpenAIAdapter {
     // Process in batches to respect rate limits
     for (let i = 0; i < items.length; i += concurrency) {
       const batch = items.slice(i, i + concurrency);
-      
+
       const batchPromises = batch.map(({ context, comments, options }) => {
         if (context instanceof RedditStoryContext) {
           return this.generateRedditStory(context, comments || [], options);
@@ -264,7 +287,7 @@ export class OpenAIAdapter {
       });
 
       const batchResults = await Promise.allSettled(batchPromises);
-      
+
       for (const result of batchResults) {
         if (result.status === 'fulfilled') {
           results.push(result.value);

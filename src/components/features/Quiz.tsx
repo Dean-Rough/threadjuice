@@ -55,26 +55,6 @@ export default function Quiz({
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(false);
 
-  // Generate quiz questions based on category/content
-  useEffect(() => {
-    if (autoGenerate) {
-      generateQuiz();
-    }
-  }, [category, autoGenerate, generateQuiz]);
-
-  // Timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (timerActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft(time => time - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      handleNextQuestion();
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, timeLeft, handleNextQuestion]);
-
   const generateQuiz = useCallback(() => {
     setIsLoading(true);
 
@@ -89,6 +69,13 @@ export default function Quiz({
       setIsLoading(false);
     }, 1000);
   }, [category]);
+
+  // Generate quiz questions based on category/content
+  useEffect(() => {
+    if (autoGenerate) {
+      generateQuiz();
+    }
+  }, [category, autoGenerate, generateQuiz]);
 
   const startQuiz = () => {
     setQuizStarted(true);
@@ -139,6 +126,19 @@ export default function Quiz({
     setTimerActive(false);
     setResult(null);
   };
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timerActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(time => time - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      handleNextQuestion();
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timeLeft, handleNextQuestion]);
 
   if (isLoading) {
     return (

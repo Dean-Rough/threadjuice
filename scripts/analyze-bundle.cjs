@@ -25,24 +25,30 @@ const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 console.log('📦 Key Dependencies Analysis:');
 console.log(`- Next.js: ${packageJson.dependencies?.next || 'Not found'}`);
 console.log(`- React: ${packageJson.dependencies?.react || 'Not found'}`);
-console.log(`- React Query: ${packageJson.dependencies?.['@tanstack/react-query'] || 'Not found'}`);
-console.log(`- Lucide React: ${packageJson.dependencies?.['lucide-react'] || 'Not found'}\n`);
+console.log(
+  `- React Query: ${packageJson.dependencies?.['@tanstack/react-query'] || 'Not found'}`
+);
+console.log(
+  `- Lucide React: ${packageJson.dependencies?.['lucide-react'] || 'Not found'}\n`
+);
 
 // Check for heavy dependencies
 const heavyDeps = [
   '@sentry/nextjs',
-  '@clerk/nextjs', 
+  '@clerk/nextjs',
   'framer-motion',
   'three',
   'chart.js',
   'moment',
-  'lodash'
+  'lodash',
 ];
 
 console.log('⚠️  Heavy Dependencies Found:');
 heavyDeps.forEach(dep => {
   if (packageJson.dependencies?.[dep] || packageJson.devDependencies?.[dep]) {
-    console.log(`- ${dep}: ${packageJson.dependencies?.[dep] || packageJson.devDependencies?.[dep]}`);
+    console.log(
+      `- ${dep}: ${packageJson.dependencies?.[dep] || packageJson.devDependencies?.[dep]}`
+    );
   }
 });
 
@@ -58,7 +64,9 @@ if (fs.existsSync(buildInfoPath)) {
 
 console.log('\n🚀 Performance Recommendations:');
 console.log('1. Update @tanstack/react-query to v5 for better performance');
-console.log('2. Consider code splitting for large components (SimplePostDetail.tsx)');
+console.log(
+  '2. Consider code splitting for large components (SimplePostDetail.tsx)'
+);
 console.log('3. Implement proper image optimization with responsive sizes');
 console.log('4. Add React.memo() to frequently re-rendering components');
 console.log('5. Use dynamic imports for heavy features');

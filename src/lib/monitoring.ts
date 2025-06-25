@@ -22,28 +22,30 @@ export function initSentry() {
         environment: VERCEL_ENV || ENVIRONMENT,
         release: APP_VERSION,
         tracesSampleRate: ENVIRONMENT === 'production' ? 0.1 : 1.0,
-        integrations: [
-          browserTracingIntegration(),
-        ],
+        integrations: [browserTracingIntegration()],
         beforeSend(event, hint) {
           // Filter out non-critical errors
           if (event.exception) {
             const error = hint.originalException;
             if (error instanceof Error) {
               // Skip network errors
-              if (error.message.includes('NetworkError') || 
-                  error.message.includes('fetch')) {
+              if (
+                error.message.includes('NetworkError') ||
+                error.message.includes('fetch')
+              ) {
                 return null;
               }
-              
+
               // Skip third-party script errors
-              if (error.stack?.includes('extension://') || 
-                  error.stack?.includes('moz-extension://')) {
+              if (
+                error.stack?.includes('extension://') ||
+                error.stack?.includes('moz-extension://')
+              ) {
                 return null;
               }
             }
           }
-          
+
           return event;
         },
       });
@@ -57,7 +59,7 @@ export function initSentry() {
 export function trackServerError(error: Error, context?: Record<string, any>) {
   if (SENTRY_DSN) {
     import('@sentry/nextjs').then(({ captureException, withScope }) => {
-      withScope((scope) => {
+      withScope(scope => {
         scope.setLevel('error');
         scope.setContext('server_context', {
           environment: ENVIRONMENT,
@@ -68,7 +70,7 @@ export function trackServerError(error: Error, context?: Record<string, any>) {
       });
     });
   }
-  
+
   // Also log to console in development
   if (ENVIRONMENT === 'development') {
     console.error('Server Error:', error, context);
@@ -87,7 +89,7 @@ export interface PerformanceMetric {
 
 class PerformanceTracker {
   private metrics: PerformanceMetric[] = [];
-  
+
   track(name: string, value: number, metadata?: Record<string, any>) {
     const metric: PerformanceMetric = {
       name,
@@ -95,20 +97,20 @@ class PerformanceTracker {
       timestamp: Date.now(),
       metadata,
     };
-    
+
     this.metrics.push(metric);
-    
+
     // Send to monitoring service
     this.sendMetric(metric);
   }
-  
+
   private async sendMetric(metric: PerformanceMetric) {
     try {
       // Send to Vercel Analytics
       if (typeof window !== 'undefined' && (window as any).va) {
         (window as any).va('track', metric.name, { value: metric.value });
       }
-      
+
       // Send to custom analytics endpoint
       await fetch('/api/analytics/performance', {
         method: 'POST',
@@ -120,11 +122,11 @@ class PerformanceTracker {
       console.debug('Failed to send performance metric:', error);
     }
   }
-  
+
   getMetrics(): PerformanceMetric[] {
     return [...this.metrics];
   }
-  
+
   clearMetrics() {
     this.metrics = [];
   }
@@ -135,7 +137,9 @@ export const performanceTracker = new PerformanceTracker();
 /**
  * API endpoint monitoring middleware
  */
-export function withMonitoring<T extends (...args: any[]) => Promise<NextResponse>>(
+export function withMonitoring<
+  T extends (...args: any[]) => Promise<NextResponse>,
+>(
   handler: T,
   options: {
     name: string;
@@ -145,20 +149,17 @@ export function withMonitoring<T extends (...args: any[]) => Promise<NextRespons
   return (async (...args: any[]) => {
     const startTime = Date.now();
     const request = args[0] as NextRequest;
-    
+
     try {
       // Set timeout
       const timeoutMs = options.timeout || 30000;
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Request timeout')), timeoutMs);
       });
-      
+
       // Execute handler with timeout
-      const response = await Promise.race([
-        handler(...args),
-        timeoutPromise,
-      ]);
-      
+      const response = await Promise.race([handler(...args), timeoutPromise]);
+
       // Track successful request
       const duration = Date.now() - startTime;
       performanceTracker.track(`api.${options.name}.duration`, duration, {
@@ -166,26 +167,27 @@ export function withMonitoring<T extends (...args: any[]) => Promise<NextRespons
         status: response.status,
         url: request.url,
       });
-      
+
       return response;
     } catch (error) {
       // Track error
       const duration = Date.now() - startTime;
-      const errorToTrack = error instanceof Error ? error : new Error(String(error));
-      
+      const errorToTrack =
+        error instanceof Error ? error : new Error(String(error));
+
       trackServerError(errorToTrack, {
         endpoint: options.name,
         method: request.method,
         url: request.url,
         duration,
       });
-      
+
       performanceTracker.track(`api.${options.name}.error`, 1, {
         method: request.method,
         error: errorToTrack.message,
         url: request.url,
       });
-      
+
       // Return error response
       return NextResponse.json(
         { error: 'Internal server error' },
@@ -221,7 +223,7 @@ export interface HealthCheck {
 export async function generateHealthCheck(): Promise<HealthCheck> {
   const startTime = Date.now();
   const checks: HealthCheck['checks'] = {};
-  
+
   // Check database connection
   try {
     // This would check your actual database
@@ -232,37 +234,37 @@ export async function generateHealthCheck(): Promise<HealthCheck> {
     checks.database = 'unhealthy';
     trackServerError(error as Error, { check: 'database' });
   }
-  
+
   // Check external APIs
   try {
     // Check critical external services
     const responses = await Promise.allSettled([
-      fetch('https://oauth.reddit.com/api/v1/me', { 
+      fetch('https://oauth.reddit.com/api/v1/me', {
         method: 'HEAD',
-        headers: { 'User-Agent': 'ThreadJuice/1.0' }
+        headers: { 'User-Agent': 'ThreadJuice/1.0' },
       }),
     ]);
-    
-    const allHealthy = responses.every(result => 
-      result.status === 'fulfilled' && result.value.ok
+
+    const allHealthy = responses.every(
+      result => result.status === 'fulfilled' && result.value.ok
     );
-    
+
     checks.external_apis = allHealthy ? 'healthy' : 'unhealthy';
   } catch (error) {
     checks.external_apis = 'unhealthy';
     trackServerError(error as Error, { check: 'external_apis' });
   }
-  
+
   // Calculate overall status
   const allChecks = Object.values(checks);
   const hasUnhealthy = allChecks.includes('unhealthy');
   const hasDegraded = false; // No longer using degraded status
-  
+
   let status: HealthCheck['status'] = 'healthy';
   if (hasUnhealthy) status = 'unhealthy';
-  
+
   const responseTime = Date.now() - startTime;
-  
+
   return {
     status,
     timestamp: Date.now(),
@@ -293,7 +295,7 @@ export function logEvent(
     version: APP_VERSION,
     ...metadata,
   };
-  
+
   if (ENVIRONMENT === 'production') {
     // Send to external logging service
     // console.log(JSON.stringify(logData));
@@ -315,7 +317,7 @@ export function trackCustomEvent(
     if ((window as any).va) {
       (window as any).va('track', event, properties);
     }
-    
+
     // Custom analytics
     fetch('/api/analytics/custom', {
       method: 'POST',
@@ -343,30 +345,30 @@ export function monitorDatabaseQuery<T>(
   queryFn: () => Promise<T>
 ): Promise<T> {
   const startTime = Date.now();
-  
+
   return queryFn()
     .then(result => {
       const duration = Date.now() - startTime;
       performanceTracker.track(`db.${queryName}.duration`, duration);
-      
+
       if (duration > 1000) {
         logEvent('warn', `Slow database query: ${queryName}`, {
           duration,
           query: queryName,
         });
       }
-      
+
       return result;
     })
     .catch(error => {
       const duration = Date.now() - startTime;
       performanceTracker.track(`db.${queryName}.error`, 1);
-      
+
       trackServerError(error, {
         query: queryName,
         duration,
       });
-      
+
       throw error;
     });
 }
@@ -377,17 +379,17 @@ export function monitorDatabaseQuery<T>(
 export function initializeMonitoring() {
   // Initialize Sentry
   initSentry();
-  
+
   // Set up global error handlers
   if (typeof window !== 'undefined') {
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       trackServerError(new Error(event.reason), {
         type: 'unhandledrejection',
         reason: event.reason,
       });
     });
-    
-    window.addEventListener('error', (event) => {
+
+    window.addEventListener('error', event => {
       trackServerError(event.error || new Error(event.message), {
         type: 'javascript_error',
         filename: event.filename,
@@ -396,7 +398,7 @@ export function initializeMonitoring() {
       });
     });
   }
-  
+
   // Log initialization
   logEvent('info', 'Monitoring initialized', {
     environment: ENVIRONMENT,

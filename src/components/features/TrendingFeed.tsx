@@ -40,7 +40,6 @@ export default function TrendingFeed({
     isLoading,
     error,
     isError,
-    isPending,
   } = usePosts({
     category: category || (activeFilter !== 'all' ? activeFilter : undefined),
     author,
@@ -51,7 +50,7 @@ export default function TrendingFeed({
 
   // Get the posts data from the API response
   const posts = postsResponse?.posts || [];
-  const currentLoading = isLoading || isPending;
+  const currentLoading = isLoading;
 
   // Add personas and engagement data to posts if not present
   const postsWithMetadata = posts.map(post => {
@@ -163,7 +162,10 @@ export default function TrendingFeed({
                 <div className='featured-post-thumb'>
                   <Link href={`/posts/${filteredPosts[0].id}`}>
                     <Image
-                      src={filteredPosts[0].imageUrl || '/assets/img/lifestyle/life_style01.jpg'}
+                      src={
+                        filteredPosts[0].imageUrl ||
+                        '/assets/img/lifestyle/life_style01.jpg'
+                      }
                       alt={filteredPosts[0].title}
                       width={800}
                       height={400}
@@ -250,7 +252,10 @@ export default function TrendingFeed({
                       <div className='post-thumb relative'>
                         <Link href={`/posts/${post.id}`}>
                           <Image
-                            src={post.imageUrl || '/assets/img/lifestyle/life_style01.jpg'}
+                            src={
+                              post.imageUrl ||
+                              '/assets/img/lifestyle/life_style01.jpg'
+                            }
                             alt={post.title}
                             width={320}
                             height={192}
@@ -311,8 +316,8 @@ export default function TrendingFeed({
                   </div>
                 ) : (
                   // Vertical layout for grid/masonry view
-                  <div 
-                    className='h-full overflow-hidden rounded-lg shadow-sm relative'
+                  <div
+                    className='relative h-full overflow-hidden rounded-lg shadow-sm'
                     style={{
                       backgroundImage: `url(${post.imageUrl || '/assets/img/lifestyle/life_style01.jpg'})`,
                       backgroundSize: 'cover',
@@ -320,10 +325,10 @@ export default function TrendingFeed({
                     }}
                   >
                     {/* Dark overlay for readability */}
-                    <div className='absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 rounded-lg' />
-                    
+                    <div className='absolute inset-0 rounded-lg bg-gradient-to-b from-black/40 via-black/60 to-black/80' />
+
                     {/* Content */}
-                    <div className='relative h-full flex flex-col'>
+                    <div className='relative flex h-full flex-col'>
                       {post.trending && (
                         <div className='trending-badge absolute right-2 top-2 z-10'>
                           <span className='rounded bg-yellow-500 px-2 py-1 text-sm font-medium text-black'>
@@ -331,21 +336,21 @@ export default function TrendingFeed({
                           </span>
                         </div>
                       )}
-                      
-                      <div className='flex-1 flex flex-col justify-end p-4'>
+
+                      <div className='flex flex-1 flex-col justify-end p-4'>
                         <div className='category mb-2'>
                           <Link
                             href={`/category/${post.category.toLowerCase()}`}
-                            className='text-orange-400 hover:text-orange-300 text-sm font-medium'
+                            className='text-sm font-medium text-orange-400 hover:text-orange-300'
                           >
                             {getCategoryEmoji(post.category)} {post.category}
                           </Link>
                         </div>
-                        
+
                         <h5 className='post-title mb-2 font-bold text-white hover:text-orange-300'>
                           <Link href={`/posts/${post.id}`}>{post.title}</Link>
                         </h5>
-                        
+
                         <div className='meta-info mb-3'>
                           <span className='author text-sm text-gray-300'>
                             By{' '}
@@ -357,7 +362,7 @@ export default function TrendingFeed({
                             </Link>
                           </span>
                         </div>
-                        
+
                         <div className='engagement-stats flex space-x-4 text-sm text-gray-300'>
                           <span className='flex items-center'>
                             <Eye size={14} className='mr-1' />

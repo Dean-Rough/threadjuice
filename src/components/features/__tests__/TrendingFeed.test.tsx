@@ -49,8 +49,10 @@ jest.mock('@/data/personas', () => ({
 
 // Mock lucide-react icons
 jest.mock('lucide-react', () => {
-  const mockIcon = (props: any) => <div data-testid={props['data-testid'] || 'mock-icon'} />;
-  
+  const mockIcon = (props: any) => (
+    <div data-testid={props['data-testid'] || 'mock-icon'} />
+  );
+
   return {
     Flame: mockIcon,
     Eye: mockIcon,
@@ -183,16 +185,18 @@ describe('TrendingFeed', () => {
     // Check for filter buttons in the filter bar specifically
     const filterBar = document.querySelector('.filter-buttons');
     expect(filterBar).toBeInTheDocument();
-    
+
     // Check for specific category buttons within the filter bar
     const allButton = screen.getByRole('button', { name: /All/i });
     expect(allButton).toBeInTheDocument();
-    
+
     // For 'viral', we need to be more specific since "Load More Viral Content" also matches
     const viralButtons = screen.getAllByRole('button', { name: /viral/i });
-    const viralFilterButton = viralButtons.find(btn => btn.classList.contains('mb-2'));
+    const viralFilterButton = viralButtons.find(btn =>
+      btn.classList.contains('mb-2')
+    );
     expect(viralFilterButton).toBeInTheDocument();
-    
+
     expect(screen.getByRole('button', { name: /gaming/i })).toBeInTheDocument();
   });
 
@@ -224,7 +228,7 @@ describe('TrendingFeed', () => {
     // Check that engagement stats exist rather than specific values
     const engagementStats = document.querySelectorAll('.engagement-stats');
     expect(engagementStats.length).toBeGreaterThan(0);
-    
+
     // Check for k-formatted views (e.g., "6.2k")
     const viewsPattern = /\d+\.\d+k/;
     const allText = document.body.textContent || '';

@@ -1,12 +1,16 @@
 /**
  * Source Stage
- * 
+ *
  * Responsible for acquiring content from various sources.
  * Normalizes different source formats into a common structure.
  */
 
 import { BasePipelineStage } from '../core/PipelineStage';
-import { PipelineContext, RedditStoryContext, AIStoryContext } from '../core/PipelineContext';
+import {
+  PipelineContext,
+  RedditStoryContext,
+  AIStoryContext,
+} from '../core/PipelineContext';
 import { redditAdapter } from '../integrations';
 import { twitterAdapter } from '../integrations';
 import { ProcessedRedditPost } from '@/types/reddit';
@@ -53,18 +57,24 @@ export class SourceStage extends BasePipelineStage {
     }
   }
 
-  private async fetchRedditContent(context: PipelineContext): Promise<PipelineContext> {
+  private async fetchRedditContent(
+    context: PipelineContext
+  ): Promise<PipelineContext> {
     if (!this.options.reddit) {
       throw new Error('Reddit options not provided');
     }
 
-    const { subreddit, sort = 'hot', limit = 10, minScore = 100 } = this.options.reddit;
+    const {
+      subreddit,
+      sort = 'hot',
+      limit = 10,
+      minScore = 100,
+    } = this.options.reddit;
 
     try {
       // Fetch posts from Reddit using adapter
-      const posts = await this.timeOperation(
-        'Fetch Reddit posts',
-        () => redditAdapter.fetchPosts({
+      const posts = await this.timeOperation('Fetch Reddit posts', () =>
+        redditAdapter.fetchPosts({
           subreddit,
           sort,
           limit,
@@ -78,29 +88,33 @@ export class SourceStage extends BasePipelineStage {
 
       // Select the best post using adapter's intelligent selection
       const selectedPost = redditAdapter.selectBestPost(posts);
-      
+
       if (!selectedPost) {
         throw new Error('No suitable post found');
       }
-      
+
       // Create Reddit-specific context
       const redditContext = new RedditStoryContext(selectedPost);
-      
+
       // Copy over any existing pipeline metadata
       redditContext.pipeline = context.pipeline;
 
-      this.log(`Selected post: "${selectedPost.title}" (score: ${selectedPost.score})`);
-      
-      return redditContext;
+      this.log(
+        `Selected post: "${selectedPost.title}" (score: ${selectedPost.score})`
+      );
 
+      return redditContext;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`Failed to fetch Reddit content: ${errorMessage}`);
       throw error;
     }
   }
 
-  private async fetchTwitterContent(context: PipelineContext): Promise<PipelineContext> {
+  private async fetchTwitterContent(
+    context: PipelineContext
+  ): Promise<PipelineContext> {
     if (!this.options.twitter) {
       throw new Error('Twitter options not provided');
     }
@@ -114,9 +128,8 @@ export class SourceStage extends BasePipelineStage {
       }
 
       // Fetch dramatic Twitter content
-      const threads = await this.timeOperation(
-        'Fetch Twitter drama',
-        () => twitterAdapter.fetchDramaticContent({
+      const threads = await this.timeOperation('Fetch Twitter drama', () =>
+        twitterAdapter.fetchDramaticContent({
           query,
           maxResults,
           minDramaScore: 60,
@@ -158,17 +171,22 @@ export class SourceStage extends BasePipelineStage {
       // Copy pipeline metadata
       twitterContext.pipeline = context.pipeline;
 
-      this.log(`Selected Twitter thread from @${selectedThread.author.username} (drama score: ${selectedThread.dramaScore})`);
+      this.log(
+        `Selected Twitter thread from @${selectedThread.author.username} (drama score: ${selectedThread.dramaScore})`
+      );
 
       return twitterContext;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       this.log(`Failed to fetch Twitter content: ${errorMessage}`);
       throw error;
     }
   }
 
-  private async generateAIContent(context: PipelineContext): Promise<PipelineContext> {
+  private async generateAIContent(
+    context: PipelineContext
+  ): Promise<PipelineContext> {
     if (!this.options.ai) {
       throw new Error('AI options not provided');
     }
@@ -186,10 +204,9 @@ export class SourceStage extends BasePipelineStage {
     aiContext.pipeline = context.pipeline;
 
     this.log(`Prepared AI generation for ${category} with ${persona}`);
-    
+
     return aiContext;
   }
-
 
   async validate(context: PipelineContext): Promise<boolean> {
     // Validate that we have the required source configuration
@@ -214,7 +231,10 @@ export class SourceStage extends BasePipelineStage {
 /**
  * Factory functions for common source configurations
  */
-export const RedditSource = (subreddit: string, options?: Partial<SourceOptions['reddit']>) => 
+export const RedditSource = (
+  subreddit: string,
+  options?: Partial<SourceOptions['reddit']>
+) =>
   new SourceStage({
     type: 'reddit',
     reddit: {
@@ -223,7 +243,10 @@ export const RedditSource = (subreddit: string, options?: Partial<SourceOptions[
     },
   });
 
-export const TwitterSource = (query: string, options?: Partial<SourceOptions['twitter']>) =>
+export const TwitterSource = (
+  query: string,
+  options?: Partial<SourceOptions['twitter']>
+) =>
   new SourceStage({
     type: 'twitter',
     twitter: {

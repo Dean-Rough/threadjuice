@@ -12,7 +12,7 @@ export class TwitterScraper {
     this.nitterInstances = [
       'https://nitter.net',
       'https://nitter.kavin.rocks',
-      'https://nitter.poast.org'
+      'https://nitter.poast.org',
     ];
     this.currentInstance = 0;
   }
@@ -22,16 +22,20 @@ export class TwitterScraper {
    */
   async getWorkingInstance() {
     for (let i = 0; i < this.nitterInstances.length; i++) {
-      const instance = this.nitterInstances[(this.currentInstance + i) % this.nitterInstances.length];
+      const instance =
+        this.nitterInstances[
+          (this.currentInstance + i) % this.nitterInstances.length
+        ];
       try {
-        const response = await fetch(instance, { 
+        const response = await fetch(instance, {
           timeout: 5000,
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)'
-          }
+            'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)',
+          },
         });
         if (response.ok) {
-          this.currentInstance = (this.currentInstance + i) % this.nitterInstances.length;
+          this.currentInstance =
+            (this.currentInstance + i) % this.nitterInstances.length;
           return instance;
         }
       } catch (error) {
@@ -45,10 +49,7 @@ export class TwitterScraper {
    * Search tweets using Nitter
    */
   async searchTweets(query, options = {}) {
-    const {
-      limit = 10,
-      includeReplies = false
-    } = options;
+    const { limit = 10, includeReplies = false } = options;
 
     try {
       const instance = await this.getWorkingInstance();
@@ -56,13 +57,13 @@ export class TwitterScraper {
       const params = new URLSearchParams({
         q: query,
         f: 'tweets', // tweets only, not users
-        s: 'relevance'
+        s: 'relevance',
       });
 
       const response = await fetch(`${searchUrl}?${params}`, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)'
-        }
+          'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)',
+        },
       });
 
       if (!response.ok) {
@@ -94,15 +95,20 @@ export class TwitterScraper {
       const content = $tweet.find('.tweet-content').text().trim();
       const timestamp = $tweet.find('.tweet-date a').attr('title');
       const tweetUrl = $tweet.find('.tweet-date a').attr('href');
-      
+
       // Extract engagement metrics
-      const replies = parseInt($tweet.find('.icon-comment').parent().text().trim()) || 0;
-      const retweets = parseInt($tweet.find('.icon-retweet').parent().text().trim()) || 0;
-      const likes = parseInt($tweet.find('.icon-heart').parent().text().trim()) || 0;
+      const replies =
+        parseInt($tweet.find('.icon-comment').parent().text().trim()) || 0;
+      const retweets =
+        parseInt($tweet.find('.icon-retweet').parent().text().trim()) || 0;
+      const likes =
+        parseInt($tweet.find('.icon-heart').parent().text().trim()) || 0;
 
       if (content) {
         tweets.push({
-          id: tweetUrl ? tweetUrl.split('/').pop() : `mock-${Date.now()}-${index}`,
+          id: tweetUrl
+            ? tweetUrl.split('/').pop()
+            : `mock-${Date.now()}-${index}`,
           username: username.replace('@', ''),
           fullname,
           content,
@@ -110,7 +116,7 @@ export class TwitterScraper {
           url: tweetUrl ? `https://twitter.com${tweetUrl}` : null,
           replies,
           retweets,
-          likes
+          likes,
         });
       }
     });
@@ -135,8 +141,8 @@ export class TwitterScraper {
 
       const response = await fetch(nitterUrl, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)'
-        }
+          'User-Agent': 'Mozilla/5.0 (compatible; ThreadJuice/1.0)',
+        },
       });
 
       if (!response.ok) {
@@ -145,7 +151,7 @@ export class TwitterScraper {
 
       const html = await response.text();
       const $ = cheerio.load(html);
-      
+
       const replies = [];
       $('.reply').each((index, element) => {
         if (replies.length >= limit) return false;
@@ -153,13 +159,14 @@ export class TwitterScraper {
         const $reply = $(element);
         const replyUsername = $reply.find('.username').text().trim();
         const replyContent = $reply.find('.tweet-content').text().trim();
-        const replyLikes = parseInt($reply.find('.icon-heart').parent().text().trim()) || 0;
+        const replyLikes =
+          parseInt($reply.find('.icon-heart').parent().text().trim()) || 0;
 
         if (replyContent) {
           replies.push({
             username: replyUsername.replace('@', ''),
             content: replyContent,
-            likes: replyLikes
+            likes: replyLikes,
           });
         }
       });
@@ -177,7 +184,7 @@ export class TwitterScraper {
   async getFormattedTweets(query, category = 'general') {
     try {
       const tweets = await this.searchTweets(query, { limit: 5 });
-      
+
       if (tweets.length === 0) {
         return this.getMockTweets(query);
       }
@@ -191,7 +198,7 @@ export class TwitterScraper {
         retweets: tweet.retweets,
         replies: tweet.replies,
         verified: tweet.likes > 1000, // Mock verification for popular tweets
-        url: tweet.url
+        url: tweet.url,
       }));
     } catch (error) {
       console.error('Error getting formatted tweets:', error);
@@ -206,38 +213,41 @@ export class TwitterScraper {
     // Use real tweet IDs that will embed properly
     const realTweetExamples = [
       {
-        content: "This whole situation is absolutely wild. Thread incoming... 🧵",
-        author: "@dramaalert",
-        handle: "dramaalert",
+        content:
+          'This whole situation is absolutely wild. Thread incoming... 🧵',
+        author: '@dramaalert',
+        handle: 'dramaalert',
         likes: 45234,
         retweets: 12453,
         replies: 3421,
         verified: true,
-        tweetId: "1729518298544296585",
-        url: "https://twitter.com/dramaalert/status/1729518298544296585"
+        tweetId: '1729518298544296585',
+        url: 'https://twitter.com/dramaalert/status/1729518298544296585',
       },
       {
-        content: "I can't believe what just happened. The internet is about to explode.",
-        author: "@breaking_viral",
-        handle: "breaking_viral",
+        content:
+          "I can't believe what just happened. The internet is about to explode.",
+        author: '@breaking_viral',
+        handle: 'breaking_viral',
         likes: 23456,
         retweets: 5678,
         replies: 1234,
         verified: true,
-        tweetId: "1726712398934966419",
-        url: "https://twitter.com/breaking_viral/status/1726712398934966419"
+        tweetId: '1726712398934966419',
+        url: 'https://twitter.com/breaking_viral/status/1726712398934966419',
       },
       {
-        content: "Update: It got worse. So much worse. Check the replies for screenshots.",
-        author: "@internetdrama",
-        handle: "internetdrama",
+        content:
+          'Update: It got worse. So much worse. Check the replies for screenshots.',
+        author: '@internetdrama',
+        handle: 'internetdrama',
         likes: 34567,
         retweets: 8901,
         replies: 2345,
         verified: false,
-        tweetId: "1728156037351649280",
-        url: "https://twitter.com/internetdrama/status/1728156037351649280"
-      }
+        tweetId: '1728156037351649280',
+        url: 'https://twitter.com/internetdrama/status/1728156037351649280',
+      },
     ];
 
     return realTweetExamples.slice(0, 3);
@@ -249,20 +259,20 @@ export class TwitterScraper {
   getMockReplies() {
     return [
       {
-        username: "shocked_viewer",
-        content: "I literally cannot process what I just read. This is insane.",
-        likes: 1234
+        username: 'shocked_viewer',
+        content: 'I literally cannot process what I just read. This is insane.',
+        likes: 1234,
       },
       {
-        username: "tea_spiller",
-        content: "The way I RAN here after seeing this on my timeline 💀",
-        likes: 2345
+        username: 'tea_spiller',
+        content: 'The way I RAN here after seeing this on my timeline 💀',
+        likes: 2345,
       },
       {
-        username: "drama_lover",
-        content: "Bestie really woke up and chose violence today",
-        likes: 3456
-      }
+        username: 'drama_lover',
+        content: 'Bestie really woke up and chose violence today',
+        likes: 3456,
+      },
     ];
   }
 }

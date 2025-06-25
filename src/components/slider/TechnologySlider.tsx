@@ -37,7 +37,7 @@ export default function TechnologySlider() {
                     alt={item.title || 'Technology post image'}
                     width={800}
                     height={500}
-                    className="w-full h-auto object-cover"
+                    className='h-auto w-full object-cover'
                   />
                 </Link>
               </div>

@@ -34,7 +34,10 @@ export default function SidebarAd({
       {/* Primary Vertical Ad */}
       <div className='mb-6'>
         <AdSenseUnit
-          adSlot={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_SIDEBAR_SLOT_1 || '1234567891'}
+          adSlot={
+            process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_SIDEBAR_SLOT_1 ||
+            '1234567891'
+          }
           adFormat='vertical'
           responsive={true}
           lazy={true}
@@ -49,7 +52,10 @@ export default function SidebarAd({
       {/* Secondary Square Ad */}
       <div className='mb-6'>
         <AdSenseUnit
-          adSlot={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_SIDEBAR_SLOT_2 || '1234567892'}
+          adSlot={
+            process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_SIDEBAR_SLOT_2 ||
+            '1234567892'
+          }
           adFormat='rectangle'
           responsive={true}
           lazy={true}

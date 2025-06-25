@@ -26,14 +26,15 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
               // Retry up to 3 times for other errors
               return failureCount < 3;
             },
-            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+            retryDelay: attemptIndex =>
+              Math.min(1000 * 2 ** attemptIndex, 30000),
             refetchOnWindowFocus: false, // Disable refetch on window focus in development
             refetchOnReconnect: true, // Refetch when network reconnects
           },
           mutations: {
             // Global defaults for all mutations
             retry: 1,
-            onError: (error) => {
+            onError: error => {
               console.error('Mutation error:', error);
               // You could integrate with a toast library here
             },

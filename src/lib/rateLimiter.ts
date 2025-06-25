@@ -58,11 +58,12 @@ export class RateLimiter {
 
     // Check if we've exceeded rate limit
     if (this.tracker.requestCount >= this.tracker.maxRequests) {
-      const waitTime = this.tracker.windowDuration - (now - this.tracker.windowStart);
+      const waitTime =
+        this.tracker.windowDuration - (now - this.tracker.windowStart);
       if (waitTime > 0) {
         // console.log(`Rate limit exceeded. Waiting ${waitTime}ms`);
         await this.delay(waitTime);
-        
+
         // Reset after waiting
         this.tracker.windowStart = Date.now();
         this.tracker.requestCount = 0;
@@ -94,7 +95,7 @@ export class RateLimiter {
       if (this.isRateLimitError(error)) {
         const delay = this.calculateBackoffDelay(retryCount);
         // console.log(`Rate limit error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
-        
+
         await this.delay(delay);
         return this.executeWithBackoff(requestFn, retryCount + 1);
       }
@@ -103,7 +104,7 @@ export class RateLimiter {
       if (this.isTemporaryError(error)) {
         const delay = this.calculateBackoffDelay(retryCount);
         // console.log(`Temporary error. Retrying in ${delay}ms (attempt ${retryCount + 1}/${this.config.maxRetries})`);
-        
+
         await this.delay(delay);
         return this.executeWithBackoff(requestFn, retryCount + 1);
       }
@@ -117,7 +118,9 @@ export class RateLimiter {
    * Calculate exponential backoff delay
    */
   private calculateBackoffDelay(retryCount: number): number {
-    const delay = this.config.baseDelay * Math.pow(this.config.backoffMultiplier, retryCount);
+    const delay =
+      this.config.baseDelay *
+      Math.pow(this.config.backoffMultiplier, retryCount);
     return Math.min(delay, this.config.maxDelay);
   }
 
@@ -143,7 +146,10 @@ export class RateLimiter {
 
     // HTTP status codes that should be retried
     const retryableStatusCodes = [500, 502, 503, 504];
-    if (error?.response?.status && retryableStatusCodes.includes(error.response.status)) {
+    if (
+      error?.response?.status &&
+      retryableStatusCodes.includes(error.response.status)
+    ) {
       return true;
     }
     if (error?.status && retryableStatusCodes.includes(error.status)) {
@@ -169,10 +175,16 @@ export class RateLimiter {
     lastRequestTime: number;
   } {
     const now = Date.now();
-    const windowTimeRemaining = Math.max(0, this.tracker.windowDuration - (now - this.tracker.windowStart));
-    
+    const windowTimeRemaining = Math.max(
+      0,
+      this.tracker.windowDuration - (now - this.tracker.windowStart)
+    );
+
     return {
-      requestsRemaining: Math.max(0, this.tracker.maxRequests - this.tracker.requestCount),
+      requestsRemaining: Math.max(
+        0,
+        this.tracker.maxRequests - this.tracker.requestCount
+      ),
       windowTimeRemaining,
       lastRequestTime: this.tracker.lastRequest,
     };

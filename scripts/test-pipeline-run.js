@@ -28,13 +28,13 @@ const TEST_CONFIG = {
     enableImages: true,
     enableGifs: true,
     maxImagesPerStory: 3,
-    maxGifsPerStory: 2
+    maxGifsPerStory: 2,
   },
   analysis: {
     enableSentiment: true,
     enableEntities: true,
-    enableKeywords: true
-  }
+    enableKeywords: true,
+  },
 };
 
 // Logger utility
@@ -46,7 +46,9 @@ const logger = {
     }
   },
   error: (stage, message, error) => {
-    console.error(`\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`);
+    console.error(
+      `\n[${new Date().toISOString()}] [${stage}] ERROR: ${message}`
+    );
     if (error) {
       console.error(error.message);
       if (error.stack) {
@@ -56,7 +58,7 @@ const logger = {
   },
   divider: () => {
     console.log('\n' + '='.repeat(80) + '\n');
-  }
+  },
 };
 
 async function ensureOutputDirectory() {
@@ -91,12 +93,12 @@ async function testPipeline() {
     // Stage 1: Source Acquisition
     logger.divider();
     logger.info('SOURCE', `Fetching posts from r/${TEST_CONFIG.subreddit}...`);
-    
+
     const redditPosts = await pipeline.source.fetchPosts({
       subreddit: TEST_CONFIG.subreddit,
       limit: TEST_CONFIG.postLimit,
       timeFilter: 'week',
-      sortBy: 'hot'
+      sortBy: 'hot',
     });
 
     if (!redditPosts || redditPosts.length === 0) {
@@ -105,7 +107,7 @@ async function testPipeline() {
 
     logger.info('SOURCE', `Fetched ${redditPosts.length} post(s)`);
     const post = redditPosts[0];
-    
+
     logger.info('SOURCE', 'Post details:', {
       id: post.id,
       title: post.title,
@@ -113,7 +115,7 @@ async function testPipeline() {
       score: post.score,
       num_comments: post.num_comments,
       created_utc: new Date(post.created_utc * 1000).toISOString(),
-      contentLength: post.selftext?.length || 0
+      contentLength: post.selftext?.length || 0,
     });
 
     await saveOutput('1-source-reddit-post.json', post);
@@ -127,17 +129,27 @@ async function testPipeline() {
     // Extract entities
     if (TEST_CONFIG.analysis.enableEntities) {
       logger.info('ANALYSIS', 'Extracting entities...');
-      const entities = await pipeline.analysis.extractEntities(post.selftext || post.title);
+      const entities = await pipeline.analysis.extractEntities(
+        post.selftext || post.title
+      );
       analysisResults.entities = entities;
-      logger.info('ANALYSIS', `Found ${entities.length} entities:`, 
-        entities.map(e => ({ text: e.text, type: e.type, salience: e.salience }))
+      logger.info(
+        'ANALYSIS',
+        `Found ${entities.length} entities:`,
+        entities.map(e => ({
+          text: e.text,
+          type: e.type,
+          salience: e.salience,
+        }))
       );
     }
 
     // Analyze sentiment
     if (TEST_CONFIG.analysis.enableSentiment) {
       logger.info('ANALYSIS', 'Analyzing sentiment...');
-      const sentiment = await pipeline.analysis.analyzeSentiment(post.selftext || post.title);
+      const sentiment = await pipeline.analysis.analyzeSentiment(
+        post.selftext || post.title
+      );
       analysisResults.sentiment = sentiment;
       logger.info('ANALYSIS', 'Sentiment analysis:', sentiment);
     }
@@ -145,7 +157,9 @@ async function testPipeline() {
     // Extract keywords
     if (TEST_CONFIG.analysis.enableKeywords) {
       logger.info('ANALYSIS', 'Extracting keywords...');
-      const keywords = await pipeline.analysis.extractKeywords(post.selftext || post.title);
+      const keywords = await pipeline.analysis.extractKeywords(
+        post.selftext || post.title
+      );
       analysisResults.keywords = keywords;
       logger.info('ANALYSIS', `Found ${keywords.length} keywords:`, keywords);
     }
@@ -158,25 +172,30 @@ async function testPipeline() {
 
     const enrichmentResults = {
       images: [],
-      gifs: []
+      gifs: [],
     };
 
     // Search for relevant images
-    if (TEST_CONFIG.enrichment.enableImages && analysisResults.keywords?.length > 0) {
+    if (
+      TEST_CONFIG.enrichment.enableImages &&
+      analysisResults.keywords?.length > 0
+    ) {
       logger.info('ENRICHMENT', 'Searching for images...');
       const searchQuery = analysisResults.keywords.slice(0, 3).join(' ');
-      
+
       try {
         const images = await pipeline.enrichment.searchImages(
           searchQuery,
           TEST_CONFIG.enrichment.maxImagesPerStory
         );
         enrichmentResults.images = images;
-        logger.info('ENRICHMENT', `Found ${images.length} images:`, 
-          images.map(img => ({ 
-            description: img.description, 
+        logger.info(
+          'ENRICHMENT',
+          `Found ${images.length} images:`,
+          images.map(img => ({
+            description: img.description,
             url: img.urls?.regular,
-            photographer: img.user?.name 
+            photographer: img.user?.name,
           }))
         );
       } catch (error) {
@@ -187,21 +206,27 @@ async function testPipeline() {
     // Search for relevant GIFs
     if (TEST_CONFIG.enrichment.enableGifs) {
       logger.info('ENRICHMENT', 'Searching for GIFs...');
-      
+
       // Determine reaction type based on sentiment
-      const reactionType = analysisResults.sentiment?.score > 0.3 ? 'happy' : 
-                          analysisResults.sentiment?.score < -0.3 ? 'angry' : 'surprised';
-      
+      const reactionType =
+        analysisResults.sentiment?.score > 0.3
+          ? 'happy'
+          : analysisResults.sentiment?.score < -0.3
+            ? 'angry'
+            : 'surprised';
+
       try {
         const gifs = await pipeline.enrichment.searchGifs(
           reactionType,
           TEST_CONFIG.enrichment.maxGifsPerStory
         );
         enrichmentResults.gifs = gifs;
-        logger.info('ENRICHMENT', `Found ${gifs.length} GIFs:`, 
-          gifs.map(gif => ({ 
-            title: gif.title, 
-            url: gif.images?.fixed_height?.url 
+        logger.info(
+          'ENRICHMENT',
+          `Found ${gifs.length} GIFs:`,
+          gifs.map(gif => ({
+            title: gif.title,
+            url: gif.images?.fixed_height?.url,
           }))
         );
       } catch (error) {
@@ -222,8 +247,8 @@ async function testPipeline() {
       enrichment: enrichmentResults,
       metadata: {
         pipeline_version: '1.0.0',
-        processed_at: new Date().toISOString()
-      }
+        processed_at: new Date().toISOString(),
+      },
     });
 
     logger.info('TRANSFORM', 'Story transformed:', {
@@ -236,7 +261,7 @@ async function testPipeline() {
       hasImages: transformedStory.images?.length > 0,
       hasGifs: transformedStory.gifs?.length > 0,
       sentiment: transformedStory.sentiment,
-      engagementScore: transformedStory.engagement_score
+      engagementScore: transformedStory.engagement_score,
     });
 
     await saveOutput('4-transformed-story.json', transformedStory);
@@ -249,13 +274,13 @@ async function testPipeline() {
       const savedStory = await pipeline.output.save(transformedStory);
       logger.info('OUTPUT', 'Story saved to database:', {
         id: savedStory.id,
-        created_at: savedStory.created_at
+        created_at: savedStory.created_at,
       });
       await saveOutput('5-saved-story.json', savedStory);
     } catch (error) {
       logger.error('OUTPUT', 'Failed to save to database', error);
       logger.info('OUTPUT', 'Falling back to file output...');
-      
+
       const filename = `story-${transformedStory.slug}-${Date.now()}.json`;
       await saveOutput(filename, transformedStory);
     }
@@ -268,11 +293,16 @@ async function testPipeline() {
       subreddit: TEST_CONFIG.subreddit,
       postId: post.id,
       title: post.title,
-      stagesCompleted: ['source', 'analysis', 'enrichment', 'transform', 'output'],
-      outputDirectory: OUTPUT_DIR
+      stagesCompleted: [
+        'source',
+        'analysis',
+        'enrichment',
+        'transform',
+        'output',
+      ],
+      outputDirectory: OUTPUT_DIR,
     });
     logger.divider();
-
   } catch (error) {
     logger.error('PIPELINE', 'Pipeline execution failed', error);
     process.exit(1);

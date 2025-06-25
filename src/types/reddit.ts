@@ -201,7 +201,15 @@ export interface RedditFetchOptions {
 // Reddit scraper options for fetching comments
 export interface RedditCommentsOptions {
   postId: string;
-  sort?: 'confidence' | 'top' | 'new' | 'controversial' | 'old' | 'random' | 'qa' | 'live';
+  sort?:
+    | 'confidence'
+    | 'top'
+    | 'new'
+    | 'controversial'
+    | 'old'
+    | 'random'
+    | 'qa'
+    | 'live';
   limit?: number;
   depth?: number;
 }

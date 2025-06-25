@@ -23,13 +23,13 @@ export class TikTokExtractor implements IPlatformExtractor {
     try {
       const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
       const response = await fetch(oembedUrl);
-      
+
       if (!response.ok) {
         throw new Error(`TikTok oEmbed error: ${response.status}`);
       }
 
       const data = await response.json();
-      
+
       // Extract video ID from URL
       const videoIdMatch = url.match(/video\/(\d+)/);
       const videoId = videoIdMatch ? videoIdMatch[1] : null;
@@ -44,7 +44,7 @@ export class TikTokExtractor implements IPlatformExtractor {
         title: data.title,
         author: data.author_name,
         platform: 'TikTok',
-        confidence: 0.9 // High confidence since it's a direct URL
+        confidence: 0.9, // High confidence since it's a direct URL
       };
     } catch (error) {
       console.error('TikTok oEmbed failed:', error);
@@ -55,39 +55,44 @@ export class TikTokExtractor implements IPlatformExtractor {
   /**
    * Mock search for development and demo
    */
-  private async mockSearch(query: string, context: string): Promise<MediaEmbed> {
+  private async mockSearch(
+    query: string,
+    context: string
+  ): Promise<MediaEmbed> {
     const mockVideos = {
       dance: {
         id: '7318335390845095173',
         url: 'https://www.tiktok.com/@username/video/7318335390845095173',
         title: 'Viral Dance Challenge',
-        author: 'DanceCreator'
+        author: 'DanceCreator',
       },
       reaction: {
         id: '7318335390845095174',
         url: 'https://www.tiktok.com/@reactor/video/7318335390845095174',
         title: 'Reacting to Drama - Part 1',
-        author: 'DramaReactor'
+        author: 'DramaReactor',
       },
       storytime: {
         id: '7318335390845095175',
         url: 'https://www.tiktok.com/@storyteller/video/7318335390845095175',
         title: 'STORYTIME: What Really Happened',
-        author: 'StoryTeller'
+        author: 'StoryTeller',
       },
       apology: {
         id: '7318335390845095176',
         url: 'https://www.tiktok.com/@influencer/video/7318335390845095176',
         title: 'Addressing the Situation...',
-        author: 'InfluencerName'
-      }
+        author: 'InfluencerName',
+      },
     };
 
     // Select based on context
     let selected = mockVideos.storytime;
     if (context.toLowerCase().includes('dance')) selected = mockVideos.dance;
-    else if (context.toLowerCase().includes('reaction')) selected = mockVideos.reaction;
-    else if (context.toLowerCase().includes('apology')) selected = mockVideos.apology;
+    else if (context.toLowerCase().includes('reaction'))
+      selected = mockVideos.reaction;
+    else if (context.toLowerCase().includes('apology'))
+      selected = mockVideos.apology;
 
     // Build embed HTML (simplified version)
     const embedHtml = `
@@ -109,7 +114,7 @@ export class TikTokExtractor implements IPlatformExtractor {
       title: selected.title,
       author: selected.author,
       platform: 'TikTok',
-      confidence: 0.7
+      confidence: 0.7,
     };
   }
 

@@ -17,7 +17,12 @@ export interface ContentQualityMetrics {
 }
 
 export interface ImprovementSuggestion {
-  category: 'readability' | 'engagement' | 'narrative' | 'originality' | 'terry_voice';
+  category:
+    | 'readability'
+    | 'engagement'
+    | 'narrative'
+    | 'originality'
+    | 'terry_voice';
   issue: string;
   suggestion: string;
   priority: 'high' | 'medium' | 'low';
@@ -41,27 +46,27 @@ export interface ContentAnalysisInput {
 
 export class ContentQualityChecker {
   private readonly QUALITY_THRESHOLDS = {
-    publishing: 0.70, // Minimum threshold to publish
-    premium: 0.85,    // Excellence tier
-    rewrite: 0.70     // Below this = needs rewrite
+    publishing: 0.7, // Minimum threshold to publish
+    premium: 0.85, // Excellence tier
+    rewrite: 0.7, // Below this = needs rewrite
   };
 
   private readonly LENGTH_LIMITS = {
     premium: {
       minSections: 3,
       maxSections: 12,
-      avgSectionLength: 800
+      avgSectionLength: 800,
     },
     standard: {
       minSections: 3,
       maxSections: 8,
-      avgSectionLength: 500
+      avgSectionLength: 500,
     },
     basic: {
       minSections: 2,
       maxSections: 6,
-      avgSectionLength: 300
-    }
+      avgSectionLength: 300,
+    },
   };
 
   /**
@@ -75,13 +80,12 @@ export class ContentQualityChecker {
     const socialProofScore = this.assessSocialProof(input.socialMetrics);
 
     // Weighted overall quality score
-    const overallQuality = (
+    const overallQuality =
       readabilityScore * 0.25 +
       engagementPotential * 0.3 +
       narrativeStructure * 0.2 +
       originalityScore * 0.15 +
-      socialProofScore * 0.1
-    );
+      socialProofScore * 0.1;
 
     const qualityTier = this.determineQualityTier(overallQuality);
     const recommendedAction = this.determineRecommendedAction(
@@ -90,16 +94,20 @@ export class ContentQualityChecker {
       input.sections?.length || 0
     );
 
-    const improvementSuggestions = this.generateImprovementSuggestions({
-      readabilityScore,
-      engagementPotential,
-      narrativeStructure,
-      originalityScore,
-      socialProofScore,
-      overallQuality
-    }, input);
+    const improvementSuggestions = this.generateImprovementSuggestions(
+      {
+        readabilityScore,
+        engagementPotential,
+        narrativeStructure,
+        originalityScore,
+        socialProofScore,
+        overallQuality,
+      },
+      input
+    );
 
-    const passesPublishingThreshold = overallQuality >= this.QUALITY_THRESHOLDS.publishing;
+    const passesPublishingThreshold =
+      overallQuality >= this.QUALITY_THRESHOLDS.publishing;
 
     return {
       readabilityScore,
@@ -111,7 +119,7 @@ export class ContentQualityChecker {
       recommendedAction,
       qualityTier,
       improvementSuggestions,
-      passesPublishingThreshold
+      passesPublishingThreshold,
     };
   }
 
@@ -120,8 +128,10 @@ export class ContentQualityChecker {
    */
   shouldAllowExtendedLength(input: ContentAnalysisInput): boolean {
     const quality = this.analyzeContent(input);
-    return quality.qualityTier === 'premium' || 
-           (quality.qualityTier === 'standard' && quality.overallQuality > 0.65);
+    return (
+      quality.qualityTier === 'premium' ||
+      (quality.qualityTier === 'standard' && quality.overallQuality > 0.65)
+    );
   }
 
   /**
@@ -140,7 +150,7 @@ export class ContentQualityChecker {
 
     return {
       ...limits,
-      recommendedSections
+      recommendedSections,
     };
   }
 
@@ -152,8 +162,10 @@ export class ContentQualityChecker {
 
     // Sentence length analysis
     const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    const avgSentenceLength = sentences.reduce((acc, s) => acc + s.split(' ').length, 0) / sentences.length;
-    
+    const avgSentenceLength =
+      sentences.reduce((acc, s) => acc + s.split(' ').length, 0) /
+      sentences.length;
+
     // Optimal sentence length is 15-20 words
     if (avgSentenceLength >= 15 && avgSentenceLength <= 20) {
       score += 0.3;
@@ -165,8 +177,9 @@ export class ContentQualityChecker {
 
     // Paragraph structure
     const paragraphs = content.split('\n\n').filter(p => p.trim().length > 0);
-    const avgParagraphLength = paragraphs.reduce((acc, p) => acc + p.length, 0) / paragraphs.length;
-    
+    const avgParagraphLength =
+      paragraphs.reduce((acc, p) => acc + p.length, 0) / paragraphs.length;
+
     // Good paragraph length: 100-300 characters
     if (avgParagraphLength >= 100 && avgParagraphLength <= 300) {
       score += 0.25;
@@ -184,13 +197,24 @@ export class ContentQualityChecker {
 
     // Content flow indicators
     const transitionWords = [
-      'however', 'meanwhile', 'furthermore', 'additionally', 'consequently',
-      'therefore', 'nevertheless', 'ultimately', 'initially', 'subsequently'
+      'however',
+      'meanwhile',
+      'furthermore',
+      'additionally',
+      'consequently',
+      'therefore',
+      'nevertheless',
+      'ultimately',
+      'initially',
+      'subsequently',
     ];
     const transitionCount = transitionWords.reduce((count, word) => {
-      return count + (content.toLowerCase().match(new RegExp(word, 'g')) || []).length;
+      return (
+        count +
+        (content.toLowerCase().match(new RegExp(word, 'g')) || []).length
+      );
     }, 0);
-    
+
     if (transitionCount >= 3) {
       score += 0.25;
     } else if (transitionCount >= 1) {
@@ -208,21 +232,48 @@ export class ContentQualityChecker {
 
     // Emotional hooks in title
     const emotionalKeywords = [
-      'shocking', 'unbelievable', 'hilarious', 'devastating', 'outrageous',
-      'genius', 'epic', 'disaster', 'perfect', 'insane', 'brilliant',
-      'discovers', 'mandatory', 'literally', 'artisanal', 'spends'
+      'shocking',
+      'unbelievable',
+      'hilarious',
+      'devastating',
+      'outrageous',
+      'genius',
+      'epic',
+      'disaster',
+      'perfect',
+      'insane',
+      'brilliant',
+      'discovers',
+      'mandatory',
+      'literally',
+      'artisanal',
+      'spends',
     ];
     const titleLower = input.title.toLowerCase();
-    const emotionalWords = emotionalKeywords.filter(word => titleLower.includes(word));
+    const emotionalWords = emotionalKeywords.filter(word =>
+      titleLower.includes(word)
+    );
     score += Math.min(emotionalWords.length * 0.15, 0.3);
 
     // Controversy and drama indicators
     const controversyKeywords = [
-      'drama', 'controversy', 'war', 'battle', 'fight', 'clash', 'debate',
-      'outrage', 'backlash', 'scandal', 'meltdown', 'chaos'
+      'drama',
+      'controversy',
+      'war',
+      'battle',
+      'fight',
+      'clash',
+      'debate',
+      'outrage',
+      'backlash',
+      'scandal',
+      'meltdown',
+      'chaos',
     ];
-    const controversyWords = controversyKeywords.filter(word => 
-      input.title.toLowerCase().includes(word) || input.content.toLowerCase().includes(word)
+    const controversyWords = controversyKeywords.filter(
+      word =>
+        input.title.toLowerCase().includes(word) ||
+        input.content.toLowerCase().includes(word)
     );
     score += Math.min(controversyWords.length * 0.1, 0.25);
 
@@ -233,8 +284,13 @@ export class ContentQualityChecker {
 
     // Category engagement potential
     const highEngagementCategories = [
-      'Food Wars', 'Relationship Drama', 'Workplace Drama', 'Family Drama',
-      'Internet Drama', 'Celebrity Drama', 'Tech Drama'
+      'Food Wars',
+      'Relationship Drama',
+      'Workplace Drama',
+      'Family Drama',
+      'Internet Drama',
+      'Celebrity Drama',
+      'Tech Drama',
     ];
     if (highEngagementCategories.includes(input.category || '')) {
       score += 0.15;
@@ -258,7 +314,7 @@ export class ContentQualityChecker {
     // Section variety and structure
     if (input.sections && input.sections.length > 0) {
       const sectionTypes = new Set(input.sections.map(s => s.type));
-      
+
       // Good variety of section types
       if (sectionTypes.size >= 4) {
         score += 0.3;
@@ -267,8 +323,10 @@ export class ContentQualityChecker {
       }
 
       // Presence of key narrative elements
-      const hasQuotes = sectionTypes.has('quotes') || sectionTypes.has('twitter-quote');
-      const hasComments = sectionTypes.has('comments-1') || sectionTypes.has('comments-2');
+      const hasQuotes =
+        sectionTypes.has('quotes') || sectionTypes.has('twitter-quote');
+      const hasComments =
+        sectionTypes.has('comments-1') || sectionTypes.has('comments-2');
       const hasDiscussion = sectionTypes.has('discussion');
       const hasOutro = sectionTypes.has('outro');
 
@@ -278,10 +336,10 @@ export class ContentQualityChecker {
       if (hasOutro) score += 0.1;
 
       // Good section distribution
-      const descriptionSections = input.sections.filter(s => 
+      const descriptionSections = input.sections.filter(s =>
         s.type.startsWith('describe')
       ).length;
-      
+
       if (descriptionSections >= 2 && descriptionSections <= 4) {
         score += 0.2;
       }
@@ -298,30 +356,61 @@ export class ContentQualityChecker {
 
     // Personal commentary and analysis
     const commentaryIndicators = [
-      'The Terry', 'notes', 'observes', 'analysis', 'fascinating',
-      'properly', 'brilliant', 'mental', 'peak internet', 'honestly',
-      'literally', 'exactly', 'perfect', 'dystopian', 'absurd',
-      'artificial', 'reveals', 'phenomenon', 'suggests', 'fundamentally',
-      'accidentally', 'metaphor', 'camaraderie'
+      'The Terry',
+      'notes',
+      'observes',
+      'analysis',
+      'fascinating',
+      'properly',
+      'brilliant',
+      'mental',
+      'peak internet',
+      'honestly',
+      'literally',
+      'exactly',
+      'perfect',
+      'dystopian',
+      'absurd',
+      'artificial',
+      'reveals',
+      'phenomenon',
+      'suggests',
+      'fundamentally',
+      'accidentally',
+      'metaphor',
+      'camaraderie',
     ];
-    
+
     const commentaryCount = commentaryIndicators.reduce((count, phrase) => {
-      return count + (input.content.match(new RegExp(phrase, 'gi')) || []).length;
+      return (
+        count + (input.content.match(new RegExp(phrase, 'gi')) || []).length
+      );
     }, 0);
-    
+
     score += Math.min(commentaryCount * 0.1, 0.3);
 
     // Unique angle or perspective
     const perspectiveIndicators = [
-      'what really happened', 'the real story', 'here\'s what actually',
-      'the thing is', 'plot twist', 'turns out', 'the bigger picture',
-      'reveals something deeper', 'isn\'t just', 'that\'s not just'
+      'what really happened',
+      'the real story',
+      "here's what actually",
+      'the thing is',
+      'plot twist',
+      'turns out',
+      'the bigger picture',
+      'reveals something deeper',
+      "isn't just",
+      "that's not just",
     ];
-    
+
     const perspectiveCount = perspectiveIndicators.reduce((count, phrase) => {
-      return count + (input.content.toLowerCase().match(new RegExp(phrase, 'g')) || []).length;
+      return (
+        count +
+        (input.content.toLowerCase().match(new RegExp(phrase, 'g')) || [])
+          .length
+      );
     }, 0);
-    
+
     if (perspectiveCount > 0) {
       score += 0.2;
     }
@@ -332,7 +421,9 @@ export class ContentQualityChecker {
   /**
    * Assess social proof through metrics
    */
-  private assessSocialProof(metrics?: ContentAnalysisInput['socialMetrics']): number {
+  private assessSocialProof(
+    metrics?: ContentAnalysisInput['socialMetrics']
+  ): number {
     if (!metrics) return 0.3; // Base score for new content
 
     let score = 0;
@@ -344,21 +435,24 @@ export class ContentQualityChecker {
     else if (views > 500) score += 0.1;
 
     // Engagement rate calculation
-    const totalEngagement = (metrics.upvoteCount || 0) + 
-                           (metrics.commentCount || 0) + 
-                           (metrics.shareCount || 0) + 
-                           (metrics.bookmarkCount || 0);
-    
+    const totalEngagement =
+      (metrics.upvoteCount || 0) +
+      (metrics.commentCount || 0) +
+      (metrics.shareCount || 0) +
+      (metrics.bookmarkCount || 0);
+
     const engagementRate = views > 0 ? totalEngagement / views : 0;
-    
+
     if (engagementRate > 0.1) score += 0.3;
     else if (engagementRate > 0.05) score += 0.2;
     else if (engagementRate > 0.02) score += 0.1;
 
     // Share/bookmark ratio (indicates quality)
-    const shareBookmarkRatio = views > 0 ? 
-      ((metrics.shareCount || 0) + (metrics.bookmarkCount || 0)) / views : 0;
-    
+    const shareBookmarkRatio =
+      views > 0
+        ? ((metrics.shareCount || 0) + (metrics.bookmarkCount || 0)) / views
+        : 0;
+
     if (shareBookmarkRatio > 0.05) score += 0.2;
     else if (shareBookmarkRatio > 0.02) score += 0.1;
 
@@ -373,7 +467,9 @@ export class ContentQualityChecker {
   /**
    * Determine quality tier based on overall score
    */
-  private determineQualityTier(overallQuality: number): 'premium' | 'standard' | 'basic' {
+  private determineQualityTier(
+    overallQuality: number
+  ): 'premium' | 'standard' | 'basic' {
     if (overallQuality >= this.QUALITY_THRESHOLDS.premium) {
       return 'premium';
     } else if (overallQuality >= this.QUALITY_THRESHOLDS.publishing) {
@@ -387,8 +483,8 @@ export class ContentQualityChecker {
    * Determine recommended action for content
    */
   private determineRecommendedAction(
-    quality: number, 
-    contentLength: number, 
+    quality: number,
+    contentLength: number,
     sectionCount: number
   ): 'expand' | 'standard' | 'shorten' {
     if (quality >= 0.8 && sectionCount < 6) {
@@ -405,7 +501,7 @@ export class ContentQualityChecker {
    */
   private getRecommendedSectionTypes(quality: ContentQualityMetrics): string[] {
     const baseSections = ['describe-1', 'quotes', 'describe-2', 'outro'];
-    
+
     if (quality.qualityTier === 'premium') {
       return [
         ...baseSections,
@@ -413,14 +509,10 @@ export class ContentQualityChecker {
         'twitter-quote',
         'comments-1',
         'discussion',
-        'comments-2'
+        'comments-2',
       ];
     } else if (quality.qualityTier === 'standard') {
-      return [
-        ...baseSections,
-        'comments-1',
-        'discussion'
-      ];
+      return [...baseSections, 'comments-1', 'discussion'];
     } else {
       return baseSections;
     }
@@ -448,17 +540,19 @@ export class ContentQualityChecker {
         suggestions.push({
           category: 'readability',
           issue: 'Poor sentence structure and flow',
-          suggestion: 'Rewrite with shorter, punchier sentences (15-20 words). Add transition words like "meanwhile," "however," "ultimately" to improve flow. Break up long paragraphs.',
+          suggestion:
+            'Rewrite with shorter, punchier sentences (15-20 words). Add transition words like "meanwhile," "however," "ultimately" to improve flow. Break up long paragraphs.',
           priority: 'high',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       } else {
         suggestions.push({
           category: 'readability',
           issue: 'Text flow could be smoother',
-          suggestion: 'Add more transition words between paragraphs. Vary sentence length for better rhythm. Aim for 100-300 character paragraphs.',
+          suggestion:
+            'Add more transition words between paragraphs. Vary sentence length for better rhythm. Aim for 100-300 character paragraphs.',
           priority: 'medium',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       }
     }
@@ -469,17 +563,19 @@ export class ContentQualityChecker {
         suggestions.push({
           category: 'engagement',
           issue: 'Low viral potential and emotional hooks',
-          suggestion: 'Add emotional keywords like "shocking," "unbelievable," "genius," "disaster." Include more controversy and drama. Build tension around character flaws and social dynamics.',
+          suggestion:
+            'Add emotional keywords like "shocking," "unbelievable," "genius," "disaster." Include more controversy and drama. Build tension around character flaws and social dynamics.',
           priority: 'high',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       } else {
         suggestions.push({
           category: 'engagement',
           issue: 'Needs stronger emotional hooks',
-          suggestion: 'Amplify the drama and stakes. Add more specific details that reveal character motivations. Include social media context or broader cultural implications.',
+          suggestion:
+            'Amplify the drama and stakes. Add more specific details that reveal character motivations. Include social media context or broader cultural implications.',
           priority: 'medium',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       }
     }
@@ -487,17 +583,22 @@ export class ContentQualityChecker {
     // Narrative structure improvements
     if (scores.narrativeStructure < 0.75) {
       if (input.sections && input.sections.length > 0) {
-        const hasQuotes = input.sections.some(s => s.type === 'quotes' || s.type === 'twitter-quote');
-        const hasComments = input.sections.some(s => s.type.includes('comments'));
+        const hasQuotes = input.sections.some(
+          s => s.type === 'quotes' || s.type === 'twitter-quote'
+        );
+        const hasComments = input.sections.some(s =>
+          s.type.includes('comments')
+        );
         const hasDiscussion = input.sections.some(s => s.type === 'discussion');
 
         if (!hasQuotes) {
           suggestions.push({
             category: 'narrative',
             issue: 'Missing dramatic quotes or key moments',
-            suggestion: 'Add a powerful quote section that captures the peak moment of drama. Use quotation marks around the most shocking or revealing statement.',
+            suggestion:
+              'Add a powerful quote section that captures the peak moment of drama. Use quotation marks around the most shocking or revealing statement.',
             priority: 'high',
-            targetScore: 0.8
+            targetScore: 0.8,
           });
         }
 
@@ -505,9 +606,10 @@ export class ContentQualityChecker {
           suggestions.push({
             category: 'narrative',
             issue: 'Missing social proof and reactions',
-            suggestion: 'Add a comments or Twitter conversation section showing how people reacted. Include mix of outrage, support, and witty observations.',
+            suggestion:
+              'Add a comments or Twitter conversation section showing how people reacted. Include mix of outrage, support, and witty observations.',
             priority: 'medium',
-            targetScore: 0.8
+            targetScore: 0.8,
           });
         }
 
@@ -515,18 +617,20 @@ export class ContentQualityChecker {
           suggestions.push({
             category: 'narrative',
             issue: 'Needs deeper analysis section',
-            suggestion: 'Add a "bigger picture" discussion section that explores what this story reveals about society, human nature, or modern life.',
+            suggestion:
+              'Add a "bigger picture" discussion section that explores what this story reveals about society, human nature, or modern life.',
             priority: 'medium',
-            targetScore: 0.8
+            targetScore: 0.8,
           });
         }
       } else {
         suggestions.push({
           category: 'narrative',
           issue: 'Poor story structure',
-          suggestion: 'Restructure with clear sections: Setup → Drama Unfolds → Peak Moment (with quotes) → Social Reactions → Bigger Picture → Resolution.',
+          suggestion:
+            'Restructure with clear sections: Setup → Drama Unfolds → Peak Moment (with quotes) → Social Reactions → Bigger Picture → Resolution.',
           priority: 'high',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       }
     }
@@ -536,34 +640,46 @@ export class ContentQualityChecker {
       if (scores.originalityScore < 0.5) {
         suggestions.push({
           category: 'terry_voice',
-          issue: 'Missing Terry\'s signature cynical commentary',
-          suggestion: 'Add more Terry-style observations: "properly mental," "peak internet behavior," "dystopian," "artificial." Include sardonic takes on modern life and social dynamics.',
+          issue: "Missing Terry's signature cynical commentary",
+          suggestion:
+            'Add more Terry-style observations: "properly mental," "peak internet behavior," "dystopian," "artificial." Include sardonic takes on modern life and social dynamics.',
           priority: 'high',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       } else {
         suggestions.push({
           category: 'terry_voice',
           issue: 'Needs stronger unique perspective',
-          suggestion: 'Amplify Terry\'s voice with more specific observations about the absurdity. Add metaphors comparing the situation to broader social phenomena.',
+          suggestion:
+            "Amplify Terry's voice with more specific observations about the absurdity. Add metaphors comparing the situation to broader social phenomena.",
           priority: 'medium',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       }
 
       // Check for specific Terry voice indicators
-      const terryIndicators = ['The Terry', 'properly', 'mental', 'peak internet', 'dystopian', 'artificial'];
+      const terryIndicators = [
+        'The Terry',
+        'properly',
+        'mental',
+        'peak internet',
+        'dystopian',
+        'artificial',
+      ];
       const terryCount = terryIndicators.reduce((count, phrase) => {
-        return count + (input.content.match(new RegExp(phrase, 'gi')) || []).length;
+        return (
+          count + (input.content.match(new RegExp(phrase, 'gi')) || []).length
+        );
       }, 0);
 
       if (terryCount < 3) {
         suggestions.push({
           category: 'terry_voice',
           issue: 'Insufficient Terry personality markers',
-          suggestion: 'Include more Terry-specific phrases: "properly mental," "peak [something]," references to "artificial" behavior, "dystopian" elements. Make observations about social hierarchy and human absurdity.',
+          suggestion:
+            'Include more Terry-specific phrases: "properly mental," "peak [something]," references to "artificial" behavior, "dystopian" elements. Make observations about social hierarchy and human absurdity.',
           priority: 'high',
-          targetScore: 0.8
+          targetScore: 0.8,
         });
       }
     }
@@ -573,9 +689,10 @@ export class ContentQualityChecker {
       suggestions.push({
         category: 'originality',
         issue: `Overall quality too low (${Math.round(scores.overallQuality * 100)}%) for publishing`,
-        suggestion: 'Focus on the highest priority improvements above. Consider adding a dramatic revelation or plot twist. Ensure the story has clear stakes and consequences.',
+        suggestion:
+          'Focus on the highest priority improvements above. Consider adding a dramatic revelation or plot twist. Ensure the story has clear stakes and consequences.',
         priority: 'high',
-        targetScore: this.QUALITY_THRESHOLDS.publishing
+        targetScore: this.QUALITY_THRESHOLDS.publishing,
       });
     }
 

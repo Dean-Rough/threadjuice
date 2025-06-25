@@ -28,16 +28,19 @@ ThreadJuice is a modern viral content aggregator that curates and presents engag
 **Real Content Scraping** - No mock or simulated data anywhere
 
 ### Primary Scrapers
+
 - **Reddit Scraper** (`scripts/scraping/scrape-reddit-story.js`) - Direct API via .json endpoints
 - **Twitter Scraper** (`scripts/scraping/scrape-twitter-story.js`) - Twitter API v2 with bearer token
 
 ### Reddit Direct API (Primary Solution)
+
 - **Reddit**: Direct API access via .json endpoints - NO RATE LIMITS!
 - **Comprehensive media extraction**: Images, videos, galleries, embeds
 - **Rich comment data**: Top comments, controversial detection
 - **No dependencies**: Uses built-in fetch, no external services needed
 
 ### Apify Integration (Twitter Only)
+
 - **Twitter**: `scripts/apify/apify-twitter-scraper.js` using `quacker/twitter-scraper`
 - **Note**: Currently not functional - all Twitter scrapers returning 0 results
 - **See**: `docs/APIFY_INTEGRATION.md` for setup
@@ -91,27 +94,32 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxx
 ```
 
 ## NO MOCK OR SIMULATED DATA ANYWHERE
-**HARD RULE**: Never use mock, simulated, dummy, or placeholder data. All content must be real, production-ready material. No "simulate", "mock", or "fake" prefixes in data generation. 
+
+**HARD RULE**: Never use mock, simulated, dummy, or placeholder data. All content must be real, production-ready material. No "simulate", "mock", or "fake" prefixes in data generation.
 
 **CRITICAL**: Stories MUST be based on REAL Reddit/Twitter posts. If no real data is available, DO NOT generate a story. The system will throw an error rather than create AI-generated content.
 
 The `generate-story-unified.js` script now REQUIRES real Reddit data via direct API. No AI generation, no data = no story.
 
 ## Script Guidance
+
 - `generate-story-unified.js` is our MAIN content generation script - that is what we tweak to improve our story generation. DO NOT create new content generation scripts without instruction to do so
 
 ## Content Philosophy
+
 - REAL DATA ONLY: We scrape real viral content from Reddit/Twitter
 - NO AI STORIES: We transform real posts, not create fictional ones
 - AUTHENTICITY: Every story is based on actual viral internet content
 - TRANSFORMATION: We enhance real stories with multiple sections, not copy them directly
 
 ## Content Integrity Rules
+
 - NO FAKE DATA, NO MOCK DATA, NO EXCEPTIONS
 
 ## Current System Status (Dec 2024)
 
 ### ✅ WORKING
+
 - Reddit scraping via direct API (no rate limits!)
 - Story generation from real Reddit data
 - Rich media extraction (images, videos, galleries)
@@ -119,10 +127,12 @@ The `generate-story-unified.js` script now REQUIRES real Reddit data via direct 
 - Supabase database integration
 
 ### ❌ NOT WORKING
+
 - Twitter/X scraping via Apify (all actors returning 0 results or demo data)
 - Twitter API hitting rate limits (429 errors)
 - Comments occasionally showing from wrong story
 
 ### Known Issues & Next Steps
+
 - Twitter scrapers not functioning - need alternative solution
 - See `/handover.md` for detailed status and troubleshooting

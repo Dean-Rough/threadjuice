@@ -15,7 +15,7 @@ export function DebugPosts() {
   // console.log('DebugPosts:', { postsResponse, isLoading, error });
 
   if (isLoading) return <div>Loading debug posts...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <div>Error: {(error as Error).message || 'Unknown error'}</div>;
   if (!postsResponse) return <div>No posts response</div>;
 
   return (

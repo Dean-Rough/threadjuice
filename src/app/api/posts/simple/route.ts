@@ -30,7 +30,7 @@ export async function GET() {
   } catch (error) {
     console.error('Simple posts API error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch posts', details: error.message },
+      { error: 'Failed to fetch posts', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

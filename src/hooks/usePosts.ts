@@ -32,7 +32,7 @@ export const usePosts = (filters: PostFilters = {}) => {
     queryKey: postKeys.list(filters),
     queryFn: () => postService.getPosts(filters),
     staleTime: 2 * 60 * 1000, // 2 minutes - reasonable caching
-    gcTime: 10 * 60 * 1000, // 10 minutes - keep in memory longer
+    cacheTime: 10 * 60 * 1000, // 10 minutes - keep in memory longer
     refetchOnMount: false, // Only refetch if data is stale
     refetchOnWindowFocus: false, // Prevent excessive refetching
   });
@@ -189,7 +189,7 @@ export const usePrefetchPost = () => {
   return (id: string | number) => {
     queryClient.prefetchQuery({
       queryKey: postKeys.detail(id),
-      queryFn: () => postService.getPost(id),
+      queryFn: () => postService.getPost(String(id)),
       staleTime: 10 * 60 * 1000,
     });
   };

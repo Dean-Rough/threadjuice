@@ -7,7 +7,11 @@
  * Now uses the unified story generation system
  */
 
-import { generateStory, saveToDatabase, generateBulkStories } from './generate-story-unified.js';
+import {
+  generateStory,
+  saveToDatabase,
+  generateBulkStories,
+} from './generate-story-unified.js';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
@@ -22,8 +26,10 @@ async function importExistingJsonFiles() {
     console.log('📂 Scanning for existing story JSON files...');
 
     const files = await fs.readdir(process.cwd());
-    const storyFiles = files.filter(f => 
-      (f.includes('auto-generated-') || f.includes('generated-')) && f.endsWith('.json')
+    const storyFiles = files.filter(
+      f =>
+        (f.includes('auto-generated-') || f.includes('generated-')) &&
+        f.endsWith('.json')
     );
 
     console.log(`Found ${storyFiles.length} story files`);
@@ -34,7 +40,10 @@ async function importExistingJsonFiles() {
 
     for (const file of storyFiles) {
       try {
-        const content = await fs.readFile(path.join(process.cwd(), file), 'utf8');
+        const content = await fs.readFile(
+          path.join(process.cwd(), file),
+          'utf8'
+        );
         const story = JSON.parse(content);
 
         // Check if already exists
@@ -117,7 +126,7 @@ async function batchImport(options = {}) {
     console.log('\n' + '═'.repeat(50));
     console.log('📊 IMPORT SUMMARY');
     console.log('═'.repeat(50));
-    
+
     if (options.importExisting !== false) {
       console.log('\nExisting Files:');
       console.log(`  Total found: ${results.existing.total}`);
@@ -125,7 +134,7 @@ async function batchImport(options = {}) {
       console.log(`  Skipped: ${results.existing.skipped}`);
       console.log(`  Failed: ${results.existing.failed}`);
     }
-    
+
     if (options.generateCount > 0) {
       console.log('\nGenerated Stories:');
       console.log(`  Generated: ${results.generated.generated}`);
@@ -133,9 +142,9 @@ async function batchImport(options = {}) {
       console.log(`  Errors: ${results.generated.errors.length}`);
     }
 
-    const totalImported = results.existing.imported + results.generated.imported;
+    const totalImported =
+      results.existing.imported + results.generated.imported;
     console.log(`\n✅ Total stories imported: ${totalImported}`);
-
   } catch (error) {
     console.error('\n💥 Batch import failed:', error.message);
     throw error;
@@ -160,18 +169,18 @@ async function main() {
         // Import existing and generate 5 new
         options.generateCount = 5;
         break;
-      
+
       case 'import':
         // Only import existing files
         options.generateCount = 0;
         break;
-      
+
       case 'generate':
         // Only generate new stories
         options.importExisting = false;
         options.generateCount = parseInt(args[1]) || 5;
         break;
-      
+
       case 'help':
         console.log(`
 ThreadJuice Batch Import
@@ -192,7 +201,7 @@ Examples:
         `);
         process.exit(0);
         break;
-      
+
       default:
         console.error(`Unknown command: ${command}`);
         console.log('Use "node batch-import.js help" for usage information');
@@ -200,7 +209,6 @@ Examples:
     }
 
     await batchImport(options);
-
   } catch (error) {
     console.error('Batch import failed:', error);
     process.exit(1);

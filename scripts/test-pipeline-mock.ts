@@ -36,13 +36,14 @@ const logger = {
     console.log(`\n[${stage}] ${message}`);
     if (data) console.log(JSON.stringify(data, null, 2));
   },
-  divider: () => console.log('\n' + '='.repeat(80) + '\n')
+  divider: () => console.log('\n' + '='.repeat(80) + '\n'),
 };
 
 // Mock data generators
 const mockRedditPost = {
   id: '1abc2de',
-  title: "AITA for refusing to attend my sister's wedding because she scheduled it during Comic-Con?",
+  title:
+    "AITA for refusing to attend my sister's wedding because she scheduled it during Comic-Con?",
   selftext: `So here's the situation. My (28M) sister (26F) just announced her wedding date, and it's the EXACT same weekend as San Diego Comic-Con. I've been going to SDCC for 10 years straight - it's basically my Christmas, New Year's, and birthday rolled into one glorious nerdy weekend.
 
 I already have my 4-day pass (which I fought tooth and nail to get when they went on sale), hotel booked, and I'm part of a group cosplay that we've been planning for months. We're doing the entire Fellowship of the Ring and I'm Aragorn.
@@ -70,25 +71,25 @@ Edit 2: Yes, I realize family is important. But so is mental health and having t
   url: 'https://reddit.com/r/AmItheAsshole/comments/1abc2de/',
   is_self: true,
   stickied: false,
-  over_18: false
+  over_18: false,
 };
 
 const mockComments = [
   {
     author: 'NerdyAndIKnowIt',
     body: "NTA. Your sister knew exactly what she was doing. Anyone who's into nerd culture knows SDCC dates are sacred.",
-    score: 5432
+    score: 5432,
   },
   {
     author: 'WeddingPlannerPro',
     body: "YTA. It's her WEDDING. You can go to Comic-Con next year. You can't redo being at your sister's wedding.",
-    score: 3210
+    score: 3210,
   },
   {
     author: 'CosplayQueen92',
-    body: "INFO: Has your sister ever shown ANY interest in your hobbies? Because this sounds like a power play to me.",
-    score: 2105
-  }
+    body: 'INFO: Has your sister ever shown ANY interest in your hobbies? Because this sounds like a power play to me.',
+    score: 2105,
+  },
 ];
 
 const mockAnalysis = {
@@ -96,44 +97,60 @@ const mockAnalysis = {
     score: -0.3,
     comparative: -0.05,
     positive: ['important', 'joy', 'glorious'],
-    negative: ['lost', 'selfish', 'threatening', 'childish']
+    negative: ['lost', 'selfish', 'threatening', 'childish'],
   },
   entities: [
     { text: 'sister', type: 'PERSON', salience: 0.9 },
     { text: 'Comic-Con', type: 'EVENT', salience: 0.85 },
     { text: 'San Diego', type: 'LOCATION', salience: 0.3 },
-    { text: 'Fellowship of the Ring', type: 'WORK_OF_ART', salience: 0.4 }
+    { text: 'Fellowship of the Ring', type: 'WORK_OF_ART', salience: 0.4 },
   ],
-  keywords: ['wedding', 'Comic-Con', 'family', 'conflict', 'priorities', 'hobby'],
+  keywords: [
+    'wedding',
+    'Comic-Con',
+    'family',
+    'conflict',
+    'priorities',
+    'hobby',
+  ],
   metaphors: [
-    { phrase: "Christmas, New Year's, and birthday rolled into one", type: 'hyperbole' }
-  ]
+    {
+      phrase: "Christmas, New Year's, and birthday rolled into one",
+      type: 'hyperbole',
+    },
+  ],
 };
 
 const mockGeneratedStory = {
-  title: "When Aragorn Must Choose: The Wedding or the Fellowship",
-  introduction: "Right, gather 'round for what The Terry considers the ultimate first-world problem with a delicious side of family drama. We've got ourselves a proper clash of the titans here: sacred nerd pilgrimage versus family obligations.",
+  title: 'When Aragorn Must Choose: The Wedding or the Fellowship',
+  introduction:
+    "Right, gather 'round for what The Terry considers the ultimate first-world problem with a delicious side of family drama. We've got ourselves a proper clash of the titans here: sacred nerd pilgrimage versus family obligations.",
   sections: [
     {
-      heading: "The Sacred Pilgrimage Under Threat",
-      content: "Look, The Terry understands the sanctity of Comic-Con. It's not just a convention - it's a bloody religious experience for those who worship at the altar of pop culture. Our protagonist here has been making this hajj for a decade, and now suddenly sister dearest decides to schedule her nuptials during the high holy days of nerdom? That's either weapons-grade ignorance or calculated emotional warfare."
+      heading: 'The Sacred Pilgrimage Under Threat',
+      content:
+        "Look, The Terry understands the sanctity of Comic-Con. It's not just a convention - it's a bloody religious experience for those who worship at the altar of pop culture. Our protagonist here has been making this hajj for a decade, and now suddenly sister dearest decides to schedule her nuptials during the high holy days of nerdom? That's either weapons-grade ignorance or calculated emotional warfare.",
     },
     {
-      heading: "The Fellowship Cannot Be Broken",
-      content: "Can we just appreciate the beautiful tragedy of having to choose between being Aragorn at Comic-Con and attending a wedding? The man's got a commitment to his Fellowship! You can't just replace Aragorn with some random bloke from Craigslist. That's like replacing the groom at the wedding - technically possible, but defeats the entire purpose."
+      heading: 'The Fellowship Cannot Be Broken',
+      content:
+        "Can we just appreciate the beautiful tragedy of having to choose between being Aragorn at Comic-Con and attending a wedding? The man's got a commitment to his Fellowship! You can't just replace Aragorn with some random bloke from Craigslist. That's like replacing the groom at the wedding - technically possible, but defeats the entire purpose.",
     },
     {
-      heading: "Family Dynamics: A Critical Analysis",
-      content: "Here's where The Terry's cynicism meter starts pinging like a metal detector at a cutlery convention. Sister who's spent years mocking his interests suddenly can't understand why he won't drop everything for her big day? The same sister who called his hobbies 'childish'? That's rich enough to fund a small nation's economy."
+      heading: 'Family Dynamics: A Critical Analysis',
+      content:
+        "Here's where The Terry's cynicism meter starts pinging like a metal detector at a cutlery convention. Sister who's spent years mocking his interests suddenly can't understand why he won't drop everything for her big day? The same sister who called his hobbies 'childish'? That's rich enough to fund a small nation's economy.",
     },
     {
-      heading: "The Verdict from Mount Doom",
-      content: "The Terry's going with NTA, but with a caveat. Yes, family is important. Yes, weddings are once-in-a-lifetime events (theoretically). But respect is a two-way street, and you can't spend years dismissing someone's passions then act shocked when they prioritize those passions over your event. If she wanted Aragorn at her wedding, she should have treated him like the King of Gondor all along, not like some basement-dwelling orc."
-    }
+      heading: 'The Verdict from Mount Doom',
+      content:
+        "The Terry's going with NTA, but with a caveat. Yes, family is important. Yes, weddings are once-in-a-lifetime events (theoretically). But respect is a two-way street, and you can't spend years dismissing someone's passions then act shocked when they prioritize those passions over your event. If she wanted Aragorn at her wedding, she should have treated him like the King of Gondor all along, not like some basement-dwelling orc.",
+    },
   ],
-  conclusion: "Sometimes the real asshole is the family dynamics we endured along the way. May the Force be with you, you beautiful nerdy bastard.",
-  personaId: "the-terry",
-  category: "family-drama"
+  conclusion:
+    'Sometimes the real asshole is the family dynamics we endured along the way. May the Force be with you, you beautiful nerdy bastard.',
+  personaId: 'the-terry',
+  category: 'family-drama',
 };
 
 const mockEnrichment = {
@@ -142,12 +159,13 @@ const mockEnrichment = {
     description: 'Crowded Comic-Con convention floor with cosplayers',
     urls: {
       regular: 'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe',
-      small: 'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400'
+      small:
+        'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400',
     },
     user: {
       name: 'Bearded Texan',
-      username: 'thebeardedtexan'
-    }
+      username: 'thebeardedtexan',
+    },
   },
   additionalImages: [
     {
@@ -155,9 +173,10 @@ const mockEnrichment = {
       description: 'Outdoor wedding ceremony setup',
       urls: {
         regular: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed',
-        small: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400'
-      }
-    }
+        small:
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400',
+      },
+    },
   ],
   reactionGifs: [
     {
@@ -165,20 +184,20 @@ const mockEnrichment = {
       title: 'Sweating superhero choosing between two buttons',
       images: {
         fixed_height: {
-          url: 'https://media.giphy.com/media/3o7aCRloybJlXpNjSU/giphy.gif'
-        }
-      }
+          url: 'https://media.giphy.com/media/3o7aCRloybJlXpNjSU/giphy.gif',
+        },
+      },
     },
     {
       id: 'aragorn-crown',
       title: 'Aragorn "My friends you bow to no one" scene',
       images: {
         fixed_height: {
-          url: 'https://media.giphy.com/media/3oFzlZzyoQqOOmWIj6/giphy.gif'
-        }
-      }
-    }
-  ]
+          url: 'https://media.giphy.com/media/3oFzlZzyoQqOOmWIj6/giphy.gif',
+        },
+      },
+    },
+  ],
 };
 
 // Main test function
@@ -201,7 +220,7 @@ async function runMockPipeline() {
   logger.stage('SOURCE', 'Post fetched:', {
     title: mockRedditPost.title,
     score: mockRedditPost.score,
-    comments: mockRedditPost.num_comments
+    comments: mockRedditPost.num_comments,
   });
 
   // Stage 2: Analysis
@@ -214,7 +233,7 @@ async function runMockPipeline() {
   logger.stage('ANALYSIS', 'Analysis complete:', {
     sentiment: mockAnalysis.sentiment.score,
     entities: mockAnalysis.entities.length,
-    keywords: mockAnalysis.keywords.length
+    keywords: mockAnalysis.keywords.length,
   });
 
   // Stage 3: Story Generation
@@ -227,7 +246,10 @@ async function runMockPipeline() {
   logger.stage('GENERATION', 'Story generated:', {
     title: mockGeneratedStory.title,
     sections: mockGeneratedStory.sections.length,
-    wordCount: mockGeneratedStory.sections.reduce((acc, s) => acc + s.content.split(' ').length, 0)
+    wordCount: mockGeneratedStory.sections.reduce(
+      (acc, s) => acc + s.content.split(' ').length,
+      0
+    ),
   });
 
   // Stage 4: Enrichment
@@ -240,13 +262,13 @@ async function runMockPipeline() {
   logger.stage('ENRICHMENT', 'Media added:', {
     primaryImage: mockEnrichment.primaryImage.description,
     additionalImages: mockEnrichment.additionalImages.length,
-    gifs: mockEnrichment.reactionGifs.length
+    gifs: mockEnrichment.reactionGifs.length,
   });
 
   // Stage 5: Final Output
   logger.divider();
   logger.stage('TRANSFORM', 'Creating final ThreadJuice story...');
-  
+
   const finalStory = {
     id: `story-${Date.now()}`,
     slug: 'aragorn-must-choose-wedding-or-fellowship',
@@ -254,7 +276,7 @@ async function runMockPipeline() {
     content: {
       introduction: mockGeneratedStory.introduction,
       sections: mockGeneratedStory.sections,
-      conclusion: mockGeneratedStory.conclusion
+      conclusion: mockGeneratedStory.conclusion,
     },
     author: 'The Terry',
     personaId: 'the-terry',
@@ -265,24 +287,30 @@ async function runMockPipeline() {
       subreddit: mockRedditPost.subreddit,
       author: mockRedditPost.author,
       score: mockRedditPost.score,
-      comments: mockComments
+      comments: mockComments,
     },
     analysis: mockAnalysis,
     media: {
       hero: mockEnrichment.primaryImage,
       images: mockEnrichment.additionalImages,
-      gifs: mockEnrichment.reactionGifs
+      gifs: mockEnrichment.reactionGifs,
     },
     engagement: {
       score: mockRedditPost.score,
       comments: mockRedditPost.num_comments,
-      sentiment: mockAnalysis.sentiment.score
+      sentiment: mockAnalysis.sentiment.score,
     },
     metadata: {
       processedAt: new Date().toISOString(),
       pipeline_version: '1.0.0',
-      stages_completed: ['source', 'analysis', 'generation', 'enrichment', 'transform']
-    }
+      stages_completed: [
+        'source',
+        'analysis',
+        'generation',
+        'enrichment',
+        'transform',
+      ],
+    },
   };
 
   await fs.writeFile(
@@ -298,17 +326,21 @@ async function runMockPipeline() {
   logger.stage('SUMMARY', 'Results:', {
     storyId: finalStory.id,
     title: finalStory.title,
-    wordCount: finalStory.content.sections.reduce((acc, s) => acc + s.content.split(' ').length, 0),
-    mediaAssets: finalStory.media.images.length + finalStory.media.gifs.length + 1,
+    wordCount: finalStory.content.sections.reduce(
+      (acc, s) => acc + s.content.split(' ').length,
+      0
+    ),
+    mediaAssets:
+      finalStory.media.images.length + finalStory.media.gifs.length + 1,
     outputFiles: [
       '1-reddit-post.json',
       '2-analysis.json',
       '3-generated-story.json',
       '4-enrichment.json',
-      '5-final-story.json'
-    ]
+      '5-final-story.json',
+    ],
   });
-  
+
   logger.divider();
   console.log(`📁 View results in: ${OUTPUT_DIR}`);
   logger.divider();

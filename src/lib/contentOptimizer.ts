@@ -3,7 +3,11 @@
  * Applies quality-based optimizations to story content
  */
 
-import { contentQualityChecker, ContentAnalysisInput, ContentQualityMetrics } from './contentQualityChecker';
+import {
+  contentQualityChecker,
+  ContentAnalysisInput,
+  ContentQualityMetrics,
+} from './contentQualityChecker';
 
 export interface ContentOptimizationResult {
   originalContent: any;
@@ -25,7 +29,7 @@ export class ContentOptimizer {
     enableQualityBasedLength: true,
     enableStructureOptimization: true,
     enableEngagementOptimization: true,
-    targetReadingTime: 7
+    targetReadingTime: 7,
   };
 
   constructor(config?: Partial<StoryOptimizationConfig>) {
@@ -47,10 +51,10 @@ export class ContentOptimizer {
         upvoteCount: story.upvoteCount,
         commentCount: story.commentCount,
         shareCount: story.shareCount,
-        bookmarkCount: story.bookmarkCount
+        bookmarkCount: story.bookmarkCount,
       },
       source: story.source,
-      category: story.category
+      category: story.category,
     };
 
     const qualityMetrics = contentQualityChecker.analyzeContent(analysisInput);
@@ -97,7 +101,7 @@ export class ContentOptimizer {
       optimizedContent,
       qualityMetrics,
       optimizationApplied,
-      recommendations
+      recommendations,
     };
   }
 
@@ -111,16 +115,23 @@ export class ContentOptimizer {
   ): { content: any; applied: string[]; recommendations: string[] } {
     const applied: string[] = [];
     const recommendations: string[] = [];
-    const recommendedStructure = contentQualityChecker.getRecommendedStructure(input);
+    const recommendedStructure =
+      contentQualityChecker.getRecommendedStructure(input);
 
     // Adjust reading time based on quality
     let targetReadingTime = this.config.targetReadingTime || 7;
-    
-    if (quality.qualityTier === 'premium' && quality.recommendedAction === 'expand') {
+
+    if (
+      quality.qualityTier === 'premium' &&
+      quality.recommendedAction === 'expand'
+    ) {
       targetReadingTime = Math.min(targetReadingTime + 3, 12); // Max 12 minutes
       applied.push('Extended reading time for premium content');
       recommendations.push('Consider adding more detailed analysis sections');
-    } else if (quality.qualityTier === 'basic' && quality.recommendedAction === 'shorten') {
+    } else if (
+      quality.qualityTier === 'basic' &&
+      quality.recommendedAction === 'shorten'
+    ) {
       targetReadingTime = Math.max(targetReadingTime - 2, 3); // Min 3 minutes
       applied.push('Reduced reading time for basic content');
       recommendations.push('Focus on key points and remove verbose sections');
@@ -128,12 +139,18 @@ export class ContentOptimizer {
 
     // Adjust section count based on quality
     const currentSections = content.sections?.length || 0;
-    
-    if (quality.qualityTier === 'premium' && currentSections < recommendedStructure.minSections) {
+
+    if (
+      quality.qualityTier === 'premium' &&
+      currentSections < recommendedStructure.minSections
+    ) {
       recommendations.push(
         `Consider adding ${recommendedStructure.minSections - currentSections} more sections for better narrative flow`
       );
-    } else if (quality.qualityTier === 'basic' && currentSections > recommendedStructure.maxSections) {
+    } else if (
+      quality.qualityTier === 'basic' &&
+      currentSections > recommendedStructure.maxSections
+    ) {
       recommendations.push(
         `Consider consolidating content into ${recommendedStructure.maxSections} sections or fewer`
       );
@@ -155,8 +172,12 @@ export class ContentOptimizer {
     if (!content.sections) return { content, applied, recommendations };
 
     // Ensure good opening and closing
-    const hasGoodOpening = content.sections.some((s: any) => s.type === 'describe-1');
-    const hasGoodClosing = content.sections.some((s: any) => s.type === 'outro');
+    const hasGoodOpening = content.sections.some(
+      (s: any) => s.type === 'describe-1'
+    );
+    const hasGoodClosing = content.sections.some(
+      (s: any) => s.type === 'outro'
+    );
 
     if (!hasGoodOpening) {
       recommendations.push('Add a strong opening section to hook readers');
@@ -167,15 +188,17 @@ export class ContentOptimizer {
     }
 
     // Check for engagement elements
-    const hasQuotes = content.sections.some((s: any) => 
-      s.type === 'quotes' || s.type === 'twitter-quote'
+    const hasQuotes = content.sections.some(
+      (s: any) => s.type === 'quotes' || s.type === 'twitter-quote'
     );
-    const hasComments = content.sections.some((s: any) => 
+    const hasComments = content.sections.some((s: any) =>
       s.type.includes('comments')
     );
 
     if (!hasQuotes && quality.qualityTier !== 'basic') {
-      recommendations.push('Consider adding memorable quotes to increase engagement');
+      recommendations.push(
+        'Consider adding memorable quotes to increase engagement'
+      );
     }
 
     if (!hasComments && quality.qualityTier === 'premium') {
@@ -184,7 +207,9 @@ export class ContentOptimizer {
 
     // Optimize section order
     const optimizedSections = this.optimizeSectionOrder(content.sections);
-    if (JSON.stringify(optimizedSections) !== JSON.stringify(content.sections)) {
+    if (
+      JSON.stringify(optimizedSections) !== JSON.stringify(content.sections)
+    ) {
       content.sections = optimizedSections;
       applied.push('Optimized section order for better flow');
     }
@@ -204,7 +229,9 @@ export class ContentOptimizer {
 
     // Add engagement hooks for high-quality content
     if (quality.engagementPotential > 0.7) {
-      recommendations.push('Consider adding interactive elements like polls or questions');
+      recommendations.push(
+        'Consider adding interactive elements like polls or questions'
+      );
       recommendations.push('Optimize for social sharing with quotable moments');
     }
 
@@ -224,14 +251,14 @@ export class ContentOptimizer {
     // Ideal flow: describe-1 -> image -> quotes -> describe-2 -> comments -> discussion -> outro
     const sectionPriority: { [key: string]: number } = {
       'describe-1': 1,
-      'image': 2,
-      'quotes': 3,
+      image: 2,
+      quotes: 3,
       'twitter-quote': 3,
       'describe-2': 4,
       'comments-1': 5,
-      'discussion': 6,
+      discussion: 6,
       'comments-2': 7,
-      'outro': 8
+      outro: 8,
     };
 
     return [...sections].sort((a, b) => {
@@ -246,7 +273,7 @@ export class ContentOptimizer {
    */
   private extractTextContent(content: any): string {
     if (!content || !content.sections) return '';
-    
+
     return content.sections
       .filter((section: any) => section.content)
       .map((section: any) => section.content)
@@ -256,7 +283,10 @@ export class ContentOptimizer {
   /**
    * Calculate optimal reading time based on content and quality
    */
-  calculateOptimalReadingTime(content: any, quality: ContentQualityMetrics): number {
+  calculateOptimalReadingTime(
+    content: any,
+    quality: ContentQualityMetrics
+  ): number {
     const textContent = this.extractTextContent(content);
     const wordCount = textContent.split(' ').length;
     const baseReadingTime = Math.ceil(wordCount / 200); // 200 words per minute

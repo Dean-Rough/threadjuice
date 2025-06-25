@@ -37,11 +37,11 @@ loadEnvVars();
 function getSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  
+
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase credentials in environment variables');
   }
-  
+
   return createClient(supabaseUrl, supabaseAnonKey);
 }
 
@@ -60,13 +60,13 @@ async function scrapeRedditPost(url) {
   try {
     // Add .json to the URL
     const jsonUrl = url.replace(/\/?$/, '.json');
-    
+
     console.log(`📖 Scraping Reddit post: ${url}`);
-    
+
     const response = await fetch(jsonUrl, {
       headers: {
-        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)'
-      }
+        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)',
+      },
     });
 
     if (!response.ok) {
@@ -74,14 +74,14 @@ async function scrapeRedditPost(url) {
     }
 
     const data = await response.json();
-    
+
     // First element is the post, second is comments
     const postData = data[0].data.children[0].data;
     const commentsData = data[1].data.children;
-    
+
     return {
       post: parsePost(postData),
-      comments: parseComments(commentsData)
+      comments: parseComments(commentsData),
     };
   } catch (error) {
     console.error('Error scraping Reddit:', error);
@@ -103,7 +103,7 @@ function parsePost(postData) {
     score: postData.score,
     numComments: postData.num_comments,
     created: new Date(postData.created_utc * 1000),
-    media: {}
+    media: {},
   };
 
   // Extract ALL media types
@@ -112,7 +112,7 @@ function parsePost(postData) {
     videos: [],
     gifs: [],
     externalLinks: [],
-    embedUrls: []
+    embedUrls: [],
   };
 
   // Primary image from post
@@ -120,7 +120,7 @@ function parsePost(postData) {
     post.media.images.push({
       url: postData.url,
       type: 'primary',
-      caption: postData.title
+      caption: postData.title,
     });
   }
 
@@ -133,7 +133,7 @@ function parsePost(postData) {
           url: cleanUrl,
           type: 'preview',
           width: img.source.width,
-          height: img.source.height
+          height: img.source.height,
         });
       }
     });
@@ -148,7 +148,7 @@ function parsePost(postData) {
           url: galleryUrl,
           type: 'gallery',
           width: item.s.x,
-          height: item.s.y
+          height: item.s.y,
         });
       }
     });
@@ -161,7 +161,7 @@ function parsePost(postData) {
       type: 'reddit_video',
       duration: postData.media.reddit_video.duration,
       width: postData.media.reddit_video.width,
-      height: postData.media.reddit_video.height
+      height: postData.media.reddit_video.height,
     });
   }
 
@@ -169,7 +169,7 @@ function parsePost(postData) {
   if (postData.url && postData.url.match(/\.(gif|gifv)$/i)) {
     post.media.gifs.push({
       url: postData.url,
-      type: 'gif'
+      type: 'gif',
     });
   }
 
@@ -180,18 +180,23 @@ function parsePost(postData) {
       type: 'oembed',
       title: postData.media.oembed.title,
       provider: postData.media.oembed.provider_name,
-      thumbnail: postData.media.oembed.thumbnail_url
+      thumbnail: postData.media.oembed.thumbnail_url,
     });
   }
 
   // External links
-  if (postData.url && !postData.is_self && 
-      !post.media.images.length && !post.media.videos.length && 
-      !post.media.gifs.length && !post.media.embedUrls.length) {
+  if (
+    postData.url &&
+    !postData.is_self &&
+    !post.media.images.length &&
+    !post.media.videos.length &&
+    !post.media.gifs.length &&
+    !post.media.embedUrls.length
+  ) {
     post.media.externalLinks.push({
       url: postData.url,
       type: 'external',
-      domain: new URL(postData.url).hostname
+      domain: new URL(postData.url).hostname,
     });
   }
 
@@ -203,9 +208,13 @@ function parsePost(postData) {
  */
 function parseComments(commentsData) {
   const comments = [];
-  
+
   commentsData.forEach(item => {
-    if (item.kind === 't1' && item.data.body && item.data.body !== '[deleted]') {
+    if (
+      item.kind === 't1' &&
+      item.data.body &&
+      item.data.body !== '[deleted]'
+    ) {
       const comment = item.data;
       comments.push({
         id: comment.id,
@@ -216,7 +225,7 @@ function parseComments(commentsData) {
         edited: comment.edited,
         awards: comment.all_awardings?.length || 0,
         isOP: comment.is_submitter,
-        controversiality: comment.controversiality || 0
+        controversiality: comment.controversiality || 0,
       });
     }
   });
@@ -227,19 +236,18 @@ function parseComments(commentsData) {
     .slice(0, 8);
 
   // Find most controversial (lowest score or highest controversiality)
-  const controversialComment = [...comments]
-    .sort((a, b) => {
-      // Prioritize negative scores, then controversiality flag
-      if (a.score < 0 && b.score >= 0) return -1;
-      if (b.score < 0 && a.score >= 0) return 1;
-      if (a.score < 0 && b.score < 0) return a.score - b.score;
-      return b.controversiality - a.controversiality || a.score - b.score;
-    })[0];
+  const controversialComment = [...comments].sort((a, b) => {
+    // Prioritize negative scores, then controversiality flag
+    if (a.score < 0 && b.score >= 0) return -1;
+    if (b.score < 0 && a.score >= 0) return 1;
+    if (a.score < 0 && b.score < 0) return a.score - b.score;
+    return b.controversiality - a.controversiality || a.score - b.score;
+  })[0];
 
   return {
     topComments,
     controversialComment,
-    totalComments: comments.length
+    totalComments: comments.length,
   };
 }
 
@@ -249,11 +257,11 @@ function parseComments(commentsData) {
 async function getControversialComments(url) {
   try {
     const jsonUrl = url.replace(/\/?$/, '.json?sort=controversial');
-    
+
     const response = await fetch(jsonUrl, {
       headers: {
-        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)'
-      }
+        'User-Agent': 'ThreadJuice/1.0 (Content Aggregator)',
+      },
     });
 
     if (!response.ok) {
@@ -262,18 +270,20 @@ async function getControversialComments(url) {
 
     const data = await response.json();
     const commentsData = data[1].data.children;
-    
+
     // Get the most controversial comment
     const controversial = commentsData
-      .filter(item => item.kind === 't1' && item.data.body && item.data.body !== '[deleted]')
+      .filter(
+        item =>
+          item.kind === 't1' && item.data.body && item.data.body !== '[deleted]'
+      )
       .map(item => ({
         author: item.data.author,
         body: item.data.body,
         score: item.data.score,
-        controversiality: item.data.controversiality || 0
+        controversiality: item.data.controversiality || 0,
       }))
-      .filter(c => c.score < 10) // Focus on low-scored comments
-      [0];
+      .filter(c => c.score < 10)[0]; // Focus on low-scored comments
 
     return controversial;
   } catch (error) {
@@ -287,10 +297,11 @@ async function getControversialComments(url) {
  */
 async function convertToStory(redditData) {
   const { post, comments } = redditData;
-  
+
   // Try to get a better controversial comment
-  const controversialComment = await getControversialComments(post.url) || comments.controversialComment;
-  
+  const controversialComment =
+    (await getControversialComments(post.url)) || comments.controversialComment;
+
   const story = {
     title: post.title,
     slug: createSlug(post.title),
@@ -303,10 +314,10 @@ async function convertToStory(redditData) {
     persona: {
       name: 'The Reddit Curator',
       avatar: '/assets/personas/reddit-curator.jpg',
-      bio: 'Bringing you the best (and worst) of Reddit'
+      bio: 'Bringing you the best (and worst) of Reddit',
     },
     content: {
-      sections: []
+      sections: [],
     },
     imageUrl: post.media.images[0]?.url || '/assets/img/reddit-default.jpg',
     sourceUrl: post.url,
@@ -316,7 +327,7 @@ async function convertToStory(redditData) {
     viewCount: post.score * 10,
     upvoteCount: post.score,
     commentCount: post.numComments,
-    tags: ['reddit', post.subreddit, 'viral']
+    tags: ['reddit', post.subreddit, 'viral'],
   };
 
   // Add sections
@@ -329,8 +340,8 @@ async function convertToStory(redditData) {
     metadata: {
       author: post.author,
       subreddit: post.subreddit,
-      score: post.score
-    }
+      score: post.score,
+    },
   });
 
   // Original post content
@@ -338,7 +349,7 @@ async function convertToStory(redditData) {
     sections.push({
       type: 'describe',
       title: 'The Original Post',
-      content: post.content
+      content: post.content,
     });
   }
 
@@ -347,16 +358,17 @@ async function convertToStory(redditData) {
     post.media.images.forEach((img, index) => {
       sections.push({
         type: 'image',
-        content: img.type === 'gallery' 
-          ? `Image ${index + 1} from Reddit gallery`
-          : 'Image from the original Reddit post',
+        content:
+          img.type === 'gallery'
+            ? `Image ${index + 1} from Reddit gallery`
+            : 'Image from the original Reddit post',
         metadata: {
           image_url: img.url,
           attribution: `Posted by u/${post.author}`,
           source: post.url,
           width: img.width,
-          height: img.height
-        }
+          height: img.height,
+        },
       });
     });
   }
@@ -374,9 +386,9 @@ async function convertToStory(redditData) {
             title: 'Video from Reddit post',
             platform: 'Reddit',
             confidence: 1.0,
-            duration: video.duration
-          }
-        }
+            duration: video.duration,
+          },
+        },
       });
     });
   }
@@ -388,8 +400,8 @@ async function convertToStory(redditData) {
         type: 'reaction_gif',
         content: 'GIF from Reddit post',
         metadata: {
-          gifUrl: gif.url
-        }
+          gifUrl: gif.url,
+        },
       });
     });
   }
@@ -407,9 +419,9 @@ async function convertToStory(redditData) {
             title: embed.title,
             platform: embed.provider,
             confidence: 1.0,
-            thumbnail: embed.thumbnail
-          }
-        }
+            thumbnail: embed.thumbnail,
+          },
+        },
       });
     });
   }
@@ -422,8 +434,8 @@ async function convertToStory(redditData) {
         content: `Original source: ${link.domain}`,
         metadata: {
           url: link.url,
-          linkText: 'View Original Source'
-        }
+          linkText: 'View Original Source',
+        },
       });
     });
   }
@@ -442,34 +454,38 @@ async function convertToStory(redditData) {
           upvotes: c.score,
           awards: c.awards,
           timestamp: '2h ago',
-          isOP: c.isOP
-        }))
-      }
+          isOP: c.isOP,
+        })),
+      },
     });
   }
 
   // Controversial comment as rage bait
-  if (controversialComment && controversialComment.body !== comments.topComments[0]?.body) {
+  if (
+    controversialComment &&
+    controversialComment.body !== comments.topComments[0]?.body
+  ) {
     sections.push({
       type: 'pullquote',
       content: controversialComment.body,
       metadata: {
         author: `u/${controversialComment.author}`,
-        context: `This controversial take got ${controversialComment.score} votes and sparked heated debate`
-      }
+        context: `This controversial take got ${controversialComment.score} votes and sparked heated debate`,
+      },
     });
 
     sections.push({
       type: 'terry_corner',
       title: "The Terry's Take",
-      content: "Of course there's always one absolute weapon in the comments who has to make it weird. Never change, Reddit."
+      content:
+        "Of course there's always one absolute weapon in the comments who has to make it weird. Never change, Reddit.",
     });
   }
 
   // Outro
   sections.push({
     type: 'outro',
-    content: `This Reddit drama brought to you by r/${post.subreddit}. Got a spicy Reddit thread? We're probably already scraping it.`
+    content: `This Reddit drama brought to you by r/${post.subreddit}. Got a spicy Reddit thread? We're probably already scraping it.`,
   });
 
   story.content.sections = sections;
@@ -494,20 +510,20 @@ function createSlug(title) {
  */
 function mapSubredditToCategory(subreddit) {
   const mappings = {
-    'AmItheAsshole': 'relationships',
-    'relationship_advice': 'relationships',
-    'tifu': 'life',
-    'antiwork': 'workplace',
-    'MaliciousCompliance': 'workplace',
-    'entitledparents': 'family',
-    'JUSTNOMIL': 'family',
-    'ChoosingBeggars': 'entitled',
-    'PublicFreakout': 'drama',
-    'facepalm': 'fails',
-    'insanepeoplefacebook': 'social-media',
-    'technology': 'technology',
-    'news': 'news',
-    'politics': 'politics'
+    AmItheAsshole: 'relationships',
+    relationship_advice: 'relationships',
+    tifu: 'life',
+    antiwork: 'workplace',
+    MaliciousCompliance: 'workplace',
+    entitledparents: 'family',
+    JUSTNOMIL: 'family',
+    ChoosingBeggars: 'entitled',
+    PublicFreakout: 'drama',
+    facepalm: 'fails',
+    insanepeoplefacebook: 'social-media',
+    technology: 'technology',
+    news: 'news',
+    politics: 'politics',
   };
 
   return mappings[subreddit] || 'viral';
@@ -518,15 +534,17 @@ function mapSubredditToCategory(subreddit) {
  */
 async function saveToDatabase(story) {
   const supabase = getSupabase();
-  
+
   const { data, error } = await supabase
     .from('posts')
-    .insert([{
-      ...story,
-      content: JSON.stringify(story.content),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }])
+    .insert([
+      {
+        ...story,
+        content: JSON.stringify(story.content),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ])
     .select()
     .single();
 
@@ -554,19 +572,22 @@ async function main() {
     // Scrape Reddit post
     const redditData = await scrapeRedditPost(redditUrl);
     console.log(`✅ Scraped post: "${redditData.post.title}"`);
-    console.log(`💬 Found ${redditData.comments.topComments.length} top comments`);
-    
+    console.log(
+      `💬 Found ${redditData.comments.topComments.length} top comments`
+    );
+
     // Convert to story
     const story = await convertToStory(redditData);
     console.log(`📝 Converted to ThreadJuice story`);
-    
+
     // Save to database
     const savedStory = await saveToDatabase(story);
     console.log(`✅ Saved to database: ${story.slug}`);
-    console.log(`📊 Final stats: ${story.upvoteCount} upvotes, ${story.commentCount} comments`);
+    console.log(
+      `📊 Final stats: ${story.upvoteCount} upvotes, ${story.commentCount} comments`
+    );
     console.log(`\n🎉 Story scraped successfully!`);
     console.log(`🔗 View at: http://localhost:4242/blog/${story.slug}`);
-    
   } catch (error) {
     console.error('❌ Scraping failed:', error.message);
     process.exit(1);

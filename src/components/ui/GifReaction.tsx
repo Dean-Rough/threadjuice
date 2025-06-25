@@ -20,12 +20,12 @@ export default function GifReaction({
   id,
   url,
   title,
-  caption = "Everyone right now:",
+  caption = 'Everyone right now:',
   width = 400,
   height = 300,
   preview,
-  className = "",
-  lazy = true
+  className = '',
+  lazy = true,
 }: GifReactionProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -71,43 +71,47 @@ export default function GifReaction({
   const calculatedHeight = maxWidth / aspectRatio;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`gif-reaction-section mb-8 ${className}`}
     >
-      <div className="flex flex-col items-center">
+      <div className='flex flex-col items-center'>
         {/* Caption */}
         {caption && (
-          <p className="mb-4 text-center text-lg font-medium text-muted-foreground italic">
+          <p className='mb-4 text-center text-lg font-medium italic text-muted-foreground'>
             {caption}
           </p>
         )}
 
         {/* GIF Container with Jaunty Styling */}
-        <div 
-          className="gif-container relative overflow-hidden rounded-xl border-2 border-orange-200 dark:border-orange-800 jaunty-cutout bg-white dark:bg-slate-900"
+        <div
+          className='gif-container jaunty-cutout relative overflow-hidden rounded-xl border-2 border-orange-200 bg-white dark:border-orange-800 dark:bg-slate-900'
           style={{
             width: `${maxWidth}px`,
             height: `${calculatedHeight}px`,
-            maxWidth: '100%'
+            maxWidth: '100%',
           }}
         >
           {/* Loading State */}
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-              <div className="flex flex-col items-center space-y-2">
-                <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
-                <span className="text-sm text-muted-foreground">Loading reaction...</span>
+            <div className='absolute inset-0 flex items-center justify-center bg-muted/50'>
+              <div className='flex flex-col items-center space-y-2'>
+                <Loader2 className='h-8 w-8 animate-spin text-orange-500' />
+                <span className='text-sm text-muted-foreground'>
+                  Loading reaction...
+                </span>
               </div>
             </div>
           )}
 
           {/* Error State */}
           {hasError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
-              <div className="flex flex-col items-center space-y-2">
-                <AlertCircle className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Failed to load reaction</span>
+            <div className='absolute inset-0 flex items-center justify-center bg-muted/30'>
+              <div className='flex flex-col items-center space-y-2'>
+                <AlertCircle className='h-8 w-8 text-muted-foreground' />
+                <span className='text-sm text-muted-foreground'>
+                  Failed to load reaction
+                </span>
               </div>
             </div>
           )}
@@ -121,11 +125,11 @@ export default function GifReaction({
                   src={preview}
                   alt={title}
                   fill
-                  className="object-cover blur-sm"
+                  className='object-cover blur-sm'
                   style={{ filter: 'blur(4px)' }}
                 />
               )}
-              
+
               {/* Main GIF */}
               <Image
                 src={url}
@@ -143,14 +147,12 @@ export default function GifReaction({
           )}
 
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+          <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent' />
         </div>
 
         {/* GIF Title/Credit */}
-        <div className="mt-2 text-center">
-          <p className="text-xs text-muted-foreground">
-            via Klipy
-          </p>
+        <div className='mt-2 text-center'>
+          <p className='text-xs text-muted-foreground'>via Klipy</p>
         </div>
       </div>
     </div>

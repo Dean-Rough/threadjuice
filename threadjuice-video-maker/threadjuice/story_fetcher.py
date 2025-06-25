@@ -8,6 +8,7 @@ import os
 import json
 from datetime import datetime
 from typing import Dict, List, Optional
+from pathlib import Path
 import requests
 
 # Try to import supabase, fall back to direct API calls if not available
@@ -109,10 +110,28 @@ class ThreadJuiceFetcher:
     """Fetches stories from ThreadJuice database"""
     
     def __init__(self):
+        # Try to load from environment first
         self.supabase_url = os.getenv('NEXT_PUBLIC_SUPABASE_URL')
         self.supabase_key = os.getenv('NEXT_PUBLIC_SUPABASE_ANON_KEY')
         
-        if HAS_SUPABASE and self.supabase_url and self.supabase_key:
+        # If not found, try loading from .env.local
+        if not self.supabase_url or not self.supabase_key:
+            env_path = Path(__file__).parent.parent.parent / '.env.local'
+            if env_path.exists():
+                with open(env_path) as f:
+                    for line in f:
+                        if '=' in line and not line.startswith('#'):
+                            key, value = line.strip().split('=', 1)
+                            value = value.strip('"\'')
+                            if key == 'NEXT_PUBLIC_SUPABASE_URL' and not self.supabase_url:
+                                self.supabase_url = value
+                            elif key == 'NEXT_PUBLIC_SUPABASE_ANON_KEY' and not self.supabase_key:
+                                self.supabase_key = value
+        
+        if not self.supabase_url or not self.supabase_key:
+            raise ValueError("Missing Supabase credentials. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        
+        if HAS_SUPABASE:
             self.client = create_client(self.supabase_url, self.supabase_key)
         else:
             self.client = None

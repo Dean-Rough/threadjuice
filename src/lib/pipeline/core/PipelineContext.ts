@@ -1,6 +1,6 @@
 /**
  * Pipeline Context
- * 
+ *
  * The shared context object that flows through all pipeline stages.
  * Each stage can read from and write to this context.
  */

@@ -124,7 +124,7 @@ export class ContentTransformer {
   constructor() {
     // Import env dynamically to avoid circular dependency
     const { env } = require('./env');
-    
+
     if (!env.OPENAI_API_KEY) {
       throw new Error('OPENAI_API_KEY environment variable is required');
     }

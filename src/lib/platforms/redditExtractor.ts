@@ -23,11 +23,11 @@ export class RedditExtractor implements IPlatformExtractor {
     try {
       // Add .json to Reddit URL to get JSON data
       const jsonUrl = url.replace(/\/$/, '') + '.json';
-      
+
       const response = await fetch(jsonUrl, {
         headers: {
-          'User-Agent': 'ThreadJuice/1.0'
-        }
+          'User-Agent': 'ThreadJuice/1.0',
+        },
       });
 
       if (!response.ok) {
@@ -36,7 +36,7 @@ export class RedditExtractor implements IPlatformExtractor {
 
       const data = await response.json();
       const post = data[0]?.data?.children?.[0]?.data;
-      
+
       if (!post) {
         return null;
       }
@@ -57,8 +57,8 @@ export class RedditExtractor implements IPlatformExtractor {
             duration: video.duration,
             width: video.width,
             height: video.height,
-            hasAudio: video.has_audio !== false
-          }
+            hasAudio: video.has_audio !== false,
+          },
         };
       }
 
@@ -73,7 +73,7 @@ export class RedditExtractor implements IPlatformExtractor {
           title: post.title,
           author: post.author,
           platform: 'Reddit',
-          confidence: 0.9
+          confidence: 0.9,
         };
       }
 
@@ -87,7 +87,7 @@ export class RedditExtractor implements IPlatformExtractor {
           title: post.title,
           author: post.author,
           platform: 'Reddit',
-          confidence: 0.9
+          confidence: 0.9,
         };
       }
 
@@ -100,9 +100,8 @@ export class RedditExtractor implements IPlatformExtractor {
         author: post.author,
         platform: 'Reddit',
         confidence: 0.8,
-        embedHtml: this.buildRedditEmbed(url, post.title)
+        embedHtml: this.buildRedditEmbed(url, post.title),
       };
-
     } catch (error) {
       console.error('Reddit extraction failed:', error);
       return null;
@@ -112,24 +111,29 @@ export class RedditExtractor implements IPlatformExtractor {
   /**
    * Mock search for development
    */
-  private async mockSearch(query: string, context: string): Promise<MediaEmbed> {
+  private async mockSearch(
+    query: string,
+    context: string
+  ): Promise<MediaEmbed> {
     const mockPosts = {
       video: {
         url: 'https://www.reddit.com/r/PublicFreakout/comments/example',
         title: 'Shocking video shows incident at store',
         author: 'reddit_user123',
         videoUrl: 'https://v.redd.it/example/DASH_720.mp4',
-        thumbnail: 'https://b.thumbs.redditmedia.com/example.jpg'
+        thumbnail: 'https://b.thumbs.redditmedia.com/example.jpg',
       },
       discussion: {
         url: 'https://www.reddit.com/r/AmItheAsshole/comments/example2',
         title: 'AITA for telling my boss the truth?',
         author: 'throwaway12345',
-        thumbnail: null
-      }
+        thumbnail: null,
+      },
     };
 
-    const selected = context.includes('video') ? mockPosts.video : mockPosts.discussion;
+    const selected = context.includes('video')
+      ? mockPosts.video
+      : mockPosts.discussion;
 
     if (selected.videoUrl) {
       return {
@@ -140,7 +144,7 @@ export class RedditExtractor implements IPlatformExtractor {
         title: selected.title,
         author: selected.author,
         platform: 'Reddit',
-        confidence: 0.7
+        confidence: 0.7,
       };
     }
 
@@ -151,7 +155,7 @@ export class RedditExtractor implements IPlatformExtractor {
       author: selected.author,
       platform: 'Reddit',
       confidence: 0.7,
-      embedHtml: this.buildRedditEmbed(selected.url, selected.title)
+      embedHtml: this.buildRedditEmbed(selected.url, selected.title),
     };
   }
 

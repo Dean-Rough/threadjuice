@@ -37,15 +37,20 @@ function loadGeneratedStories() {
     if (!fs.existsSync(storiesDir)) {
       return [];
     }
-    
-    const files = fs.readdirSync(storiesDir).filter(file => file.endsWith('.json'));
+
+    const files = fs
+      .readdirSync(storiesDir)
+      .filter(file => file.endsWith('.json'));
     const stories = files.map(file => {
       const content = fs.readFileSync(path.join(storiesDir, file), 'utf-8');
       return JSON.parse(content);
     });
-    
+
     // Sort by creation date, newest first
-    return stories.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return stories.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   } catch (error) {
     // Failed to load generated stories
     return [];
@@ -83,10 +88,11 @@ export async function GET(request: NextRequest) {
     // Try Supabase first
     try {
       // Attempting to fetch from Supabase
-      
+
       let query = supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           id,
           title,
           slug,
@@ -106,7 +112,8 @@ export async function GET(request: NextRequest) {
             avatar_url,
             tone
           )
-        `)
+        `
+        )
         .eq('status', 'published');
 
       // Apply filters
@@ -157,43 +164,56 @@ export async function GET(request: NextRequest) {
       }
 
       // Successfully fetched from Supabase
-      
+
       // Transform Supabase data to match expected format
-      posts = data?.map(post => ({
-        id: post.id,
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.hook,
-        imageUrl: post.featured_image,
-        category: post.category,
-        author: (Array.isArray(post.personas) ? post.personas[0]?.name : post.personas?.name) || 'The Terry',
-        viewCount: post.view_count,
-        upvoteCount: Math.floor(post.view_count * 0.08), // Derived metric
-        commentCount: Math.floor(post.view_count * 0.03), // Derived metric
-        shareCount: post.share_count,
-        bookmarkCount: Math.floor(post.view_count * 0.05), // Derived metric
-        trending: post.trending_score >= 50,
-        featured: post.featured,
-        status: post.status,
-        createdAt: post.created_at,
-        updatedAt: post.updated_at,
-        content: post.content,
-        persona: {
-          name: (Array.isArray(post.personas) ? post.personas[0]?.name : post.personas?.name) || 'The Terry',
-          avatar: (Array.isArray(post.personas) ? post.personas[0]?.avatar_url : post.personas?.avatar_url) || '/assets/img/personas/the-terry.svg',
-          bio: (Array.isArray(post.personas) ? post.personas[0]?.tone : post.personas?.tone) || 'Acerbic wit and social commentary'
-        },
-        readingTime: Math.ceil((post.content?.sections?.length || 8) * 0.5)
-      })) || [];
+      posts =
+        data?.map((post: any) => ({
+          id: post.id,
+          title: post.title,
+          slug: post.slug,
+          excerpt: post.hook,
+          imageUrl: post.featured_image,
+          category: post.category,
+          author:
+            (Array.isArray(post.personas)
+              ? post.personas[0]?.name
+              : post.personas?.name) || 'The Terry',
+          viewCount: post.view_count,
+          upvoteCount: Math.floor(post.view_count * 0.08), // Derived metric
+          commentCount: Math.floor(post.view_count * 0.03), // Derived metric
+          shareCount: post.share_count,
+          bookmarkCount: Math.floor(post.view_count * 0.05), // Derived metric
+          trending: post.trending_score >= 50,
+          featured: post.featured,
+          status: post.status,
+          createdAt: post.created_at,
+          updatedAt: post.updated_at,
+          content: post.content,
+          persona: {
+            name:
+              (Array.isArray(post.personas)
+                ? post.personas[0]?.name
+                : post.personas?.name) || 'The Terry',
+            avatar:
+              (Array.isArray(post.personas)
+                ? post.personas[0]?.avatar_url
+                : post.personas?.avatar_url) ||
+              '/assets/img/personas/the-terry.svg',
+            bio:
+              (Array.isArray(post.personas)
+                ? post.personas[0]?.tone
+                : post.personas?.tone) || 'Acerbic wit and social commentary',
+          },
+          readingTime: Math.ceil((post.content?.sections?.length || 8) * 0.5),
+        })) || [];
 
       usedSupabase = true;
-
     } catch (supabaseError) {
       // Supabase unavailable, falling back to file system
-      
+
       // Fallback to file-based system
       const generatedStories = loadGeneratedStories();
-      
+
       // Filter and process like before
       const filteredPosts = generatedStories.filter(post => {
         if (post.status && post.status !== 'published') return false;
@@ -207,7 +227,9 @@ export async function GET(request: NextRequest) {
         if (search) {
           const searchLower = search.toLowerCase();
           const titleMatch = post.title.toLowerCase().includes(searchLower);
-          const excerptMatch = post.excerpt?.toLowerCase().includes(searchLower);
+          const excerptMatch = post.excerpt
+            ?.toLowerCase()
+            .includes(searchLower);
           if (!titleMatch && !excerptMatch) return false;
         }
         return true;
@@ -219,16 +241,21 @@ export async function GET(request: NextRequest) {
           filteredPosts.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
           break;
         case 'shares':
-          filteredPosts.sort((a, b) => (b.shareCount || 0) - (a.shareCount || 0));
+          filteredPosts.sort(
+            (a, b) => (b.shareCount || 0) - (a.shareCount || 0)
+          );
           break;
         case 'trending':
-          filteredPosts.sort((a, b) => (b.viral_score || 0) - (a.viral_score || 0));
+          filteredPosts.sort(
+            (a, b) => (b.viral_score || 0) - (a.viral_score || 0)
+          );
           break;
         case 'latest':
         default:
-          filteredPosts.sort((a, b) => 
-            new Date(b.createdAt || b.updatedAt).getTime() - 
-            new Date(a.createdAt || a.updatedAt).getTime()
+          filteredPosts.sort(
+            (a, b) =>
+              new Date(b.createdAt || b.updatedAt).getTime() -
+              new Date(a.createdAt || a.updatedAt).getTime()
           );
           break;
       }
@@ -246,7 +273,7 @@ export async function GET(request: NextRequest) {
     const hasPrev = page > 1;
 
     // Transform posts to ensure consistent format
-    const transformedPosts = posts.map(post => ({
+    const transformedPosts = posts.map((post: any) => ({
       id: post.id,
       title: post.title,
       slug: post.slug,
@@ -268,29 +295,31 @@ export async function GET(request: NextRequest) {
       persona: post.persona || {
         name: 'The Terry',
         avatar: '/assets/img/personas/the-terry.svg',
-        bio: 'Acerbic wit and social commentary'
-      }
+        bio: 'Acerbic wit and social commentary',
+      },
     }));
 
-    return NextResponse.json({
-      posts: transformedPosts,
-      meta: {
-        page,
-        limit,
-        total,
-        totalPages,
-        hasNext,
-        hasPrev,
-        source: usedSupabase ? 'supabase' : 'filesystem',
+    return NextResponse.json(
+      {
+        posts: transformedPosts,
+        meta: {
+          page,
+          limit,
+          total,
+          totalPages,
+          hasNext,
+          hasPrev,
+          source: usedSupabase ? 'supabase' : 'filesystem',
+        },
       },
-    }, {
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
       }
-    });
-
+    );
   } catch (error) {
     console.error('Posts API error:', error);
     return NextResponse.json(
@@ -308,7 +337,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate required fields
     const requiredFields = ['title', 'slug', 'content', 'category'];
     for (const field of requiredFields) {
@@ -332,7 +361,7 @@ export async function POST(request: NextRequest) {
       view_count: body.viewCount || 0,
       share_count: body.shareCount || 0,
       featured_image: body.imageUrl,
-      status: 'published'
+      status: 'published',
     };
 
     const { data, error } = await supabase
@@ -350,7 +379,6 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ post: data }, { status: 201 });
-
   } catch (error) {
     console.error('POST /api/posts error:', error);
     return NextResponse.json(

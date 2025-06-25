@@ -10,7 +10,7 @@ const trendingData = [
   {
     id: 1,
     image: '/assets/img/category/trending_thumb01.png',
-    title: 'How to climb the career latter and don\'t waste your youth...',
+    title: "How to climb the career latter and don't waste your youth...",
   },
   {
     id: 2,
@@ -31,24 +31,22 @@ export default function VerticalSider() {
         }}
         className='tgslider__trending-active'
       >
-        {trendingData.map((item) => (
+        {trendingData.map(item => (
           <SwiperSlide key={item.id} className='tgslider__trending-item'>
             <div className='tgslider__trending-thumb'>
               <Link href={`/blog/${item.id}`}>
-                <Image 
-                  src={item.image} 
+                <Image
+                  src={item.image}
                   alt={item.title}
                   width={150}
                   height={100}
-                  className="w-full h-auto object-cover"
+                  className='h-auto w-full object-cover'
                 />
               </Link>
             </div>
             <div className='tgslider__trending-content'>
               <h6 className='title'>
-                <Link href={`/blog/${item.id}`}>
-                  {item.title}
-                </Link>
+                <Link href={`/blog/${item.id}`}>{item.title}</Link>
               </h6>
             </div>
           </SwiperSlide>

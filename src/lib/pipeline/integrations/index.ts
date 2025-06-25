@@ -1,6 +1,6 @@
 /**
  * Pipeline Service Integrations
- * 
+ *
  * Central export point for all service adapters.
  * These adapters bridge existing services with the pipeline architecture.
  */
@@ -9,7 +9,11 @@ export { redditAdapter, RedditAdapter } from './RedditAdapter';
 export type { RedditFetchOptions } from './RedditAdapter';
 
 export { openAIAdapter, OpenAIAdapter } from './OpenAIAdapter';
-export type { StoryGenerationOptions, GeneratedStory, StorySection } from './OpenAIAdapter';
+export type {
+  StoryGenerationOptions,
+  GeneratedStory,
+  StorySection,
+} from './OpenAIAdapter';
 
 export { pexelsAdapter, PexelsAdapter } from './PexelsAdapter';
 export type { ImageSearchOptions } from './PexelsAdapter';
@@ -18,7 +22,10 @@ export { klipyAdapter, KlipyAdapter } from './KlipyAdapter';
 export type { GifSelectionOptions, EnhancedGifResult } from './KlipyAdapter';
 
 export { twitterAdapter, TwitterAdapter } from './TwitterAdapter';
-export type { TwitterFetchOptions, ProcessedTwitterThread } from './TwitterAdapter';
+export type {
+  TwitterFetchOptions,
+  ProcessedTwitterThread,
+} from './TwitterAdapter';
 
 /**
  * Service availability checks
@@ -26,7 +33,8 @@ export type { TwitterFetchOptions, ProcessedTwitterThread } from './TwitterAdapt
 export const checkServiceAvailability = () => {
   return {
     reddit: {
-      available: !!process.env.REDDIT_CLIENT_ID && !!process.env.REDDIT_CLIENT_SECRET,
+      available:
+        !!process.env.REDDIT_CLIENT_ID && !!process.env.REDDIT_CLIENT_SECRET,
       message: 'Reddit API credentials required',
     },
     openai: {
@@ -53,11 +61,13 @@ export const checkServiceAvailability = () => {
  */
 export const initializeServices = async () => {
   const availability = checkServiceAvailability();
-  
+
   console.log('🚀 Initializing pipeline services...');
-  
+
   for (const [service, status] of Object.entries(availability)) {
-    console.log(`  ${status.available ? '✅' : '⚠️'} ${service}: ${status.message}`);
+    console.log(
+      `  ${status.available ? '✅' : '⚠️'} ${service}: ${status.message}`
+    );
   }
 
   // Pre-authenticate Reddit if available

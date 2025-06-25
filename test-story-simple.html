@@ -1,29 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Test Story API</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Testing Story API</h1>
     <div id="result">Loading...</div>
-    
+
     <script>
-        fetch('/api/test-story')
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Data received:', data);
-                document.getElementById('result').innerHTML = 
-                    '<h2>' + data.title + '</h2>' +
-                    '<p>Sections: ' + data.content.sections.length + '</p>' +
-                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('result').innerHTML = 'Error: ' + error.message;
-            });
+      fetch('/api/test-story')
+        .then(response => {
+          console.log('Response status:', response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log('Data received:', data);
+          document.getElementById('result').innerHTML =
+            '<h2>' +
+            data.title +
+            '</h2>' +
+            '<p>Sections: ' +
+            data.content.sections.length +
+            '</p>' +
+            '<pre>' +
+            JSON.stringify(data, null, 2) +
+            '</pre>';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('result').innerHTML =
+            'Error: ' + error.message;
+        });
     </script>
-</body>
+  </body>
 </html>

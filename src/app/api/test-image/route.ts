@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       test_info: {
         title: title.slice(0, 100),
         category,
-        analysis: result.analysis || null,
+        analysis: (result as { analysis?: any }).analysis || null,
       },
     });
   } catch (error) {

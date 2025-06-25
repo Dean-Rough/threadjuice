@@ -7,12 +7,14 @@ The modular pipeline system has been successfully integrated and verified. All T
 ## Pipeline Components Verified
 
 ### Core Components
+
 - ✅ **PipelineContext**: Base context class with Reddit and AI variants
 - ✅ **Pipeline**: Main pipeline class with stage chaining
 - ✅ **PipelineStage**: Base stage class for all pipeline stages
 - ✅ **PipelineOrchestrator**: Manages multiple pipelines with monitoring
 
 ### Pipeline Stages
+
 - ✅ **SourceStage**: Fetches content from Reddit, Twitter (stub), or AI
 - ✅ **AnalysisStage**: Extracts entities, sentiment, keywords, and metaphors
 - ✅ **EnrichmentStage**: Adds images and GIFs with full/minimal options
@@ -20,6 +22,7 @@ The modular pipeline system has been successfully integrated and verified. All T
 - ✅ **OutputStage**: Saves to database, file, or both
 
 ### Helper Functions
+
 - ✅ **createRedditPipeline**: Pre-configured Reddit ingestion pipeline
 - ✅ **createAIPipeline**: Pre-configured AI generation pipeline
 - ✅ **createContext**: Factory for creating empty pipeline contexts
@@ -28,7 +31,9 @@ The modular pipeline system has been successfully integrated and verified. All T
 ## Integration Points Ready
 
 ### 1. Story Generation Scripts
+
 The pipeline can replace existing story generation with:
+
 ```typescript
 import { createRedditPipeline, createContext } from '@/lib/pipeline';
 
@@ -37,7 +42,9 @@ const result = await pipeline.execute(createContext());
 ```
 
 ### 2. API Routes
+
 Can be integrated into API endpoints:
+
 ```typescript
 // app/api/stories/generate/route.ts
 import { createAIPipeline, createContext } from '@/lib/pipeline';
@@ -51,9 +58,14 @@ export async function POST(request: Request) {
 ```
 
 ### 3. Batch Processing
+
 For scheduled jobs or bulk operations:
+
 ```typescript
-import { PipelineOrchestrator, createDefaultOrchestrator } from '@/lib/pipeline';
+import {
+  PipelineOrchestrator,
+  createDefaultOrchestrator,
+} from '@/lib/pipeline';
 
 const orchestrator = createDefaultOrchestrator();
 const results = await orchestrator.execute('reddit-viral', createContext());
@@ -62,26 +74,31 @@ const results = await orchestrator.execute('reddit-viral', createContext());
 ## Next Steps for Full Integration
 
 ### 1. Database Integration
+
 - Connect OutputStage to actual Prisma client
 - Ensure schema matches ProcessedStory interface
 - Add transaction support for atomic saves
 
 ### 2. External Service Integration
+
 - Implement Reddit API client in SourceStage
 - Add OpenAI integration for AI story generation
 - Connect Unsplash/Giphy for media enrichment
 
 ### 3. Error Handling & Monitoring
+
 - Add proper logging to production system
 - Implement retry logic for external services
 - Add metrics collection for pipeline performance
 
 ### 4. Testing
+
 - Unit tests for each pipeline stage
 - Integration tests for full pipelines
 - E2E tests for API endpoints using pipelines
 
 ### 5. Migration
+
 - Update existing story generation scripts to use pipeline
 - Migrate cron jobs to use PipelineOrchestrator
 - Update API routes to leverage pipeline system
@@ -101,6 +118,7 @@ npx tsx scripts/pipeline-examples.ts
 ## Architecture Benefits
 
 The modular pipeline provides:
+
 - **Extensibility**: Easy to add new stages or sources
 - **Testability**: Each stage can be tested independently
 - **Flexibility**: Mix and match stages for different use cases

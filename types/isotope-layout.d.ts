@@ -21,7 +21,7 @@ declare module 'isotope-layout' {
 
   class Isotope {
     constructor(element: HTMLElement, options?: IsotopeOptions);
-    
+
     arrange(options?: { filter?: string; sortBy?: string }): void;
     layout(): void;
     reloadItems(): void;
@@ -35,11 +35,11 @@ declare module 'isotope-layout' {
     appended(elements: HTMLElement | HTMLElement[]): void;
     prepended(elements: HTMLElement | HTMLElement[]): void;
     addItems(elements: HTMLElement | HTMLElement[]): void;
-    
+
     on(eventName: string, listener: Function): void;
     off(eventName: string, listener: Function): void;
     once(eventName: string, listener: Function): void;
-    
+
     static data(element: HTMLElement): Isotope | undefined;
   }
 
