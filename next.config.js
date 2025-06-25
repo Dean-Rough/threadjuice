@@ -171,6 +171,15 @@ const nextConfig = {
 
   // Bundle optimization
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Add resolve extensions explicitly
+    config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js', '.json'];
+    
+    // Ensure proper module resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+    };
+
     // Optimize for production builds
     if (!dev && !isServer) {
       // Split chunks for better caching
