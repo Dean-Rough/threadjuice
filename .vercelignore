@@ -29,3 +29,5 @@ jest.setup.js
 docs
 *.md
 !README.md
+src/app/admin/**
+src/app/(admin)/**

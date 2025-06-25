@@ -173,7 +173,7 @@ export function createTwitterPipeline(
 /**
  * Quick Reddit Pipeline
  *
- * Minimal pipeline for fast processing
+ * Minimal pipeline for fast processing - fixed TypeScript errors
  */
 export function createQuickRedditPipeline(subreddit: string) {
   return new PipelineBuilder()
