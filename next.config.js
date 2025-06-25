@@ -1,3 +1,9 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false, // Temporarily disabled to fix duplicate rendering
@@ -177,7 +183,7 @@ const nextConfig = {
     // Ensure proper module resolution
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': require('path').resolve(__dirname, 'src'),
+      '@': path.join(__dirname, 'src'),
     };
 
     // Optimize for production builds
