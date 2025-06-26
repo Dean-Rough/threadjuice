@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id               String              @id @default(uuid())
+  title            String
+  slug             String              @unique
+  excerpt          String?
+  content          Json?
+  imageUrl         String?             @map("image_url")
+  category         String
+  author           String
+  personaId        Int?                @map("persona_id")
+  status           String              @default("published")
+  viewCount        Int                 @default(0) @map("view_count")
+  upvoteCount      Int                 @default(0) @map("upvote_count")
+  commentCount     Int                 @default(0) @map("comment_count")
+  shareCount       Int                 @default(0) @map("share_count")
+  bookmarkCount    Int                 @default(0) @map("bookmark_count")
+  trending         Boolean             @default(false)
+  featured         Boolean             @default(false)
+  redditThreadId   String?             @map("reddit_thread_id")
+  subreddit        String?
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @default(now()) @updatedAt @map("updated_at")
+
+  persona          Persona?            @relation(fields: [personaId], references: [id])
+  interactions     UserInteraction[]
+  comments         Comment[]
+  images           Image[]
+  postTags         PostTag[]
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([category])
+  @@index([author])
+  @@index([trending, createdAt(sort: Desc)])
+  @@index([featured, createdAt(sort: Desc)])
+  @@index([slug])
+  @@map("posts")
+}
+
+model Persona {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  avatarUrl   String   @map("avatar_url")
+  tone        String
+  bio         String?
+  storyCount  Int      @default(0) @map("story_count")
+  rating      Float    @default(0.0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  posts       Post[]
+
+  @@map("personas")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String   @default("#f97316")
+  postCount   Int      @default(0) @map("post_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model UserInteraction {
+  id              String   @id @default(uuid())
+  userId          String?  @map("user_id")
+  postId          String   @map("post_id")
+  interactionType String   @map("interaction_type")
+  metadata        Json?
+  ipAddress       String?  @map("ip_address")
+  userAgent       String?  @map("user_agent")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, interactionType])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([ipAddress, createdAt(sort: Desc)])
+  @@map("user_interactions")
+}
+
+model Comment {
+  id               String    @id @default(uuid())
+  postId           String    @map("post_id")
+  parentId         String?   @map("parent_id")
+  userId           String?   @map("user_id")
+  authorName       String    @map("author_name")
+  content          String
+  upvoteCount      Int       @default(0) @map("upvote_count")
+  downvoteCount    Int       @default(0) @map("downvote_count")
+  isRedditExcerpt  Boolean   @default(false) @map("is_reddit_excerpt")
+  redditCommentId  String?   @map("reddit_comment_id")
+  redditScore      Int?      @map("reddit_score")
+  status           String    @default("active")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  post             Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent           Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies          Comment[] @relation("CommentReplies")
+
+  @@index([postId, createdAt(sort: Desc)])
+  @@index([parentId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("comments")
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  postId     String   @map("post_id")
+  url        String
+  altText    String?  @map("alt_text")
+  caption    String?
+  licenseType String? @map("license_type")
+  author     String?
+  sourceName String?  @map("source_name")
+  sourceUrl  String?  @map("source_url")
+  width      Int?
+  height     Int?
+  fileSize   Int?     @map("file_size")
+  position   String   @default("main")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("images")
+}
+
+model Tag {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  slug       String    @unique
+  usageCount Int       @default(0) @map("usage_count")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  postTags   PostTag[]
+
+  @@index([slug])
+  @@map("tags")
+}
+
+model PostTag {
+  postId String @map("post_id")
+  tagId  Int    @map("tag_id")
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([postId])
+  @@index([tagId])
+  @@map("post_tags")
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  eventType  String   @map("event_type")
+  entityType String?  @map("entity_type")
+  entityId   String?  @map("entity_id")
+  userId     String?  @map("user_id")
+  sessionId  String?  @map("session_id")
+  metadata   Json?
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  referrer   String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([eventType, createdAt(sort: Desc)])
+  @@index([entityType, entityId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("analytics_events")
+}
+
+model NewsletterSubscriber {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  userId      String?  @map("user_id")
+  status      String   @default("active")
+  preferences Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([status])
+  @@map("newsletter_subscribers")
+}

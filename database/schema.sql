@@ -62,6 +62,8 @@ CREATE TABLE posts (
   trending_score INTEGER DEFAULT 0,
   view_count INTEGER DEFAULT 0,
   share_count INTEGER DEFAULT 0,
+  upvote_count INTEGER DEFAULT 0,
+  downvote_count INTEGER DEFAULT 0,
   event_id UUID REFERENCES events(id),
   reddit_thread_id TEXT,
   subreddit TEXT,
@@ -143,6 +145,8 @@ CREATE INDEX idx_posts_trending_score ON posts(trending_score DESC);
 CREATE INDEX idx_posts_created_at ON posts(created_at DESC);
 CREATE INDEX idx_posts_slug ON posts(slug);
 CREATE INDEX idx_posts_reddit_thread_id ON posts(reddit_thread_id);
+CREATE INDEX idx_posts_upvote_count ON posts(upvote_count DESC);
+CREATE INDEX idx_posts_downvote_count ON posts(downvote_count DESC);
 
 CREATE INDEX idx_comments_post_id ON comments(post_id);
 CREATE INDEX idx_comments_parent_id ON comments(parent_id);

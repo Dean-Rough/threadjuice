@@ -18,3 +18,20 @@ export interface Post {
   created_at: string;
   updated_at: string;
 }
+
+export interface Comment {
+  id: string;
+  postId?: string;
+  parentId?: string | null;
+  author: string;
+  authorId?: string;
+  content: string;
+  upvotes: number;
+  downvotes?: number;
+  timestamp: string;
+  isReddit?: boolean;
+  redditScore?: number;
+  replies?: Comment[];
+  isLiked?: boolean;
+  isCollapsed?: boolean;
+}
