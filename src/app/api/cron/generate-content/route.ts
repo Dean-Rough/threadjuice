@@ -12,7 +12,8 @@ const execAsync = promisify(exec);
 export async function GET(request: NextRequest) {
   try {
     // Verify this is from Vercel Cron
-    const authHeader = headers().get('authorization');
+    const headersList = await headers();
+    const authHeader = headersList.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json(
         { error: 'Unauthorized' },

@@ -53,16 +53,14 @@ export async function POST(
         trending_score: currentScore + (type === 'upvote' ? 3 : -1),
       })
       .eq('id', postId)
-      .select()
-      .single();
+      .select();
 
-    if (error) {
+    if (error || !data || data.length === 0) {
       console.error('Error updating vote:', error);
-      return NextResponse.json(
-        { error: 'Failed to update vote' },
-        { status: 500 }
-      );
+      throw new Error('Failed to update vote');
     }
+
+    const updatedPost = data[0];
 
     // Track interaction
     const ipAddress = request.headers.get('x-forwarded-for') || 
@@ -79,9 +77,9 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      upvotes: data.upvote_count,
-      downvotes: data.downvote_count || 0,
-      trendingScore: data.trending_score,
+      upvotes: updatedPost.upvote_count || 0,
+      downvotes: updatedPost.downvote_count || 0,
+      trendingScore: updatedPost.trending_score || 0,
     });
 
   } catch (error) {

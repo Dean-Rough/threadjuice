@@ -1,6 +1,5 @@
 const { FlatCompat } = require('@eslint/eslintrc');
 const nextPlugin = require('@next/eslint-plugin-next');
-const zodPlugin = require('eslint-plugin-zod');
 const path = require('path');
 
 const compat = new FlatCompat({
