@@ -21,12 +21,11 @@ module.exports = [
       'src-backup-frankensteined/',
     ],
   },
-  ...compat.extends('next/core-web-vitals', 'plugin:prettier/recommended'),
+  ...compat.extends('next/core-web-vitals'),
   {
     plugins: {
       '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
       '@next/next': nextPlugin,
-      zod: zodPlugin,
     },
     rules: {
       '@typescript-eslint/no-unused-vars': [
