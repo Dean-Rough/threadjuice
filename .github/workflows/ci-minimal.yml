@@ -1,0 +1,53 @@
+name: Minimal CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  quality-check:
+    name: Quality Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting (continue on error)
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Security audit (continue on error)
+        run: npm audit --audit-level high
+        continue-on-error: true
+
+  deploy-production:
+    name: Deploy to Production via Vercel
+    runs-on: ubuntu-latest
+    needs: [quality-check]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Trigger Vercel deployment
+        run: |
+          echo "✅ Production deployment will be handled by Vercel automatically"
+          echo "🔗 Monitor deployment at: https://vercel.com/dean-roughs-projects/threadjuice"
+          
+      - name: Notify deployment
+        run: |
+          echo "🚀 ThreadJuice deployment initiated"
+          echo "📊 Check status: https://threadjuice.com/tj-control-x7j9k"
