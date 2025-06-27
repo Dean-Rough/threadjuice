@@ -45,7 +45,7 @@ export default function DashboardPage() {
 
   // Calculate dashboard stats
   const totalPosts = posts.length;
-  const totalViews = posts.reduce((sum, post) => sum + post.views, 0);
+  const totalViews = posts.reduce((sum, post) => sum + (post.views || 0), 0);
   const totalEngagement = posts.reduce(
     (sum, post) => sum + post.redditMetrics.upvotes,
     0
