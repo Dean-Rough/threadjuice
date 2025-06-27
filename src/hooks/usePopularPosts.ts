@@ -14,20 +14,32 @@ interface PopularPostsResponse {
 
 // Fetch posts sorted by view count
 async function fetchPopularPosts(limit = 5): Promise<PopularPostsResponse> {
-  const response = await fetch(`/api/posts?limit=${limit}&sortBy=views`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch popular posts');
+  try {
+    const response = await fetch(`/api/posts?limit=${limit}&sortBy=views`);
+    if (!response.ok) {
+      console.error('Failed to fetch popular posts:', response.status, response.statusText);
+      return { posts: [] }; // Return empty array instead of throwing
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching popular posts:', error);
+    return { posts: [] }; // Return empty array on network errors
   }
-  return response.json();
 }
 
 // Fetch posts sorted by share count
 async function fetchMostSharedPosts(limit = 5): Promise<PopularPostsResponse> {
-  const response = await fetch(`/api/posts?limit=${limit}&sortBy=shares`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch most shared posts');
+  try {
+    const response = await fetch(`/api/posts?limit=${limit}&sortBy=shares`);
+    if (!response.ok) {
+      console.error('Failed to fetch most shared posts:', response.status, response.statusText);
+      return { posts: [] }; // Return empty array instead of throwing
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching most shared posts:', error);
+    return { posts: [] }; // Return empty array on network errors
   }
-  return response.json();
 }
 
 export function usePopularPosts(limit = 5) {
