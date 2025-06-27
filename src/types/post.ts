@@ -15,14 +15,21 @@ export interface Post {
   slug: string;
   title: string;
   excerpt: string;
-  content: string;
+  content: string | { sections?: any[] };
   featuredImage: string;
   category: string;
   tags: string[];
-  persona: Persona;
+  persona?: Persona;
+  author?: string;
   publishedAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   readTime: number;
-  views: number;
-  redditMetrics: RedditMetrics;
+  views?: number;
+  viewCount?: number;
+  upvoteCount?: number;
+  commentCount?: number;
+  shareCount?: number;
+  sourceUrl?: string;
+  redditAuthor?: string;
+  redditMetrics?: RedditMetrics;
 }

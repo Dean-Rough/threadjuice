@@ -63,7 +63,21 @@ function optimizeTitle(originalTitle: string): string {
 }
 
 function extractDescription(content: any): string {
-  // Extract first meaningful text from content sections
+  // Handle string content
+  if (typeof content === 'string') {
+    const cleaned = content
+      .replace(/<[^>]*>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    if (cleaned.length > 155) {
+      return cleaned.substring(0, 152) + '...';
+    }
+    
+    return cleaned || 'Discover the latest viral stories, internet drama, and trending content on ThreadJuice.';
+  }
+  
+  // Handle object content with sections
   const sections = content?.sections || [];
   
   for (const section of sections) {
