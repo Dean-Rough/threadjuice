@@ -47,11 +47,11 @@ export default function DashboardPage() {
   const totalPosts = posts.length;
   const totalViews = posts.reduce((sum, post) => sum + (post.views || 0), 0);
   const totalEngagement = posts.reduce(
-    (sum, post) => sum + post.redditMetrics.upvotes,
+    (sum, post) => sum + (post.redditMetrics?.upvotes || 0),
     0
   );
   const avgEngagementRate = (
-    posts.reduce((sum, post) => sum + post.redditMetrics.engagementRate, 0) /
+    posts.reduce((sum, post) => sum + (post.redditMetrics?.engagementRate || 0), 0) /
     posts.length
   ).toFixed(1);
 
