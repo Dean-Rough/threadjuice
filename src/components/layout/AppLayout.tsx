@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Header } from './Header';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { HeaderAd } from '@/components/ads';
@@ -52,28 +53,28 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <h3 className='mb-4 font-extrabold text-foreground'>Explore</h3>
                 <ul className='space-y-2 text-sm'>
                   <li>
-                    <a
+                    <Link
                       href='/'
                       className='text-muted-foreground hover:text-foreground'
                     >
                       Trending Stories
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href='/personas'
                       className='text-muted-foreground hover:text-foreground'
                     >
                       Our Writers
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href='/about'
                       className='text-muted-foreground hover:text-foreground'
                     >
                       About
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a
@@ -91,12 +92,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <h3 className='mb-4 font-extrabold text-foreground'>About</h3>
                 <ul className='space-y-2 text-sm'>
                   <li>
-                    <a
+                    <Link
                       href='/personas'
                       className='text-muted-foreground hover:text-foreground'
                     >
                       Our Writers
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a
