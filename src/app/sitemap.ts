@@ -1,14 +1,18 @@
 import { MetadataRoute } from 'next';
-import { getAllPosts, getAllCategories } from '@/data/mockPosts';
-import { getAllPersonas } from '@/data/personas';
+import supabase from '@/lib/database';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://threadjuice.com';
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://threadjuice.com';
 
-  // Get all posts, categories, and personas
-  const posts = getAllPosts();
-  const categories = getAllCategories();
-  const personas = getAllPersonas();
+  // Get all published posts from database
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('slug, updated_at, category')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false });
+
+  // Get unique categories
+  const categories = [...new Set(posts?.map(p => p.category).filter(Boolean))];
 
   // Static pages
   const staticPages = [
@@ -33,28 +37,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Dynamic post pages
-  const postPages = posts.map(post => ({
+  const postPages = posts?.map(post => ({
     url: `${baseUrl}/posts/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: 'weekly' as const,
+    lastModified: new Date(post.updated_at || new Date()),
+    changeFrequency: 'daily' as const,
     priority: 0.9,
-  }));
+  })) || [];
 
   // Category pages
   const categoryPages = categories.map(category => ({
-    url: `${baseUrl}/category/${category.slug}`,
+    url: `${baseUrl}/category/${category.toLowerCase()}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
+    priority: 0.7,
+  }));
+
+  // Author pages from posts
+  const { data: authorPosts } = await supabase
+    .from('posts')
+    .select('author')
+    .not('author', 'is', null)
+    .limit(50);
+    
+  const authors = [...new Set(authorPosts?.map(p => p.author).filter(Boolean))];
+  const authorPages = authors.map(author => ({
+    url: `${baseUrl}/author/${encodeURIComponent(author)}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
     priority: 0.6,
   }));
 
-  // Persona pages
-  const personaPages = personas.map(persona => ({
-    url: `${baseUrl}/personas/${persona.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.5,
-  }));
-
-  return [...staticPages, ...postPages, ...categoryPages, ...personaPages];
+  return [...staticPages, ...postPages, ...categoryPages, ...authorPages];
 }

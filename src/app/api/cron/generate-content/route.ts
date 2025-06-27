@@ -21,10 +21,29 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Check if content generation is enabled
+    const controlsPath = './threadjuice-controls.json';
+    try {
+      const { readFile } = await import('fs/promises');
+      const controlsData = await readFile(controlsPath, 'utf-8');
+      const controls = JSON.parse(controlsData);
+      
+      if (!controls.contentGeneration) {
+        return NextResponse.json({
+          success: true,
+          message: 'Content generation is disabled',
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } catch {
+      // If controls file doesn't exist, assume enabled
+    }
+
     console.log('Starting content generation cron job...');
 
-    // Generate 5 new stories
-    const numberOfStories = 5;
+    // Generate 3-7 stories based on time of day
+    const hour = new Date().getUTCHours();
+    const numberOfStories = hour >= 6 && hour <= 18 ? 5 : 3; // More during peak hours
     const results = [];
 
     for (let i = 0; i < numberOfStories; i++) {

@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Script from 'next/script';
 import PostDetail from '@/components/features/PostDetail';
-import { prisma } from '@/lib/prisma';
+import supabase from '@/lib/database';
+import { generateSEOData, generateMetaTags } from '@/lib/seo/auto-seo';
+import { optimizeForAISearch } from '@/lib/seo/ai-search-optimization';
 
 interface PostPageProps {
   params: Promise<{
@@ -15,43 +18,64 @@ export async function generateMetadata({
 }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const post = await prisma.post.findUnique({
-    where: { slug },
-    include: { persona: true },
-  });
+  const { data: post, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-  if (!post) {
+  if (error || !post) {
     return {
-      title: 'Post Not Found',
+      title: 'Post Not Found | ThreadJuice',
+      description: 'The requested story could not be found.'
     };
   }
 
-  return {
-    title: post.title,
-    description: post.excerpt,
-  };
+  // Generate SEO data
+  const seoData = generateSEOData(post);
+  
+  // Generate meta tags
+  const metaTags = generateMetaTags(seoData, post);
+  
+  return metaTags;
 }
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
 
-  const post = await prisma.post.findUnique({
-    where: { slug },
-    include: {
-      persona: true,
-      images: true,
-      postTags: {
-        include: { tag: true },
-      },
-    },
-  });
+  const { data: post, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-  if (!post) {
+  if (error || !post) {
     notFound();
   }
 
+  // Generate SEO and AI search data
+  const seoData = generateSEOData(post);
+  const aiSearchData = await optimizeForAISearch(post);
+
+  // Track view
+  await supabase
+    .from('posts')
+    .update({ view_count: (post.view_count || 0) + 1 })
+    .eq('id', post.id);
+
   return (
     <>
+      {/* Structured Data for SEO and AI Search */}
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            seoData.jsonLd,
+            ...aiSearchData.structuredData
+          ])
+        }}
+      />
       {/* Breadcrumb Navigation */}
       <section
         className='breadcrumb-area pb-20 pt-20'

@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 
-const { createClient } = require('@supabase/supabase-js');
-const fs = require('fs').promises;
-const path = require('path');
+import { createClient } from '@supabase/supabase-js';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

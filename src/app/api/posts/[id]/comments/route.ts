@@ -25,7 +25,7 @@ export async function GET(
 
     if (!dbError && dbComments && dbComments.length > 0) {
       // Format comments for frontend
-      const formattedComments = dbComments.map(comment => ({
+      const formattedComments = dbComments.map((comment: any) => ({
         id: comment.id,
         postId: comment.post_id,
         parentId: comment.parent_id,
