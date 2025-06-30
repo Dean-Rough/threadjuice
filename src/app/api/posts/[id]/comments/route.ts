@@ -41,16 +41,16 @@ export async function GET(
 
       // Build comment tree
       const commentMap = new Map();
-      const rootComments = [];
+      const rootComments: any[] = [];
 
-      formattedComments.forEach(comment => {
+      formattedComments.forEach((comment: any) => {
         commentMap.set(comment.id, comment);
         if (!comment.parentId) {
           rootComments.push(comment);
         }
       });
 
-      formattedComments.forEach(comment => {
+      formattedComments.forEach((comment: any) => {
         if (comment.parentId && commentMap.has(comment.parentId)) {
           const parent = commentMap.get(comment.parentId);
           parent.replies.push(comment);
@@ -79,11 +79,11 @@ export async function GET(
 
     // Extract Reddit comments from post content sections
     const sections = post.content?.sections || [];
-    const redditComments = [];
+    const redditComments: any[] = [];
 
-    sections.forEach(section => {
+    sections.forEach((section: any) => {
       if (section.type === 'comments-1' && section.comments) {
-        section.comments.forEach((comment, index) => {
+        section.comments.forEach((comment: any, index: number) => {
           redditComments.push({
             id: `reddit-${postId}-${index}`,
             postId: postId,

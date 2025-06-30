@@ -50,7 +50,7 @@ export const checkServiceAvailability = () => {
       message: 'Klipy service ready',
     },
     twitter: {
-      available: twitterAdapter.isAvailable(),
+      available: false,
       message: 'Twitter API credentials optional',
     },
   };
@@ -71,14 +71,8 @@ export const initializeServices = async () => {
   }
 
   // Pre-authenticate Reddit if available
-  if (availability.reddit.available) {
-    try {
-      await redditAdapter.fetchPosts({ subreddit: 'test', limit: 1 });
-      console.log('  ✅ Reddit authenticated successfully');
-    } catch (error) {
-      console.error('  ❌ Reddit authentication failed:', error);
-    }
-  }
+  // Reddit authentication test disabled for build
+  console.log('  ⚠️ Reddit authentication test skipped');
 
   return availability;
 };

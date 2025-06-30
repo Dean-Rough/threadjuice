@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
       const testUrls = [
         'https://www.reddit.com/r/AskReddit.json',
         process.env.TWITTER_BEARER_TOKEN ? 'https://api.twitter.com/2/users/by/username/elonmusk' : null
-      ].filter(Boolean);
+      ].filter((url): url is string => url !== null);
 
       for (const url of testUrls) {
         try {

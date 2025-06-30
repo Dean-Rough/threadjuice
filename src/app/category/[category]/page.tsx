@@ -59,9 +59,9 @@ export default async function CategoryPage({
   const sortedPosts = [...paginatedPosts].sort((a, b) => {
     switch (sort) {
       case 'popular':
-        return b.redditMetrics.upvotes - a.redditMetrics.upvotes;
+        return (b.redditMetrics?.upvotes || 0) - (a.redditMetrics?.upvotes || 0);
       case 'trending':
-        return b.redditMetrics.engagementRate - a.redditMetrics.engagementRate;
+        return (b.redditMetrics?.engagementRate || 0) - (a.redditMetrics?.engagementRate || 0);
       default: // newest
         return (
           new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -312,8 +312,8 @@ export default async function CategoryPage({
                     {posts
                       .sort(
                         (a, b) =>
-                          b.redditMetrics.engagementRate -
-                          a.redditMetrics.engagementRate
+                          (b.redditMetrics?.engagementRate || 0) -
+                          (a.redditMetrics?.engagementRate || 0)
                       )
                       .slice(0, 5)
                       .map((post, index) => (
@@ -337,12 +337,12 @@ export default async function CategoryPage({
                               </h6>
                               <div className='trending-meta small text-muted'>
                                 <span>
-                                  {post.redditMetrics.upvotes.toLocaleString()}{' '}
+                                  {(post.redditMetrics?.upvotes || 0).toLocaleString()}{' '}
                                   upvotes
                                 </span>
                                 <span className='mx-2'>•</span>
                                 <span>
-                                  {post.redditMetrics.engagementRate}%
+                                  {post.redditMetrics?.engagementRate || 0}%
                                   engagement
                                 </span>
                               </div>

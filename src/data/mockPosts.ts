@@ -283,17 +283,17 @@ export function getPostsByCategory(category: string): Post[] {
 }
 
 export function getPostsByPersona(personaId: string): Post[] {
-  return mockPosts.filter(post => post.persona.id === personaId);
+  return mockPosts.filter(post => post.persona?.id === personaId);
 }
 
 export function getFeaturedPosts(limit: number = 5): Post[] {
-  return mockPosts.sort((a, b) => b.views - a.views).slice(0, limit);
+  return mockPosts.sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, limit);
 }
 
 export function getTrendingPosts(limit: number = 10): Post[] {
   return mockPosts
     .sort(
-      (a, b) => b.redditMetrics.engagementRate - a.redditMetrics.engagementRate
+      (a, b) => (b.redditMetrics?.engagementRate || 0) - (a.redditMetrics?.engagementRate || 0)
     )
     .slice(0, limit);
 }

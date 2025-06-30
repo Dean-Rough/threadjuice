@@ -43,7 +43,7 @@ export async function POST(
     const { data, error } = await supabase
       .from('comments')
       .update({
-        [column]: comment[column] + increment,
+        [column]: (comment as any)[column] + increment,
       })
       .eq('id', commentId)
       .select()

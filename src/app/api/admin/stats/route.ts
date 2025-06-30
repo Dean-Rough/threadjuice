@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       .select('view_count')
       .gte('created_at', today.toISOString());
     
-    const dailyTraffic = todaysPosts?.reduce((sum, post) => sum + (post.view_count || 0), 0) || 0;
+    const dailyTraffic = todaysPosts?.reduce((sum: number, post: any) => sum + (post.view_count || 0), 0) || 0;
 
     // Get AI search traffic percentage
     // This would normally track referrers, but we'll estimate based on patterns
@@ -30,11 +30,11 @@ export async function GET(request: NextRequest) {
       .limit(20);
 
     // Estimate AI traffic based on viral patterns (posts with sudden spikes)
-    const totalViews = recentViews?.reduce((sum, post) => sum + (post.view_count || 0), 0) || 1;
-    const aiPatternViews = recentViews?.filter(post => 
+    const totalViews = recentViews?.reduce((sum: number, post: any) => sum + (post.view_count || 0), 0) || 1;
+    const aiPatternViews = recentViews?.filter((post: any) => 
       post.view_count > 1000 && // High traffic
       post.title.length < 100 // Concise titles (AI prefers)
-    ).reduce((sum, post) => sum + (post.view_count || 0), 0) || 0;
+    ).reduce((sum: number, post: any) => sum + (post.view_count || 0), 0) || 0;
     
     const aiSearchTraffic = Math.round((aiPatternViews / totalViews) * 100);
 
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
     const viralScore = topPosts?.length ? 
       Math.round(
-        topPosts.reduce((sum, post) => 
+        topPosts.reduce((sum: number, post: any) => 
           sum + (post.upvote_count || 0) * 3 + 
           (post.share_count || 0) * 5 + 
           (post.comment_count || 0) * 2 + 

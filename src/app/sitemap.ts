@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .order('created_at', { ascending: false });
 
   // Get unique categories
-  const categories = [...new Set(posts?.map(p => p.category).filter(Boolean))];
+  const categories = [...new Set(posts?.map((p: any) => p.category).filter(Boolean))];
 
   // Static pages
   const staticPages = [
@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic post pages
-  const postPages = posts?.map(post => ({
+  const postPages = posts?.map((post: any) => ({
     url: `${baseUrl}/posts/${post.slug}`,
     lastModified: new Date(post.updated_at || new Date()),
     changeFrequency: 'daily' as const,
@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })) || [];
 
   // Category pages
-  const categoryPages = categories.map(category => ({
+  const categoryPages = categories.map((category: any) => ({
     url: `${baseUrl}/category/${category.toLowerCase()}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
@@ -59,8 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .not('author', 'is', null)
     .limit(50);
     
-  const authors = [...new Set(authorPosts?.map(p => p.author).filter(Boolean))];
-  const authorPages = authors.map(author => ({
+  const authors = [...new Set(authorPosts?.map((p: any) => p.author).filter(Boolean))];
+  const authorPages = authors.map((author: any) => ({
     url: `${baseUrl}/author/${encodeURIComponent(author)}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,

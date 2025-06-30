@@ -1,5 +1,5 @@
 import './globals.css';
-// import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import { GeistSans, GeistMono } from 'geist/font';
 import { AppLayout } from '@/components/layout/AppLayout';
 
@@ -111,19 +111,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en' className='scroll-smooth'>
-      <head></head>
-      <body
-        className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
-        style={
-          {
-            '--font-geist-sans': GeistSans.style.fontFamily,
-            '--font-geist-mono': GeistMono.style.fontFamily,
-          } as React.CSSProperties
-        }
-      >
-        <AppLayout>{children}</AppLayout>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang='en' className='scroll-smooth'>
+        <head></head>
+        <body
+          className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
+          style={
+            {
+              '--font-geist-sans': GeistSans.style.fontFamily,
+              '--font-geist-mono': GeistMono.style.fontFamily,
+            } as React.CSSProperties
+          }
+        >
+          <AppLayout>{children}</AppLayout>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

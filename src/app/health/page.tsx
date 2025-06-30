@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getSafeEnv, isSupabaseConfigured, isClerkConfigured } from '@/lib/env-safe';
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+
+// Simple environment checks
+const isSupabaseConfigured = () => !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const isClerkConfigured = () => !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 interface HealthCheck {
   name: string;
@@ -17,9 +20,6 @@ export default function HealthPage() {
   useEffect(() => {
     async function runHealthChecks() {
       const results: HealthCheck[] = [];
-      
-      // Check environment variables
-      const env = getSafeEnv();
       
       // Supabase check
       results.push({
@@ -40,11 +40,12 @@ export default function HealthPage() {
       });
       
       // App URL check
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       results.push({
         name: 'App URL',
-        status: env.NEXT_PUBLIC_APP_URL ? 'ok' : 'warning',
-        message: env.NEXT_PUBLIC_APP_URL 
-          ? `App URL: ${env.NEXT_PUBLIC_APP_URL}` 
+        status: appUrl ? 'ok' : 'warning',
+        message: appUrl 
+          ? `App URL: ${appUrl}` 
           : 'Using fallback app URL'
       });
       

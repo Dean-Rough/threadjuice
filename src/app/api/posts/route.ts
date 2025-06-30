@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server.js';
 import { z } from 'zod';
-import supabase from '@/lib/database-safe';
+import supabase from '@/lib/database';
 import fs from 'fs';
 import path from 'path';
 

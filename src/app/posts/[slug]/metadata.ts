@@ -38,7 +38,7 @@ export async function generateStaticParams() {
     .order('created_at', { ascending: false })
     .limit(100);
 
-  return posts?.map((post) => ({
+  return posts?.map((post: any) => ({
     slug: post.slug,
   })) || [];
 }

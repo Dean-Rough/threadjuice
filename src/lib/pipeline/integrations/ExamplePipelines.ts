@@ -253,7 +253,7 @@ export function createDebugPipeline() {
     .pipe(RedditGeneration('the-terry', { maxTokens: 500 }))
     .pipe(MinimalEnrichment())
     .pipe(new TransformStage())
-    .pipe(new OutputStage({ includeMetadata: true }));
+    .pipe(new OutputStage({}));
 }
 
 /**

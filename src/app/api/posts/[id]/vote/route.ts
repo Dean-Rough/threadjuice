@@ -43,7 +43,7 @@ export async function POST(
     }
 
     // Update with incremented values (handle null counts)
-    const currentCount = post[column] || 0;
+    const currentCount = (post as any)[column] || 0;
     const currentScore = post.trending_score || 0;
     
     const { data, error } = await supabase

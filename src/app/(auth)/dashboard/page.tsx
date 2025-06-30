@@ -18,6 +18,10 @@ import {
 import { getAllPosts, getPostsByPersona } from '@/data/mockPosts';
 import { getAllPersonas } from '@/data/personas';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export default function DashboardPage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [activeTab, setActiveTab] = useState('overview');
@@ -64,7 +68,7 @@ export default function DashboardPage() {
     .slice(0, 5);
 
   // Top performing posts
-  const topPosts = posts.sort((a, b) => b.views - a.views).slice(0, 5);
+  const topPosts = posts.sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
 
   return (
     <>
@@ -256,7 +260,7 @@ export default function DashboardPage() {
                               </a>
                             </h6>
                             <div className='post-meta small text-muted'>
-                              <span>{post.persona.name}</span>
+                              <span>{post.persona?.name || 'Unknown'}</span>
                               <span className='mx-2'>•</span>
                               <span>
                                 {new Date(
@@ -264,7 +268,7 @@ export default function DashboardPage() {
                                 ).toLocaleDateString()}
                               </span>
                               <span className='mx-2'>•</span>
-                              <span>{post.views.toLocaleString()} views</span>
+                              <span>{(post.views || 0).toLocaleString()} views</span>
                             </div>
                           </div>
                           <div className='post-actions'>
@@ -339,10 +343,10 @@ export default function DashboardPage() {
                               </a>
                             </h6>
                             <div className='post-stats small text-muted'>
-                              <span>{post.views.toLocaleString()} views</span>
+                              <span>{(post.views || 0).toLocaleString()} views</span>
                               <span className='mx-2'>•</span>
                               <span>
-                                {post.redditMetrics.upvotes.toLocaleString()}{' '}
+                                {(post.redditMetrics?.upvotes || 0).toLocaleString()}{' '}
                                 upvotes
                               </span>
                             </div>
@@ -409,14 +413,14 @@ export default function DashboardPage() {
                               </div>
                             </div>
                           </td>
-                          <td>{post.persona.name}</td>
+                          <td>{post.persona?.name || 'Unknown'}</td>
                           <td>
                             <span className='badge bg-light text-dark'>
                               {post.category}
                             </span>
                           </td>
-                          <td>{post.views.toLocaleString()}</td>
-                          <td>{post.redditMetrics.upvotes.toLocaleString()}</td>
+                          <td>{(post.views || 0).toLocaleString()}</td>
+                          <td>{(post.redditMetrics?.upvotes || 0).toLocaleString()}</td>
                           <td>
                             {new Date(post.publishedAt).toLocaleDateString()}
                           </td>
@@ -512,7 +516,7 @@ export default function DashboardPage() {
                               <div className='stat-item'>
                                 <h6 className='stat-number mb-0'>
                                   {personaPosts
-                                    .reduce((sum, post) => sum + post.views, 0)
+                                    .reduce((sum, post) => sum + (post.views || 0), 0)
                                     .toLocaleString()}
                                 </h6>
                                 <small className='text-muted'>Views</small>
