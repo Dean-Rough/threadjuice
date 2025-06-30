@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     // Check database health
     try {
-      const { error } = await supabase.from('posts').select('id').limit(1);
+      const { error } = await getSupabaseClient().from('posts').select('id').limit(1);
       if (error) {
         metrics.databaseHealth = false;
         errors.push({
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check content generation (last post)
-    const { data: lastPost } = await supabase
+    const { data: lastPost } = await getSupabaseClient()
       .from('posts')
       .select('created_at')
       .order('created_at', { ascending: false })
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check cron jobs (recent runs)
-    const { data: recentCrons } = await supabase
+    const { data: recentCrons } = await getSupabaseClient()
       .from('posts')
       .select('created_at')
       .gte('created_at', new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString())

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { z } from 'zod';
 
 const VoteSchema = z.object({
@@ -29,7 +29,7 @@ export async function POST(
     const increment = action === 'add' ? 1 : -1;
 
     // First get current values
-    const { data: comment, error: fetchError } = await supabase
+    const { data: comment, error: fetchError } = await getSupabaseClient()
       .from('comments')
       .select(column)
       .eq('id', commentId)
@@ -40,7 +40,7 @@ export async function POST(
     }
 
     // Update vote count
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseClient()
       .from('comments')
       .update({
         [column]: (comment as any)[column] + increment,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server.js';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { normalizeContent } from '@/lib/contentAdapter';
 
 export async function GET(
@@ -12,7 +12,7 @@ export async function GET(
     // Fetching post with ID/slug
 
     // Try to fetch by ID first (UUID), then by slug
-    let query = supabase.from('posts').select(`
+    let query = getSupabaseClient().from('posts').select(`
         *,
         personas (
           id,

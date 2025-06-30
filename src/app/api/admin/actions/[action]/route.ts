@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { revalidatePath } from 'next/cache';
 
 export async function POST(
@@ -21,7 +21,7 @@ export async function POST(
         revalidatePath('/', 'layout');
         
         // Clear any cached data in database
-        await supabase
+        await getSupabaseClient()
           .from('cache')
           .delete()
           .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
@@ -81,13 +81,13 @@ export async function POST(
 
       case 'fix-database':
         // Run database maintenance
-        const { error: cleanupError } = await supabase
+        const { error: cleanupError } = await getSupabaseClient()
           .from('posts')
           .delete()
           .is('title', null);
         
         // Update missing slugs
-        const { data: postsWithoutSlugs } = await supabase
+        const { data: postsWithoutSlugs } = await getSupabaseClient()
           .from('posts')
           .select('id, title')
           .is('slug', null);
@@ -99,7 +99,7 @@ export async function POST(
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-+|-+$/g, '');
             
-            await supabase
+            await getSupabaseClient()
               .from('posts')
               .update({ slug })
               .eq('id', post.id);

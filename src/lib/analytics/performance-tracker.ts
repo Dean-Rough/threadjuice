@@ -1,4 +1,4 @@
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 interface PerformanceMetrics {
   pageLoadTime: number;
@@ -30,7 +30,7 @@ export class PerformanceTracker {
   // Track Core Web Vitals
   async trackWebVitals(metrics: Partial<PerformanceMetrics>) {
     try {
-      await supabase.from('performance_metrics').insert({
+      await getSupabaseClient().from('performance_metrics').insert({
         ...metrics,
         timestamp: new Date().toISOString(),
         user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'server',
@@ -44,7 +44,7 @@ export class PerformanceTracker {
   async trackContentPerformance(postId: string) {
     try {
       // Get current stats
-      const { data: post } = await supabase
+      const { data: post } = await getSupabaseClient()
         .from('posts')
         .select('view_count, upvote_count, comment_count, share_count, created_at')
         .eq('id', postId)
@@ -70,7 +70,7 @@ export class PerformanceTracker {
       });
       
       // Update post with performance data
-      await supabase
+      await getSupabaseClient()
         .from('posts')
         .update({
           view_velocity: viewVelocity,
@@ -125,7 +125,7 @@ export class PerformanceTracker {
   // Auto-boost high-potential content
   private async boostContent(postId: string) {
     try {
-      await supabase
+      await getSupabaseClient()
         .from('posts')
         .update({
           boosted: true,
@@ -144,7 +144,7 @@ export class PerformanceTracker {
   async trackAISearchHit(postId: string, source: 'perplexity' | 'chatgpt' | 'claude' | 'other') {
     try {
       // Increment AI search counter
-      const { data: post } = await supabase
+      const { data: post } = await getSupabaseClient()
         .from('posts')
         .select('ai_search_hits')
         .eq('id', postId)
@@ -154,7 +154,7 @@ export class PerformanceTracker {
       hits[source] = (hits[source] || 0) + 1;
       hits.total = (hits.total || 0) + 1;
       
-      await supabase
+      await getSupabaseClient()
         .from('posts')
         .update({ ai_search_hits: hits })
         .eq('id', postId);
@@ -168,14 +168,14 @@ export class PerformanceTracker {
   async getPerformanceInsights() {
     try {
       // Top performing content
-      const { data: topPosts } = await supabase
+      const { data: topPosts } = await getSupabaseClient()
         .from('posts')
         .select('id, title, view_count, engagement_rate, viral_potential')
         .order('viral_potential', { ascending: false })
         .limit(10);
       
       // AI search performance
-      const { data: aiSearchPosts } = await supabase
+      const { data: aiSearchPosts } = await getSupabaseClient()
         .from('posts')
         .select('id, title, ai_search_hits')
         .not('ai_search_hits', 'is', null)
@@ -183,7 +183,7 @@ export class PerformanceTracker {
         .limit(10);
       
       // Category performance
-      const { data: categoryStats } = await supabase
+      const { data: categoryStats } = await getSupabaseClient()
         .from('posts')
         .select('category, view_count, engagement_rate')
         .not('category', 'is', null);

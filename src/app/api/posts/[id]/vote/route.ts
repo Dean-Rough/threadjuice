@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { z } from 'zod';
 
 const VoteSchema = z.object({
@@ -27,7 +27,7 @@ export async function POST(
     const column = type === 'upvote' ? 'upvote_count' : 'downvote_count';
 
     // First get current values
-    const { data: post, error: fetchError } = await supabase
+    const { data: post, error: fetchError } = await getSupabaseClient()
       .from('posts')
       .select(`${column}, trending_score`)
       .eq('id', postId)
@@ -46,7 +46,7 @@ export async function POST(
     const currentCount = (post as any)[column] || 0;
     const currentScore = post.trending_score || 0;
     
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseClient()
       .from('posts')
       .update({
         [column]: currentCount + 1,
@@ -68,7 +68,7 @@ export async function POST(
                      'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
-    await supabase.from('user_interactions').insert({
+    await getSupabaseClient().from('user_interactions').insert({
       post_id: postId,
       interaction_type: type,
       ip_address: ipAddress,

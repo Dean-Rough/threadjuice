@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const { data: todaysPosts } = await supabase
+    const { data: todaysPosts } = await getSupabaseClient()
       .from('posts')
       .select('view_count')
       .gte('created_at', today.toISOString());
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     // Get AI search traffic percentage
     // This would normally track referrers, but we'll estimate based on patterns
-    const { data: recentViews } = await supabase
+    const { data: recentViews } = await getSupabaseClient()
       .from('posts')
       .select('view_count, title')
       .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const aiSearchTraffic = Math.round((aiPatternViews / totalViews) * 100);
 
     // Calculate viral score
-    const { data: topPosts } = await supabase
+    const { data: topPosts } = await getSupabaseClient()
       .from('posts')
       .select('upvote_count, view_count, share_count, comment_count')
       .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
@@ -57,12 +57,12 @@ export async function GET(request: NextRequest) {
       ) : 0;
 
     // Get total posts
-    const { count: totalPosts } = await supabase
+    const { count: totalPosts } = await getSupabaseClient()
       .from('posts')
       .select('*', { count: 'exact', head: true });
 
     // Get last generated post
-    const { data: lastPost } = await supabase
+    const { data: lastPost } = await getSupabaseClient()
       .from('posts')
       .select('created_at')
       .order('created_at', { ascending: false })
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     // Get top performer
-    const { data: topPerformer } = await supabase
+    const { data: topPerformer } = await getSupabaseClient()
       .from('posts')
       .select('title, view_count')
       .order('view_count', { ascending: false })

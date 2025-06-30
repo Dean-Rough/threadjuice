@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { z } from 'zod';
 
 const CreateCommentSchema = z.object({
@@ -16,7 +16,7 @@ export async function GET(
     const { id: postId } = await params;
     
     // First, try to get comments from the database
-    const { data: dbComments, error: dbError } = await supabase
+    const { data: dbComments, error: dbError } = await getSupabaseClient()
       .from('comments')
       .select('*')
       .eq('post_id', postId)
@@ -64,7 +64,7 @@ export async function GET(
     }
 
     // If no comments in database, try to get from post content (Reddit comments)
-    const { data: post, error: postError } = await supabase
+    const { data: post, error: postError } = await getSupabaseClient()
       .from('posts')
       .select('content')
       .eq('id', postId)
@@ -113,7 +113,7 @@ export async function GET(
         status: 'active',
       }));
 
-      await supabase.from('comments').insert(commentsToInsert);
+      await getSupabaseClient().from('comments').insert(commentsToInsert);
     }
 
     return NextResponse.json({
@@ -150,7 +150,7 @@ export async function POST(
     const { content, authorName, parentId } = validation.data;
 
     // Create comment
-    const { data: comment, error } = await supabase
+    const { data: comment, error } = await getSupabaseClient()
       .from('comments')
       .insert({
         post_id: postId,
@@ -171,14 +171,14 @@ export async function POST(
     }
 
     // Update post comment count
-    const { data: postData } = await supabase
+    const { data: postData } = await getSupabaseClient()
       .from('posts')
       .select('comment_count')
       .eq('id', postId)
       .single();
 
     if (postData) {
-      await supabase
+      await getSupabaseClient()
         .from('posts')
         .update({ comment_count: postData.comment_count + 1 })
         .eq('id', postId);

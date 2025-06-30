@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 export async function POST(
   request: NextRequest,
@@ -9,7 +9,7 @@ export async function POST(
     const { id: postId } = await params;
 
     // First get current values
-    const { data: post, error: fetchError } = await supabase
+    const { data: post, error: fetchError } = await getSupabaseClient()
       .from('posts')
       .select('bookmark_count, trending_score')
       .eq('id', postId)
@@ -20,7 +20,7 @@ export async function POST(
     }
 
     // Update bookmark count
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseClient()
       .from('posts')
       .update({
         bookmark_count: post.bookmark_count + 1,
@@ -44,7 +44,7 @@ export async function POST(
                      'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
-    await supabase.from('user_interactions').insert({
+    await getSupabaseClient().from('user_interactions').insert({
       post_id: postId,
       interaction_type: 'bookmark',
       ip_address: ipAddress,

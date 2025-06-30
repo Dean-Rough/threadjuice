@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { generateSEOData, generateMetaTags } from '@/lib/seo/auto-seo';
 import { optimizeForAISearch } from '@/lib/seo/ai-search-optimization';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { data: post, error } = await supabase
+  const { data: post, error } = await getSupabaseClient()
     .from('posts')
     .select('*')
     .eq('slug', params.slug)
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export async function generateStaticParams() {
-  const { data: posts } = await supabase
+  const { data: posts } = await getSupabaseClient()
     .from('posts')
     .select('slug')
     .eq('status', 'published')

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server.js';
 import { z } from 'zod';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import fs from 'fs';
 import path from 'path';
 
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     try {
       // Attempting to fetch from Supabase
 
-      let query = supabase
+      let query = getSupabaseClient()
         .from('posts')
         .select(
           `
@@ -364,7 +364,7 @@ export async function POST(request: NextRequest) {
       status: 'published',
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseClient()
       .from('posts')
       .insert(postData)
       .select()

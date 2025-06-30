@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 /**
  * Cron job to update trending scores
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { data: posts, error } = await supabase
+    const { data: posts, error } = await getSupabaseClient()
       .from('posts')
       .select('id, view_count, upvote_count, share_count, comment_count, created_at')
       .gte('created_at', sevenDaysAgo.toISOString());
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       const trendingScore = Math.round(engagementScore * timeDecay);
 
       // Update the score
-      const { error: updateError } = await supabase
+      const { error: updateError } = await getSupabaseClient()
         .from('posts')
         .update({ 
           trending_score: trendingScore,
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Clean up old posts (remove trending flag from posts older than 7 days)
-    await supabase
+    await getSupabaseClient()
       .from('posts')
       .update({ trending: false, trending_score: 0 })
       .lt('created_at', sevenDaysAgo.toISOString());

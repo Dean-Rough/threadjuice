@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://threadjuice.com';
 
   // Get all published posts from database
-  const { data: posts } = await supabase
+  const { data: posts } = await getSupabaseClient()
     .from('posts')
     .select('slug, updated_at, category')
     .eq('status', 'published')
@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Author pages from posts
-  const { data: authorPosts } = await supabase
+  const { data: authorPosts } = await getSupabaseClient()
     .from('posts')
     .select('author')
     .not('author', 'is', null)

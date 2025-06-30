@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
 import PostDetail from '@/components/features/PostDetail';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { generateSEOData, generateMetaTags } from '@/lib/seo/auto-seo';
 import { optimizeForAISearch } from '@/lib/seo/ai-search-optimization';
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const { data: post, error } = await supabase
+  const { data: post, error } = await getSupabaseClient()
     .from('posts')
     .select('*')
     .eq('slug', slug)
@@ -43,7 +43,7 @@ export async function generateMetadata({
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
 
-  const { data: post, error } = await supabase
+  const { data: post, error } = await getSupabaseClient()
     .from('posts')
     .select('*')
     .eq('slug', slug)
@@ -58,7 +58,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const aiSearchData = await optimizeForAISearch(post);
 
   // Track view
-  await supabase
+  await getSupabaseClient()
     .from('posts')
     .update({ view_count: (post.view_count || 0) + 1 })
     .eq('id', post.id);

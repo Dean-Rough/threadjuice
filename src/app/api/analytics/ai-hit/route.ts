@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import supabase from '@/lib/database';
+import { getSupabaseClient } from '@/lib/database';
 import { PerformanceTracker } from '@/lib/analytics/performance-tracker';
 
 export async function POST(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const { postSlug, source, userAgent } = await request.json();
     
     // Get post ID from slug
-    const { data: post } = await supabase
+    const { data: post } = await getSupabaseClient()
       .from('posts')
       .select('id')
       .eq('slug', postSlug)
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     await tracker.trackAISearchHit(post.id, source);
     
     // Log for analysis
-    await supabase.from('ai_crawler_logs').insert({
+    await getSupabaseClient().from('ai_crawler_logs').insert({
       post_id: post.id,
       source,
       user_agent: userAgent,
