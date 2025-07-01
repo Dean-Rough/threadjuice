@@ -160,8 +160,8 @@ export const TrendingFeed = React.memo(function TrendingFeed() {
 
   return (
     <div className='space-y-6'>
-      {/* 3x4 Bento Grid with integrated ads */}
-      <div className='grid auto-rows-[320px] grid-cols-3 gap-4'>
+      {/* Responsive Bento Grid with integrated ads */}
+      <div className='grid auto-rows-[320px] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
         {mixedContent.map((item, gridIndex) => {
           const cardClasses = 'col-span-1 row-span-1';
 

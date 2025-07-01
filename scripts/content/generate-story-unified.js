@@ -2116,14 +2116,6 @@ export async function generateStory(options = {}) {
     if (storyData.realPost?.controversialComment) {
       const controversial = storyData.realPost.controversialComment;
 
-      // Add a separator section
-      sections.push({
-        type: 'terry_corner',
-        title: 'Meanwhile, in the Depths of Reddit...',
-        content:
-          "Brace yourself, we found the one comment that's making everyone lose their minds. Remember, we're just the messengers here:",
-      });
-
       // Add the controversial comment with clear distancing
       sections.push({
         type: 'pullquote',
@@ -2133,14 +2125,6 @@ export async function generateStory(options = {}) {
           context: `⚠️ This controversial take got ${controversial.score} points and sparked HEATED debate. ThreadJuice does not endorse this view - we're just showing you what got Reddit riled up.`,
           isControversial: true,
         },
-      });
-
-      // Add another Terry comment to further distance
-      sections.push({
-        type: 'terry_corner',
-        title: "The Terry's Take",
-        content:
-          "And this, ladies and gentlemen, is why we can't have nice things. Some people just wake up and choose violence. At least it gave everyone something to argue about in the replies. 🍿",
       });
     }
 

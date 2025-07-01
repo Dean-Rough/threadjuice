@@ -1518,6 +1518,44 @@ export default function SimplePostDetail({
           </div>
         );
 
+      case 'reddit_quote':
+        return (
+          <div key={index} className='reddit-quote-section my-12'>
+            <div className='rounded-lg border border-border bg-card p-6 shadow-sm'>
+              <div className='flex items-start gap-4'>
+                <div className='flex-shrink-0'>
+                  <div className='flex h-8 w-8 items-center justify-center rounded-full bg-orange-500'>
+                    <span className='text-sm font-bold text-white'>r/</span>
+                  </div>
+                </div>
+                <div className='min-w-0 flex-1'>
+                  <div className='mb-3 flex flex-wrap items-center gap-2 text-sm'>
+                    <span className='font-medium text-orange-600 dark:text-orange-400'>
+                      r/{section.metadata?.subreddit || 'reddit'}
+                    </span>
+                    <span className='text-muted-foreground'>•</span>
+                    <span className='text-muted-foreground'>
+                      Posted by u/{section.metadata?.author || 'OP'}
+                    </span>
+                    <span className='text-muted-foreground'>•</span>
+                    <span className='text-muted-foreground'>
+                      {section.metadata?.score || 0} points
+                    </span>
+                  </div>
+                  <div className='leading-relaxed text-foreground'>
+                    <div className='whitespace-pre-wrap'>{section.content}</div>
+                  </div>
+                  {section.metadata?.context && (
+                    <div className='mt-3 text-xs italic text-muted-foreground'>
+                      {section.metadata.context}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div key={index} className='default-section mb-8'>
