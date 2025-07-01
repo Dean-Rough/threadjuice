@@ -23,6 +23,8 @@ export function useCategories() {
     queryKey: ['categories'],
     queryFn: fetchCategories,
     staleTime: 10 * 60 * 1000, // 10 minutes
-    cacheTime: 30 * 60 * 1000, // 30 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    retry: 1, // Only retry once if failed
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 }

@@ -75,3 +75,27 @@
 [2025-06-24T20:22:36.206Z] 🚀 Starting generation run #5
 [2025-06-24T20:22:36.209Z] 📊 Target: 3 stories from reddit
 [2025-06-24T20:24:07.569Z] ✅ Generation completed: 3/3 stories successful
+[2025-07-01T15:41:10.927Z] 🤖 THREADJUICE CONTINUOUS GENERATOR STARTED
+[2025-07-01T15:41:10.930Z] ==========================================
+[2025-07-01T15:41:10.930Z] 🎯 Configuration:
+[2025-07-01T15:41:10.930Z]    • Stories per run: 1
+[2025-07-01T15:41:10.930Z]    • Source: reddit
+[2025-07-01T15:41:10.930Z]    • Interval: 288 minutes
+[2025-07-01T15:41:10.930Z]    • Max daily: 5
+[2025-07-01T15:41:10.930Z]    • PID: 71060
+[2025-07-01T15:41:10.930Z]    • Log file: /Users/deannewton/Documents/ThreadJuice/logs/automation/continuous-generator.log
+[2025-07-01T15:41:10.930Z] 
+[2025-07-01T15:41:10.930Z] 📊 Current state:
+[2025-07-01T15:41:10.931Z]    • Total runs: 4
+[2025-07-01T15:41:10.931Z]    • Total stories: 6
+[2025-07-01T15:41:10.931Z]    • Success rate: 100%
+[2025-07-01T15:41:10.931Z]    • Today: 6/5
+[2025-07-01T15:41:10.931Z] 
+[2025-07-01T15:41:10.931Z] 📅 New day: Reset daily counter
+[2025-07-01T15:41:10.931Z] 🚀 Starting generation run #5
+[2025-07-01T15:41:10.931Z] 📊 Target: 1 stories from reddit
+[2025-07-01T15:41:13.554Z] ❌ Generation failed with code 1
+[2025-07-01T15:41:13.554Z] Error: ❌ Story generation failed: 401 Incorrect API key provided: sk-proj-*************************************************************************************************************************************
+[2025-07-01T15:41:13.573Z] ⏰ Next run scheduled for 9:29:13 PM
+[2025-07-01T15:41:13.573Z] 😴 Sleeping for 288 minutes...
+[2025-07-01T15:41:13.573Z] 

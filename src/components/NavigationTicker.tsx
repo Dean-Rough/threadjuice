@@ -47,12 +47,26 @@ const categoryIcons: { [key: string]: React.ComponentType<any> } = {
 };
 
 export function NavigationTicker() {
-  const { data: categoriesData, isLoading } = useCategories();
+  const { data: categoriesData, isLoading, isError } = useCategories();
 
-  // Fallback categories for loading state
-  const categories = categoriesData?.categories || [];
+  // Default categories as fallback
+  const defaultCategories = [
+    { name: 'Politics', slug: 'politics', post_count: 0 },
+    { name: 'Technology', slug: 'technology', post_count: 0 },
+    { name: 'Relationships', slug: 'relationships', post_count: 0 },
+    { name: 'Sports', slug: 'sports', post_count: 0 },
+    { name: 'Business', slug: 'business', post_count: 0 },
+    { name: 'Celebrity', slug: 'celebrity', post_count: 0 },
+    { name: 'Workplace', slug: 'workplace', post_count: 0 },
+    { name: 'Food', slug: 'food', post_count: 0 },
+  ];
 
-  if (isLoading || categories.length === 0) {
+  // Use API categories if available, otherwise use defaults
+  const categories = (categoriesData?.categories && categoriesData.categories.length > 0) 
+    ? categoriesData.categories 
+    : defaultCategories;
+
+  if (isLoading) {
     return (
       <div className='bg-orange-500 py-3'>
         <div className='animate-pulse'>

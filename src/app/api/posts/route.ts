@@ -173,6 +173,7 @@ export async function GET(request: NextRequest) {
           slug: post.slug,
           excerpt: post.hook,
           imageUrl: post.featured_image,
+          image_url: post.featured_image, // Support both naming conventions
           category: post.category,
           author:
             (Array.isArray(post.personas)
@@ -278,7 +279,8 @@ export async function GET(request: NextRequest) {
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
-      imageUrl: post.imageUrl,
+      imageUrl: post.imageUrl || post.image_url || post.featured_image,
+      image_url: post.imageUrl || post.image_url || post.featured_image, // Support both naming conventions
       category: post.category,
       author: post.author,
       viewCount: post.viewCount || 0,

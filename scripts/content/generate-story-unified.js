@@ -937,6 +937,9 @@ PLATFORM: ${contentSource.toUpperCase()} - ${platformStyles[contentSource]}
 CRITICAL WRITING STYLE REQUIREMENTS:
 - Write in THIRD PERSON throughout - never use "I", "me", "my"
 - Refer to the story author as "the author", "OP", "our protagonist", "the writer", etc.
+- NEVER write Reddit-style edits or sign-offs (no "Edit:", "Update:", "Thanks for the gold", etc.)
+- You are ThreadJuice REPORTING on the story, not the original poster
+- Do NOT end sections with Reddit clichés or acknowledgments
 - TONGUE-IN-CHEEK CLICKBAIT title that's self-aware about being clickbait
 - Each section should be 150-250 words (longer than typical)
 - Total story: 1200-1800 words
@@ -956,7 +959,7 @@ MEDIA REFERENCES:
 ${
   contentSource === 'twitter'
     ? 'TWITTER SPECIFIC: Include mentions of quote tweets, viral threads, being "ratioed", screenshots going viral, blue check drama'
-    : 'REDDIT SPECIFIC: Include subreddit culture, upvotes, awards, cross-posting - DO NOT include "Edit: Thanks for the gold!" (ThreadJuice repackages content, not original Reddit user)'
+    : 'REDDIT SPECIFIC: Include subreddit culture, upvotes, awards, cross-posting - NEVER write as if you are the Reddit user. NO "Edit:", NO "Thanks for the gold", NO "RIP my inbox", NO "obligatory front page edit", NO "throwaway for obvious reasons". You are REPORTING on their story, not posting it yourself.'
 }
 
 Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
@@ -1027,7 +1030,7 @@ Format as JSON with this structure (but with CREATIVE, STORY-SPECIFIC titles):
         {
           role: 'system',
           content:
-            'You are a viral content creator who writes engaging Reddit-style stories.',
+            'You are a ThreadJuice content writer who transforms viral Reddit and Twitter posts into engaging third-person stories. You are NOT the original Reddit/Twitter user - you are reporting on their story.',
         },
         {
           role: 'user',
